@@ -36,11 +36,13 @@
     return ([[[CPSystemInfo getHardwareModel] lowercaseString] rangeOfString:@"book"].location != NSNotFound);
 }
 
-+ (SInt32) getOSVersion {
++ (NSInteger) getOSVersion {
     // get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
+    
 
     // get the version number into a format that
     // matches the availability macros (MAC_OS_X_VERSION_10_8)

@@ -287,9 +287,10 @@
 		return nil;
     
     // get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
     
 	classes = [[NSMutableArray alloc] initWithObjects:
                [ConnectBluetoothDeviceAction class],
