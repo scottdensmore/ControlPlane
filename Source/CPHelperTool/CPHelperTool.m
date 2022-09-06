@@ -12,6 +12,7 @@
 #import <unistd.h>
 #import <CoreServices/CoreServices.h>
 #import <syslog.h>
+#import <Foundation/Foundation.h>
 
 #import "AuthorizationLib/BetterAuthorizationSampleLib.h"
 #import "CPHelperToolCommon.h"
@@ -162,9 +163,10 @@ static OSStatus DoEnableTM (AuthorizationRef		auth,
 	int retValue = 0;
 	
 	// get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
 	
 	// if Lion or greater
 	if ((major == 10 && minor >= 7) || major >= 11) {
@@ -204,10 +206,11 @@ static OSStatus DoDisableTM (AuthorizationRef		auth,
 	int retValue = 0;
 	
 	// get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
-	
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
+    
 	// if Lion or greater
 	if ((major == 10 && minor >= 7) || major >= 11) {
 		sprintf(command,"/usr/bin/tmutil disable");
@@ -246,10 +249,11 @@ static OSStatus DoStartBackupTM (AuthorizationRef		auth,
 	int retValue = 0;
 	
 	// get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
-	
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
+    
 	// if Lion or greater
 	if ((major == 10 && minor >= 7) || major >= 11) {
 		sprintf(command,"/usr/bin/tmutil startbackup");
@@ -278,9 +282,10 @@ static OSStatus DoStopBackupTM (AuthorizationRef		auth,
 	int retValue = 0;
 	
 	// get system version
-	SInt32 major = 0, minor = 0;
-	Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
 	
 	// if Lion or greater
 	if ((major == 10 && minor >= 7) || major >= 11) {
@@ -522,10 +527,10 @@ static OSStatus DoEnableSMBFileSharing (AuthorizationRef         auth,
     
     
     // get system version
-    SInt32 major = 0, minor = 0;
-    Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
-    
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
     
     if ((major == 10 && minor >= 9) || major >= 11) {
         sprintf(enable_command, "/bin/launchctl load -F /System/Library/LaunchDaemons/%s.plist", kCPHelperToolSMBDServiceName);
@@ -561,11 +566,16 @@ static OSStatus DoDisableSMBFileSharing (AuthorizationRef         auth,
     
     
     // get system version
-    SInt32 major = 0, minor = 0;
-    Gestalt(gestaltSystemVersionMajor, &major);
-    Gestalt(gestaltSystemVersionMinor, &minor);
+//    SInt32 major = 0, minor = 0;
+//    
+//    Gestalt(gestaltSystemVersionMajor, &major);
+//    Gestalt(gestaltSystemVersionMinor, &minor);
     
     
+    NSInteger major = 0, minor = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    major = version.majorVersion;
+    minor = version.minorVersion;
     if ((major == 10 && minor >= 9) || major >= 11) {
         sprintf(disable_command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/%s.plist", kCPHelperToolSMBDServiceName);
         sprintf(sync_command, "%s", kCPHelperToolSMBSyncToolFilePathMavericks);

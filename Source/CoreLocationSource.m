@@ -45,6 +45,7 @@
 
 static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api/geocode/json?";
 
+
 - (id)init {
     self = [super initWithNibNamed:@"CoreLocationRule"];
     if (!self) {

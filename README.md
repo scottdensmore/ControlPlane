@@ -28,8 +28,8 @@ Building ControlPlane from Source
 
 ControlPlane is free, open source software hosted at <https://github.com/dustinrue/ControlPlane>.  Before you can build ControlPlane you will need the following:
 
-1. Xcode 4.4+.
+1. Xcode 8.3+.
 2. A git client if you don't wish to use Xcode itself, the command line tools for Xcode include the Git command line client.
-3. OS X version 10.8.
+3. OS X version 10.12.
 
 If you wish to build ControlPlane yourself you can do so by cloning the ControlPlane code to your computer using Xcode or your preferred git client.  Once cloned, open the project file in Xcode and edit the Action.h file to enable or disable the building of the iChat action.

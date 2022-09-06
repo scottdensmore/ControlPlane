@@ -76,10 +76,10 @@
 
 - (void)dealloc {
     if (browsersUpdatesSerialQueue) {
-        dispatch_release(browsersUpdatesSerialQueue);
+        browsersUpdatesSerialQueue = nil;
     }
     if (servicesUpdatesSerialQueue) {
-        dispatch_release(servicesUpdatesSerialQueue);
+        servicesUpdatesSerialQueue = nil;
     }
 }
 
