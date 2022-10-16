@@ -276,7 +276,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 
 	// Check consistency of parent UUIDs; drop the parent UUID if it is invalid
     [contexts enumerateKeysAndObjectsUsingBlock:^(id key, Context *ctxt, BOOL *stop) {
-		if (![ctxt isRoot] && ![contexts objectForKey:[ctxt parentUUID]]) {
+        if (![ctxt isRoot] && ![self->contexts objectForKey:[ctxt parentUUID]]) {
 			NSLog(@"%s correcting broken parent UUID for context '%@'", __PRETTY_FUNCTION__, [ctxt name]);
 			[ctxt setParentUUID:@""];
 		}
