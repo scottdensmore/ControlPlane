@@ -170,8 +170,11 @@
         NSInvocation *taskInvocation = [NSInvocation invocationWithMethodSignature:taskSignature];
         [taskInvocation setTarget:self];
         [taskInvocation setSelector:@selector(runScript:)];
-        NSString *taskArgument = [currentTask valueForKey:@"parameter"];
-        [taskInvocation setArgument:&taskArgument atIndex:2];
+//        NSString *taskArgument = [currentTask valueForKey:@"parameter"];
+//        [taskInvocation setArgument:&taskArgument atIndex:2];
+        NSArray *taskArgumentArray = @[[currentTask valueForKey:@"parameter"]];
+        //NSString *taskArgument = [currentTask valueForKey:@"parameter"];
+        [taskInvocation setArgument:taskArgumentArray atIndex:0];
         
         tmp = [NSTimer scheduledTimerWithTimeInterval:interval invocation:taskInvocation repeats:YES];
 
