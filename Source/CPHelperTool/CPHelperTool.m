@@ -87,9 +87,18 @@ static OSStatus DoInstallTool(
             {
                 // Passed codesign validation
                 // OK to copy now - overwrite if present
-                OSStatus fsret = FSPathCopyObjectSync(pFilename, "/usr/local/bin", toolName, NULL, kFSFileOperationOverwrite);
-                if (fsret != noErr)
+                NSString *toolNameString = (__bridge NSString *)toolName;
+                NSString *filenameString = [NSString stringWithUTF8String:pFilename];
+                
+                NSFileManager *fileManager = [NSFileManager defaultManager];
+                NSError *error = nil;
+                BOOL copySuccess = [fileManager copyItemAtPath:filenameString
+                                                        toPath:[@"/usr/local/bin" stringByAppendingPathComponent:toolNameString]
+                                                         error:&error];
+                if (!copySuccess) {
+                    NSLog(@"Copy failed: %@", error.localizedDescription);
                     success = false;
+                }
             }
             
             

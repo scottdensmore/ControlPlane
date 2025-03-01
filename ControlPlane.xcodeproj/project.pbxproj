@@ -195,6 +195,7 @@
 		DDFF423114156B0A0047D311 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = DDFF423014156B0A0047D311 /* location.png */; };
 		DE3670AB28C0407F003A200D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
 		DE99DE3C28C034910014E380 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
+		DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -687,6 +688,7 @@
 		DDF4E594141588E80028DF4A /* CoreLocationMap.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = CoreLocationMap.html; path = Resources/CoreLocationMap.html; sourceTree = "<group>"; };
 		DDFF423014156B0A0047D311 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = location.png; path = Resources/location.png; sourceTree = "<group>"; };
 		DE99DE3B28C034910014E380 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetFS.framework; path = System/Library/Frameworks/NetFS.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -694,6 +696,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */,
 				DAC817B1159BF95A0012ED43 /* ServiceManagement.framework in Frameworks */,
 				DA8E2833156B498A0040FC35 /* ApplicationServices.framework in Frameworks */,
 				8D8C9BAB0BBB3ADB0074D5B3 /* Apple80211.framework in Frameworks */,
@@ -890,6 +893,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */,
 				DE99DE3B28C034910014E380 /* Foundation.framework */,
 				DACCA09F1DD7A309007F7373 /* HockeySDK.framework */,
 				DA7EAF5E19F2EB4600DF6F54 /* QuartzCore.framework */,

@@ -1876,9 +1876,16 @@ static NSSet *sharedActiveContexts = nil;
 #pragma mark -
 #pragma mark Evidence source change handling
 - (void)evidenceSourceDataDidChange:(NSNotification *)notification {
-    dispatch_queue_t mainQueue = dispatch_get_main_queue();
-    if (dispatch_get_current_queue() != mainQueue) {
-        dispatch_async(mainQueue, ^{
+    static const void *mainQueueKey = &mainQueueKey;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dispatch_queue_set_specific(dispatch_get_main_queue(), mainQueueKey, (void *)1, NULL);
+    });
+    
+    // Check if we're on the main queue
+    if (dispatch_get_specific(mainQueueKey) == NULL) {
+        // We're not on the main queue, so dispatch to main queue
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self evidenceSourceDataDidChange:notification];
         });
         return;
