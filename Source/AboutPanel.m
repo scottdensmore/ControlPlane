@@ -27,7 +27,7 @@
 		return nil;
 	}
 	NSArray *topLevelObjects = [NSArray array];
-	if (![nib instantiateNibWithOwner:self topLevelObjects:&topLevelObjects]) {
+	if (![nib instantiateWithOwner:self topLevelObjects:&topLevelObjects]) {
 		NSLog(@"%@ >> failed instantiating nib!", [self class]);
 		return nil;
 	}

@@ -6,6 +6,7 @@
 //
 
 #import <IOKit/graphics/IOGraphicsLib.h>
+#import "CPSystemInfo.h"
 #import "MonitorEvidenceSource.h"
 
 
@@ -54,7 +55,7 @@
 		CGDirectDisplayID display_id = displays[i];
 
 		NSString *display_name = NSLocalizedString(@"(Unnamed display)", "String for unnamed monitors");
-		io_service_t dev = CGDisplayIOServicePort(display_id);
+		io_service_t dev = [CPSystemInfo IOServicePortFromCGDisplayID:display_id];
 		NSDictionary *dict = (NSDictionary *) IODisplayCreateInfoDictionary(dev, kIODisplayOnlyPreferredName);
 		if (!dict) {
 			NSLog(@"%@ >> Couldn't get info about display with ID 0x%08x!", [self class], display_id);

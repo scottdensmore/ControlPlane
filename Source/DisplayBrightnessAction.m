@@ -9,9 +9,11 @@
 //	Copyright 2011. All rights reserved.
 //
 
+#import "CPSystemInfo.h"
 #import "DisplayBrightnessAction.h"
 #import "DSLogger.h"
 #import <IOKit/graphics/IOGraphicsLib.h>
+
 
 const int kMaxDisplays = 16;
 const CFStringRef kDisplayBrightness = CFSTR(kIODisplayBrightnessKey);
@@ -113,7 +115,7 @@ const CFStringRef kDisplayBrightness = CFSTR(kIODisplayBrightnessKey);
 		if (originalMode == NULL)
 			continue;
         
-        io_service_t service = CGDisplayIOServicePort(dspy);
+        io_service_t service = [CPSystemInfo IOServicePortFromCGDisplayID:dspy];
         
         CFRelease(originalMode);
 		

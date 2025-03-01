@@ -95,7 +95,7 @@
             return nil;
         }
     } else {
-        if (![nib instantiateNibWithOwner:owner topLevelObjects:&topLevelObjects]) {
+        if (![nib instantiateWithOwner:owner topLevelObjects:&topLevelObjects]) {
             NSLog(@"%@ >> failed instantiating nib (named '%@')!", [self class], name);
             return nil;
         }

@@ -22,7 +22,7 @@
 }
 
 - (BOOL)execute:(NSString **)errorString {
-    SInt32 version = [CPSystemInfo getOSVersion];
+    NSInteger version = [CPSystemInfo getOSVersion];
     
     if (version > 1100) {
 
