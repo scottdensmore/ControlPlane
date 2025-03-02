@@ -298,7 +298,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="288" name="value" keyPath="values.EnableGrowl" id="1912"/>
+                        <binding destination="288" name="value" keyPath="values.EnableNotifications" id="1912"/>
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" id="1916">

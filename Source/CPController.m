@@ -147,7 +147,7 @@ static NSSet *sharedActiveContexts = nil;
 	[appDefaults setValue:[NSNumber numberWithDouble:0.75] forKey:@"MinimumConfidenceRequired"];
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"EnableSwitchSmoothing"];
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"HideStatusBarIcon"];
-    [appDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"EnableGrowl"];
+    [appDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"EnableNotifications"];
     [appDefaults setValue:[NSNumber numberWithInt:CP_DISPLAY_ICON] forKey:@"menuBarOption"];
 
     
