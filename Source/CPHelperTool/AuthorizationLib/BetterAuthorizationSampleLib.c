@@ -1341,10 +1341,10 @@ static int CheckInWithLaunchd(aslclient asl, aslmsg aslMsg, const char **errStrP
     // The following was used to debug a problem with launchd <rdar://problem/5410487>.  
     // I'm going to leave it in, disabled, until that problem is resolved.
     
-    if (false) {
-        err = asl_log(asl, aslMsg, ASL_LEVEL_INFO, "Listening descriptor is %d", fd);
-        assert(err == 0);
-    }
+//    if (false) {
+//        err = asl_log(asl, aslMsg, ASL_LEVEL_INFO, "Listening descriptor is %d", fd);
+//        assert(err == 0);
+//    }
     
 done:
     if (checkinResponse != NULL) {

@@ -98,8 +98,7 @@
 		DA0CAE6516C4813600EDE2C5 /* PreventDisplaySleepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0CAE6416C4813600EDE2C5 /* PreventDisplaySleepAction.m */; };
 		DA0E648615EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E648515EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DA16392613D4B14A00E3F421 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = DA16392513D4B14A00E3F421 /* dsa_pub.pem */; };
-		DA1E59D21673A039002D256D /* Growl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA1E59D11673A039002D256D /* Growl.framework */; };
-		DA1E59D41673A2F7002D256D /* Growl.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DA1E59D11673A039002D256D /* Growl.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		/* Removed Growl.framework references */
 		DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DA2479B21C664CEC00063E8E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; };
 		DA2523BD1968601400F717FC /* ConnectBluetoothDeviceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */; };
@@ -196,6 +195,7 @@
 		DE3670AB28C0407F003A200D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
 		DE99DE3C28C034910014E380 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
 		DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */; };
+		DEEADC5228FCABBC000677F1 /* ToggleAutomaticSwitchingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -238,7 +238,7 @@
 			files = (
 				DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */,
 				DA87D18014EE0E8300E46DFF /* MapKit.framework in Copy Frameworks */,
-				DA1E59D41673A2F7002D256D /* Growl.framework in Copy Frameworks */,
+				/* Removed Growl.framework reference */
 				DACCA0A11DD7A48B007F7373 /* HockeySDK.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -509,7 +509,7 @@
 		DA146F7E143F3C4000906DBF /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "da-DK"; path = "da-DK.lproj/CoreLocationRule.xib"; sourceTree = "<group>"; };
 		DA146F7F143F3C4000906DBF /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
 		DA16392513D4B14A00E3F421 /* dsa_pub.pem */ = {isa = PBXFileReference; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
-		DA1E59D11673A039002D256D /* Growl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Growl.framework; path = Frameworks/Growl.framework; sourceTree = "<group>"; };
+		/* Removed Growl.framework reference */
 		DA2523BB1968601400F717FC /* ConnectBluetoothDeviceAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectBluetoothDeviceAction.h; path = Source/ConnectBluetoothDeviceAction.h; sourceTree = "<group>"; };
 		DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConnectBluetoothDeviceAction.m; path = Source/ConnectBluetoothDeviceAction.m; sourceTree = "<group>"; };
 		DA2B437F152161C800E94A1D /* ToggleTFTPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleTFTPAction.h; path = Source/ToggleTFTPAction.h; sourceTree = "<group>"; };
@@ -679,7 +679,7 @@
 		DDAE004C141521EF00FDADE8 /* CoreLocationSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreLocationSource.m; path = Source/CoreLocationSource.m; sourceTree = "<group>"; };
 		DDAEFFF91414714F00FDADE8 /* Action+HelperTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Action+HelperTool.h"; path = "Source/Action+HelperTool.h"; sourceTree = "<group>"; };
 		DDAEFFFA1414714F00FDADE8 /* Action+HelperTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Action+HelperTool.m"; path = "Source/Action+HelperTool.m"; sourceTree = "<group>"; };
-		DDC3C2A11412A82000655F34 /* Growl Registration Ticket.growlRegDict */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "Growl Registration Ticket.growlRegDict"; path = "Resources/Growl Registration Ticket.growlRegDict"; sourceTree = "<group>"; };
+		/* Removed Growl Registration Ticket.growlRegDict file reference */
 		DDDF1C291411D49300DB0018 /* DefaultBrowserAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DefaultBrowserAction.h; path = Source/DefaultBrowserAction.h; sourceTree = "<group>"; };
 		DDDF1C2A1411D49300DB0018 /* DefaultBrowserAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DefaultBrowserAction.m; path = Source/DefaultBrowserAction.m; sourceTree = "<group>"; };
 		DDDF1C2D1411E07F00DB0018 /* ITunesPlaylistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ITunesPlaylistAction.h; path = Source/ITunesPlaylistAction.h; sourceTree = "<group>"; };
@@ -689,6 +689,8 @@
 		DDFF423014156B0A0047D311 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = location.png; path = Resources/location.png; sourceTree = "<group>"; };
 		DE99DE3B28C034910014E380 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetFS.framework; path = System/Library/Frameworks/NetFS.framework; sourceTree = SDKROOT; };
+		DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleAutomaticSwitchingAction.m; path = Source/ToggleAutomaticSwitchingAction.m; sourceTree = "<group>"; };
+		DEEADC5128FCABBC000677F1 /* ToggleAutomaticSwitchingAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleAutomaticSwitchingAction.h; path = Source/ToggleAutomaticSwitchingAction.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -715,7 +717,7 @@
 				8D82F06D0AA811CE009ADA44 /* SystemConfiguration.framework in Frameworks */,
 				8D3BFFB20C61CA5300B9B910 /* WebKit.framework in Frameworks */,
 				DA4411A514EE03C9005E7B3B /* MapKit.framework in Frameworks */,
-				DA1E59D21673A039002D256D /* Growl.framework in Frameworks */,
+				/* Removed Growl.framework in Frameworks */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -781,7 +783,7 @@
 			isa = PBXGroup;
 			children = (
 				DA80EC4B17681C5000EAEBFF /* libcups.dylib */,
-				DA1E59D11673A039002D256D /* Growl.framework */,
+				/* Removed Growl.framework */
 				DA4411A414EE03C9005E7B3B /* MapKit.framework */,
 				8D20720E0B86AB0000D61A9E /* Sparkle.framework */,
 			);
@@ -875,7 +877,7 @@
 				8D4DBDC20BE1E3C00024DEA0 /* gear.png */,
 				8D232F7F0BD9D228006A3963 /* GeneralPrefs.png */,
 				96454D3D18C3E6BE004F64E7 /* GeneralPrefs@2x.png */,
-				DDC3C2A11412A82000655F34 /* Growl Registration Ticket.growlRegDict */,
+				/* Removed Growl Registration Ticket */
 				8D1107310486CEB800E47090 /* Info.plist */,
 				DDFF423014156B0A0047D311 /* location.png */,
 				8D1A45590BA00DE2004A6BC4 /* minus-8.png */,
@@ -1150,6 +1152,8 @@
 				DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */,
 				DA04D57015DC119E004B9E1C /* ToggleContextStickinessAction.h */,
 				DA04D57115DC119E004B9E1C /* ToggleContextStickinessAction.m */,
+				DEEADC5128FCABBC000677F1 /* ToggleAutomaticSwitchingAction.h */,
+				DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */,
 			);
 			name = "Application Actions";
 			sourceTree = "<group>";
@@ -1318,7 +1322,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0940;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = YV4RHGCYFA;
@@ -1437,7 +1441,7 @@
 				DDA201581411C35700DE570E /* LightRule.xib in Resources */,
 				DDA201621411C37300DE570E /* MainMenu.xib in Resources */,
 				DDA2016C1411C38D00DE570E /* TimeOfDayRule.xib in Resources */,
-				DDC3C2A21412A82000655F34 /* Growl Registration Ticket.growlRegDict in Resources */,
+				/* Removed Growl Registration Ticket in Resources */
 				DD44B59F14142D2D0016BF6B /* CPHelperToolAuthorizationPrompts.strings in Resources */,
 				DD3BAB8314163C6B000D5F88 /* CoreLocationRule.xib in Resources */,
 				DDFF423114156B0A0047D311 /* location.png in Resources */,
@@ -1585,6 +1589,7 @@
 				DA461C0C14C33E3C0019594A /* NSString+ShellScriptHelper.m in Sources */,
 				DA49AF6C14C3E0AB00D03D6A /* TogglePrinterSharingAction.m in Sources */,
 				DAC45F2014CDEC170007F5EF /* TimeMachineDestinationAction.m in Sources */,
+				DEEADC5228FCABBC000677F1 /* ToggleAutomaticSwitchingAction.m in Sources */,
 				DA72BFF615019D8C003072C6 /* CPBonjourResolver.m in Sources */,
 				DA571B71151587B80074CE22 /* ToggleFileSharingAction.m in Sources */,
 				DA41954D151C17F000FF7BA0 /* ActionSubmenuItem.m in Sources */,
@@ -1851,6 +1856,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -1877,6 +1883,7 @@
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
@@ -1907,12 +1914,20 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1960,7 +1975,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1974,12 +1989,20 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -2024,7 +2047,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2037,6 +2060,7 @@
 		DA5B01DF1412B6A700E19C50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
@@ -2048,6 +2072,7 @@
 		DA5B01E01412B6A700E19C50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
@@ -2059,6 +2084,7 @@
 		DA5B02031412BB1800E19C50 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = "CPHelperTool-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
@@ -2080,6 +2106,7 @@
 		DA5B02041412BB1800E19C50 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "";
 				INFOPLIST_FILE = "CPHelperTool-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;

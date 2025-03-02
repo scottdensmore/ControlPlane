@@ -256,6 +256,7 @@
 #import "SpeakAction.h"
 #import "StartTimeMachineAction.h"
 #import "TimeMachineDestinationAction.h"
+#import "ToggleAutomaticSwitchingAction.h"
 #import "ToggleBluetoothAction.h"
 #import "ToggleContextStickinessAction.h"
 #import "ToggleFileSharingAction.h"
@@ -322,6 +323,7 @@
 			   [SpeakAction class],
 			   [StartTimeMachineAction class],
                [TimeMachineDestinationAction class],
+               [ToggleAutomaticSwitchingAction class],
 			   [ToggleBluetoothAction class],
                [ToggleContextStickinessAction class],
                [ToggleFileSharingAction class],
@@ -406,6 +408,7 @@
 		NSLocalizedString(@"Speak", @"Action type");
 		NSLocalizedString(@"StartTimeMachine", @"Action type");
         NSLocalizedString(@"TimeMachineDestination", @"Action type");
+        NSLocalizedString(@"ToggleAutomaticSwitching", @"Action type");
 		NSLocalizedString(@"ToggleBluetooth", @"Action type");
         NSLocalizedString(@"ToggleContextStickiness", @"Action type");
         NSLocalizedString(@"ToggleFileSharing", @"Action type");
