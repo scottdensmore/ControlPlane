@@ -98,7 +98,6 @@
 		DA0CAE6516C4813600EDE2C5 /* PreventDisplaySleepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0CAE6416C4813600EDE2C5 /* PreventDisplaySleepAction.m */; };
 		DA0E648615EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E648515EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DA16392613D4B14A00E3F421 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = DA16392513D4B14A00E3F421 /* dsa_pub.pem */; };
-		/* Removed Growl.framework references */
 		DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DA2479B21C664CEC00063E8E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; };
 		DA2523BD1968601400F717FC /* ConnectBluetoothDeviceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */; };
@@ -186,7 +185,6 @@
 		DDAC3C55140D866200FBF29E /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDAC3C54140D866200FBF29E /* ScriptingBridge.framework */; };
 		DDAE0017141474DC00FDADE8 /* CPController+SleepMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAE0016141474DC00FDADE8 /* CPController+SleepMonitor.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DDAEFFFB1414714F00FDADE8 /* Action+HelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DDAEFFFA1414714F00FDADE8 /* Action+HelperTool.m */; };
-		DDC3C2A21412A82000655F34 /* Growl Registration Ticket.growlRegDict in Resources */ = {isa = PBXBuildFile; fileRef = DDC3C2A11412A82000655F34 /* Growl Registration Ticket.growlRegDict */; };
 		DDDF1C2B1411D49300DB0018 /* DefaultBrowserAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDF1C2A1411D49300DB0018 /* DefaultBrowserAction.m */; };
 		DDDF1C2F1411E08000DB0018 /* ITunesPlaylistAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DDDF1C2E1411E07F00DB0018 /* ITunesPlaylistAction.m */; };
 		DDE1B068140438DB006564A6 /* ControlPlane.sdef in Resources */ = {isa = PBXBuildFile; fileRef = DDE1B067140438DB006564A6 /* ControlPlane.sdef */; };
@@ -238,7 +236,6 @@
 			files = (
 				DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */,
 				DA87D18014EE0E8300E46DFF /* MapKit.framework in Copy Frameworks */,
-				/* Removed Growl.framework reference */
 				DACCA0A11DD7A48B007F7373 /* HockeySDK.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -509,7 +506,6 @@
 		DA146F7E143F3C4000906DBF /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "da-DK"; path = "da-DK.lproj/CoreLocationRule.xib"; sourceTree = "<group>"; };
 		DA146F7F143F3C4000906DBF /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
 		DA16392513D4B14A00E3F421 /* dsa_pub.pem */ = {isa = PBXFileReference; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
-		/* Removed Growl.framework reference */
 		DA2523BB1968601400F717FC /* ConnectBluetoothDeviceAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectBluetoothDeviceAction.h; path = Source/ConnectBluetoothDeviceAction.h; sourceTree = "<group>"; };
 		DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConnectBluetoothDeviceAction.m; path = Source/ConnectBluetoothDeviceAction.m; sourceTree = "<group>"; };
 		DA2B437F152161C800E94A1D /* ToggleTFTPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleTFTPAction.h; path = Source/ToggleTFTPAction.h; sourceTree = "<group>"; };
@@ -679,7 +675,6 @@
 		DDAE004C141521EF00FDADE8 /* CoreLocationSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoreLocationSource.m; path = Source/CoreLocationSource.m; sourceTree = "<group>"; };
 		DDAEFFF91414714F00FDADE8 /* Action+HelperTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Action+HelperTool.h"; path = "Source/Action+HelperTool.h"; sourceTree = "<group>"; };
 		DDAEFFFA1414714F00FDADE8 /* Action+HelperTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Action+HelperTool.m"; path = "Source/Action+HelperTool.m"; sourceTree = "<group>"; };
-		/* Removed Growl Registration Ticket.growlRegDict file reference */
 		DDDF1C291411D49300DB0018 /* DefaultBrowserAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DefaultBrowserAction.h; path = Source/DefaultBrowserAction.h; sourceTree = "<group>"; };
 		DDDF1C2A1411D49300DB0018 /* DefaultBrowserAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DefaultBrowserAction.m; path = Source/DefaultBrowserAction.m; sourceTree = "<group>"; };
 		DDDF1C2D1411E07F00DB0018 /* ITunesPlaylistAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ITunesPlaylistAction.h; path = Source/ITunesPlaylistAction.h; sourceTree = "<group>"; };
@@ -717,7 +712,6 @@
 				8D82F06D0AA811CE009ADA44 /* SystemConfiguration.framework in Frameworks */,
 				8D3BFFB20C61CA5300B9B910 /* WebKit.framework in Frameworks */,
 				DA4411A514EE03C9005E7B3B /* MapKit.framework in Frameworks */,
-				/* Removed Growl.framework in Frameworks */
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,7 +777,6 @@
 			isa = PBXGroup;
 			children = (
 				DA80EC4B17681C5000EAEBFF /* libcups.dylib */,
-				/* Removed Growl.framework */
 				DA4411A414EE03C9005E7B3B /* MapKit.framework */,
 				8D20720E0B86AB0000D61A9E /* Sparkle.framework */,
 			);
@@ -877,7 +870,6 @@
 				8D4DBDC20BE1E3C00024DEA0 /* gear.png */,
 				8D232F7F0BD9D228006A3963 /* GeneralPrefs.png */,
 				96454D3D18C3E6BE004F64E7 /* GeneralPrefs@2x.png */,
-				/* Removed Growl Registration Ticket */
 				8D1107310486CEB800E47090 /* Info.plist */,
 				DDFF423014156B0A0047D311 /* location.png */,
 				8D1A45590BA00DE2004A6BC4 /* minus-8.png */,
@@ -1325,7 +1317,7 @@
 				LastUpgradeCheck = 0940;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
-						DevelopmentTeam = YV4RHGCYFA;
+						DevelopmentTeam = 27ZDER873F;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1441,7 +1433,6 @@
 				DDA201581411C35700DE570E /* LightRule.xib in Resources */,
 				DDA201621411C37300DE570E /* MainMenu.xib in Resources */,
 				DDA2016C1411C38D00DE570E /* TimeOfDayRule.xib in Resources */,
-				/* Removed Growl Registration Ticket in Resources */
 				DD44B59F14142D2D0016BF6B /* CPHelperToolAuthorizationPrompts.strings in Resources */,
 				DD3BAB8314163C6B000D5F88 /* CoreLocationRule.xib in Resources */,
 				DDFF423114156B0A0047D311 /* location.png in Resources */,
@@ -1474,7 +1465,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "\nif [ ! -f ${PROJECT_DIR}/Resources/oui.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-oui.sh\n\nfi\n\nif [ ! -f ${PROJECT_DIR}/Resources/usb-vendors.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-usb-data.sh\n\nfi";
+			shellScript = "\nif [ ! -f ${PROJECT_DIR}/Resources/oui.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-oui.sh\n\nfi\n\nif [ ! -f ${PROJECT_DIR}/Resources/usb-vendors.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-usb-data.sh\n\nfi\n";
 		};
 		DACCA09E1DD7A2D4007F7373 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1487,7 +1478,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "FILE=\"${SRCROOT}/HockeySDK-Mac/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
+			shellScript = "FILE=\"${SRCROOT}/HockeySDK-Mac/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi\n";
 		};
 		DD7CD9B0140EDBA90037463E /* Generate Script Bridge Headers */ = {
 			isa = PBXShellScriptBuildPhase;
