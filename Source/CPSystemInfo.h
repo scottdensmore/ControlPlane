@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <IOKit/graphics/IOGraphicsLib.h>
+#include <IOKit/IOKitLib.h>
 
 @interface CPSystemInfo : NSObject
 
@@ -22,5 +24,7 @@
 
 + (NSInteger) getOSVersion;
 
+// Add this to your header file
++ (io_service_t) IOServicePortFromCGDisplayID:(CGDirectDisplayID) displayID;
 
 @end
