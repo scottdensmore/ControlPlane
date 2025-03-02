@@ -117,6 +117,8 @@
 - (void)forceSwitchAndToggleSticky:(id)sender;
 - (void)setStickyBit:(NSNotification *) notification;
 - (void)unsetStickyBit:(NSNotification *) notification;
+- (void)enableAutomaticSwitching:(NSNotification *) notification;
+- (void)disableAutomaticSwitching:(NSNotification *) notification;
 
 - (void)registerForNotifications;
 
@@ -649,6 +651,16 @@ static NSSet *sharedActiveContexts = nil;
 											   object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enableAutomaticSwitching:)
+                                                 name:@"enableAutomaticSwitching"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(disableAutomaticSwitching:)
+                                                 name:@"disableAutomaticSwitching"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateMenuBarImageOnIconColorPreviewNotification:)
                                                  name:@"iconColorPreviewRequested"
                                                object:nil];
@@ -664,6 +676,16 @@ static NSSet *sharedActiveContexts = nil;
     
 }
 
+- (void)enableAutomaticSwitching:(NSNotification *) notification {
+    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
+
+- (void)disableAutomaticSwitching:(NSNotification *) notification {
+    [[NSUserDefaults standardUserDefaults] setValue:[NSNumber numberWithBool:NO] forKey:@"Enabled"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 #pragma mark Menu Bar Wrangling
 
