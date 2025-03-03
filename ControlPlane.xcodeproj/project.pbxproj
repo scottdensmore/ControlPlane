@@ -1324,7 +1324,7 @@
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "ControlPlane" */;
 			compatibilityVersion = "Xcode 10.0";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -1335,26 +1335,21 @@
 				it,
 				pt_BR,
 				ar,
-				Dutch,
-				English,
 				fi,
-				French,
-				German,
-				Italian,
-				Japanese,
 				ko,
 				no,
 				pl,
 				pt,
 				pt_PT,
 				ru,
-				Spanish,
 				sv,
 				zh_CN,
 				zh_TW,
 				"da-DK",
 				"pt-BR",
 				"pt-PT",
+				ja,
+				es,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* ControlPlane */;
 			projectDirPath = "";
@@ -1495,7 +1490,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\nmkdir -p $DERIVED_FILES_DIR\nfor (( i=0; i < $SCRIPT_INPUT_FILE_COUNT; i++ )); do\n    \n    appFile=\"$(eval echo \\$SCRIPT_INPUT_FILE_$i | cut -d ':' -f 2)\"\n    bundleid=\"$(eval echo \\$SCRIPT_INPUT_FILE_$i | cut -d ':' -f 1)\"\n\n\n    sdef \"/Applications/$appFile.app\" | sdp -fh -o \"$DERIVED_FILES_DIR\" --basename ${appFile} --bundleid ${bundleid}\ndone";
+			shellScript = "\nmkdir -p $DERIVED_FILES_DIR\nfor (( i=0; i < $SCRIPT_INPUT_FILE_COUNT; i++ )); do\n    \n    appFile=\"$(eval echo \\$SCRIPT_INPUT_FILE_$i | cut -d ':' -f 2)\"\n    bundleid=\"$(eval echo \\$SCRIPT_INPUT_FILE_$i | cut -d ':' -f 1)\"\n\n\n    sdef \"/Applications/$appFile.app\" | sdp -fh -o \"$DERIVED_FILES_DIR\" --basename ${appFile} --bundleid ${bundleid}\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
