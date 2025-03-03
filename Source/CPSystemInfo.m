@@ -67,7 +67,7 @@
     while ((serv = IOIteratorNext(iter)) != 0)
     {
         CFDictionaryRef info;
-        CFIndex vendorID, productID, serialNumber;
+        CFIndex vendorID, productID, serialNumber = 0;
         CFNumberRef vendorIDRef, productIDRef, serialNumberRef;
         Boolean success;
         
@@ -78,15 +78,21 @@
                                            CFSTR(kDisplayVendorID));
         productIDRef = CFDictionaryGetValue(info,
                                             CFSTR(kDisplayProductID));
-        serialNumberRef = CFDictionaryGetValue(info,
-                                               CFSTR(kDisplaySerialNumber));
+//        serialNumberRef = CFDictionaryGetValue(info,
+//                                               CFSTR(kDisplaySerialNumber));
         
         success = CFNumberGetValue(vendorIDRef, kCFNumberCFIndexType,
                                    &vendorID);
         success &= CFNumberGetValue(productIDRef, kCFNumberCFIndexType,
                                     &productID);
-        success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
-                                    &serialNumber);
+//        success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
+//                                        &serialNumber);
+        const void *serialNumberPtr;
+        if (CFDictionaryGetValueIfPresent(info, CFSTR(kDisplaySerialNumber), &serialNumberPtr)) {
+            serialNumberRef = (CFNumberRef)serialNumberPtr;
+            success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
+                                        &serialNumber);
+        }
         
         if (!success)
         {
