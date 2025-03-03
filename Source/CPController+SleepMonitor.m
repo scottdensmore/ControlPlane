@@ -28,7 +28,7 @@ io_connect_t rootPort = 0;
 CFRunLoopSourceRef powerAdapterChanged = NULL, powerPortNotification = NULL;
 
 static void sleepCallBack(void *refCon, io_service_t service, natural_t messageType, void *argument);
-static void powerAdapterChangedCallBack();
+static void powerAdapterChangedCallBack(void *context);
 
 @implementation CPController (SleepMonitor)
 
@@ -81,7 +81,7 @@ static void powerAdapterChangedCallBack();
 }
 
 
-static void powerAdapterChangedCallBack() {
+static void powerAdapterChangedCallBack(void *context) {
 #ifdef DEBUG_MODE
     DSLog(@"System notification on power adapter change");
 #endif
