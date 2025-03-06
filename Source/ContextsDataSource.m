@@ -305,10 +305,12 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 
 	// XXX: hackish -- but will be enough until 3.0
     // don't force data update if we're editing a context name
-	NSOutlineView *olv = [self valueForKey:@"outlineView"];
-	if ([olv currentEditor] == nil) {
-        [self triggerOutlineViewReloadData:nil];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSOutlineView *olv = [self valueForKey:@"outlineView"];
+        if ([olv currentEditor] == nil) {
+            [self triggerOutlineViewReloadData:nil];
+        }
+    });
 }
 
 #pragma mark -

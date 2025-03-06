@@ -232,13 +232,7 @@
 #import "DisplayBrightnessAction.h"
 #import "DisplaySleepTimeAction.h"
 #import "FirewallRuleAction.h"
-//#import "IChatAction.h"
-#import "ITunesPlaylistAction.h"
 #import "LockKeychainAction.h"
-#import "MailIMAPServerAction.h"
-#import "MailSMTPServerAction.h"
-#import "MailIntervalAction.h"
-#import "MessagesAction.h"
 #import "MountAction.h"
 #import "MuteAction.h"
 #import "NetworkLocationAction.h"
@@ -300,12 +294,7 @@
 			   [DesktopBackgroundAction class],
 			   [DisplayBrightnessAction class],
                [DisplaySleepTimeAction class],
-			   [ITunesPlaylistAction class],
 			   [LockKeychainAction class],
-			   [MailIMAPServerAction class],
-			   [MailSMTPServerAction class],
-			   [MailIntervalAction class],
-               [MessagesAction class],
 			   [MountAction class],
 			   [MuteAction class],
 			   [NetworkLocationAction class],
@@ -386,12 +375,7 @@
         NSLocalizedString(@"DefaultPrinter", @"Action type");
 		NSLocalizedString(@"DesktopBackground", @"Action type");
 		NSLocalizedString(@"DisplayBrightness", @"Action type");
-		NSLocalizedString(@"iTunesPlaylist", @"Action type");
 		NSLocalizedString(@"LockKeychain", @"Action type");
-		NSLocalizedString(@"MailIMAPServer", @"Action type");
-		NSLocalizedString(@"MailSMTPServer", @"Action type");
-		NSLocalizedString(@"MailInterval", @"Action type");
-        NSLocalizedString(@"Messages", @"Action type");
 		NSLocalizedString(@"Mount", @"Action type");
 		NSLocalizedString(@"Mute", @"Action type");
 		NSLocalizedString(@"NetworkLocation", @"Action type");
