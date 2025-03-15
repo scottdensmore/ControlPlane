@@ -365,28 +365,30 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
     NSButton *strongNewContextSheetColorPreviewEnabled = newContextSheetColorPreviewEnabled;
     [strongNewContextSheetColorPreviewEnabled setIntValue:0];
 
-	[NSApp beginSheet:newContextSheet
-	   modalForWindow:prefsWindow
-	    modalDelegate:self
-	   didEndSelector:@selector(newContextSheetDidEnd:returnCode:contextInfo:)
-	      contextInfo:nil];
+	__weak typeof(self) weakSelf = self;
+    [prefsWindow beginSheet:newContextSheet completionHandler:^(NSModalResponse returnCode) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (strongSelf) {
+            [strongSelf newContextSheetDidEnd:self->newContextSheet returnCode:returnCode contextInfo:nil];
+        }
+    }];
 }
 
 // Triggered by OK button
 - (IBAction)newContextSheetAccepted:(id)sender {
 	NSPanel *strongNewContextSheet = newContextSheet;
-    [NSApp endSheet:strongNewContextSheet returnCode:NSOKButton];
+    [NSApp endSheet:strongNewContextSheet returnCode:NSModalResponseOK];
 	[strongNewContextSheet orderOut:nil];
 }
 
 // Triggered by cancel button
 - (IBAction)newContextSheetRejected:(id)sender {
 	NSPanel *strongNewContextSheet = newContextSheet;
-	[NSApp endSheet:strongNewContextSheet returnCode:NSCancelButton];
+    [NSApp endSheet:strongNewContextSheet returnCode:NSModalResponseCancel];
 	[strongNewContextSheet orderOut:nil];
 }
 
-- (void)newContextSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)newContextSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     NSButton *strongNewContextSheetColorPreviewEnabled = newContextSheetColorPreviewEnabled;
     if ([strongNewContextSheetColorPreviewEnabled intValue]) {
@@ -394,7 +396,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"iconColorPreviewFinished" object:nil];
     }
     
-	if (returnCode != NSOKButton) {
+    if (returnCode != NSModalResponseOK) {
 		return;
     }
     
@@ -423,14 +425,12 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
     NSButton *strongNewContextSheetColorPreviewEnabled = newContextSheetColorPreviewEnabled;
     [strongNewContextSheetColorPreviewEnabled setIntValue:0];
     
-	[NSApp beginSheet:newContextSheet
-	   modalForWindow:prefsWindow
-	    modalDelegate:self
-	   didEndSelector:@selector(editContextSheetDidEnd:returnCode:contextInfo:)
-	      contextInfo:nil];
+	[prefsWindow beginSheet:newContextSheet completionHandler:^(NSModalResponse returnCode) {
+        [self editContextSheetDidEnd:self->newContextSheet returnCode:returnCode contextInfo:nil];
+    }];
 }
 
-- (void)editContextSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)editContextSheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     NSOutlineView *strongOutlineView = outlineView;
     NSButton *strongNewContextSheetColorPreviewEnabled = newContextSheetColorPreviewEnabled;
@@ -439,7 +439,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
         [[NSNotificationCenter defaultCenter] postNotificationName:@"iconColorPreviewFinished" object:nil];
     }
     
-	if (returnCode != NSOKButton) {
+    if (returnCode != NSModalResponseOK) {
 		return;
     }
     
@@ -487,7 +487,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 	[contexts removeObjectForKey:uuid];
 }
 
-- (void)removeContextAfterAlert:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+- (void)removeContextAfterAlert:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
 	Context *ctxt = (__bridge Context *)contextInfo;
 
 	if (returnCode != NSAlertFirstButtonReturn) {
@@ -542,10 +542,9 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 		[alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];
 		[alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"")];
 
-		[alert beginSheetModalForWindow:prefsWindow
-				  modalDelegate:self
-				 didEndSelector:@selector(removeContextAfterAlert:returnCode:contextInfo:)
-				    contextInfo:(__bridge void *)ctxt];
+		[alert beginSheetModalForWindow:prefsWindow completionHandler:^(NSModalResponse returnCode) {
+            [self removeContextAfterAlert:alert returnCode:returnCode contextInfo:(__bridge void *)ctxt];
+        }];
 		return;
 	}
 

@@ -415,10 +415,17 @@ static int BASReadDictionary(int fdIn, CFDictionaryRef *dictPtr)
 		}
 	}
 	if (err == 0) {
-		dict = CFPropertyListCreateFromXMLData(NULL, dictData, kCFPropertyListImmutable, NULL);
-		if (dict == NULL) {
-			err = BASOSStatusToErrno( coreFoundationUnknownErr );
-		}
+		CFErrorRef error = NULL;
+        CFPropertyListFormat format = kCFPropertyListXMLFormat_v1_0;
+        dict = CFPropertyListCreateWithData(NULL, dictData, kCFPropertyListImmutable, &format, &error);
+                
+        if (dict == NULL) {
+            err = BASOSStatusToErrno(coreFoundationUnknownErr);
+            if (error != NULL) {
+                // Optional: You can log the error
+                CFRelease(error);
+            }
+        }
 	}
 	if ( (err == 0) && (CFGetTypeID(dict) != CFDictionaryGetTypeID()) ) {
 		err = EINVAL;		// only CFDictionaries need apply
@@ -465,10 +472,15 @@ static int BASWriteDictionary(CFDictionaryRef dict, int fdOut)
 	
     // Get the dictionary as XML data.
     
-	dictData = CFPropertyListCreateXMLData(NULL, dict);
-	if (dictData == NULL) {
-		err = BASOSStatusToErrno( coreFoundationUnknownErr );
-	}
+	CFErrorRef error = NULL;
+    dictData = CFPropertyListCreateData(NULL, dict, kCFPropertyListXMLFormat_v1_0, 0, &error);
+    if (dictData == NULL) {
+        err = BASOSStatusToErrno(coreFoundationUnknownErr);
+        if (error != NULL) {
+            // Optional: log the error information
+            CFRelease(error);
+        }
+    }
     
     // Send the length, then send the data.  Always send the length as a big-endian 
     // uint32_t, so that the app and the helper tool can be different architectures.

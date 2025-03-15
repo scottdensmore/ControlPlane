@@ -71,7 +71,8 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 }
 
 + (BOOL) isEvidenceSourceApplicableToSystem {
-    return ([[CWInterface interfaceNames] count] > 0);
+    CWWiFiClient *wifiClient = [CWWiFiClient sharedWiFiClient];
+    return ([wifiClient interfaces].count > 0);
 }
 
 - (void)start {
@@ -369,7 +370,8 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 }
 
 - (BOOL) getWiFiInterface {
-    NSArray *supportedInterfaces = [[CWInterface interfaceNames] allObjects];
+    CWWiFiClient *wifiClient = [CWWiFiClient sharedWiFiClient];
+    NSArray *supportedInterfaces = [wifiClient interfaces];
     
     // get a list of supported Wi-Fi interfaces.  It is unlikely, but still possible,
     // for there to be more than one interface, yet this assumes there is just one
@@ -381,7 +383,7 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
         return NO;
     }
 
-    self.currentInterface = [CWInterface interfaceWithName:supportedInterfaces[0]];
+    self.currentInterface = [wifiClient interfaceWithName:supportedInterfaces[0]];
     self.interfaceBSDName = [self.currentInterface interfaceName];
 
 #ifdef DEBUG_MODE

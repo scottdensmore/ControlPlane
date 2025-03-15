@@ -243,9 +243,12 @@ BOOL installHelperToolUsingSMJobBless(void) {
         {
             NSLog(@"Failed to install privileged helper: %@", [error description]);
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSRunAlertPanel(@"Error",
-                                @"Failed to install privileged helper: %@",
-                                @"OK", nil, nil, [error description]);
+               NSAlert *alert = [[NSAlert alloc] init];
+                [alert setMessageText:NSLocalizedString(@"Error", @"Error")];
+                [alert setInformativeText:[NSString stringWithFormat:@"Failed to install privileged helper: %@", [error description]]];
+                [alert addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
+                [alert runModal];
+                [alert release];
             });
             
             return NO;
@@ -295,11 +298,14 @@ BOOL blessHelperWithLabel(NSString* label, NSError** error) {
 }
 
 - (void) helperToolAlert: (NSMutableDictionary *) parameters {
-	NSInteger t = NSRunAlertPanel(NSLocalizedString(@"ControlPlane Helper Needed", @"Fix helper tool"),
-								  NSLocalizedString(@"ControlPlane needs to install a helper app to enable and disable some items", @"Fix helper tool"),
-								  NSLocalizedString(@"Install", @"Fix helper tool"),
-								  NSLocalizedString(@"Cancel", @"Fix helper tool"),
-								  NULL);
+	NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:NSLocalizedString(@"ControlPlane Helper Needed", @"Fix helper tool")];
+    [alert setInformativeText:NSLocalizedString(@"ControlPlane needs to install a helper app to enable and disable some items", @"Fix helper tool")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Install", @"Fix helper tool")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Fix helper tool")];
+
+    NSInteger t = [alert runModal];
+    [alert release];
 	
 	[parameters setObject: [NSNumber numberWithInteger: t] forKey: @"result"];
 }
