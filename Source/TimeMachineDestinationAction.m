@@ -82,7 +82,7 @@
 
 + (NSArray *) limitedOptions {
     NSString* TediumPath = [[NSWorkspace sharedWorkspace] 
-                            absolutePathForAppBundleWithIdentifier:@"com.dustinrue.Tedium"];
+                            absolutePathForAppBundleWithIdentifier:@"com.scottdensmore.Tedium"];
     if (!TediumPath) {
         [[[self new] autorelease] performSelectorOnMainThread:@selector(tediumNotInstalledAlert) withObject:self waitUntilDone:YES];
         return nil;

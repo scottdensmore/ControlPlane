@@ -144,26 +144,25 @@
 
 - (void)handleURL:(NSString *)url {
     NSString *browser = [[NSUserDefaults standardUserDefaults] valueForKey:@"currentDefaultBrowser"];
-
     
     if (!browser) {
         browser = @"com.apple.Safari";
     }
     
     NSString *decodedURL = [url stringByRemovingPercentEncoding];
-    NSString *newURL = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                           NULL,
-                                                                           (CFStringRef)decodedURL,
-                                                                           (CFStringRef)@"#",
-                                                                           (CFStringRef)@" ",
-                                                                           kCFStringEncodingUTF8 );
-    NSArray *urls = [NSArray arrayWithObject:[NSURL URLWithString:newURL]];
-    [newURL release];
-
-
-    [[NSWorkspace sharedWorkspace] openURLs:urls withAppBundleIdentifier:browser options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifiers:nil];
+    
+    // Replace deprecated CFURLCreateStringByAddingPercentEscapes with modern API
+    NSString *newURL = [decodedURL stringByAddingPercentEncodingWithAllowedCharacters:
+                       [NSCharacterSet URLQueryAllowedCharacterSet]];
+    
+    NSArray *urls = @[[NSURL URLWithString:newURL]];
+    
+    // Updated API call for macOS 15
+    [[NSWorkspace sharedWorkspace] openURLs:urls
+                    withApplicationAtURL:[NSWorkspace.sharedWorkspace URLForApplicationWithBundleIdentifier:browser]
+                                 options:NSWorkspaceLaunchDefault
+                          configuration:@{}
+                                  error:nil];
 }
-
-
 
 @end

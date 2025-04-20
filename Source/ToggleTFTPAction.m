@@ -7,7 +7,6 @@
 //
 
 #import "ToggleTFTPAction.h"
-#import "CPHelperToolCommon.h"
 #import "Action+HelperTool.h"
 
 @implementation ToggleTFTPAction
@@ -21,7 +20,7 @@
 
 - (BOOL) execute: (NSString **) errorString {
     
-    NSString *command = turnOn ? @kCPHelperToolEnableTFTPCommand : @kCPHelperToolDisableTFTPCommand;
+    NSString *command = turnOn ? kCPHelperEnableTFTPCommand : kCPHelperDisableTFTPCommand;
 	
 	BOOL success = [self helperToolPerformAction: command];
     

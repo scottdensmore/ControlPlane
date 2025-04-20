@@ -329,19 +329,29 @@
 static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 - (void)persistCurrentViewSize {
-	NSSize minSize = [prefsWindow minSize], maxSize = [prefsWindow maxSize];
+    NSSize minSize = [prefsWindow minSize], maxSize = [prefsWindow maxSize];
     if (currentPrefsGroup && ((minSize.width < maxSize.width) || (minSize.height < maxSize.height))) {
         NSString *sizeParamName = [sizeParamPrefix stringByAppendingString:currentPrefsGroup];
-
-		NSSize size  = [prefsWindow frame].size;
+        
+        NSSize size = [prefsWindow frame].size;
         if ((size.width > minSize.width) || (size.height > minSize.height)) {
             size.height -= [self toolbarHeight] + [self titleBarHeight];
-            NSData *persistedSize = [NSArchiver archivedDataWithRootObject:[NSValue valueWithSize:size]];
+            
+            NSError *archiveError = nil;
+            NSData *persistedSize = [NSKeyedArchiver archivedDataWithRootObject:[NSValue valueWithSize:size]
+                                                         requiringSecureCoding:NO
+                                                                         error:&archiveError];
+            
+            if (archiveError) {
+                NSLog(@"Error archiving size: %@", archiveError);
+                return;
+            }
+            
             [[NSUserDefaults standardUserDefaults] setObject:persistedSize forKey:sizeParamName];
         } else {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:sizeParamName];
         }
-	}
+    }
 }
 
 - (NSValue *)getPersistedSizeOfViewNamed:(NSString *)name {
@@ -350,8 +360,18 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     if (!persistedSize) {
         return nil;
     }
-
-    return (NSValue *) [NSUnarchiver unarchiveObjectWithData:persistedSize];
+    
+    NSError *error = nil;
+    NSValue *value = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSValue class]
+                                                       fromData:persistedSize
+                                                          error:&error];
+    
+    if (error) {
+        NSLog(@"Error unarchiving size value: %@", error);
+        return nil;
+    }
+    
+    return value;
 }
 
 - (void)onPrefsWindowClose:(NSNotification *)notification {

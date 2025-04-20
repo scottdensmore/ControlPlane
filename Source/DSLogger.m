@@ -121,7 +121,7 @@ static DSLogger *sharedLogger = nil;
 	buffer = [[NSMutableArray alloc] initWithCapacity:DSLOGGER_CAPACITY];
 	startIndex = count = 0u;
 
-    serialQueue = dispatch_queue_create("com.dustinrue.ControlPlane.DSLogger", DISPATCH_QUEUE_SERIAL);
+    serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.DSLogger", DISPATCH_QUEUE_SERIAL);
     if (!serialQueue) {
         self = nil;
         return nil;

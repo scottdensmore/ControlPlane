@@ -179,7 +179,7 @@ static BOOL addDNSServersToSet(NSDictionary *dict, NSString *dnsKey, NSMutableSe
 		return;
     }
 
-    serialQueue = dispatch_queue_create("com.dustinrue.ControlPlane.DNSEvidenceSource", DISPATCH_QUEUE_SERIAL);
+    serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.DNSEvidenceSource", DISPATCH_QUEUE_SERIAL);
     if (!serialQueue) {
         [self doStop];
         return;

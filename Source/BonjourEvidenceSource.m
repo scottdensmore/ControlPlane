@@ -50,7 +50,7 @@
 
 #pragma mark -
 
-#define ES_QUEUE_PREFIX "com.dustinrue.ControlPlane.BonjourEvidenceSource"
+#define ES_QUEUE_PREFIX "com.scottdensmore.ControlPlane.BonjourEvidenceSource"
 #define NET_SERVICE_RESOLVE_TIMEOUT_SECS 2
 
 @implementation BonjourEvidenceSource

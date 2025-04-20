@@ -65,7 +65,7 @@
 {
 	NSNumber *n = [NSNumber numberWithInt:[time intValue]];
     
-	BOOL success = [self helperToolPerformAction:@kCPHelperToolSetDisplaySleepTimeCommand withParameter:n];
+    BOOL success = [self helperToolPerformAction:kCPHelperSetDisplaySleepTimeCommand withParameter:n];
     
 	if (success) {
 

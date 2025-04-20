@@ -115,7 +115,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 		return;
     }
 
-    serialQueue = dispatch_queue_create("com.dustinrue.ControlPlane.NetworkLink", DISPATCH_QUEUE_SERIAL);
+    serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.NetworkLink", DISPATCH_QUEUE_SERIAL);
     if (!serialQueue) {
         [self doStop];
         return;

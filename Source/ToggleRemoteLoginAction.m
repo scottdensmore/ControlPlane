@@ -7,7 +7,6 @@
 //
 
 #import "ToggleRemoteLoginAction.h"
-#import "CPHelperToolCommon.h"
 #import "Action+HelperTool.h"
 
 @implementation ToggleRemoteLoginAction
@@ -21,7 +20,7 @@
 
 - (BOOL) execute: (NSString **) errorString {
     
-    NSString *command = turnOn ? @kCPHelperToolEnableRemoteLoginCommand : @kCPHelperToolDisableRemoteLoginCommand;
+    NSString *command = turnOn ? kCPHelperEnableRemoteLoginCommand : kCPHelperDisableRemoteLoginCommand;
 	
 	BOOL success = [self helperToolPerformAction: command];
     

@@ -7,7 +7,7 @@
 //
 
 #import "Action.h"
-#import "CPHelperToolCommon.h"
+#import "../CPHelperTool/CPHelperCommon.h"
 
 @interface Action (HelperTool)
 

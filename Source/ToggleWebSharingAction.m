@@ -7,7 +7,6 @@
 //
 
 #import "ToggleWebSharingAction.h"
-#import "CPHelperToolCommon.h"
 #import "Action+HelperTool.h"
 
 @implementation ToggleWebSharingAction
@@ -21,7 +20,7 @@
 
 - (BOOL) execute: (NSString **) errorString {
     
-    NSString *command = turnOn ? @kCPHelperToolEnableWebSharingCommand : @kCPHelperToolDisableWebSharingCommand;
+    NSString *command = turnOn ? kCPHelperEnableWebSharingCommand : kCPHelperDisableWebSharingCommand;
 	
 	BOOL success = [self helperToolPerformAction: command];
     

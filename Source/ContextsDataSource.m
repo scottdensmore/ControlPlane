@@ -46,20 +46,29 @@
 - (id)initWithDictionary:(NSDictionary *)dict
 {
     self = [super init];
-	if (self == nil) {
-		return nil;
+    if (self == nil) {
+        return nil;
     }
 
-	_uuid = [dict[@"uuid"] copy];
-	_parentUUID = [dict[@"parent"] copy];
-	_name = [dict[@"name"] copy];
+    _uuid = [dict[@"uuid"] copy];
+    _parentUUID = [dict[@"parent"] copy];
+    _name = [dict[@"name"] copy];
 
     NSData *colorData = dict[@"iconColor"];
     if (colorData != nil) {
-        _iconColor = [(NSColor *) [NSUnarchiver unarchiveObjectWithData:colorData] copy];
+        // Replace deprecated NSUnarchiver with NSKeyedUnarchiver
+        NSError *error = nil;
+        _iconColor = [(NSColor *)[NSKeyedUnarchiver unarchivedObjectOfClass:[NSColor class]
+                                                                   fromData:colorData
+                                                                      error:&error] copy];
+        
+        // Handle error if needed
+        if (error != nil) {
+            NSLog(@"Error unarchiving color data: %@", error);
+        }
     }
 
-	return self;
+    return self;
 }
 
 - (NSColor *)iconColor
@@ -83,7 +92,18 @@
         return @{ @"uuid": self.uuid, @"parent": self.parentUUID, @"name": self.name };
     }
 
-    NSData *colorData = [NSArchiver archivedDataWithRootObject:(_iconColor)];
+    // NSArchiver is deprecated, use NSKeyedArchiver instead
+    NSData *colorData;
+    NSError *error = nil;
+    
+    // The secure coding option is recommended for macOS 10.15
+    colorData = [NSKeyedArchiver archivedDataWithRootObject:_iconColor requiringSecureCoding:NO error:&error];
+    
+    if (error || !colorData) {
+        NSLog(@"Error archiving color: %@", error);
+        return @{ @"uuid": self.uuid, @"parent": self.parentUUID, @"name": self.name };
+    }
+    
     return @{ @"uuid": self.uuid, @"parent": self.parentUUID, @"name": self.name, @"iconColor": colorData };
 }
 
@@ -536,7 +556,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 	if ([[self childrenOfContext:[ctxt uuid]] count] > 0) {
 		// Warn about destroying child contexts
 		NSAlert *alert = [[NSAlert alloc] init];
-		[alert setAlertStyle:NSWarningAlertStyle];
+        [alert setAlertStyle:NSAlertStyleWarning];
 		[alert setMessageText:NSLocalizedString(@"Removing this context will also remove its child contexts!", "")];
 		[alert setInformativeText:NSLocalizedString(@"This action is not undoable!", @"")];
 		[alert addButtonWithTitle:NSLocalizedString(@"OK", @"")];

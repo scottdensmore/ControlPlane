@@ -80,7 +80,7 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
         return;
     }
     
-    serialQueue = dispatch_queue_create("com.dustinrue.ControlPlane.CoreWLANEvidenceSource",
+    serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.CoreWLANEvidenceSource",
                                         DISPATCH_QUEUE_SERIAL);
     if (!serialQueue) {
         [self doStop];
