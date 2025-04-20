@@ -1,0 +1,74 @@
+/*
+<codex>
+<abstract>Localized strings for the stuff in "CPAuthorization.m".</abstract>
+</codex>
+*/
+
+/* prompt shown when user is required to authorize to enable time machine */
+"ControlPlane is trying to enable Time Machine." = "ControlPlane is trying to enable Time Machine.";
+
+/* prompt shown when user is required to authorize to disable time machine */
+"ControlPlane is trying to disable Time Machine." = "ControlPlane is trying to disable Time Machine.";
+
+/* prompt shown when user is required to authorize to start a time machine backup */
+"ControlPlane is trying to start a Time Machine backup." = "ControlPlane is trying to start a Time Machine backup.";
+
+/* prompt shown when user is required to authorize to stop a time machine backup */
+"ControlPlane is trying to stop a Time Machine backup." = "ControlPlane is trying to stop a Time Machine backup.";
+
+/* prompt shown when user is required to authorize to enable internet sharing */
+"ControlPlane is trying to enable Internet Sharing." = "ControlPlane is trying to enable Internet Sharing.";
+
+/* prompt shown when user is required to authorize to disable internet sharing */
+"ControlPlane is trying to disable Internet Sharing." = "ControlPlane is trying to disable Internet Sharing.";
+
+/* prompt shown when user is required to authorize to enable the firewall */
+"ControlPlane is trying to enable your Firewall." = "ControlPlane is trying to enable your Firewall.";
+
+/* prompt shown when user is required to authorize to disable the firewall */
+"ControlPlane is trying to disable your Firewall." = "ControlPlane is trying to disable your Firewall.";
+
+/* prompt shown when user is required to authorize to change the display sleep time */
+"ControlPlane is trying to change the display sleep time." = "ControlPlane is trying to change the display sleep time.";
+
+/* prompt shown when user is required to authorize to enable printer sharing */
+"ControlPlane is trying to enable Printer Sharing." = "ControlPlane is trying to enable Printer Sharing.";
+
+/* prompt shown when user is required to authorize to disable printer sharing */
+"ControlPlane is trying to disable Printer Sharing." = "ControlPlane is trying to disable Printer Sharing.";
+
+/* prompt shown when user is required to authorize to enable afp file sharing */
+"ControlPlane is trying to enable AFP File Sharing." = "ControlPlane is trying to enable AFP File Sharing.";
+
+/* prompt shown when user is required to authorize to disalbe afp file sharing */
+"ControlPlane is trying to disable AFP File Sharing." = "ControlPlane is trying to disable AFP File Sharing.";
+
+/* prompt shown when user is required to authorize to enable smnb file sharin */
+"ControlPlane is trying to enable SMB File Sharing." = "ControlPlane is trying to enable SMB File Sharing.";
+
+/* prompt shown when user is required to authorize to disalbe smnb file sharing */
+"ControlPlane is trying to disable SMB File Sharing." = "ControlPlane is trying to disable SMB File Sharing.";
+
+/* prompt shown when user is required to authorize to enable tftp */
+"ControlPlane is trying to enable TFTP." = "ControlPlane is trying to enable TFTP.";
+
+/* prompt shown when user is required to authorize to disable tftp */
+"ControlPlane is trying to disable TFTP." = "ControlPlane is trying to disable TFTP.";
+
+/* prompt shown when user is required to authorize to enable ftp */
+"ControlPlane is trying to enable FTP." = "ControlPlane is trying to enable FTP.";
+
+/* prompt shown when user is required to authorize to disable ftp */
+"ControlPlane is trying to disable FTP." = "ControlPlane is trying to disable FTP.";
+
+/* prompt shown when user is required to authorize to enable web sharing */
+"ControlPlane is trying to enable Web Sharing." = "ControlPlane is trying to enable Web Sharing.";
+
+/* prompt shown when user is required to authorize to disable web sharing */
+"ControlPlane is trying to disable Web Sharing." = "ControlPlane is trying to disable Web Sharing.";
+
+/* prompt shown when user is required to authorize to enable remote login */
+"ControlPlane is trying to enable Remote Login." = "ControlPlane is trying to enable Remote Login.";
+
+/* prompt shown when user is required to authorize to disable remote login */
+"ControlPlane is trying to disable Remote Login." = "ControlPlane is trying to disable Remote Login.";

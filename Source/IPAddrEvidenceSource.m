@@ -234,7 +234,7 @@ static NSComparator descendingSorter = ^NSComparisonResult(id obj1, id obj2) {
 		return;
     }
 
-    serialQueue = dispatch_queue_create("com.dustinrue.ControlPlane.IPAddrEvidenceSource",
+    serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.IPAddrEvidenceSource",
                                         DISPATCH_QUEUE_SERIAL);
     if (!serialQueue) {
         [self doStop];

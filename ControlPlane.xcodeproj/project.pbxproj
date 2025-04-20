@@ -109,14 +109,6 @@
 		DA4A629513E25C9D00CE976F /* Credits.html in Resources */ = {isa = PBXBuildFile; fileRef = DA4A629413E25C9D00CE976F /* Credits.html */; };
 		DA4ED9C41520055100E6A8CE /* ToggleNaturalScrollingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4ED9C31520055100E6A8CE /* ToggleNaturalScrollingAction.m */; };
 		DA571B71151587B80074CE22 /* ToggleFileSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA571B70151587B80074CE22 /* ToggleFileSharingAction.m */; };
-		DA5B01E61412B86400E19C50 /* CPHelperInstallTool in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA5B01D71412B6A700E19C50 /* CPHelperInstallTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		DA5B01F31412BAEC00E19C50 /* BetterAuthorizationSampleLib.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5B01F21412BAEC00E19C50 /* BetterAuthorizationSampleLib.c */; };
-		DA5B01F61412BB0D00E19C50 /* BetterAuthorizationSampleLibInstallTool.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5B01F41412BAF400E19C50 /* BetterAuthorizationSampleLibInstallTool.c */; };
-		DA5B020A1412BBF200E19C50 /* CPHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DA5B02091412BBF200E19C50 /* CPHelperTool.m */; };
-		DA5B020C1412BDEF00E19C50 /* CPHelperToolCommon.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5B020B1412BDEF00E19C50 /* CPHelperToolCommon.c */; };
-		DA5C34621BA478150023FF41 /* BetterAuthorizationSampleLib.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5B01F21412BAEC00E19C50 /* BetterAuthorizationSampleLib.c */; };
-		DA648AEE1412C15D00532B2C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
-		DA648AF11412C19800532B2C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA648AEF1412C17A00532B2C /* CoreFoundation.framework */; };
 		DA69D7E217BD04C30062FBBC /* HostAvailabilityEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */; };
 		DA72BF9413CD317B002D27DD /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA72BF9313CD317B002D27DD /* CoreWLAN.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		DA72BFF615019D8C003072C6 /* CPBonjourResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = DA72BFF515019D8C003072C6 /* CPBonjourResolver.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -141,7 +133,6 @@
 		DAAA7FAB1953DE0500C06DBB /* PreventSystemSleepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAA7FA91953DE0500C06DBB /* PreventSystemSleepAction.m */; };
 		DAAA7FAE1953E2C500C06DBB /* MountedVolumeEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAA7FAD1953E2C500C06DBB /* MountedVolumeEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DAAF16B61413174400F5D915 /* ToggleTimeMachineAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAF16B51413174400F5D915 /* ToggleTimeMachineAction.m */; };
-		DAAF16B714131CDE00F5D915 /* CPHelperToolCommon.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5B020B1412BDEF00E19C50 /* CPHelperToolCommon.c */; };
 		DAB1A7E215C3776D00CF65E8 /* CPNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DABE3F6A16C44236004F5E63 /* OpenAndHideAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DABE3F6916C44236004F5E63 /* OpenAndHideAction.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DABF656617910AB600AA5B86 /* CPSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = DABF656517910AB600AA5B86 /* CPSystemInfo.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -150,9 +141,6 @@
 		DAC817B1159BF95A0012ED43 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */; };
 		DACCA0A01DD7A309007F7373 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DACCA09F1DD7A309007F7373 /* HockeySDK.framework */; };
 		DACCA0A11DD7A48B007F7373 /* HockeySDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DACCA09F1DD7A309007F7373 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		DACE6D4A159BFC1D00FEE37E /* CPHelperTool-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DACE6D48159BFC1D00FEE37E /* CPHelperTool-Info.plist */; };
-		DACE6D4B159BFC1D00FEE37E /* CPHelperTool-Launchd.plist in Resources */ = {isa = PBXBuildFile; fileRef = DACE6D49159BFC1D00FEE37E /* CPHelperTool-Launchd.plist */; };
-		DACE6D4E159C055C00FEE37E /* com.dustinrue.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DA5B01FB1412BB1700E19C50 /* com.dustinrue.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DADFF79715D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DADFF79615D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m */; };
 		DAE893EE1454FFFB005FA13C /* ToggleFirewallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE893E514546897005FA13C /* ToggleFirewallAction.m */; };
 		DAF2257E15ABD8CD003A8030 /* DisplayBrightnessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD827506141188880098FA6E /* DisplayBrightnessAction.m */; };
@@ -161,7 +149,6 @@
 		DAFC0E4614788B0500DA6139 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB8911C0BB88D0B005347C2 /* IOBluetooth.framework */; };
 		DD06E811140C661700059764 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD06E810140C661600059764 /* AudioToolbox.framework */; };
 		DD3BAB8314163C6B000D5F88 /* CoreLocationRule.xib in Resources */ = {isa = PBXBuildFile; fileRef = DD3BAB8514163C6B000D5F88 /* CoreLocationRule.xib */; };
-		DD44B57E141417E40016BF6B /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD44B57D141417E40016BF6B /* CoreServices.framework */; };
 		DD44B59F14142D2D0016BF6B /* CPHelperToolAuthorizationPrompts.strings in Resources */ = {isa = PBXBuildFile; fileRef = DD44B5A114142D2D0016BF6B /* CPHelperToolAuthorizationPrompts.strings */; };
 		DD6FCC691413EF6B0095E64F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD6FCC681413EF6B0095E64F /* CoreLocation.framework */; };
 		DD7D2539149C338300BE7C8B /* NSTimer+Invalidation.m in Sources */ = {isa = PBXBuildFile; fileRef = DD7D2538149C338300BE7C8B /* NSTimer+Invalidation.m */; };
@@ -185,27 +172,29 @@
 		DDE1B068140438DB006564A6 /* ControlPlane.sdef in Resources */ = {isa = PBXBuildFile; fileRef = DDE1B067140438DB006564A6 /* ControlPlane.sdef */; };
 		DDF4E595141588E80028DF4A /* CoreLocationMap.html in Resources */ = {isa = PBXBuildFile; fileRef = DDF4E594141588E80028DF4A /* CoreLocationMap.html */; };
 		DDFF423114156B0A0047D311 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = DDFF423014156B0A0047D311 /* location.png */; };
-		DE3670AB28C0407F003A200D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
-		DE99DE3C28C034910014E380 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
+		DE184AEB2D98C6D30072F8ED /* CPHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AEA2D98C6D30072F8ED /* CPHelperTool.m */; };
+		DE184AF62D98D73A0072F8ED /* CPAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AF52D98D73A0072F8ED /* CPAuthorization.m */; };
+		DE184AF72D98D73A0072F8ED /* CPAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AF52D98D73A0072F8ED /* CPAuthorization.m */; };
+		DE184AFC2D98DA270072F8ED /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
+		DE184B012D98E5180072F8ED /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
+		DE184B022D98EBD80072F8ED /* CPAuthorization.strings in Resources */ = {isa = PBXBuildFile; fileRef = DE184B042D98EBD80072F8ED /* CPAuthorization.strings */; };
+		DE184B0A2D9918600072F8ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
+		DE184B0B2D9918720072F8ED /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */; };
+		DE184B0C2D99188A0072F8ED /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
+		DE184B102D9918EA0072F8ED /* com.scotttdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */; };
+		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
+		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
+		DE762B7E2D98BA310095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7D2D98BA310095F733 /* main.m */; };
+		DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = DE762B772D98BA310095F733 /* CPXPCService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DE762B9F2D98C1BE0095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B9E2D98C1BE0095F733 /* main.m */; };
+		DE762BA52D98C2A80095F733 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
+		DE762BA62D98C2B40095F733 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
 		DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */; };
 		DEEADC5228FCABBC000677F1 /* ToggleAutomaticSwitchingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DA5B01E21412B78900E19C50 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DA5B01D61412B6A700E19C50;
-			remoteInfo = CPHelperInstallTool;
-		};
-		DA5B02061412BB3A00E19C50 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DA5B01FA1412BB1700E19C50;
-			remoteInfo = CPHelperTool;
-		};
 		DA94BEE215CA233400ED2AB2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DA94BEDE15CA233400ED2AB2 /* SampleESPlugin.xcodeproj */;
@@ -219,6 +208,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = DAD8898E15D5F337009F30A3;
 			remoteInfo = NotificationCenterAction;
+		};
+		DE184B0D2D9918AA0072F8ED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE762B9B2D98C1BE0095F733;
+			remoteInfo = com.scotttdensmore.CPHelperTool;
+		};
+		DE762B802D98BA310095F733 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE762B762D98BA310095F733;
+			remoteInfo = CPXPCService;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -256,33 +259,14 @@
 			name = "Copy Action Plugins";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA5B01D51412B6A700E19C50 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		DA5B01E51412B85600E19C50 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = Contents/Library/LaunchServices;
 			dstSubfolderSpec = 1;
 			files = (
-				DA5B01E61412B86400E19C50 /* CPHelperInstallTool in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA5B01F91412BB1700E19C50 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = usr/share/man/man1;
-			dstSubfolderSpec = 7;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
 		};
 		DACE6D4D159C053000FEE37E /* Copy Launch Services */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -290,9 +274,30 @@
 			dstPath = Contents/Library/LaunchServices;
 			dstSubfolderSpec = 1;
 			files = (
-				DACE6D4E159C055C00FEE37E /* com.dustinrue.CPHelperTool in Copy Launch Services */,
 			);
 			name = "Copy Launch Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE184B0F2D9918BD0072F8ED /* Copy Launch Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchServices;
+			dstSubfolderSpec = 1;
+			files = (
+				DE184B102D9918EA0072F8ED /* com.scotttdensmore.CPHelperTool in Copy Launch Services */,
+			);
+			name = "Copy Launch Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE762B862D98BA310095F733 /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */,
+			);
+			name = "Embed XPC Services";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -513,14 +518,6 @@
 		DA4ED9C31520055100E6A8CE /* ToggleNaturalScrollingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleNaturalScrollingAction.m; path = Source/ToggleNaturalScrollingAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		DA571B6F151587B80074CE22 /* ToggleFileSharingAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleFileSharingAction.h; path = Source/ToggleFileSharingAction.h; sourceTree = "<group>"; };
 		DA571B70151587B80074CE22 /* ToggleFileSharingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleFileSharingAction.m; path = Source/ToggleFileSharingAction.m; sourceTree = "<group>"; };
-		DA5B01D71412B6A700E19C50 /* CPHelperInstallTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CPHelperInstallTool; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA5B01EB1412BA6700E19C50 /* BetterAuthorizationSampleLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BetterAuthorizationSampleLib.h; sourceTree = "<group>"; };
-		DA5B01F21412BAEC00E19C50 /* BetterAuthorizationSampleLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BetterAuthorizationSampleLib.c; sourceTree = "<group>"; };
-		DA5B01F41412BAF400E19C50 /* BetterAuthorizationSampleLibInstallTool.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BetterAuthorizationSampleLibInstallTool.c; sourceTree = "<group>"; };
-		DA5B01FB1412BB1700E19C50 /* com.dustinrue.CPHelperTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.dustinrue.CPHelperTool; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA5B02091412BBF200E19C50 /* CPHelperTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPHelperTool.m; sourceTree = "<group>"; };
-		DA5B020B1412BDEF00E19C50 /* CPHelperToolCommon.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CPHelperToolCommon.c; sourceTree = "<group>"; };
-		DA5B020E1412BE4F00E19C50 /* CPHelperToolCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPHelperToolCommon.h; sourceTree = "<group>"; };
 		DA648AEF1412C17A00532B2C /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		DA69D7E017BD04C30062FBBC /* HostAvailabilityEvidenceSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HostAvailabilityEvidenceSource.h; path = Source/HostAvailabilityEvidenceSource.h; sourceTree = "<group>"; };
 		DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HostAvailabilityEvidenceSource.m; path = Source/HostAvailabilityEvidenceSource.m; sourceTree = "<group>"; };
@@ -578,8 +575,6 @@
 		DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleWebSharingAction.m; path = Source/ToggleWebSharingAction.m; sourceTree = "<group>"; };
 		DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ServiceManagement.framework; path = System/Library/Frameworks/ServiceManagement.framework; sourceTree = SDKROOT; };
 		DACCA09F1DD7A309007F7373 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "HockeySDK-Mac/HockeySDK.framework"; sourceTree = "<group>"; };
-		DACE6D48159BFC1D00FEE37E /* CPHelperTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CPHelperTool-Info.plist"; sourceTree = "<group>"; };
-		DACE6D49159BFC1D00FEE37E /* CPHelperTool-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CPHelperTool-Launchd.plist"; sourceTree = "<group>"; };
 		DAD889A315D5F337009F30A3 /* NotificationCenterAction.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NotificationCenterAction.xcodeproj; path = NotificationCenterAction/NotificationCenterAction.xcodeproj; sourceTree = "<group>"; };
 		DADFF79515D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleNotificationCenterAlertsAction.h; path = Source/ToggleNotificationCenterAlertsAction.h; sourceTree = "<group>"; };
 		DADFF79615D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleNotificationCenterAlertsAction.m; path = Source/ToggleNotificationCenterAlertsAction.m; sourceTree = "<group>"; };
@@ -656,6 +651,27 @@
 		DDE1B067140438DB006564A6 /* ControlPlane.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = ControlPlane.sdef; path = Resources/ControlPlane.sdef; sourceTree = "<group>"; };
 		DDF4E594141588E80028DF4A /* CoreLocationMap.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = CoreLocationMap.html; path = Resources/CoreLocationMap.html; sourceTree = "<group>"; };
 		DDFF423014156B0A0047D311 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = location.png; path = Resources/location.png; sourceTree = "<group>"; };
+		DE184AE92D98C6D30072F8ED /* CPHelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperTool.h; sourceTree = "<group>"; };
+		DE184AEA2D98C6D30072F8ED /* CPHelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperTool.m; sourceTree = "<group>"; };
+		DE184AF22D98C8A50072F8ED /* CPHelperToolProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperToolProtocol.h; sourceTree = "<group>"; };
+		DE184AF42D98D73A0072F8ED /* CPAuthorization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPAuthorization.h; sourceTree = "<group>"; };
+		DE184AF52D98D73A0072F8ED /* CPAuthorization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPAuthorization.m; sourceTree = "<group>"; };
+		DE184AFA2D98DA0E0072F8ED /* CPHelperCommon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperCommon.h; sourceTree = "<group>"; };
+		DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperCommon.m; sourceTree = "<group>"; };
+		DE184B032D98EBD80072F8ED /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CPAuthorization.strings; sourceTree = "<group>"; };
+		DE184B132D999D7D0072F8ED /* Action+XPCHelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Action+XPCHelperTool.h"; path = "Source/Action+XPCHelperTool.h"; sourceTree = "<group>"; };
+		DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "Action+XPCHelperTool.m"; path = "Source/Action+XPCHelperTool.m"; sourceTree = "<group>"; };
+		DE184B2E2DAC1D480072F8ED /* CPCommonConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPCommonConstants.h; sourceTree = "<group>"; };
+		DE762B772D98BA310095F733 /* CPXPCService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = CPXPCService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE762B792D98BA310095F733 /* CPXPCServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCServiceProtocol.h; sourceTree = "<group>"; };
+		DE762B7A2D98BA310095F733 /* CPXPCService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCService.h; sourceTree = "<group>"; };
+		DE762B7B2D98BA310095F733 /* CPXPCService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPXPCService.m; sourceTree = "<group>"; };
+		DE762B7D2D98BA310095F733 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DE762B7F2D98BA310095F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.scotttdensmore.CPHelperTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE762B9E2D98C1BE0095F733 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		DE762BA32D98C2440095F733 /* HelperTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Info.plist"; sourceTree = "<group>"; };
+		DE762BA42D98C2440095F733 /* HelperTool-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Launchd.plist"; sourceTree = "<group>"; };
 		DE99DE3B28C034910014E380 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DEA3DAF12D7566C10034FCFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ShellScriptRule.xib; sourceTree = "<group>"; };
 		DEA3DAF22D7566C10034FCFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
@@ -700,22 +716,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA5B01D41412B6A700E19C50 /* Frameworks */ = {
+		DE762B742D98BA310095F733 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE3670AB28C0407F003A200D /* Foundation.framework in Frameworks */,
+				DE184B0A2D9918600072F8ED /* Foundation.framework in Frameworks */,
+				DE184B0C2D99188A0072F8ED /* Security.framework in Frameworks */,
+				DE184B0B2D9918720072F8ED /* ServiceManagement.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA5B01F81412BB1700E19C50 /* Frameworks */ = {
+		DE762B992D98C1BE0095F733 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DE99DE3C28C034910014E380 /* Foundation.framework in Frameworks */,
-				DD44B57E141417E40016BF6B /* CoreServices.framework in Frameworks */,
-				DA648AEE1412C15D00532B2C /* Security.framework in Frameworks */,
-				DA648AF11412C19800532B2C /* CoreFoundation.framework in Frameworks */,
+				DE762BA62D98C2B40095F733 /* Security.framework in Frameworks */,
+				DE762BA52D98C2A80095F733 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,8 +815,8 @@
 			isa = PBXGroup;
 			children = (
 				DA1204DA13D0E5C800CDA091 /* ControlPlane.app */,
-				DA5B01D71412B6A700E19C50 /* CPHelperInstallTool */,
-				DA5B01FB1412BB1700E19C50 /* com.dustinrue.CPHelperTool */,
+				DE762B772D98BA310095F733 /* CPXPCService.xpc */,
+				DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -808,11 +824,14 @@
 		29B97314FDCFA39411CA2CEA /* ControlPlane */ = {
 			isa = PBXGroup;
 			children = (
-				DA5B01E91412BA6700E19C50 /* HelperTool */,
+				DE184B2D2DAC1D260072F8ED /* Common */,
+				DE184AF32D98D3EE0072F8ED /* CPAuthorization */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				DDFF422F14153F650047D311 /* UI */,
+				DE762B782D98BA310095F733 /* CPXPCService */,
+				DE762B9D2D98C1BE0095F733 /* CPHelperTool */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -1023,6 +1042,8 @@
 				DD8274ED14114D620098FA6E /* System Actions */,
 				DDAEFFF91414714F00FDADE8 /* Action+HelperTool.h */,
 				DDAEFFFA1414714F00FDADE8 /* Action+HelperTool.m */,
+				DE184B132D999D7D0072F8ED /* Action+XPCHelperTool.h */,
+				DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */,
 				8DF5A4150BC2353D00CBEB4B /* Action.h */,
 				8DF5A4160BC2353D00CBEB4B /* Action.m */,
 				DAF7F83F1749BB90002BB402 /* ActionPlugin.h */,
@@ -1040,30 +1061,6 @@
 				DAD889A315D5F337009F30A3 /* NotificationCenterAction.xcodeproj */,
 			);
 			name = Plugins;
-			sourceTree = "<group>";
-		};
-		DA5B01E91412BA6700E19C50 /* HelperTool */ = {
-			isa = PBXGroup;
-			children = (
-				DACE6D48159BFC1D00FEE37E /* CPHelperTool-Info.plist */,
-				DACE6D49159BFC1D00FEE37E /* CPHelperTool-Launchd.plist */,
-				DA5B01EA1412BA6700E19C50 /* AuthorizationLib */,
-				DA5B01F41412BAF400E19C50 /* BetterAuthorizationSampleLibInstallTool.c */,
-				DA5B02091412BBF200E19C50 /* CPHelperTool.m */,
-				DA5B020E1412BE4F00E19C50 /* CPHelperToolCommon.h */,
-				DA5B020B1412BDEF00E19C50 /* CPHelperToolCommon.c */,
-			);
-			name = HelperTool;
-			path = Source/CPHelperTool;
-			sourceTree = "<group>";
-		};
-		DA5B01EA1412BA6700E19C50 /* AuthorizationLib */ = {
-			isa = PBXGroup;
-			children = (
-				DA5B01F21412BAEC00E19C50 /* BetterAuthorizationSampleLib.c */,
-				DA5B01EB1412BA6700E19C50 /* BetterAuthorizationSampleLib.h */,
-			);
-			path = AuthorizationLib;
 			sourceTree = "<group>";
 		};
 		DA94BE8815CA1B0300ED2AB2 /* Plugins */ = {
@@ -1217,6 +1214,51 @@
 			name = UI;
 			sourceTree = "<group>";
 		};
+		DE184AF32D98D3EE0072F8ED /* CPAuthorization */ = {
+			isa = PBXGroup;
+			children = (
+				DE184AF42D98D73A0072F8ED /* CPAuthorization.h */,
+				DE184AF52D98D73A0072F8ED /* CPAuthorization.m */,
+				DE184B042D98EBD80072F8ED /* CPAuthorization.strings */,
+			);
+			path = CPAuthorization;
+			sourceTree = "<group>";
+		};
+		DE184B2D2DAC1D260072F8ED /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				DE184B2E2DAC1D480072F8ED /* CPCommonConstants.h */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		DE762B782D98BA310095F733 /* CPXPCService */ = {
+			isa = PBXGroup;
+			children = (
+				DE762B792D98BA310095F733 /* CPXPCServiceProtocol.h */,
+				DE762B7A2D98BA310095F733 /* CPXPCService.h */,
+				DE762B7B2D98BA310095F733 /* CPXPCService.m */,
+				DE762B7D2D98BA310095F733 /* main.m */,
+				DE762B7F2D98BA310095F733 /* Info.plist */,
+			);
+			path = CPXPCService;
+			sourceTree = "<group>";
+		};
+		DE762B9D2D98C1BE0095F733 /* CPHelperTool */ = {
+			isa = PBXGroup;
+			children = (
+				DE762BA32D98C2440095F733 /* HelperTool-Info.plist */,
+				DE762BA42D98C2440095F733 /* HelperTool-Launchd.plist */,
+				DE762B9E2D98C1BE0095F733 /* main.m */,
+				DE184AE92D98C6D30072F8ED /* CPHelperTool.h */,
+				DE184AEA2D98C6D30072F8ED /* CPHelperTool.m */,
+				DE184AF22D98C8A50072F8ED /* CPHelperToolProtocol.h */,
+				DE184AFA2D98DA0E0072F8ED /* CPHelperCommon.h */,
+				DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */,
+			);
+			path = CPHelperTool;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1234,12 +1276,12 @@
 				DA0E9C1715C84D0100C53789 /* Copy Evidence Source Plugins */,
 				DA0E9C1815C84D3500C53789 /* Copy Action Plugins */,
 				DACCA09E1DD7A2D4007F7373 /* ShellScript */,
+				DE762B862D98BA310095F733 /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DA5B02071412BB3A00E19C50 /* PBXTargetDependency */,
-				DA5B01E31412B78900E19C50 /* PBXTargetDependency */,
+				DE762B812D98BA310095F733 /* PBXTargetDependency */,
 			);
 			name = ControlPlane;
 			productInstallPath = "$(HOME)/Applications";
@@ -1247,38 +1289,39 @@
 			productReference = DA1204DA13D0E5C800CDA091 /* ControlPlane.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DA5B01D61412B6A700E19C50 /* CPHelperInstallTool */ = {
+		DE762B762D98BA310095F733 /* CPXPCService */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DA5B01DE1412B6A700E19C50 /* Build configuration list for PBXNativeTarget "CPHelperInstallTool" */;
+			buildConfigurationList = DE762B832D98BA310095F733 /* Build configuration list for PBXNativeTarget "CPXPCService" */;
 			buildPhases = (
-				DA5B01D31412B6A700E19C50 /* Sources */,
-				DA5B01D41412B6A700E19C50 /* Frameworks */,
-				DA5B01D51412B6A700E19C50 /* CopyFiles */,
+				DE762B732D98BA310095F733 /* Sources */,
+				DE762B742D98BA310095F733 /* Frameworks */,
+				DE762B752D98BA310095F733 /* Resources */,
+				DE184B0F2D9918BD0072F8ED /* Copy Launch Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DE184B0E2D9918AA0072F8ED /* PBXTargetDependency */,
 			);
-			name = CPHelperInstallTool;
-			productName = CPHelperInstallTool;
-			productReference = DA5B01D71412B6A700E19C50 /* CPHelperInstallTool */;
-			productType = "com.apple.product-type.tool";
+			name = CPXPCService;
+			productName = CPXPCService;
+			productReference = DE762B772D98BA310095F733 /* CPXPCService.xpc */;
+			productType = "com.apple.product-type.xpc-service";
 		};
-		DA5B01FA1412BB1700E19C50 /* com.dustinrue.CPHelperTool */ = {
+		DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DA5B02021412BB1800E19C50 /* Build configuration list for PBXNativeTarget "com.dustinrue.CPHelperTool" */;
+			buildConfigurationList = DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scotttdensmore.CPHelperTool" */;
 			buildPhases = (
-				DA5B01F71412BB1700E19C50 /* Sources */,
-				DA5B01F81412BB1700E19C50 /* Frameworks */,
-				DA5B01F91412BB1700E19C50 /* CopyFiles */,
+				DE762B982D98C1BE0095F733 /* Sources */,
+				DE762B992D98C1BE0095F733 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = com.dustinrue.CPHelperTool;
+			name = com.scotttdensmore.CPHelperTool;
 			productName = CPHelperTool;
-			productReference = DA5B01FB1412BB1700E19C50 /* com.dustinrue.CPHelperTool */;
+			productReference = DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1287,11 +1330,18 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				CLASSPREFIX = CP;
+				LastUpgradeCheck = 1170;
 				TargetAttributes = {
 					8D1107260486CEB800E47090 = {
 						DevelopmentTeam = YV4RHGCYFA;
 						ProvisioningStyle = Automatic;
+					};
+					DE762B762D98BA310095F733 = {
+						CreatedOnToolsVersion = 11.7;
+					};
+					DE762B9B2D98C1BE0095F733 = {
+						CreatedOnToolsVersion = 11.7;
 					};
 				};
 			};
@@ -1340,8 +1390,8 @@
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* ControlPlane */,
-				DA5B01D61412B6A700E19C50 /* CPHelperInstallTool */,
-				DA5B01FA1412BB1700E19C50 /* com.dustinrue.CPHelperTool */,
+				DE762B762D98BA310095F733 /* CPXPCService */,
+				DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */,
 			);
 		};
 /* End PBXProject section */
@@ -1409,13 +1459,19 @@
 				73A5092F14849405007D22B5 /* ShellScriptRule.xib in Resources */,
 				96454D3F18C3E6BE004F64E7 /* ActionsPrefs@2x.png in Resources */,
 				DAA9ABFF1595FDE700B84B05 /* README.md in Resources */,
-				DACE6D4A159BFC1D00FEE37E /* CPHelperTool-Info.plist in Resources */,
 				96454D4118C3E6BE004F64E7 /* ContextsPrefs@2x.png in Resources */,
-				DACE6D4B159BFC1D00FEE37E /* CPHelperTool-Launchd.plist in Resources */,
 				7CFF034917246B770098990F /* SearchDomainRule.xib in Resources */,
 				7CFF035A172471DD0098990F /* ServerAddressRule.xib in Resources */,
 				96454D4318C3E6BE004F64E7 /* GeneralPrefs@2x.png in Resources */,
 				7C4855BB17493B7200D8EB84 /* IPv6AddrRule.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE762B752D98BA310095F733 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DE184B022D98EBD80072F8ED /* CPAuthorization.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1459,7 +1515,6 @@
 				DAF2257E15ABD8CD003A8030 /* DisplayBrightnessAction.m in Sources */,
 				DAE893EE1454FFFB005FA13C /* ToggleFirewallAction.m in Sources */,
 				DAF36ECA143E7C5700350991 /* CoreLocationSource.m in Sources */,
-				DAAF16B714131CDE00F5D915 /* CPHelperToolCommon.c in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				8D82F0A30AA81411009ADA44 /* PrefsWindowController.m in Sources */,
 				8D90E51F0B71C4C9007D39FD /* CPController.m in Sources */,
@@ -1474,6 +1529,7 @@
 				8DBAFAFC0BDC3B7B00BE0747 /* ShellScriptAction.m in Sources */,
 				8D9AE3A60BE0DA7E00D4D4E4 /* PopButton.m in Sources */,
 				8D75A6200BE6F68B0069DF3F /* ToggleBluetoothAction.m in Sources */,
+				DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */,
 				8D649BA50BE8033A00716059 /* ToggleWiFiAction.m in Sources */,
 				8DC4E7FD0C178917007E7E41 /* MuteAction.m in Sources */,
 				DA07C11018FE04A3008FE8B5 /* ContextEvidenceSource.m in Sources */,
@@ -1499,6 +1555,7 @@
 				8DE428FC0C5084D00073499A /* TimeOfDayEvidenceSource.m in Sources */,
 				8DBB44980C530F7600064010 /* DSLogger.m in Sources */,
 				8D2BAAAD0C56E26200A50777 /* NetworkLinkEvidenceSource.m in Sources */,
+				DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */,
 				8D3BFF3F0C61BE4500B9B910 /* AboutPanel.m in Sources */,
 				8D1493F70C824B6D00D29FE8 /* BonjourEvidenceSource.m in Sources */,
 				8DFA46170CC33E46003EAC16 /* QuitApplicationAction.m in Sources */,
@@ -1516,7 +1573,6 @@
 				DAAA7FAB1953DE0500C06DBB /* PreventSystemSleepAction.m in Sources */,
 				DD8274FE14117C590098FA6E /* SpeakAction.m in Sources */,
 				DDDF1C2B1411D49300DB0018 /* DefaultBrowserAction.m in Sources */,
-				DA5B01F31412BAEC00E19C50 /* BetterAuthorizationSampleLib.c in Sources */,
 				DAAF16B61413174400F5D915 /* ToggleTimeMachineAction.m in Sources */,
 				DDAEFFFB1414714F00FDADE8 /* Action+HelperTool.m in Sources */,
 				DDAE0017141474DC00FDADE8 /* CPController+SleepMonitor.m in Sources */,
@@ -1560,36 +1616,40 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA5B01D31412B6A700E19C50 /* Sources */ = {
+		DE762B732D98BA310095F733 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA5B01F61412BB0D00E19C50 /* BetterAuthorizationSampleLibInstallTool.c in Sources */,
+				DE762B7E2D98BA310095F733 /* main.m in Sources */,
+				DE184AF62D98D73A0072F8ED /* CPAuthorization.m in Sources */,
+				DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */,
+				DE184B012D98E5180072F8ED /* CPHelperCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA5B01F71412BB1700E19C50 /* Sources */ = {
+		DE762B982D98C1BE0095F733 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA5C34621BA478150023FF41 /* BetterAuthorizationSampleLib.c in Sources */,
-				DA5B020A1412BBF200E19C50 /* CPHelperTool.m in Sources */,
-				DA5B020C1412BDEF00E19C50 /* CPHelperToolCommon.c in Sources */,
+				DE184AEB2D98C6D30072F8ED /* CPHelperTool.m in Sources */,
+				DE184AF72D98D73A0072F8ED /* CPAuthorization.m in Sources */,
+				DE762B9F2D98C1BE0095F733 /* main.m in Sources */,
+				DE184AFC2D98DA270072F8ED /* CPHelperCommon.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		DA5B01E31412B78900E19C50 /* PBXTargetDependency */ = {
+		DE184B0E2D9918AA0072F8ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DA5B01D61412B6A700E19C50 /* CPHelperInstallTool */;
-			targetProxy = DA5B01E21412B78900E19C50 /* PBXContainerItemProxy */;
+			target = DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */;
+			targetProxy = DE184B0D2D9918AA0072F8ED /* PBXContainerItemProxy */;
 		};
-		DA5B02071412BB3A00E19C50 /* PBXTargetDependency */ = {
+		DE762B812D98BA310095F733 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DA5B01FA1412BB1700E19C50 /* com.dustinrue.CPHelperTool */;
-			targetProxy = DA5B02061412BB3A00E19C50 /* PBXContainerItemProxy */;
+			target = DE762B762D98BA310095F733 /* CPXPCService */;
+			targetProxy = DE762B802D98BA310095F733 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1788,6 +1848,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		DE184B042D98EBD80072F8ED /* CPAuthorization.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DE184B032D98EBD80072F8ED /* en */,
+			);
+			name = CPAuthorization.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1797,10 +1865,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 27ZDER873F;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Frameworks\"",
@@ -1810,10 +1880,11 @@
 					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 			};
@@ -1825,10 +1896,12 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 27ZDER873F;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Frameworks\"",
@@ -1839,10 +1912,11 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -1915,7 +1989,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1987,7 +2061,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -1997,71 +2071,171 @@
 			};
 			name = Release;
 		};
-		DA5B01DF1412B6A700E19C50 /* Debug */ = {
+		DE762B842D98BA310095F733 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 27ZDER873F;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CPXPCService/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.CPXPCService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
-		DA5B01E01412B6A700E19C50 /* Release */ = {
+		DE762B852D98BA310095F733 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dustinrue.${PRODUCT_NAME:rfc1034identifier}";
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 27ZDER873F;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = CPXPCService/Info.plist;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.CPXPCService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
-		DA5B02031412BB1800E19C50 /* Debug */ = {
+		DE762BA12D98C1BE0095F733 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				INFOPLIST_FILE = "CPHelperTool-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 27ZDER873F;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "CPHelperTool/HelperTool-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"Source/CPHelperTool/CPHelperTool-Info.plist",
+					"CPHelperTool/HelperTool-Info.plist",
 					"-sectcreate",
 					__TEXT,
 					__launchd_plist,
-					"Source/CPHelperTool/CPHelperTool-Launchd.plist",
+					"CPHelperTool/HelperTool-Launchd.plist",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.scotttdensmore.CPHelperTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
-		DA5B02041412BB1800E19C50 /* Release */ = {
+		DE762BA22D98C1BE0095F733 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CODE_SIGN_IDENTITY = "";
-				INFOPLIST_FILE = "CPHelperTool-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27ZDER873F;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = "CPHelperTool/HelperTool-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 2.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"Source/CPHelperTool/CPHelperTool-Info.plist",
+					"CPHelperTool/HelperTool-Info.plist",
 					"-sectcreate",
 					__TEXT,
 					__launchd_plist,
-					"Source/CPHelperTool/CPHelperTool-Launchd.plist",
+					"CPHelperTool/HelperTool-Launchd.plist",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.scotttdensmore.CPHelperTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -2086,20 +2260,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DA5B01DE1412B6A700E19C50 /* Build configuration list for PBXNativeTarget "CPHelperInstallTool" */ = {
+		DE762B832D98BA310095F733 /* Build configuration list for PBXNativeTarget "CPXPCService" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA5B01DF1412B6A700E19C50 /* Debug */,
-				DA5B01E01412B6A700E19C50 /* Release */,
+				DE762B842D98BA310095F733 /* Debug */,
+				DE762B852D98BA310095F733 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DA5B02021412BB1800E19C50 /* Build configuration list for PBXNativeTarget "com.dustinrue.CPHelperTool" */ = {
+		DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scotttdensmore.CPHelperTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DA5B02031412BB1800E19C50 /* Debug */,
-				DA5B02041412BB1800E19C50 /* Release */,
+				DE762BA12D98C1BE0095F733 /* Debug */,
+				DE762BA22D98C1BE0095F733 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

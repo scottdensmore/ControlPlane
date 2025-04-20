@@ -334,7 +334,7 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 
 
 + (BOOL)geocodeAddress:(NSString **)address toLocation:(CLLocation **)location {
-	NSString *param = [*address stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+	NSString *param = [*address stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 	NSString *url = [NSString stringWithFormat:@"%@address=%@&sensor=false", kGoogleAPIPrefix, param];
 #ifdef DEBUG_MODE
 	DSLog(@"%@", url);

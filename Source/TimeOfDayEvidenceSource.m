@@ -176,8 +176,8 @@
 
 - (BOOL)doesRuleMatch:(NSDictionary *)rule
 {
-	NSString *day = nil;
-	NSDate *startT = nil, *endT = nil;
+    NSString *day = nil;
+    NSDate *startT = nil, *endT = nil;
 
     if (![self parseParameter:rule[@"parameter"] intoDay:&day startTime:&startT endTime:&endT]) {
         return NO;
@@ -190,38 +190,46 @@
         return NO;
     }
 
-    NSCalendarDate *now = [NSCalendarDate calendarDate];
+    // NSCalendarDate is deprecated, replace with NSDate and NSCalendar
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
     
-	// Check day first
-	NSInteger dow = [now dayOfWeek];	// 0=Sunday, 1=Monday, etc.
-	if ([day isEqualToString:@"Any day"]) {
-		// Okay
-	} else if ([day isEqualToString:@"Weekday"]) {
-		if ((dow < 1) || (dow > 5))
-			return NO;
-	} else if ([day isEqualToString:@"Weekend"]) {
-		if ((dow != 0) && (dow != 6))
-			return NO;
-	} else {
-		static NSString *day_name[7] = { @"Sunday", @"Monday", @"Tuesday", @"Wednesday",
-						@"Thursday", @"Friday", @"Saturday" };
-		if (![day isEqualToString:day_name[dow]])
-			return NO;
-	}
+    // Check day first
+    NSDateComponents *weekdayComponents = [calendar components:NSCalendarUnitWeekday fromDate:now];
+    NSInteger dow = [weekdayComponents weekday] - 1; // Convert from 1-7 (Sunday=1) to 0-6 (Sunday=0)
     
-	NSCalendar *cal = [NSCalendar currentCalendar];
-	NSDateComponents *startC = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:startT];
-	NSDateComponents *endC = [cal components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:endT];
+    if ([day isEqualToString:@"Any day"]) {
+        // Okay
+    } else if ([day isEqualToString:@"Weekday"]) {
+        if ((dow < 1) || (dow > 5))
+            return NO;
+    } else if ([day isEqualToString:@"Weekend"]) {
+        if ((dow != 0) && (dow != 6))
+            return NO;
+    } else {
+        static NSString *day_name[7] = { @"Sunday", @"Monday", @"Tuesday", @"Wednesday",
+            @"Thursday", @"Friday", @"Saturday" };
+        if (![day isEqualToString:day_name[dow]])
+            return NO;
+    }
     
-    const NSInteger hourNow = [now hourOfDay], minuteNow = [now minuteOfHour];
-    BOOL hasStarted = (hourNow > [startC hour]) || ( (hourNow == [startC hour]) && (minuteNow >= [startC minute]) );
-    BOOL hasEnded   = (hourNow > [endC hour])   || ( (hourNow == [endC hour])   && (minuteNow >= [endC minute]) );
+    // Get current hour and minute
+    NSDateComponents *nowComponents = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:now];
+    NSInteger hourNow = [nowComponents hour];
+    NSInteger minuteNow = [nowComponents minute];
     
-    if ([startT earlierDate:endT] == endT) {  //cross-midnight rule
+    // Get start and end time components
+    NSDateComponents *startC = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:startT];
+    NSDateComponents *endC = [calendar components:(NSCalendarUnitHour | NSCalendarUnitMinute) fromDate:endT];
+    
+    BOOL hasStarted = (hourNow > [startC hour]) || ((hourNow == [startC hour]) && (minuteNow >= [startC minute]));
+    BOOL hasEnded = (hourNow > [endC hour]) || ((hourNow == [endC hour]) && (minuteNow >= [endC minute]));
+    
+    if ([startT compare:endT] == NSOrderedDescending) {  // cross-midnight rule
         return (hasStarted || !hasEnded);
     }
     
-	return (hasStarted && !hasEnded);
+    return (hasStarted && !hasEnded);
 }
 
 - (NSString *)friendlyName {

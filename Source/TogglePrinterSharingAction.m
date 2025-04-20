@@ -19,7 +19,7 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-	NSString *command = turnOn ? @kCPHelperToolEnablePrinterSharingCommand : @kCPHelperToolDisablePrinterSharingCommand;
+    NSString *command = turnOn ? kCPHelperEnablePrinterSharingCommand : kCPHelperDisablePrinterSharingCommand;
 	
 	BOOL result = [self helperToolPerformAction: command];
 	

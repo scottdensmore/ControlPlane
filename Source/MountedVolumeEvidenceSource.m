@@ -38,25 +38,26 @@
     dataCollected = NO;
 }
 
-- (void) volumeListDidChange:(NSNotification *)notification {
+- (void)volumeListDidChange:(NSNotification *)notification {
     NSMutableDictionary *volumeList = [NSMutableDictionary dictionaryWithCapacity:0];
     
-    NSArray *mountedVolumes = [[NSWorkspace sharedWorkspace] mountedLocalVolumePaths];
+    // Get volume URLs using NSFileManager (compatible with macOS 10.15)
+    NSArray *volumeURLs = [[NSFileManager defaultManager] mountedVolumeURLsIncludingResourceValuesForKeys:nil options:NSVolumeEnumerationSkipHiddenVolumes];
     
-    for (NSString *mountedVolume in mountedVolumes) {
+    // Convert URLs to paths
+    for (NSURL *volumeURL in volumeURLs) {
+        NSString *mountedVolume = [volumeURL path];
         [volumeList setValue:mountedVolume forKey:mountedVolume];
     }
     
-    
     self.mountedVolumes = volumeList;
-
+    
     if ([self.mountedVolumes count] > 0) {
         dataCollected = YES;
     }
     else {
         dataCollected = NO;
     }
-
 }
 
 

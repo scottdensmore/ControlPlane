@@ -329,19 +329,29 @@
 static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 - (void)persistCurrentViewSize {
-	NSSize minSize = [prefsWindow minSize], maxSize = [prefsWindow maxSize];
+    NSSize minSize = [prefsWindow minSize], maxSize = [prefsWindow maxSize];
     if (currentPrefsGroup && ((minSize.width < maxSize.width) || (minSize.height < maxSize.height))) {
         NSString *sizeParamName = [sizeParamPrefix stringByAppendingString:currentPrefsGroup];
-
-		NSSize size  = [prefsWindow frame].size;
+        
+        NSSize size = [prefsWindow frame].size;
         if ((size.width > minSize.width) || (size.height > minSize.height)) {
             size.height -= [self toolbarHeight] + [self titleBarHeight];
-            NSData *persistedSize = [NSArchiver archivedDataWithRootObject:[NSValue valueWithSize:size]];
+            
+            NSError *archiveError = nil;
+            NSData *persistedSize = [NSKeyedArchiver archivedDataWithRootObject:[NSValue valueWithSize:size]
+                                                         requiringSecureCoding:NO
+                                                                         error:&archiveError];
+            
+            if (archiveError) {
+                NSLog(@"Error archiving size: %@", archiveError);
+                return;
+            }
+            
             [[NSUserDefaults standardUserDefaults] setObject:persistedSize forKey:sizeParamName];
         } else {
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:sizeParamName];
         }
-	}
+    }
 }
 
 - (NSValue *)getPersistedSizeOfViewNamed:(NSString *)name {
@@ -350,8 +360,18 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     if (!persistedSize) {
         return nil;
     }
-
-    return (NSValue *) [NSUnarchiver unarchiveObjectWithData:persistedSize];
+    
+    NSError *error = nil;
+    NSValue *value = [NSKeyedUnarchiver unarchivedObjectOfClass:[NSValue class]
+                                                       fromData:persistedSize
+                                                          error:&error];
+    
+    if (error) {
+        NSLog(@"Error unarchiving size value: %@", error);
+        return nil;
+    }
+    
+    return value;
 }
 
 - (void)onPrefsWindowClose:(NSNotification *)notification {
@@ -704,7 +724,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 		NSOpenPanel *panel = [NSOpenPanel openPanel];
 		[panel setAllowsMultipleSelection:NO];
 		[panel setCanChooseDirectories:NO];
-		if ([panel runModal] != NSOKButton)
+        if ([panel runModal] != NSModalResponseOK)
 			return;
 		NSString *filename = [[panel URL] path];
 		Action *action = [[klass alloc] initWithFile:filename];
@@ -815,21 +835,21 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     CFArrayRef currentLoginItems = LSSharedFileListCopySnapshot(loginItemList, &seedValue);
     
     if (currentLoginItems != NULL) {
-        const UInt32 resolveFlags = (kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes);
         
         // walk the array looking for an entry that belongs to us
         for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
             LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
             
             BOOL startupItemFound = NO;
-            CFURLRef pathOfCurrentItem = NULL;
-            if (LSSharedFileListItemResolve(itemToCheck, resolveFlags, &pathOfCurrentItem, NULL) == noErr) {
-                startupItemFound = ((pathOfCurrentItem != NULL)
-                                    && CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath));
-            }
-            
+            CFErrorRef error = NULL;
+            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, 0, &error);
+
             if (pathOfCurrentItem != NULL) {
+                startupItemFound = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
                 CFRelease(pathOfCurrentItem);
+            } else if (error != NULL) {
+                // Handle error if needed
+                CFRelease(error);
             }
             
             if (startupItemFound) {
@@ -873,16 +893,19 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
         // walk the array looking for an entry that belongs to us
         for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
             LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
-            
-            CFURLRef pathOfCurrentItem = NULL;
-            if (LSSharedFileListItemResolve(itemToCheck, resolveFlags, &pathOfCurrentItem, NULL) == noErr) {
-                isControlPlaneListed = ((pathOfCurrentItem != NULL)
-                                        && CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath));
-            }
+                        
+            CFErrorRef error = NULL;
+            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, resolveFlags, &error);
+
             if (pathOfCurrentItem != NULL) {
+                isControlPlaneListed = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
                 CFRelease(pathOfCurrentItem);
             }
-            
+            else if (error != NULL) {
+                // Optional: handle error here
+                CFRelease(error);
+            }
+                        
             if (isControlPlaneListed) {
                 break;
             }

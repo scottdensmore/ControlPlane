@@ -54,7 +54,7 @@
 
 - (BOOL) execute: (NSString **) errorString {
 	// make sure any space characters in the url string are percent-escaped
-	NSString *escapedPath = [path stringByAddingPercentEscapesUsingEncoding: NSMacOSRomanStringEncoding];
+    NSString *escapedPath = [path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
 	NSURL *url = [NSURL URLWithString: escapedPath];
 	
 	// try to mount

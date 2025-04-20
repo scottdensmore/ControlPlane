@@ -7,7 +7,6 @@
 //
 
 #import "ToggleFTPAction.h"
-#import "CPHelperToolCommon.h"
 #import "Action+HelperTool.h"
 
 @implementation ToggleFTPAction
@@ -21,7 +20,7 @@
 
 - (BOOL) execute: (NSString **) errorString {
     
-    NSString *command = turnOn ? @kCPHelperToolEnableFTPCommand : @kCPHelperToolDisableFTPCommand;
+    NSString *command = turnOn ? kCPHelperEnableFTPCommand : kCPHelperDisableFTPCommand;
 	
 	BOOL success = [self helperToolPerformAction: command];
     

@@ -1,0 +1,15 @@
+/*
+<codex>
+<abstract>Localized strings for the stuff in "CPAuthorizaiton.m".</abstract>
+</codex>
+*/
+
+
+/* prompt shown when user is required to authorize to enable time machine */
+"ControlPlane is trying to enable Time Machine." = "ControlPlane is trying to enable Time Machine.";
+
+/* prompt shown when user is required to authorize to disable time machine */
+"ControlPlane is trying to disable Time Machine." = "ControlPlane is trying to disable Time Machine.";
+
+
+

@@ -13,7 +13,7 @@
 
 @interface EvidenceSource (Private)
 
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 
 @end
 
@@ -210,31 +210,29 @@
 	[contextInfo setSelector:selector];
 	[contextInfo setTarget:callbackObject];
 
-	[NSApp beginSheet:panel
-	   modalForWindow:window
-	    modalDelegate:self
-	   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
-	      contextInfo:[contextInfo retain]];
+	[window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
+        [self sheetDidEnd:panel returnCode:returnCode contextInfo:contextInfo];
+    }];
 }
 
 - (IBAction)closeSheetWithOK:(id)sender
 {
-	[NSApp endSheet:panel returnCode:NSOKButton];
+    [NSApp endSheet:panel returnCode:NSModalResponseOK];
 	[panel orderOut:nil];
 }
 
 - (IBAction)closeSheetWithCancel:(id)sender
 {
-	[NSApp endSheet:panel returnCode:NSCancelButton];
+    [NSApp endSheet:panel returnCode:NSModalResponseCancel];
 	[panel orderOut:nil];
 }
 
 // Private
-- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
     NSInvocation *inv = (NSInvocation *) contextInfo;
 
-	if (returnCode == NSOKButton) {
+    if (returnCode == NSModalResponseOK) {
         NSDictionary *dict = [self readFromPanel];
         [inv setArgument:&dict atIndex:2];
         [inv invoke];

@@ -232,8 +232,8 @@ static NSSet *sharedActiveContexts = nil;
             NSImage *tintedImage = [[image copy] autorelease];
             [tintedImage setTemplate:NO];
             [tintedImage lockFocus];
-            [[color colorUsingColorSpaceName:NSCalibratedRGBColorSpace] set];
-            NSRectFillUsingOperation((NSRect) {NSZeroPoint, tintedImage.size}, NSCompositeSourceIn);
+            [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] set];
+            NSRectFillUsingOperation((NSRect) {NSZeroPoint, tintedImage.size}, NSCompositingOperationSourceIn);
             [tintedImage unlockFocus];
             return tintedImage;
         }
@@ -449,7 +449,7 @@ static NSSet *sharedActiveContexts = nil;
 
 - (void)importVersion1SettingsFinish: (BOOL)rulesImported withActions: (BOOL)actionsImported andIPActions: (BOOL)ipActionsFound {
 	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-	[alert setAlertStyle:NSInformationalAlertStyle];
+    [alert setAlertStyle:NSAlertStyleInformational];
 	if (!rulesImported && !actionsImported)
 		[alert setMessageText:NSLocalizedString(@"Quick Start", @"")];
 	else
@@ -695,14 +695,14 @@ static NSSet *sharedActiveContexts = nil;
 		return;
     }
 	if (!title) {
-		[sbItem setTitle:nil];
+		sbItem.button.title = @"";
 		return;
 	}
 
 	// Smaller font
 	NSDictionary *attrs = @{ NSFontAttributeName: [NSFont menuBarFontOfSize:0] };
 	NSAttributedString *as = [[NSAttributedString alloc] initWithString:title attributes:attrs];
-	[sbItem setAttributedTitle:as];
+	sbItem.button.attributedTitle = as;
     [as release];
 }
 
@@ -757,7 +757,7 @@ static NSSet *sharedActiveContexts = nil;
     }
     
     @try {
-        [sbItem setImage:image];
+        sbItem.button.image = image;
     }
     @catch (NSException *exception) {
         DSLog(@"failed to set the menubar icon to %@ with error %@. Please alert ControlPlane Developers!",
@@ -773,7 +773,7 @@ static NSSet *sharedActiveContexts = nil;
 	}
 
 	sbItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
-	[sbItem setHighlightMode:YES];
+    sbItem.button.cell.highlighted = YES;
 
     [self updateMenuBarImage];
 
@@ -843,7 +843,7 @@ static NSSet *sharedActiveContexts = nil;
         NSString *rep = [item representedObject];
         if (rep && [contextsDataSource contextByUUID:rep]) {
             BOOL ticked = ([rep isEqualToString:self.currentContext.uuid]);
-            [item setState:(ticked ? NSOnState : NSOffState)];
+            [item setState:(ticked ? NSControlStateValueOn : NSControlStateValueOff)];
         }
     }
 }
@@ -868,7 +868,7 @@ static NSSet *sharedActiveContexts = nil;
         
 		item = [[item copy] autorelease];
 		[item setTitle:[NSString stringWithFormat:@"%@ (*)", [item title]]];
-		[item setKeyEquivalentModifierMask:NSAlternateKeyMask];
+        [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
 		[item setAlternate:YES];
 		[item setAction:@selector(forceSwitchAndToggleSticky:)];
 		[submenu addItem:item];
@@ -1405,7 +1405,7 @@ static NSSet *sharedActiveContexts = nil;
 
 	// Selecting any context in the force-context menu deselects the 'stick forced contexts' item,
 	// so we force it to be correct here.
-	int state = forcedContextIsSticky ? NSOnState : NSOffState;
+    int state = forcedContextIsSticky ? NSControlStateValueOn : NSControlStateValueOff;
     [self.stickForcedContextMenuItem setState:state];
 
     [self increaseActionsInProgress];
@@ -1436,7 +1436,7 @@ static NSSet *sharedActiveContexts = nil;
 	BOOL oldValue = forcedContextIsSticky;
 	forcedContextIsSticky = !oldValue;
 
-  	[sender setState:(forcedContextIsSticky ? NSOnState : NSOffState)];
+    [sender setState:(forcedContextIsSticky ? NSControlStateValueOn : NSControlStateValueOff)];
 
     if (!forcedContextIsSticky) {
         [self setForceOneFullUpdate:YES];
@@ -1934,12 +1934,12 @@ const int64_t UPDATING_TIMER_LEEWAY = (int64_t) (0.5 * NSEC_PER_SEC);
 }
 
 - (BOOL)doInitUpdatingQueue {
-    updatingQueue = dispatch_queue_create("com.dustinrue.ControlPlane.UpdateQueue", DISPATCH_QUEUE_SERIAL);
+    updatingQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.UpdateQueue", DISPATCH_QUEUE_SERIAL);
     if (!updatingQueue) {
         DSLog(@"Failed to create a GCD queue");
         return NO;
     }
-    concurrentActionQueue = dispatch_queue_create("com.dustinrue.ControlPlane.ActionQueue", DISPATCH_QUEUE_CONCURRENT);
+    concurrentActionQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.ActionQueue", DISPATCH_QUEUE_CONCURRENT);
     if (!concurrentActionQueue) {
         DSLog(@"Failed to create a GCD queue");
         return NO;

@@ -27,23 +27,23 @@
         
     if (([turnOn intValue] == kCPAFPEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable)) {
         enabling = YES;
-        if (![self helperToolPerformAction:@kCPHelperToolEnableAFPFileSharingCommand withParameter:@kCPHelperToolAFPServiceName]) 
+        if (![self helperToolPerformAction:kCPHelperEnableAFPFileSharingCommand withParameter:kCPHelperAFPServiceName])
             afpStatusFailed = YES;
     }
     else if (([turnOn intValue] == kCPAFPDisable) || ([turnOn intValue] == kCPAFPAndSMBDisable)) {
-        if (![self helperToolPerformAction:@kCPHelperToolDisableAFPFileSharingCommand withParameter:@kCPHelperToolAFPServiceName]) 
+        if (![self helperToolPerformAction:kCPHelperDisableAFPFileSharingCommand withParameter:kCPHelperAFPServiceName])
             afpStatusFailed = YES;
     }
     
     
     if (([turnOn intValue] == kCPSMBEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable)) {
         enabling = YES;
-        if (![self helperToolPerformAction:@kCPHelperToolEnableSMBFileSharingCommand withParameter:@kCPHelperToolSMBDServiceName]) {
+        if (![self helperToolPerformAction:kCPHelperEnableSMBFileSharingCommand withParameter:kCPHelperSMBDServiceName]) {
             smbdStatusFailed = YES;
         }
     }
     else if (([turnOn intValue] == kCPSMBDisable) || ([turnOn intValue] == kCPAFPAndSMBDisable)) {
-        if (![self helperToolPerformAction:@kCPHelperToolDisableSMBFileSharingCommand withParameter:@kCPHelperToolSMBDServiceName])
+        if (![self helperToolPerformAction:kCPHelperDisableSMBFileSharingCommand withParameter:kCPHelperSMBDServiceName])
             smbdStatusFailed = YES;
             
     }

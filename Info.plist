@@ -23,7 +23,7 @@
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.dustinrue.ControlPlane</string>
+				<string>com.scottdensmore.ControlPlane</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>NSDocument</string>
@@ -46,7 +46,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6.8</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -55,7 +55,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>com.dustinrue.ControlPlane</string>
+			<string>com.scottdensmore.ControlPlane</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>http</string>
@@ -65,7 +65,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>com.dustinrue.ControlPlane</string>
+			<string>com.scottdensmore.ControlPlane</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>https</string>
@@ -73,7 +73,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>80</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CPCrashReportURL</key>
 	<string>http://crashreport.controlplaneapp.com/crash_v200.php</string>
 	<key>CPDonationURL</key>
@@ -117,11 +117,6 @@
 	<true/>
 	<key>OSAScriptingDefinition</key>
 	<string>ControlPlane.sdef</string>
-	<key>SMPrivilegedExecutables</key>
-	<dict>
-		<key>com.dustinrue.CPHelperTool</key>
-		<string>identifier com.dustinrue.CPHelperTool and certificate leaf[subject.CN] = "Developer ID Application: Dustin Rue"</string>
-	</dict>
 	<key>SUFeedURL</key>
 	<string>https://www.controlplaneapp.com/appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
