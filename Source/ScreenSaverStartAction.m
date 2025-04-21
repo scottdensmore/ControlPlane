@@ -21,8 +21,34 @@
 
 - (BOOL) execute: (NSString **) errorString {
     
-    if(![[NSWorkspace sharedWorkspace] launchApplication:@"ScreenSaverEngine.app"])
-        NSLog(@"ScreenSaverEngine failed to launch");
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+    NSURL *screensaverURL = [workspace URLForApplicationWithBundleIdentifier:@"com.apple.ScreenSaver.Engine"];
+
+    if (!screensaverURL) {
+        // Try to find it by name in default locations
+        NSString *appPath = @"/System/Library/CoreServices/ScreenSaverEngine.app";
+        screensaverURL = [NSURL fileURLWithPath:appPath];
+    }
+
+    if (screensaverURL) {
+        __block BOOL success = NO;
+        NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+        
+        [workspace openApplicationAtURL:screensaverURL
+                         configuration:configuration
+                     completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
+                         if (error == nil) {
+                             success = YES;
+                         } else {
+                             NSLog(@"ScreenSaverEngine failed to launch: %@", error);
+                         }
+                     }];
+        
+        return success;
+    } else {
+        NSLog(@"ScreenSaverEngine not found");
+        return NO;
+    }
     
 //    NSFileHandle *devnull = [NSFileHandle fileHandleForWritingAtPath:@"/dev/null"];
 //    NSTask *screenSaver = [[NSTask alloc] init];
