@@ -139,8 +139,6 @@
 		DAC45F2014CDEC170007F5EF /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; };
 		DAC672FE152235E800F1C7A1 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
 		DAC817B1159BF95A0012ED43 /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */; };
-		DACCA0A01DD7A309007F7373 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DACCA09F1DD7A309007F7373 /* HockeySDK.framework */; };
-		DACCA0A11DD7A48B007F7373 /* HockeySDK.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DACCA09F1DD7A309007F7373 /* HockeySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DADFF79715D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DADFF79615D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m */; };
 		DAE893EE1454FFFB005FA13C /* ToggleFirewallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE893E514546897005FA13C /* ToggleFirewallAction.m */; };
 		DAF2257E15ABD8CD003A8030 /* DisplayBrightnessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD827506141188880098FA6E /* DisplayBrightnessAction.m */; };
@@ -234,7 +232,6 @@
 			files = (
 				DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */,
 				DA87D18014EE0E8300E46DFF /* MapKit.framework in Copy Frameworks */,
-				DACCA0A11DD7A48B007F7373 /* HockeySDK.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,7 +703,6 @@
 				DAFC0E4514788ACB00DA6139 /* DisplayServices.framework in Frameworks */,
 				DA2479B21C664CEC00063E8E /* Sparkle.framework in Frameworks */,
 				DAFC0E4614788B0500DA6139 /* IOBluetooth.framework in Frameworks */,
-				DACCA0A01DD7A309007F7373 /* HockeySDK.framework in Frameworks */,
 				8D481B0A0B6098DD0097CF9C /* IOKit.framework in Frameworks */,
 				DDAC3C55140D866200FBF29E /* ScriptingBridge.framework in Frameworks */,
 				DD8274FB141177750098FA6E /* Security.framework in Frameworks */,
