@@ -24,7 +24,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
         sCommandInfo = @{
             NSStringFromSelector(@selector(enableTimeMachineAuthorization:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableTMCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable Time Machine.",
                     @"prompt shown when user is required to authorize to enable time machine"
@@ -32,7 +32,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableTimeMachineAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableTMCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable Time Machine.",
                     @"prompt shown when user is required to authorize to disable time machine"
@@ -40,7 +40,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(startBackupTimeMachineAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperStartBackupTMCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to start a Time Machine backup.",
                     @"prompt shown when user is required to authorize to start a time machine backup"
@@ -48,7 +48,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(stopBackupTimeMachineAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperStopBackupTMCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to stop a Time Machine backup.",
                     @"prompt shown when user is required to authorize to stop a time machine backup"
@@ -56,7 +56,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableInternetSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableISCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable Internet Sharing.",
                     @"prompt shown when user is required to authorize to enable internet sharing"
@@ -64,7 +64,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableInternetSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableISCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable Internet Sharing.",
                     @"prompt shown when user is required to authorize to disable internet sharing"
@@ -72,15 +72,15 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableFirewallAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableFirewallCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable your Firewall.",
                     @"prompt shown when user is required to authorize to enable the firewall"
                 )
             },
-            NSStringFromSelector(@selector(disableInternetSharingAuthorizaiton:withReply:)) : @{
+            NSStringFromSelector(@selector(disableFirewallAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableFirewallCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable your Firewall.",
                     @"prompt shown when user is required to authorize to disable the firewall"
@@ -88,7 +88,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(setDisplaySleepTime:authorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperSetDisplaySleepTimeCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to change the display sleep time.",
                     @"prompt shown when user is required to authorize to change the display sleep time"
@@ -96,7 +96,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enablePrinterSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnablePrinterSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable Printer Sharing.",
                     @"prompt shown when user is required to authorize to enable printer sharing"
@@ -104,7 +104,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disablePrinterSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisablePrinterSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable Printer Sharing.",
                     @"prompt shown when user is required to authorize to disable printer sharing"
@@ -112,7 +112,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableAFPFileSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableAFPFileSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable AFP File Sharing.",
                     @"prompt shown when user is required to authorize to enable afp file sharing"
@@ -128,7 +128,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableSMBFileSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableSMBFileSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable SMB File Sharing.",
                     @"prompt shown when user is required to authorize to enable smnb file sharing"
@@ -136,7 +136,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableSMBFileSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableSMBFileSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable SMB File Sharing.",
                     @"prompt shown when user is required to authorize to disalbe smnb file sharing"
@@ -144,7 +144,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableTFTPAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableTMCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable TFTP.",
                     @"prompt shown when user is required to authorize to enable tftp"
@@ -152,7 +152,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableTFTPAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableTFTPCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable TFTP.",
                     @"prompt shown when user is required to authorize to disable tftp"
@@ -168,7 +168,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableFTPAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableFTPCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable FTP.",
                     @"prompt shown when user is required to authorize to disable ftp"
@@ -176,7 +176,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableWebSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableWebSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable Web Sharing.",
                     @"prompt shown when user is required to authorize to enable web sharing"
@@ -184,7 +184,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableWebSharingAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableWebSharingCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable Web Sharing.",
                     @"prompt shown when user is required to authorize to disable web sharing"
@@ -192,7 +192,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(enableRemoteLoginAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperEnableRemoteLoginCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to enable Remote Login.",
                     @"prompt shown when user is required to authorize to enable remote login"
@@ -200,7 +200,7 @@ NSString * const kCommandKeyAuthRightDesc    = @"authRightDescription";
             },
             NSStringFromSelector(@selector(disableRemoteLoginAuthorizaiton:withReply:)) : @{
                 kCommandKeyAuthRightName    : kCPHelperDisableRemoteLoginCommandAuthRightName,
-                kCommandKeyAuthRightDefault : @kAuthorizationRuleAuthenticateAsAdmin,
+                kCommandKeyAuthRightDefault : @kAuthorizationRuleClassAllow,
                 kCommandKeyAuthRightDesc    : NSLocalizedString(
                     @"ControlPlane is trying to disable Remote Login.",
                     @"prompt shown when user is required to authorize to disable remote login"

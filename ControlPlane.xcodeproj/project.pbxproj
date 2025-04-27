@@ -181,7 +181,7 @@
 		DE184B0A2D9918600072F8ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
 		DE184B0B2D9918720072F8ED /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */; };
 		DE184B0C2D99188A0072F8ED /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
-		DE184B102D9918EA0072F8ED /* com.scotttdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		DE184B102D9918EA0072F8ED /* com.scottdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */; };
 		DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */; };
 		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
 		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
@@ -299,7 +299,7 @@
 			dstPath = Contents/Library/LaunchServices;
 			dstSubfolderSpec = 1;
 			files = (
-				DE184B102D9918EA0072F8ED /* com.scotttdensmore.CPHelperTool in Copy Launch Services */,
+				DE184B102D9918EA0072F8ED /* com.scottdensmore.CPHelperTool in Copy Launch Services */,
 			);
 			name = "Copy Launch Services";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -683,7 +683,7 @@
 		DE762B7B2D98BA310095F733 /* CPXPCService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPXPCService.m; sourceTree = "<group>"; };
 		DE762B7D2D98BA310095F733 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DE762B7F2D98BA310095F733 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.scotttdensmore.CPHelperTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = com.scottdensmore.CPHelperTool; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE762B9E2D98C1BE0095F733 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DE762BA32D98C2440095F733 /* HelperTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Info.plist"; sourceTree = "<group>"; };
 		DE762BA42D98C2440095F733 /* HelperTool-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Launchd.plist"; sourceTree = "<group>"; };
@@ -833,7 +833,7 @@
 			children = (
 				DA1204DA13D0E5C800CDA091 /* ControlPlane.app */,
 				DE762B772D98BA310095F733 /* CPXPCService.xpc */,
-				DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */,
+				DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1328,9 +1328,9 @@
 			productReference = DE762B772D98BA310095F733 /* CPXPCService.xpc */;
 			productType = "com.apple.product-type.xpc-service";
 		};
-		DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */ = {
+		DE762B9B2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scotttdensmore.CPHelperTool" */;
+			buildConfigurationList = DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scottdensmore.CPHelperTool" */;
 			buildPhases = (
 				DE762B982D98C1BE0095F733 /* Sources */,
 				DE762B992D98C1BE0095F733 /* Frameworks */,
@@ -1339,9 +1339,9 @@
 			);
 			dependencies = (
 			);
-			name = com.scotttdensmore.CPHelperTool;
+			name = com.scottdensmore.CPHelperTool;
 			productName = CPHelperTool;
-			productReference = DE762B9C2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */;
+			productReference = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -1411,7 +1411,7 @@
 			targets = (
 				8D1107260486CEB800E47090 /* ControlPlane */,
 				DE762B762D98BA310095F733 /* CPXPCService */,
-				DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */,
+				DE762B9B2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */,
 			);
 		};
 /* End PBXProject section */
@@ -1663,7 +1663,7 @@
 /* Begin PBXTargetDependency section */
 		DE184B0E2D9918AA0072F8ED /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DE762B9B2D98C1BE0095F733 /* com.scotttdensmore.CPHelperTool */;
+			target = DE762B9B2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */;
 			targetProxy = DE184B0D2D9918AA0072F8ED /* PBXContainerItemProxy */;
 		};
 		DE762B812D98BA310095F733 /* PBXTargetDependency */ = {
@@ -2220,8 +2220,9 @@
 					__launchd_plist,
 					"CPHelperTool/HelperTool-Launchd.plist",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.scotttdensmore.CPHelperTool;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.CPHelperTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -2264,8 +2265,9 @@
 					__launchd_plist,
 					"CPHelperTool/HelperTool-Launchd.plist",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.scotttdensmore.CPHelperTool;
+				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.CPHelperTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
@@ -2299,7 +2301,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scotttdensmore.CPHelperTool" */ = {
+		DE762BA02D98C1BE0095F733 /* Build configuration list for PBXNativeTarget "com.scottdensmore.CPHelperTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DE762BA12D98C1BE0095F733 /* Debug */,

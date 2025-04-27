@@ -7,12 +7,12 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>HelperTool</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>2.0.0.1</string>
 	<key>SMAuthorizedClients</key>
 	<array>
-		<string>identifier "com.scottdensmore.CPXPCService" and anchor apple generic and certificate leaf[subject.CN] = "Apple Development: Scott Densmore (62U9HX9N5D)" and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
+		<string>identifier &quot;com.scottdensmore.CPXPCService&quot; and anchor apple generic and certificate leaf[subject.CN] = &quot;Apple Development: Scott Densmore (62U9HX9N5D)&quot; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
 	</array>
 </dict>
 </plist>

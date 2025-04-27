@@ -8,12 +8,14 @@
 //
 
 #import <WebKit/WebFrame.h>
+#import <WebKit/WebKit.h>
 #import "AboutPanel.h"
 
 
 @implementation AboutPanel {
 	NSPanel *panel;
-	IBOutlet WebView *webView;
+//	IBOutlet WebView *webView;
+    IBOutlet WKWebView *wkWebView;
 }
 
 - (id)init {
@@ -44,8 +46,11 @@
 		return nil;
 	}
 
-	[webView.mainFrame loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:
-		[[NSBundle mainBundle] pathForResource:@"Credits" ofType:@"html"]]]];
+//	[webView.mainFrame loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:
+//		[[NSBundle mainBundle] pathForResource:@"Credits" ofType:@"html"]]]];
+    
+    [wkWebView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:
+                                                         [[NSBundle mainBundle] pathForResource:@"Credits" ofType:@"html"]]]];
 
 	return self;
 }

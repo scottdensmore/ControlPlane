@@ -16,7 +16,7 @@
 
 @interface Action (XPCHelperTool_Private)
 
-@property (atomic, copy, readwrite) NSData *authorization;
+//@property (atomic, copy, readwrite) NSData *authorization;
 
 - (NSXPCConnection *)helperToolConnection:(NSXPCListenerEndpoint *)endpoint;
 - (NSXPCConnection *)xpcServiceConnection;
@@ -99,13 +99,13 @@
     static NSXPCConnection *helperConnection;
     static dispatch_once_t helperOnceToken;
     dispatch_once(&helperOnceToken, ^{
-        helperConnection = [[NSXPCConnection alloc] initWithServiceName:kHelperToolMachServiceName];
+        helperConnection = [[NSXPCConnection alloc] initWithListenerEndpoint:endpoint];
         helperConnection.remoteObjectInterface = [NSXPCInterface interfaceWithProtocol:@protocol(CPHelperToolProtocol)];
         
         // Set up error handling
         helperConnection.invalidationHandler = ^{
             // Connection was invalidated - could attempt to reconnect here
-            NSLog(@"XPC Helper Tool connection invalidated");
+            NSLog(@"Helper Tool connection invalidated");
             helperConnection = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 helperOnceToken = 0; // Allow recreation of connection on next call
@@ -114,7 +114,7 @@
         
         helperConnection.interruptionHandler = ^{
             // Connection was interrupted - could attempt to reconnect here
-            NSLog(@"XPC Helper Tool connection interrupted");
+            NSLog(@"Helper Tool connection interrupted");
         };
         
         [helperConnection resume];
@@ -220,7 +220,11 @@
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     [self authorize];
-    [self installHelperTool];
+    
+    if (![self installHelperTool]) {
+        dispatch_release(semaphore);
+        return result;
+    }
     
     if ([action isEqualToString:kCPHelperEnableTMCommand]) {
         result = [self enableTimeMachine];
@@ -273,7 +277,7 @@
         
         dispatch_release(semaphore);
         
-        return NO;
+        return result;
     }
     
     // Wait for the action to complete
@@ -299,7 +303,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableTimeMachineAuthorization:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableTimeMachineAuthorization:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable time machine : %@", [error description]);
             }
@@ -323,7 +327,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableTimeMachineAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableTimeMachineAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable time machine : %@", [error description]);
             }
@@ -347,7 +351,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] startBackupTimeMachineAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] startBackupTimeMachineAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to start time machine backup : %@", [error description]);
             }
@@ -371,7 +375,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] stopBackupTimeMachineAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] stopBackupTimeMachineAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to stop time machine backup : %@", [error description]);
             }
@@ -397,7 +401,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableInternetSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableInternetSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable Internet Sharing : %@", [error description]);
             }
@@ -421,7 +425,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableInternetSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableInternetSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable Internet Sharing : %@", [error description]);
             }
@@ -447,7 +451,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableFirewallAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableFirewallAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable the Firewall : %@", [error description]);
             }
@@ -471,7 +475,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableFirewallAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableFirewallAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable the Firewall : %@", [error description]);
             }
@@ -497,7 +501,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] setDisplaySleepTime:minutes authorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] setDisplaySleepTime:minutes authorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to set display sleep time : %@", [error description]);
             }
@@ -523,7 +527,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enablePrinterSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enablePrinterSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable Printer Sharing : %@", [error description]);
             }
@@ -547,7 +551,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disablePrinterSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disablePrinterSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disble Printer Sharing : %@", [error description]);
             }
@@ -573,7 +577,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableAFPFileSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableAFPFileSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable AFP File Sharing : %@", [error description]);
             }
@@ -597,7 +601,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableAFPFileSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableAFPFileSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable AFP File Sharing : %@", [error description]);
             }
@@ -621,7 +625,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableSMBFileSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableSMBFileSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable SMB File Sharing : %@", [error description]);
             }
@@ -645,7 +649,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableSMBFileSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableSMBFileSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable SMB File Sharing : %@", [error description]);
             }
@@ -671,7 +675,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableTFTPAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableTFTPAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable TFTP : %@", [error description]);
             }
@@ -695,7 +699,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableTFTPAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableTFTPAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable TFTP : %@", [error description]);
             }
@@ -721,7 +725,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableFTPAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableFTPAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable FTP : %@", [error description]);
             }
@@ -745,7 +749,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableTFTPAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableTFTPAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable FTP : %@", [error description]);
             }
@@ -771,7 +775,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableWebSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableWebSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable Web Sharing : %@", [error description]);
             }
@@ -795,7 +799,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableWebSharingAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableWebSharingAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable Web Sharing : %@", [error description]);
             }
@@ -821,7 +825,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] enableRemoteLoginAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] enableRemoteLoginAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to enable Remote Login : %@", [error description]);
             }
@@ -845,7 +849,7 @@
             NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
             error = helperProxyError;
             success = NO;
-        }] disableRemoteLoginAuthorizaiton:self.authorization withReply:^(BOOL commandSuccess, NSError *commandError) {
+        }] disableRemoteLoginAuthorizaiton:connectReplyAuthorization withReply:^(BOOL commandSuccess, NSError *commandError) {
             if (commandError) {
                 NSLog(@"Failed to disable Remote Login : %@", [error description]);
             }

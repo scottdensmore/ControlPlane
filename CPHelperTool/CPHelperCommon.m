@@ -1,6 +1,6 @@
 //
 //  CPHelperCommon.m
-//  com.scotttdensmore.CPHelperTool
+//  com.scottdensmore.CPHelperTool
 //
 //  Created by Scott Densmore on 3/29/25.
 //
