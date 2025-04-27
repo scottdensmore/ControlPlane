@@ -1,6 +1,6 @@
 //
 //  CPHelperTool.m
-//  com.scotttdensmore.CPHelperTool
+//  com.scottdensmore.CPHelperTool
 //
 //  Created by Scott Densmore on 3/29/25.
 //
@@ -134,7 +134,8 @@
 {
     // We specifically don't check for authorization here.  Everyone is always allowed to get
     // the version of the helper tool.
-    reply([[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]);
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    reply(bundleVersion);
 }
 
 

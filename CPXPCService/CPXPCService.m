@@ -97,6 +97,8 @@
         reply(nil);
     } else {
         assert(error != NULL);
+        NSError *foo = (__bridge NSError *) error;
+        NSLog(@"Failed to install helper tool : %@", [foo description]);
         reply((__bridge NSError *) error);
         CFRelease(error);
     }
