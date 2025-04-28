@@ -190,6 +190,7 @@
 		DE762BA62D98C2B40095F733 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
 		DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */; };
 		DEEADC5228FCABBC000677F1 /* ToggleAutomaticSwitchingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */; };
+		DEF6F4B32DBF07D5004C88A1 /* DNDArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF6F4B22DBF07D5004C88A1 /* DNDArrayController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -684,6 +685,8 @@
 		DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetFS.framework; path = System/Library/Frameworks/NetFS.framework; sourceTree = SDKROOT; };
 		DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleAutomaticSwitchingAction.m; path = Source/ToggleAutomaticSwitchingAction.m; sourceTree = "<group>"; };
 		DEEADC5128FCABBC000677F1 /* ToggleAutomaticSwitchingAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleAutomaticSwitchingAction.h; path = Source/ToggleAutomaticSwitchingAction.h; sourceTree = "<group>"; };
+		DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DNDArrayController.h; path = Source/DNDArrayController.h; sourceTree = "<group>"; };
+		DEF6F4B22DBF07D5004C88A1 /* DNDArrayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DNDArrayController.m; path = Source/DNDArrayController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -756,6 +759,8 @@
 				DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */,
 				8D8C9E320BBB89320074D5B3 /* DB.h */,
 				8D8C9E330BBB89320074D5B3 /* DB.m */,
+				DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */,
+				DEF6F4B22DBF07D5004C88A1 /* DNDArrayController.m */,
 				8DBB44950C530F7600064010 /* DSLogger.h */,
 				8DBB44960C530F7600064010 /* DSLogger.m */,
 				DA461C0A14C33E3B0019594A /* NSString+ShellScriptHelper.h */,
@@ -1528,6 +1533,7 @@
 				DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */,
 				8D649BA50BE8033A00716059 /* ToggleWiFiAction.m in Sources */,
 				8DC4E7FD0C178917007E7E41 /* MuteAction.m in Sources */,
+				DEF6F4B32DBF07D5004C88A1 /* DNDArrayController.m in Sources */,
 				DA07C11018FE04A3008FE8B5 /* ContextEvidenceSource.m in Sources */,
 				8D71CAEF0C17BA7900E56526 /* ToggleableAction.m in Sources */,
 				8D71CB790C17C01700E56526 /* ScreenSaverPasswordAction.m in Sources */,
@@ -1873,7 +1879,6 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/ApplicationServices.framework/Frameworks\"",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/Frameworks",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
@@ -1904,7 +1909,6 @@
 					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks/ApplicationServices.framework/Frameworks\"",
 					"$(SRCROOT)",
 					"$(PROJECT_DIR)/Frameworks",
-					"$(PROJECT_DIR)/HockeySDK-Mac",
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES;
