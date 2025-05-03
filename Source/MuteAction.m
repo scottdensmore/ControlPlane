@@ -32,7 +32,7 @@
     OSStatus status = noErr;
     AudioObjectPropertyAddress property;
     property.mScope = kAudioDevicePropertyScopeOutput;
-    property.mElement = kAudioObjectPropertyElementMaster;
+    property.mElement = kAudioObjectPropertyElementMain;
     property.mSelector = kAudioDevicePropertyMute;
 
     // check device
@@ -96,7 +96,7 @@
 	OSStatus status = noErr;
 	AudioObjectPropertyAddress property;
 	property.mScope = kAudioObjectPropertyScopeGlobal;
-	property.mElement = kAudioObjectPropertyElementMaster;
+    property.mElement = kAudioObjectPropertyElementMain;
 	property.mSelector = kAudioHardwarePropertyDefaultOutputDevice;
 	
 	// are there audio properties
@@ -122,7 +122,7 @@
     OSStatus status = noErr;
     AudioObjectPropertyAddress property;
     property.mScope = kAudioObjectPropertyScopeGlobal;
-    property.mElement = kAudioObjectPropertyElementMaster;  // This is still valid
+    property.mElement = kAudioObjectPropertyElementMain;  // This is still valid
     property.mSelector = kAudioHardwarePropertyDefaultOutputDevice;
     
     // are there audio properties

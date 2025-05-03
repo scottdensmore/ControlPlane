@@ -47,7 +47,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
     AudioObjectPropertyAddress address2 = {
         kAudioHardwarePropertyDefaultOutputDevice,
         kAudioObjectPropertyScopeGlobal,
-        kAudioObjectPropertyElementMaster
+        kAudioObjectPropertyElementMain
     };
     
     if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &address2, 0, NULL, &sz2, &deviceID) != noErr) {
@@ -127,7 +127,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
 	AudioObjectPropertyAddress address = {
 		kAudioHardwarePropertyDefaultOutputDevice,
 		kAudioObjectPropertyScopeGlobal,
-		kAudioObjectPropertyElementMaster
+        kAudioObjectPropertyElementMain
 	};
 	
 	if (AudioObjectGetPropertyData(kAudioObjectSystemObject, &address, 0, NULL, &sz, &deviceID) != noErr) {
@@ -151,7 +151,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
     AudioObjectPropertyAddress availableDeviceSearch = {
         kAudioHardwarePropertyDevices,
         kAudioObjectPropertyScopeGlobal,
-        kAudioObjectPropertyElementMaster,
+        kAudioObjectPropertyElementMain,
     };
     
     UInt32 propertySize;
@@ -194,7 +194,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
     AudioObjectPropertyAddress sourceAddr = {
         kAudioDevicePropertyDataSource,
         kAudioDevicePropertyScopeOutput,
-        kAudioObjectPropertyElementMaster
+        kAudioObjectPropertyElementMain
     };
     
     if (AudioObjectAddPropertyListener(builtinDeviceID, &sourceAddr, &sourceChange, self) != noErr) {
@@ -216,7 +216,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
 	AudioObjectPropertyAddress address = {
 		kAudioHardwarePropertyDefaultOutputDevice,
 		kAudioObjectPropertyScopeGlobal,
-		kAudioObjectPropertyElementMaster
+        kAudioObjectPropertyElementMain
 	};
 	
 	// Unregister listener; I don't know what we could do if this fails ...
@@ -224,7 +224,7 @@ static OSStatus sourceChange(AudioObjectID inDevice, UInt32 inChannel,
     
     address.mSelector =kAudioDevicePropertyDataSource;
     address.mScope = kAudioDevicePropertyScopeOutput;
-    address.mElement = kAudioObjectPropertyElementMaster;
+    address.mElement = kAudioObjectPropertyElementMain;
     AudioObjectRemovePropertyListener(builtinDeviceID, &address, &sourceChange, self);
 
 	source = 0;

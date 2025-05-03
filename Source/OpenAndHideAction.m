@@ -11,8 +11,11 @@
 
 @implementation OpenAndHideAction
 
-- (NSWorkspaceLaunchOptions)launchOptions {
-    return NSWorkspaceLaunchDefault | NSWorkspaceLaunchAndHide;
+- (NSWorkspaceOpenConfiguration *)launchOptions {
+    NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+        configuration.activates = YES;
+        configuration.hides = YES;
+    return configuration;
 }
 
 + (NSString *)helpText {

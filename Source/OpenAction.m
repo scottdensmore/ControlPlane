@@ -56,10 +56,11 @@
 	return [NSString stringWithFormat:NSLocalizedString(@"Opening '%@'.", @""), path];
 }
 
-- (NSWorkspaceLaunchOptions)launchOptions {
-    return NSWorkspaceLaunchDefault;
+- (NSWorkspaceOpenConfiguration *)launchConfiguration {
+    NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+    configuration.activates = NO;
+    return configuration;
 }
-
 - (BOOL)execute:(NSString **)errorString {
 	NSString *app, *fileType;
     

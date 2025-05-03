@@ -58,7 +58,7 @@
     CFMutableDictionaryRef matching = IOServiceMatching("IODisplayConnect");
     
     // releases matching for us
-    kern_return_t err = IOServiceGetMatchingServices(kIOMasterPortDefault,
+    kern_return_t err = IOServiceGetMatchingServices(kIOMainPortDefault,
                                                      matching,
                                                      &iter);
     if (err)

@@ -56,9 +56,19 @@
 }
 
 - (void) setControlPlaneAsURLHandler {
-    NSString *currentSystemBrowser = (NSString *)LSCopyDefaultHandlerForURLScheme((CFStringRef) @"http");
+    // Get current default browser using modern API
+    NSURL *httpURL = [NSURL URLWithString:@"http://example.com"];
+    NSURL *currentBrowserURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:httpURL];
+    NSString *currentBrowserID = nil;
     
-    if (![[currentSystemBrowser lowercaseString] isEqualToString:[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]]) {
+    if (currentBrowserURL) {
+        NSBundle *currentBrowserBundle = [NSBundle bundleWithURL:currentBrowserURL];
+        currentBrowserID = [currentBrowserBundle bundleIdentifier];
+    }
+    
+    NSString *ourBundleID = [[NSBundle mainBundle] bundleIdentifier];
+    
+    if (!currentBrowserID || ![[currentBrowserID lowercaseString] isEqualToString:[ourBundleID lowercaseString]]) {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:NSLocalizedString(@"You are adding or have triggered a Default Browser Action but ControlPlane is not currently set as the system wide default web browser. For the Default Browser Action feature to work properly ControlPlane must be set as the system's default web browser. ControlPlane will take the URL and then pass it to the browser of your choice. You may be asked to confirm this choice if you are using OS X 10.10 (Yosemite) or higher. Please select 'Use ControlPlane' if prompted." , @"")];
         [self performSelectorOnMainThread:@selector(runModal) withObject:alert waitUntilDone:false];
@@ -72,8 +82,6 @@
 
     }
     LSSetDefaultHandlerForURLScheme((CFStringRef) @"http", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-
-    [currentSystemBrowser release];
 }
 
 - (NSMutableDictionary *) dictionary {
@@ -105,33 +113,42 @@
 	return NSLocalizedString(@"Set default browser to:", @"");
 }
 
-+ (NSArray *) limitedOptions {
-	NSArray *handlers = [(NSArray *) LSCopyAllHandlersForURLScheme((CFStringRef) @"http") autorelease];
-	
-	// no handlers
-	if (!handlers)
-		return [NSArray array];
-	
-	NSUInteger total = [handlers count];
-	NSMutableArray *options = [NSMutableArray arrayWithCapacity: total];
-	
-	for (NSUInteger i = 0; i < total; ++i) {
-		NSString *bundleID = [handlers objectAtIndex: i];
-		
-        if ([[bundleID lowercaseString] isEqualToString:[[[NSBundle mainBundle] bundleIdentifier] lowercaseString]])
++ (NSArray *)limitedOptions {
+    // Create a URL with http scheme
+    NSURL *httpURL = [NSURL URLWithString:@"http://example.com"];
+    
+    // Get applications that can open this URL using the recommended API
+    NSArray *appURLs = [[NSWorkspace sharedWorkspace] URLsForApplicationsToOpenURL:httpURL];
+    
+    // No handlers
+    if (!appURLs || [appURLs count] == 0)
+        return [NSArray array];
+    
+    NSUInteger total = [appURLs count];
+    NSMutableArray *options = [NSMutableArray arrayWithCapacity:total];
+    NSString *currentBundleID = [[NSBundle mainBundle] bundleIdentifier];
+    
+    for (NSURL *appURL in appURLs) {
+        NSBundle *appBundle = [NSBundle bundleWithURL:appURL];
+        NSString *bundleID = [appBundle bundleIdentifier];
+        
+        // Skip our own app
+        if ([[bundleID lowercaseString] isEqualToString:[currentBundleID lowercaseString]])
             continue;
-		[options addObject: [NSDictionary dictionaryWithObjectsAndKeys:
-							 bundleID, @"option",
-							 [self idToName: bundleID], @"description", nil]];
-	}
-	
-	return options;
+        
+        [options addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+                           bundleID, @"option",
+                           [self idToName:bundleID], @"description", nil]];
+    }
+    
+    return options;
 }
 
 + (NSString *) idToName: (NSString *) bundleID {
-	NSString * path = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier: bundleID];
-	
-	return [[NSFileManager defaultManager] displayNameAtPath: path];
+    NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier: bundleID];
+    NSString *path = [appURL path];
+    
+    return [[NSFileManager defaultManager] displayNameAtPath: path];
 }
 
 + (NSString *) friendlyName {
