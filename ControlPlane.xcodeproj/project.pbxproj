@@ -181,6 +181,7 @@
 		DE184B102D9918EA0072F8ED /* com.scottdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */; };
 		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
+		DE5FA30D2DC69513002BF2C3 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE5FA30C2DC69513002BF2C3 /* UserNotifications.framework */; };
 		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
 		DE762B7E2D98BA310095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7D2D98BA310095F733 /* main.m */; };
 		DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = DE762B772D98BA310095F733 /* CPXPCService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -670,6 +671,7 @@
 		DE184B132D999D7D0072F8ED /* Action+XPCHelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Action+XPCHelperTool.h"; path = "Source/Action+XPCHelperTool.h"; sourceTree = "<group>"; };
 		DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "Action+XPCHelperTool.m"; path = "Source/Action+XPCHelperTool.m"; sourceTree = "<group>"; };
 		DE184B2E2DAC1D480072F8ED /* CPCommonConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPCommonConstants.h; sourceTree = "<group>"; };
+		DE5FA30C2DC69513002BF2C3 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DE762B772D98BA310095F733 /* CPXPCService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = CPXPCService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE762B792D98BA310095F733 /* CPXPCServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCServiceProtocol.h; sourceTree = "<group>"; };
 		DE762B7A2D98BA310095F733 /* CPXPCService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCService.h; sourceTree = "<group>"; };
