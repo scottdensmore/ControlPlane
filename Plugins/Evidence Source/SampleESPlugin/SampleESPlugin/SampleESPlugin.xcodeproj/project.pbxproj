@@ -106,7 +106,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1250;
-				ORGANIZATIONNAME = "";
+				ORGANIZATIONNAME = "Scott Densmore";
 			};
 			buildConfigurationList = DA94BEC715CA233400ED2AB2 /* Build configuration list for PBXProject "SampleESPlugin" */;
 			compatibilityVersion = "Xcode 12.0";

@@ -10,6 +10,7 @@
 //  IMPORTANT: This code is intended to be compiled for the ARC mode
 //
 
+#import <MapKit/MapKit.h>
 #import "CoreLocationSource.h"
 #import "DSLogger.h"
 
@@ -37,7 +38,7 @@
 	NSDate *startDate;
 	
 	// for custom panel
-	IBOutlet WebView *webView;
+    IBOutlet MKMapView *mapView;
 	NSString *address;
 	NSString *coordinates;
 	NSString *accuracy;
@@ -75,9 +76,6 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
     
 	startDate = [NSDate date];
     
-    [webView setMaintainsBackForwardList:NO];
-    webView.frameLoadDelegate = self;
-    
 	locationManager = [[CLLocationManager alloc] init];
 	locationManager.delegate = self;
 	locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
@@ -105,10 +103,6 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
     
 	[self setDataCollected:NO];
 	running = NO;
-    
-    webView.frameLoadDelegate = nil;
-    [webView.windowScriptObject setValue:nil forKey:@"cocoa"];
-	[webView.mainFrame loadHTMLString:@"" baseURL:nil];
 }
 
 - (NSMutableDictionary *)readFromPanel {
@@ -230,25 +224,25 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 	[self setValue:add forKey:@"address"];
 }
 
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
-	if (running && (frame == [frame findFrameNamed:@"_top"])) {
-		[sender.windowScriptObject setValue:self forKey:@"cocoa"];
-	}
-}
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)selector {
-	if (selector == @selector(updateSelectedWithLatitude:andLongitude:)) {
-		return NO;
-	}
-	return YES;
-}
-
-+ (NSString *)webScriptNameForSelector:(SEL)sel {
-	if (sel == @selector(updateSelectedWithLatitude:andLongitude:)) {
-		return @"updateSelected";
-    }
-	return nil;
-}
+//- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame {
+//	if (running && (frame == [frame findFrameNamed:@"_top"])) {
+//		[sender.windowScriptObject setValue:self forKey:@"cocoa"];
+//	}
+//}
+//
+//+ (BOOL)isSelectorExcludedFromWebScript:(SEL)selector {
+//	if (selector == @selector(updateSelectedWithLatitude:andLongitude:)) {
+//		return NO;
+//	}
+//	return YES;
+//}
+//
+//+ (NSString *)webScriptNameForSelector:(SEL)sel {
+//	if (sel == @selector(updateSelectedWithLatitude:andLongitude:)) {
+//		return @"updateSelected";
+//    }
+//	return nil;
+//}
 
 #pragma mark -
 #pragma mark CoreLocation callbacks
@@ -329,7 +323,7 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 	NSLog(@"htmlString is %@", htmlString);
 #endif
 	// Load the HTML in the WebView
-	[webView.mainFrame loadHTMLString:htmlString baseURL:nil];
+//	[webView.mainFrame loadHTMLString:htmlString baseURL:nil];
 }
 
 
