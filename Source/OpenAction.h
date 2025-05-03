@@ -18,6 +18,6 @@
 - (NSString *)description;
 - (BOOL)execute:(NSString **)errorString;
 
-- (NSWorkspaceLaunchOptions)launchOptions;
+- (NSWorkspaceOpenConfiguration *)launchConfiguration;
 
 @end
