@@ -889,7 +889,7 @@ IA
                     </tableHeaderView>
                 </scrollView>
             </subviews>
-            <point key="canvasLocation" x="-1239" y="-1070"/>
+            <point key="canvasLocation" x="139" y="482"/>
         </customView>
         <window title="*Preferences - XXX*" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" id="910" userLabel="PrefsWindow" customClass="NSPanel">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES"/>
@@ -1695,6 +1695,7 @@ DQ
                     </textField>
                 </subviews>
             </view>
+            <point key="canvasLocation" x="139" y="468"/>
         </window>
     </objects>
     <resources>

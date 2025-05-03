@@ -22,7 +22,7 @@ typedef NS_ENUM(int, LaptopLidStateType) {
 
 static void onPMrootDomainChange(void *refcon, io_service_t service, uint32_t messageType, void *messageArgument) {
     if (messageType == kIOPMMessageClamshellStateChange) {
-        const int isClamshellClosed = ((int) messageArgument & kClamshellStateBit);
+        const int isClamshellClosed = ((int)(intptr_t)messageArgument & kClamshellStateBit);
         *((LaptopLidStateType *) refcon) = (isClamshellClosed) ? (LaptopLidIsClosed) : (LaptopLidIsOpen);
 #ifdef DEBUG_MODE
         DSLog(@"Laptop lid state has changed to %@.", (isClamshellClosed) ? (@"closed") : (@"open"));

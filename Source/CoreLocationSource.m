@@ -10,7 +10,7 @@
 //  IMPORTANT: This code is intended to be compiled for the ARC mode
 //
 
-#import <MapKit/MKMapView.h>
+#import <MapKit/MapKit.h>
 #import "CoreLocationSource.h"
 #import "DSLogger.h"
 
