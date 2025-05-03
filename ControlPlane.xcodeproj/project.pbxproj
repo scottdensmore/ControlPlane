@@ -181,6 +181,7 @@
 		DE184B102D9918EA0072F8ED /* com.scottdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */; };
 		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
+		DE5FA30D2DC69513002BF2C3 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE5FA30C2DC69513002BF2C3 /* UserNotifications.framework */; };
 		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
 		DE762B7E2D98BA310095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7D2D98BA310095F733 /* main.m */; };
 		DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = DE762B772D98BA310095F733 /* CPXPCService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -669,6 +670,7 @@
 		DE184B132D999D7D0072F8ED /* Action+XPCHelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Action+XPCHelperTool.h"; path = "Source/Action+XPCHelperTool.h"; sourceTree = "<group>"; };
 		DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "Action+XPCHelperTool.m"; path = "Source/Action+XPCHelperTool.m"; sourceTree = "<group>"; };
 		DE184B2E2DAC1D480072F8ED /* CPCommonConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPCommonConstants.h; sourceTree = "<group>"; };
+		DE5FA30C2DC69513002BF2C3 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		DE762B772D98BA310095F733 /* CPXPCService.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = CPXPCService.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE762B792D98BA310095F733 /* CPXPCServiceProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCServiceProtocol.h; sourceTree = "<group>"; };
 		DE762B7A2D98BA310095F733 /* CPXPCService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPXPCService.h; sourceTree = "<group>"; };
@@ -703,7 +705,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DEED1DE72DB580D700417E6C /* UserNotifications.framework in Frameworks */,
 				DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */,
 				DAC817B1159BF95A0012ED43 /* ServiceManagement.framework in Frameworks */,
 				DA8E2833156B498A0040FC35 /* ApplicationServices.framework in Frameworks */,
@@ -719,6 +720,7 @@
 				DAFC0E4614788B0500DA6139 /* IOBluetooth.framework in Frameworks */,
 				8D481B0A0B6098DD0097CF9C /* IOKit.framework in Frameworks */,
 				DDAC3C55140D866200FBF29E /* ScriptingBridge.framework in Frameworks */,
+				DE5FA30D2DC69513002BF2C3 /* UserNotifications.framework in Frameworks */,
 				DD8274FB141177750098FA6E /* Security.framework in Frameworks */,
 				8D82F06D0AA811CE009ADA44 /* SystemConfiguration.framework in Frameworks */,
 				8D3BFFB20C61CA5300B9B910 /* WebKit.framework in Frameworks */,
@@ -898,6 +900,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DE5FA30C2DC69513002BF2C3 /* UserNotifications.framework */,
 				DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */,
 				DE02C5D22DC67E000041FA17 /* MapKit.framework */,
 				DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */,
