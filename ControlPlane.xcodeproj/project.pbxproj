@@ -221,6 +221,20 @@
 			remoteGlobalIDString = DE762B762D98BA310095F733;
 			remoteInfo = CPXPCService;
 		};
+		DEED1DE22DB5704300417E6C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAD889A315D5F337009F30A3 /* NotificationCenterAction.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DAD8898D15D5F337009F30A3;
+			remoteInfo = NotificationCenterAction;
+		};
+		DEED1DE42DB5704700417E6C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA94BEDE15CA233400ED2AB2 /* SampleESPlugin.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DA94BECC15CA233400ED2AB2;
+			remoteInfo = SampleESPlugin;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -689,6 +703,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DEED1DE72DB580D700417E6C /* UserNotifications.framework in Frameworks */,
 				DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */,
 				DAC817B1159BF95A0012ED43 /* ServiceManagement.framework in Frameworks */,
 				DA8E2833156B498A0040FC35 /* ApplicationServices.framework in Frameworks */,
@@ -1275,6 +1290,8 @@
 			);
 			dependencies = (
 				DE762B812D98BA310095F733 /* PBXTargetDependency */,
+				DEED1DE52DB5704700417E6C /* PBXTargetDependency */,
+				DEED1DE32DB5704300417E6C /* PBXTargetDependency */,
 			);
 			name = ControlPlane;
 			productInstallPath = "$(HOME)/Applications";
@@ -1646,6 +1663,16 @@
 			target = DE762B762D98BA310095F733 /* CPXPCService */;
 			targetProxy = DE762B802D98BA310095F733 /* PBXContainerItemProxy */;
 		};
+		DEED1DE32DB5704300417E6C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = NotificationCenterAction;
+			targetProxy = DEED1DE22DB5704300417E6C /* PBXContainerItemProxy */;
+		};
+		DEED1DE52DB5704700417E6C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SampleESPlugin;
+			targetProxy = DEED1DE42DB5704700417E6C /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1874,7 +1901,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
@@ -1905,7 +1932,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
@@ -1983,7 +2010,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2056,7 +2083,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2096,7 +2123,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = CPXPCService/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2133,7 +2160,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = CPXPCService/Info.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -2173,7 +2200,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "CPHelperTool/HelperTool-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -2218,7 +2245,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				INFOPLIST_FILE = "CPHelperTool/HelperTool-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
 				MARKETING_VERSION = 2.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;

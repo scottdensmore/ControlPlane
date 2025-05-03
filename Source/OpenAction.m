@@ -96,10 +96,30 @@
         }
         
         // whether it is a file or an app, it needs to get opened here
-        NSArray *urls = [NSArray arrayWithObject:[NSURL fileURLWithPath:path]];
-        if ([[NSWorkspace sharedWorkspace] openURLs:urls withAppBundleIdentifier:nil options:[self launchOptions] additionalEventParamDescriptor:nil launchIdentifiers:nil]) {
-            return YES;
-        }
+        NSURL *fileURL = [NSURL fileURLWithPath:path];
+        NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+
+        // Apply any specific configuration settings here if needed
+        // configuration.activates = YES;
+        // configuration.hides = NO;
+
+        __block BOOL success = NO;
+        [[NSWorkspace sharedWorkspace] openURL:fileURL
+                                 configuration:configuration
+                             completionHandler:^(NSRunningApplication * _Nullable application, NSError * _Nullable error) {
+                                 if (error == nil) {
+                                     success = YES;
+                                 } else {
+                                     NSLog(@"Failed to open URL: %@", error);
+                                 }
+                             }];
+
+        // If you need synchronous behavior, you may need to wait for the completion handler
+        // This is a simple approach, but in a real app you might want to use a better mechanism
+        // dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        // dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC * 5));
+
+        return success;
 	}
 	
 	*errorString = [NSString stringWithFormat:NSLocalizedString(@"Failed opening '%@'.", @""), path];

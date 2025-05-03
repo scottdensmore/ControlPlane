@@ -81,8 +81,10 @@
 }
 
 + (NSArray *) limitedOptions {
-    NSString* TediumPath = [[NSWorkspace sharedWorkspace] 
-                            absolutePathForAppBundleWithIdentifier:@"com.scottdensmore.Tedium"];
+    NSURL *tediumURL = [[NSWorkspace sharedWorkspace]
+                            URLForApplicationWithBundleIdentifier:@"com.scottdensmore.Tedium"];
+    
+    NSString* TediumPath = [tediumURL path];
     if (!TediumPath) {
         [[[self new] autorelease] performSelectorOnMainThread:@selector(tediumNotInstalledAlert) withObject:self waitUntilDone:YES];
         return nil;

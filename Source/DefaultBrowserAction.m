@@ -155,14 +155,34 @@
     NSString *newURL = [decodedURL stringByAddingPercentEncodingWithAllowedCharacters:
                        [NSCharacterSet URLQueryAllowedCharacterSet]];
     
-    NSArray *urls = @[[NSURL URLWithString:newURL]];
+    NSURL *urlToOpen = [NSURL URLWithString:newURL];
     
-    // Updated API call for macOS 15
-    [[NSWorkspace sharedWorkspace] openURLs:urls
-                    withApplicationAtURL:[NSWorkspace.sharedWorkspace URLForApplicationWithBundleIdentifier:browser]
-                                 options:NSWorkspaceLaunchDefault
-                          configuration:@{}
-                                  error:nil];
+    if (!urlToOpen) {
+        NSLog(@"Invalid URL: %@", newURL);
+        return;
+    }
+    
+    // Get browser application URL
+    NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+    NSURL *browserURL = [workspace URLForApplicationWithBundleIdentifier:browser];
+    
+    if (!browserURL) {
+        NSLog(@"Browser with bundle ID %@ not found", browser);
+        return;
+    }
+    
+    // Create configuration
+    NSWorkspaceOpenConfiguration *configuration = [NSWorkspaceOpenConfiguration configuration];
+    configuration.activates = YES;
+    
+    // Open URL with the specified browser
+    [workspace openURL:urlToOpen
+          configuration:configuration
+      completionHandler:^(NSRunningApplication * _Nullable app, NSError * _Nullable error) {
+          if (error) {
+              NSLog(@"Failed to open URL %@ with browser %@: %@", newURL, browser, error);
+          }
+      }];
 }
 
 @end
