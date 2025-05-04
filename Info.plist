@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>ControlPlane needs access to Bluetooth to create rules based on attached and nearby, discoverable bluetooth devices.</string>
 	<key>BuildMachineOSBuild</key>
 	<string>11A511</string>
 	<key>CFBundleDevelopmentRegion</key>
