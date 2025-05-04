@@ -1498,7 +1498,6 @@
 /* Begin PBXShellScriptBuildPhase section */
 		7374BAE51528B83B00BEEFE0 /* Get out.txt and usb-vendors.txt if they don't exist */ = {
 			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1510,10 +1509,12 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(PROJECT_DIR)/Resources/usb-vendors.txt",
+				"$(PROJECT_DIR)/Resources/oui.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "\nif [ ! -f ${PROJECT_DIR}/Resources/oui.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-oui.sh\n\nfi\n\nif [ ! -f ${PROJECT_DIR}/Resources/usb-vendors.txt ]; then\n\n    cd ${PROJECT_DIR}/Utilities\n    . ./update-usb-data.sh\n\nfi\n";
+			shellScript = "\ncurl http://www.usb.org/developers/tools/comp_dump > $SCRIPT_OUTPUT_FILE_0\n\ncurl http://standards.ieee.org/develop/regauth/oui/oui.txt | grep \"..-..-..\" | grep hex | sed \"s/(hex)//\" | awk -F '\\t' '{print $1,$3}' | awk -F '       ' '{print $1\"\\t\"$3}' | sed -e 's/^[ \\t]*//' > $SCRIPT_OUTPUT_FILE_1\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
