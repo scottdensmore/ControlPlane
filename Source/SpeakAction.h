@@ -10,7 +10,7 @@
 
 #import "Action.h"
 
-@interface SpeakAction: Action <ActionWithString, NSSpeechSynthesizerDelegate>
+@interface SpeakAction: Action <ActionWithString>
 
 - (id) initWithDictionary: (NSDictionary *) dict;
 - (NSMutableDictionary *) dictionary;

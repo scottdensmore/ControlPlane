@@ -62,40 +62,72 @@
     
 }
 
-- (NSString *) interpreterFromExtension
+- (NSString *)interpreterFromExtension
 {
-    NSString *app, *extension;
-	NSString *result = @"/bin/bash";
-	
-	// Get the file type of the script
-	if (![NSWorkspace.sharedWorkspace getInfoForFile: self application: &app type: &extension]) {
-		return result;
+    NSString *result = @"/bin/bash";
+    
+    // Create URL from self (assuming self is a path string)
+    NSURL *fileURL = [NSURL fileURLWithPath:self];
+    
+    // Get the file type using NSURLContentTypeKey
+    NSString *fileType = nil;
+    NSError *error = nil;
+    [fileURL getResourceValue:&fileType forKey:NSURLContentTypeKey error:&error];
+    
+    if (error || !fileType) {
+        return result;
     }
-	extension = extension.lowercaseString;
-	
-	// check type
-	if ([extension isEqualToString: @"sh"])
-		result = @"/bin/bash";
-	else if ([extension isEqualToString: @"zsh"])
-		result = @"/usr/bin/zsh";
-	else if ([extension isEqualToString: @"rb"])
-		result = @"/usr/bin/ruby";
-	else if ([extension isEqualToString: @"scpt"])
-		result = @"/usr/bin/osascript";
-	else if ([extension isEqualToString: @"pl"])
-		result = @"/usr/bin/perl";
-	else if ([extension isEqualToString: @"py"])
-		result = @"/usr/bin/python";
-	else if ([extension isEqualToString: @"php"])
-		result = @"/usr/bin/php";
-	else if ([extension isEqualToString: @"expect"])
-		result = @"/usr/bin/expect";
-	else if ([extension isEqualToString: @"tcl"])
-		result = @"/usr/bin/tclsh";
-	
-	return result;
+    
+    // Convert UTI to extension if needed
+    NSString *extension = nil;
+    
+    // Map common UTIs to extensions
+    NSDictionary *utiToExtensionMap = @{
+        @"public.shell-script": @"sh",
+        @"public.zsh-script": @"zsh",
+        @"public.ruby-script": @"rb",
+        @"com.apple.applescript.script": @"scpt",
+        @"public.perl-script": @"pl",
+        @"public.python-script": @"py",
+        @"public.php-script": @"php",
+        @"public.tcl-script": @"tcl"
+    };
+    
+    // Try to get extension from UTI
+    extension = utiToExtensionMap[fileType];
+    
+    // If no mapping found, try to get extension from path
+    if (!extension) {
+        extension = fileURL.pathExtension.lowercaseString;
+    }
+    
+    // If still no extension, return default
+    if (!extension) {
+        return result;
+    }
+    
+    // Check type (same logic as before)
+    if ([extension isEqualToString:@"sh"])
+        result = @"/bin/bash";
+    else if ([extension isEqualToString:@"zsh"])
+        result = @"/usr/bin/zsh";
+    else if ([extension isEqualToString:@"rb"])
+        result = @"/usr/bin/ruby";
+    else if ([extension isEqualToString:@"scpt"])
+        result = @"/usr/bin/osascript";
+    else if ([extension isEqualToString:@"pl"])
+        result = @"/usr/bin/perl";
+    else if ([extension isEqualToString:@"py"])
+        result = @"/usr/bin/python";
+    else if ([extension isEqualToString:@"php"])
+        result = @"/usr/bin/php";
+    else if ([extension isEqualToString:@"expect"])
+        result = @"/usr/bin/expect";
+    else if ([extension isEqualToString:@"tcl"])
+        result = @"/usr/bin/tclsh";
+    
+    return result;
 }
-
 @end
 
 
