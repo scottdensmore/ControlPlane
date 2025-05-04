@@ -281,12 +281,6 @@
 	if (!(self = [super init]))
 		return nil;
     
-    // get system version
-    NSInteger major = 0, minor = 0;
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    major = version.majorVersion;
-    minor = version.minorVersion;
-    
 	classes = [[NSMutableArray alloc] initWithObjects:
                [ConnectBluetoothDeviceAction class],
 			   [DefaultBrowserAction class],
