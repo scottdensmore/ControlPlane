@@ -241,7 +241,7 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 	if (running)
 		return;
 
-	notificationPort = IONotificationPortCreate(kIOMasterPortDefault);
+    notificationPort = IONotificationPortCreate(kIOMainPortDefault);
 	runLoopSource = IONotificationPortGetRunLoopSource(notificationPort);
 	CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, kCFRunLoopDefaultMode);
 	
