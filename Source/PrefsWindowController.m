@@ -258,8 +258,26 @@
 	[prefsToolbar setDelegate:self];
 	[prefsToolbar setAllowsUserCustomization:NO];
 	[prefsToolbar setAutosavesConfiguration:NO];
-    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+    [prefsToolbar setVisible:YES];
+    [prefsToolbar setSizeMode:NSToolbarSizeModeRegular];
+    [prefsToolbar setShowsBaselineSeparator:NO];
+
+    // Force traditional toolbar style
+    if (@available(macOS 11.0, *)) {
+        [prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
+    }
+
 	[prefsWindow setToolbar:prefsToolbar];
+
+	// Debug: Log toolbar setup
+	NSLog(@"PrefsGroups count: %lu", (unsigned long)[prefsGroups count]);
+	for (NSMutableDictionary *group in prefsGroups) {
+		NSLog(@"Group: %@ - View: %@", group[@"name"], group[@"view"] ? @"SET" : @"NIL");
+	}
+	NSLog(@"Toolbar created with %lu items", (unsigned long)[[prefsToolbar items] count]);
+	NSLog(@"Toolbar visible: %@", [prefsToolbar isVisible] ? @"YES" : @"NO");
+	NSLog(@"Window toolbar: %@", [prefsWindow toolbar] ? @"SET" : @"NOT SET");
 
 	currentPrefsGroup = nil;
 	[self switchToView:@"General"];
@@ -556,12 +574,14 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
      itemForItemIdentifier:(NSString *)groupId
  willBeInsertedIntoToolbar:(BOOL)flag
 {
+	NSLog(@"Toolbar requesting item for ID: %@", groupId);
 	NSDictionary *group = [self groupById:groupId];
 	if (group == nil) {
 		NSLog(@"Oops! toolbar delegate is trying to use '%@' as an ID!", groupId);
 		return nil;
 	}
 
+	NSLog(@"Creating toolbar item for: %@", group[@"display_name"]);
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
 	[item setLabel:[group objectForKey:@"display_name"]];
 	[item setPaletteLabel:[group objectForKey:@"display_name"]];
