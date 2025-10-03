@@ -263,10 +263,13 @@
     [prefsToolbar setSizeMode:NSToolbarSizeModeRegular];
     [prefsToolbar setShowsBaselineSeparator:NO];
 
-    // Force traditional toolbar style
+    // Force traditional toolbar style and maximum space utilization
     if (@available(macOS 11.0, *)) {
         [prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
     }
+
+    // Allow user customization to ensure all items are shown
+    [prefsToolbar setAllowsUserCustomization:YES];
 
 	[prefsWindow setToolbar:prefsToolbar];
 
@@ -574,20 +577,37 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
      itemForItemIdentifier:(NSString *)groupId
  willBeInsertedIntoToolbar:(BOOL)flag
 {
-	NSLog(@"Toolbar requesting item for ID: %@", groupId);
+	NSLog(@"=== TOOLBAR ITEM CREATION ===");
+	NSLog(@"Requesting item for ID: %@", groupId);
+	NSLog(@"Will be inserted: %@", flag ? @"YES" : @"NO");
+
 	NSDictionary *group = [self groupById:groupId];
 	if (group == nil) {
-		NSLog(@"Oops! toolbar delegate is trying to use '%@' as an ID!", groupId);
+		NSLog(@"ERROR: No group found for ID '%@'", groupId);
 		return nil;
 	}
 
-	NSLog(@"Creating toolbar item for: %@", group[@"display_name"]);
+	NSString *displayName = [group objectForKey:@"display_name"];
+	NSString *iconName = [group objectForKey:@"icon"];
+	NSImage *image = [NSImage imageNamed:iconName];
+
+	NSLog(@"Group data - ID: %@, Display: %@, Icon: %@", groupId, displayName, iconName);
+	NSLog(@"Image loaded: %@", image ? @"YES" : @"NO");
+	if (image) {
+		NSLog(@"Image size: %.1f x %.1f", image.size.width, image.size.height);
+	}
+
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
-	[item setLabel:[group objectForKey:@"display_name"]];
-	[item setPaletteLabel:[group objectForKey:@"display_name"]];
-	[item setImage:[NSImage imageNamed:[group objectForKey:@"icon"]]];
+	[item setLabel:displayName];
+	[item setPaletteLabel:displayName];
+	[item setImage:image];
 	[item setTarget:self];
 	[item setAction:@selector(switchToViewFromToolbar:)];
+
+	// Log final item properties
+	NSLog(@"Final item - Label: '%@', Image: %@", item.label, item.image ? @"SET" : @"MISSING");
+	NSLog(@"Item view: %@", item.view ? @"HAS CUSTOM VIEW" : @"STANDARD");
+	NSLog(@"================================");
 
 	return item;
 }
@@ -596,16 +616,28 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 {
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[prefsGroups count]];
 
+	NSLog(@"=== TOOLBAR ALLOWED ITEMS ===");
 	for (NSDictionary *group in prefsGroups) {
-		[array addObject:group[@"name"]];
+		NSString *groupId = group[@"name"];  // This is the key used for identifiers
+		[array addObject:groupId];
+		NSLog(@"Allowed: %@ (display: %@)", groupId, group[@"display_name"]);
     }
+	NSLog(@"Total allowed: %lu", (unsigned long)[array count]);
+	NSLog(@"===============================");
 
 	return array;
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [self toolbarAllowedItemIdentifiers:toolbar];
+	NSArray *defaultItems = [self toolbarAllowedItemIdentifiers:toolbar];
+	NSLog(@"=== TOOLBAR DEFAULT ITEMS ===");
+	for (NSString *itemId in defaultItems) {
+		NSLog(@"Default: %@", itemId);
+	}
+	NSLog(@"Total default: %lu", (unsigned long)[defaultItems count]);
+	NSLog(@"==============================");
+	return defaultItems;
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
