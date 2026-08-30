@@ -23,7 +23,14 @@ If verification finds a defect and code changes, **restart this entire skill** a
 
 3. Build Release (same scheme, `Release`).
 4. Treat **new** compiler warnings on touched files as failures unless pre-existing and noted.
-5. Run unit/UI tests if targets exist (`xcodebuild test …`). If none, say so explicitly.
+5. Run unit tests:
+
+   ```bash
+   xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
+     -destination 'platform=macOS' test -only-testing:ControlPlaneTests
+   ```
+
+   Or `./scripts/smoke-build.sh`. See `docs/TESTING.md`. Prefer logic `ControlPlaneTests` over host-based tests (LSUIElement dual-NSApplication). Run UI tests only when the slice touches prefs/UI.
 6. Smoke the slice on the target OS (or note manual steps for the human):
    - Launch agent; open Preferences.
    - Exercise affected evidence source / action / notification / login item / helper path.
