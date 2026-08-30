@@ -78,7 +78,8 @@ Use the **implementer** subagent / `tdd-slice` skill.
 10. **UI / UX review** *(only if user-visible surface changed: XIBs, menus, prefs, status item, Help).* Use **ui-reviewer**. Check macOS HIG, accessibility, layout on the target OS.
 11. **Verification.** Use **verifier** / `verify-macos-build` skill:
     - Debug and Release builds; treat new warnings as findings.
-    - Full test suite when present.
+    - Run `ControlPlaneTests` (`xcodebuild test -only-testing:ControlPlaneTests`) or `./scripts/smoke-build.sh`.
+    - See `docs/TESTING.md` for unit vs UI journey scope.
     - Smoke the affected evidence/action/prefs path on the target OS.
     - If a fix is required, **re-run verification from the start** after the fix.
 12. **Expert code review.** Use **code-reviewer** on the full branch diff + uncommitted files (memory/MRC-ARC, threading, helper security, API deprecations). Feedback → fix → re-verify → fresh review.
