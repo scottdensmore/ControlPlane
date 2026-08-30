@@ -1,0 +1,1 @@
+Before we get started lets make sure things are working and there are plenty of unit tests and user journey tests so as we make changes thigns work. Go through the entire app and figure out what tests we need to ensure that as we go, things stay working. Ensure that things are working today already.
