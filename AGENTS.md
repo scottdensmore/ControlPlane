@@ -35,6 +35,7 @@ Upgrade **one major macOS at a time**. Each OS line must fully work before the n
 - Prefer the smallest change that restores or preserves behavior on the **current** OS branch.
 - Do not pull forward `macos-<N+1>` (or later) work onto the current branch unless the user explicitly expands scope.
 - When filing or picking issues, set/respect labels `macos-15`, `macos-16`, …
+- **Rescan at each new OS line:** before implementing `macOS-<N+1>`, re-audit the tree and refresh `macos-<N+1>` issues; prior labels are not automatically sufficient.
 - Deployment target should match the branch’s OS line when you intentionally raise it (e.g. `macOS-15` → 15.x); do not raise it “for fun.”
 
 ---
