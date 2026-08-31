@@ -273,40 +273,14 @@
 
 - (void)enableInternetSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.InternetSharing.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Internet Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Internet Sharing is not supported on this version of macOS."]);
 }
 
 - (void)disableInternetSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -w /System/Library/LaunchDaemons/com.apple.InternetSharing.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Internet Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Internet Sharing is not supported on this version of macOS."]);
 }
 
 #pragma mark - Firewall Commands
@@ -414,40 +388,14 @@
 
 - (void)enableAFPFileSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -F /System/Library/LaunchDaemons/%s.plist", [kCPHelperAFPServiceName UTF8String]);
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable AFP File Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"AFP file sharing is not supported on this version of macOS."]);
 }
 
 - (void)disableAFPFileSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/%s.plist", [kCPHelperAFPServiceName UTF8String]);
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable AFP File Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"AFP file sharing is not supported on this version of macOS."]);
 }
 
 - (void)enableSMBFileSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply

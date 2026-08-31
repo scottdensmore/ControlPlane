@@ -32,7 +32,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
 | `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is universal (`x86_64` + `arm64`) |
-| `RetiredSharingActionTests` | FTP/TFTP/Web Sharing actions gated off on modern macOS |
+| `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 
 Additional test **sources** live under `ControlPlaneTests/` (Action registry, IPv4 match, Context model, applicability characterization, Packed IP). Wire them into the target as mock seams / stubs land — tracked by `macos-15` testing issues.
 
