@@ -6,6 +6,7 @@
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
 - **UI tests:** `ControlPlaneUITests` target exists for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
+- **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-15`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
 
 ## Commands
 
@@ -13,10 +14,13 @@
 # Unit tests only
 xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
   -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
-  test -only-testing:ControlPlaneTests
+  CODE_SIGNING_ALLOWED=NO test -only-testing:ControlPlaneTests
 
-# Full smoke (Debug + Release + unit tests)
+# Full local smoke (Debug + Release + unit tests)
 ./scripts/smoke-build.sh
+
+# CI-shaped smoke (skip Release)
+SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 
 ## What day-1 unit tests cover
