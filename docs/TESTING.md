@@ -30,6 +30,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
+| `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is universal (`x86_64` + `arm64`) |
 
 Additional test **sources** live under `ControlPlaneTests/` (Action registry, IPv4 match, Context model, applicability characterization, Packed IP). Wire them into the target as mock seams / stubs land — tracked by `macos-15` testing issues.
 
