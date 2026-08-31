@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "01M1B30PXRJ209TCD222WV6ZWJ",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T05:00:06.312407Z",
+  "branch": "fix/retire-ftp-tftp-web-22",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "f0b891a134b5",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 4,
+    "context_tokens": 232342,
+    "context_window_size": 256000
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 317,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61,
+        "workflow.md": 128
+      }
+    }
+  ]
+}
