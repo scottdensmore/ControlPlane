@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "01M1APN223RJZGTXC5PKK6N8Q1",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T01:24:10.643594Z",
+  "branch": "ci/github-actions-smoke-tests",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "1ba97456b80a",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 333,
+      "user_lines_removed": 21,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61,
+        "ControlPlane.xcodeproj/xcshareddata/xcschemes/ControlPlane.xcscheme": 16,
+        "workflow.md": 128
+      },
+      "user_removed_per_file": {
+        "ControlPlane.xcodeproj/xcshareddata/xcschemes/ControlPlane.xcscheme": 21
+      }
+    }
+  ]
+}
