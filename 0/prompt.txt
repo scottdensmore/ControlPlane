@@ -39,3 +39,7 @@ yes
 ---
 
 Ok lets go
+
+---
+
+Ok 1Password is unlocked
