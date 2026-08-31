@@ -7,9 +7,13 @@
 //
 
 #import "ToggleTFTPAction.h"
-#import "Action+HelperTool.h"
 
 @implementation ToggleTFTPAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -19,21 +23,11 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    
-    NSString *command = turnOn ? kCPHelperEnableTFTPCommand : kCPHelperDisableTFTPCommand;
-	
-	BOOL success = [self helperToolPerformAction: command];
-    
-	if (!success) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling TFTP Service.", @"Act of turning on or enabling TFTP Service failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling TFTP Service.", @"Act of turning off or disabling TFTP Service failed");
-	}
-    
-
-    
-	return success;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(@"TFTP sharing is not supported on this version of macOS.",
+                                         @"Error when a retired sharing action runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *) helpText {
