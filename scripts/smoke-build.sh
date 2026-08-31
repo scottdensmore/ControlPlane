@@ -57,6 +57,15 @@ echo "==> Info.plist smoke (Debug)"
 /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_DEBUG/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c 'Print :LSUIElement' "$APP_DEBUG/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c 'Print :NSBluetoothAlwaysUsageDescription' "$APP_DEBUG/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c 'Print :NSLocationWhenInUseUsageDescription' "$APP_DEBUG/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c 'Print :NSLocalNetworkUsageDescription' "$APP_DEBUG/Contents/Info.plist"
+/usr/libexec/PlistBuddy -c 'Print :NSAppleEventsUsageDescription' "$APP_DEBUG/Contents/Info.plist"
+# ATS must not allow unrestricted arbitrary loads
+if /usr/libexec/PlistBuddy -c 'Print :NSAppTransportSecurity:NSAllowsArbitraryLoads' "$APP_DEBUG/Contents/Info.plist" 2>/dev/null; then
+  echo "ERROR: NSAllowsArbitraryLoads still present" >&2
+  exit 1
+fi
+echo "ATS: NSAllowsArbitraryLoads absent (ok)"
 
 echo "==> Unit tests (ControlPlaneTests)"
 xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \

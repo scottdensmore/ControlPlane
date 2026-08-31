@@ -4,6 +4,18 @@
 <dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>ControlPlane needs access to Bluetooth to create rules based on attached and nearby, discoverable bluetooth devices.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>ControlPlane uses your location to match rules based on where you are.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>ControlPlane uses your location to match rules based on where you are, including while the menu-bar agent is running.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>ControlPlane browses local network services (Bonjour) to create rules based on devices and services on your network.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_services._dns-sd._udp</string>
+	</array>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>ControlPlane uses Apple Events to run scripting actions such as VPN, firewall, and Time Machine destination changes.</string>
 	<key>BuildMachineOSBuild</key>
 	<string>11A511</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -77,11 +89,11 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CPCrashReportURL</key>
-	<string>http://crashreport.controlplaneapp.com/crash_v200.php</string>
+	<string>https://crashreport.controlplaneapp.com/crash_v200.php</string>
 	<key>CPDonationURL</key>
 	<string>https://www.controlplaneapp.com/support-controlplane/</string>
 	<key>CPSupportURL</key>
-	<string>http://groups.google.com/group/controlplane-support/topics</string>
+	<string>https://groups.google.com/group/controlplane-support/topics</string>
 	<key>CPWebPageURL</key>
 	<string>https://www.controlplaneapp.com/</string>
 	<key>DTCompiler</key>
@@ -106,8 +118,23 @@
 	<string>1</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>tediumapp.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>crashreport.controlplaneapp.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
@@ -126,6 +153,6 @@
 	<key>SUScheduledCheckInterval</key>
 	<integer>86400</integer>
 	<key>TediumURL</key>
-	<string>http://www.tediumapp.com/get-tedium/</string>
+	<string>https://www.tediumapp.com/get-tedium/</string>
 </dict>
 </plist>
