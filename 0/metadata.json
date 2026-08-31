@@ -1,0 +1,18 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "01M1AQNQ65MFBYE8ZWBW5J2XZX",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T01:41:51.698508Z",
+  "branch": "fix/arm64-release-valid-archs",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "1ba97456b80a",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 1
+  }
+}
