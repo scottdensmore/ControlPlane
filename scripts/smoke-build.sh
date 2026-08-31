@@ -38,7 +38,7 @@ lipo -archs "$APP_DEBUG/Contents/MacOS/ControlPlane"
 
 if [[ "$SKIP_RELEASE" != "1" ]]; then
   APP_RELEASE=$(find "$DERIVED/Build/Products/Release" -name 'ControlPlane.app' -maxdepth 2 | head -1)
-  echo "==> Archs (Release) — may be x86_64-only until issue #38"
+  echo "==> Archs (Release)"
   lipo -archs "$APP_RELEASE/Contents/MacOS/ControlPlane" || true
 fi
 

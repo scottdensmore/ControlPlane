@@ -2361,7 +2361,6 @@
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = macosx;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
