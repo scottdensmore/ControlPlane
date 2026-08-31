@@ -36,10 +36,21 @@ test -n "$APP_DEBUG"
 echo "==> Archs (Debug)"
 lipo -archs "$APP_DEBUG/Contents/MacOS/ControlPlane"
 
+SPARKLE_DEBUG="$APP_DEBUG/Contents/Frameworks/Sparkle.framework/Versions/Current/Sparkle"
+if [[ -f "$SPARKLE_DEBUG" ]]; then
+  echo "==> Sparkle archs (Debug bundle)"
+  lipo -archs "$SPARKLE_DEBUG"
+fi
+
 if [[ "$SKIP_RELEASE" != "1" ]]; then
   APP_RELEASE=$(find "$DERIVED/Build/Products/Release" -name 'ControlPlane.app' -maxdepth 2 | head -1)
   echo "==> Archs (Release)"
   lipo -archs "$APP_RELEASE/Contents/MacOS/ControlPlane" || true
+  SPARKLE_RELEASE="$APP_RELEASE/Contents/Frameworks/Sparkle.framework/Versions/Current/Sparkle"
+  if [[ -f "$SPARKLE_RELEASE" ]]; then
+    echo "==> Sparkle archs (Release bundle)"
+    lipo -archs "$SPARKLE_RELEASE"
+  fi
 fi
 
 echo "==> Info.plist smoke (Debug)"
