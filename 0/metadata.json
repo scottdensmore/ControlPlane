@@ -1,0 +1,74 @@
+{
+  "cli_version": "0.10.3",
+  "checkpoint_id": "01M1CWPCKF8M24091SZ5ACXTNS",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-08-31T21:48:05.562411Z",
+  "branch": "fix/tcc-privacy-ats-21",
+  "checkpoints_count": 4,
+  "save_step_count": 2,
+  "files_touched": [
+    "ControlPlane.xcodeproj/project.pbxproj",
+    "ControlPlaneTests/InfoPlistPrivacyTests.m",
+    "Info.plist",
+    "Source/CoreLocationSource.m",
+    "docs/TESTING.md",
+    "scripts/smoke-build.sh"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "abab95ee6046",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 182987,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 3069824,
+    "output_tokens": 9999,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 9,
+    "context_tokens": 232342,
+    "context_window_size": 256000
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-08-31T21:48:05.422831Z",
+    "agent_lines": 173,
+    "agent_removed": 12,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 173,
+    "total_lines_changed": 185,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 317,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61,
+        "workflow.md": 128
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 317,
+      "user_lines_removed": 0,
+      "agent_lines_added": 173,
+      "agent_lines_removed": 12,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61,
+        "workflow.md": 128
+      }
+    }
+  ]
+}
