@@ -79,14 +79,26 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 	locationManager = [[CLLocationManager alloc] init];
 	locationManager.delegate = self;
 	locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-	[locationManager startUpdatingLocation];
-    
-	[self setDataCollected:YES];
+
+	[self requestLocationAuthorizationIfNeeded];
 	running = YES;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateMap];
-    });
+
+	if ([self isLocationAuthorizationDeniedOrRestricted]) {
+		DSLog(@"Core Location is denied or restricted; location evidence will not collect data until permission is granted in System Settings.");
+		[self setDataCollected:NO];
+		return;
+	}
+
+	if ([self isLocationAuthorizationGranted]) {
+		[locationManager startUpdatingLocation];
+		[self setDataCollected:YES];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self updateMap];
+		});
+	} else {
+		// NotDetermined: wait for locationManagerDidChangeAuthorization:
+		[self setDataCollected:NO];
+	}
 }
 
 - (void)stop {
@@ -246,6 +258,56 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 
 #pragma mark -
 #pragma mark CoreLocation callbacks
+
+- (CLAuthorizationStatus)currentLocationAuthorizationStatus
+{
+    if (@available(macOS 11.0, *)) {
+        return locationManager.authorizationStatus;
+    }
+    return [CLLocationManager authorizationStatus];
+}
+
+- (BOOL)isLocationAuthorizationDeniedOrRestricted
+{
+    CLAuthorizationStatus status = [self currentLocationAuthorizationStatus];
+    return (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted);
+}
+
+- (BOOL)isLocationAuthorizationGranted
+{
+    CLAuthorizationStatus status = [self currentLocationAuthorizationStatus];
+    // macOS exposes Always / Authorized; WhenInUse is not available on this SDK.
+    return (status == kCLAuthorizationStatusAuthorizedAlways);
+}
+
+- (void)requestLocationAuthorizationIfNeeded
+{
+    CLAuthorizationStatus status = [self currentLocationAuthorizationStatus];
+    if (status == kCLAuthorizationStatusNotDetermined) {
+        [locationManager requestWhenInUseAuthorization];
+    }
+}
+
+- (void)locationManagerDidChangeAuthorization:(CLLocationManager *)manager
+{
+    (void)manager;
+    if (!running || locationManager == nil) {
+        return;
+    }
+
+    if ([self isLocationAuthorizationGranted]) {
+        [locationManager startUpdatingLocation];
+        [self setDataCollected:YES];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateMap];
+        });
+    } else if ([self isLocationAuthorizationDeniedOrRestricted]) {
+        DSLog(@"Core Location permission denied; stopping location updates.");
+        [locationManager stopUpdatingLocation];
+        current = nil;
+        [self setDataCollected:NO];
+    }
+}
 
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
