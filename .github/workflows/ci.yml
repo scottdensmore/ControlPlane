@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - macOS-15
+      - master
+  pull_request:
+    branches:
+      - macOS-15
+      - master
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Debug build + ControlPlaneTests
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          # Prefer a recent installed Xcode; fall back to default.
+          if [ -d /Applications/Xcode.app ]; then
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
+          xcodebuild -version
+          swift --version || true
+
+      - name: Debug build
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
+        run: |
+          set -euo pipefail
+          mkdir -p "$DERIVED_DATA_PATH"
+          xcodebuild \
+            -project ControlPlane.xcodeproj \
+            -scheme ControlPlane \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY=- \
+            build
+
+      - name: Unit tests (ControlPlaneTests)
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project ControlPlane.xcodeproj \
+            -scheme ControlPlane \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY=- \
+            test \
+            -only-testing:ControlPlaneTests
+
+      - name: Info.plist smoke
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
+        run: |
+          set -euo pipefail
+          APP=$(find "$DERIVED_DATA_PATH/Build/Products/Debug" -name 'ControlPlane.app' -maxdepth 2 | head -1)
+          test -n "$APP"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :LSUIElement' "$APP/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :NSBluetoothAlwaysUsageDescription' "$APP/Contents/Info.plist"
+          echo "Archs: $(lipo -archs "$APP/Contents/MacOS/ControlPlane")"

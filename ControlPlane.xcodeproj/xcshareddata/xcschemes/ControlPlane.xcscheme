@@ -28,34 +28,6 @@
             buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B52E4473889A4313048C029B"
-               BuildableName = "ControlPlaneTests.xctest"
-               BlueprintName = "ControlPlaneTests"
-               ReferencedContainer = "container:ControlPlane.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C3A2E30C636E659A773FFB78"
-               BuildableName = "ControlPlaneUITests.xctest"
-               BlueprintName = "ControlPlaneUITests"
-               ReferencedContainer = "container:ControlPlane.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "91BC44D52B139D336B9288E4"
                BuildableName = "ControlPlaneTests.xctest"
                BlueprintName = "ControlPlaneTests"
@@ -93,26 +65,6 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B52E4473889A4313048C029B"
-               BuildableName = "ControlPlaneTests.xctest"
-               BlueprintName = "ControlPlaneTests"
-               ReferencedContainer = "container:ControlPlane.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C3A2E30C636E659A773FFB78"
-               BuildableName = "ControlPlaneUITests.xctest"
-               BlueprintName = "ControlPlaneUITests"
-               ReferencedContainer = "container:ControlPlane.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
