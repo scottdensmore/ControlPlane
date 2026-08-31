@@ -94,6 +94,9 @@
 		F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4384152161D900E94A1D /* ToggleFTPAction.m */; };
 		A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4380152161C800E94A1D /* ToggleTFTPAction.m */; };
 		B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
+		B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA922E9C144FC95200920B40 /* ToggleInternetSharingAction.m */; };
+		C394B5D6E7F809112233445 /* ToggleFileSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA571B70151587B80074CE22 /* ToggleFileSharingAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D4E5F6A7B8C9D0E112233446 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
 		E4F5A6B7C8D9E0F11223344 /* CPRetiredSharingTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C3D4E5F60718293A4B5C6D7E /* CPNotificationsMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */; };
 		A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */; };
@@ -1814,6 +1817,9 @@
 				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
 				A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */,
 				B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */,
+				B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */,
+				C394B5D6E7F809112233445 /* ToggleFileSharingAction.m in Sources */,
+				D4E5F6A7B8C9D0E112233446 /* CPHelperCommon.m in Sources */,
 				E4F5A6B7C8D9E0F11223344 /* CPRetiredSharingTestStubs.m in Sources */,
 				D229D65F82451D3735966B12 /* SharedNumberFormatter.m in Sources */,
 				2E4754E4B1E04028ABAEA6DD /* CPSystemInfo.m in Sources */,
