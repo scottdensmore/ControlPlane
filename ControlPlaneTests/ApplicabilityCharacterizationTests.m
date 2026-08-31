@@ -18,11 +18,10 @@
 
 @implementation ApplicabilityCharacterizationTests
 
-- (void)testRetiredSharingActionsStillReportApplicableToday {
-    // Known debt (#22): these still inherit YES. When gated, flip these asserts.
-    XCTAssertTrue([ToggleFTPAction isActionApplicableToSystem]);
-    XCTAssertTrue([ToggleTFTPAction isActionApplicableToSystem]);
-    XCTAssertTrue([ToggleWebSharingAction isActionApplicableToSystem]);
+- (void)testRetiredSharingActionsAreNotApplicableOnModernMacOS {
+    XCTAssertFalse([ToggleFTPAction isActionApplicableToSystem]);
+    XCTAssertFalse([ToggleTFTPAction isActionApplicableToSystem]);
+    XCTAssertFalse([ToggleWebSharingAction isActionApplicableToSystem]);
 }
 
 - (void)testScreenSaverPasswordWaitFlags {

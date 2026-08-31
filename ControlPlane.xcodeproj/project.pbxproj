@@ -90,6 +90,11 @@
 		8DFA46170CC33E46003EAC16 /* QuitApplicationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA46150CC33E46003EAC16 /* QuitApplicationAction.m */; };
 		8DFD0DA60CEBBC8A00E79049 /* UnmountAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFD0DA40CEBBC8A00E79049 /* UnmountAction.m */; };
 		90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */; };
+		E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */; };
+		F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4384152161D900E94A1D /* ToggleFTPAction.m */; };
+		A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4380152161C800E94A1D /* ToggleTFTPAction.m */; };
+		B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
+		E4F5A6B7C8D9E0F11223344 /* CPRetiredSharingTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C3D4E5F60718293A4B5C6D7E /* CPNotificationsMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */; };
 		A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */; };
 		96454D3F18C3E6BE004F64E7 /* ActionsPrefs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 96454D3918C3E6BE004F64E7 /* ActionsPrefs@2x.png */; };
@@ -353,6 +358,8 @@
 		32CA4F630368D1EE00C91783 /* ControlPlane_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlPlane_Prefix.pch; path = Source/ControlPlane_Prefix.pch; sourceTree = "<group>"; };
 		3A469C54740862F2CA73424A /* ToggleableActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ToggleableActionTests.m; sourceTree = "<group>"; };
 		429E8B6B4153B81493E8C483 /* InfoPlistSmokeTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = InfoPlistSmokeTests.m; sourceTree = "<group>"; };
+		F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RetiredSharingActionTests.m; sourceTree = "<group>"; };
+		F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPRetiredSharingTestStubs.m; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SparkleVendoredArchitectureTests.m; sourceTree = "<group>"; };
 		4B07AB3428D8A5A0971C3CD5 /* ControlPlaneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AB01456A891A29FF1EE3792 /* ContextModelTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ContextModelTests.m; sourceTree = "<group>"; };
@@ -1013,6 +1020,8 @@
 				5AB01456A891A29FF1EE3792 /* ContextModelTests.m */,
 				C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */,
 				429E8B6B4153B81493E8C483 /* InfoPlistSmokeTests.m */,
+				F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */,
+				F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */,
 				8BB66EF6F6A8923E600D9ED3 /* PackedIPAddressTests.m */,
 				309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */,
 				B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */,
@@ -1801,6 +1810,11 @@
 				62CD2363CFB9175C9363FECD /* CPSystemInfoTests.m in Sources */,
 				90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */,
+				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
+				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
+				A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */,
+				B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */,
+				E4F5A6B7C8D9E0F11223344 /* CPRetiredSharingTestStubs.m in Sources */,
 				D229D65F82451D3735966B12 /* SharedNumberFormatter.m in Sources */,
 				2E4754E4B1E04028ABAEA6DD /* CPSystemInfo.m in Sources */,
 				9E863206F2BB3BCAC654DD2C /* CPNotifications.m in Sources */,

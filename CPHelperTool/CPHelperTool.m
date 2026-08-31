@@ -530,120 +530,42 @@
 
 - (void)enableTFTPAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -F /System/Library/LaunchDaemons/tftp.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable TFTP"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"TFTP sharing is not supported on this version of macOS."]);
 }
 
 - (void)disableTFTPAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/tftp.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable TFTP"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"TFTP sharing is not supported on this version of macOS."]);
 }
 
 #pragma mark - FTP Commands
 
 - (void)enableFTPAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -F /System/Library/LaunchDaemons/ftp.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable FTP"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"FTP sharing is not supported on this version of macOS."]);
 }
 
 - (void)disableFTPAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/ftp.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable FTP"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"FTP sharing is not supported on this version of macOS."]);
 }
 
 #pragma mark - Web Sharing Commands
 
 - (void)enableWebSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -F /System/Library/LaunchDaemons/org.apache.httpd.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Web Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Web sharing is not supported on this version of macOS."]);
 }
 
 - (void)disableWebSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-    }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/org.apache.httpd.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Web Sharing"]);
-    }
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Web sharing is not supported on this version of macOS."]);
 }
 
 #pragma mark - Remote Login Commands
