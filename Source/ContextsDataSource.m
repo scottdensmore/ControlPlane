@@ -11,6 +11,7 @@
 
 #import "ContextsDataSource.h"
 #import "CPController.h"
+#import "CPNotifications.h"
 #import "DSLogger.h"
 #import "SliderWithValue.h"
 #import "SharedNumberFormatter.h"
@@ -208,7 +209,9 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
     [strongGeneralPreferencesStartAtLogin setToolTip:NSLocalizedString(@"Check this option if you want ControlPlane to start when you login.", @"")];
     
     NSButton *strongGeneralPreferencesUseNotifications = generalPreferencesUseNotifications;
-    [strongGeneralPreferencesUseNotifications setToolTip:NSLocalizedString(@"Check this option if you want to ControlPlane to issue notifications.  If checked, Growl will be used on system's older than 10.8 and Notification Center will be used on systems 10.8 or newer.", @"")];
+    [strongGeneralPreferencesUseNotifications setToolTip:NSLocalizedString(@"Check this option if you want ControlPlane to issue notifications for context changes and other events.", @"")];
+    [strongGeneralPreferencesUseNotifications setTarget:self];
+    [strongGeneralPreferencesUseNotifications setAction:@selector(notificationsPreferenceChanged:)];
     
     NSButton *strongGeneralPreferencesCheckForUpdates = generalPreferencesCheckForUpdates;
     [strongGeneralPreferencesCheckForUpdates setToolTip:NSLocalizedString(@"If checked, ControlPlane will check for updates when it starts.", @"")];
@@ -235,6 +238,22 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
     
     NSTextField *strongGeneralPreferencesCRtSTextField = generalPreferencesCRtSTextField;
     [strongGeneralPreferencesCRtSTextField setToolTip:confidenceToolTip];
+}
+
+- (IBAction)notificationsPreferenceChanged:(id)sender
+{
+    if (![sender isKindOfClass:[NSButton class]]) {
+        return;
+    }
+    if ([(NSButton *)sender state] != NSControlStateValueOn) {
+        return;
+    }
+
+    [CPNotifications requestAuthorizationIfNeededWithCompletion:^(BOOL granted) {
+        if (!granted) {
+            [CPNotifications showAuthorizationDeniedAlert];
+        }
+    }];
 }
 
 // Private

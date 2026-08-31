@@ -306,12 +306,12 @@
                 <button id="1887">
                     <rect key="frame" x="18" y="229" width="131" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Growl verwenden" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1888">
+                    <buttonCell key="cell" type="check" title="Benachrichtigungen verwenden" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1888">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="288" name="value" keyPath="values.EnableGrowl" id="1891"/>
+                        <binding destination="288" name="value" keyPath="values.EnableNotifications" id="1891"/>
                     </connections>
                 </button>
                 <popUpButton verticalHuggingPriority="750" id="1892">
