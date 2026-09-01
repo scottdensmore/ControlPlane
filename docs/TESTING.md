@@ -35,8 +35,11 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `InfoPlistPrivacyTests` | TCC usage strings present; ATS no longer allows arbitrary loads |
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
+| `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
+| `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
+| `ApplicabilityCharacterizationTests` | Retired sharing gates NO; ScreenSaverPassword wait flags |
 
-Additional test **sources** live under `ControlPlaneTests/` (Action registry, IPv4 match, Context model, applicability characterization, Packed IP). Wire them into the target as mock seams / stubs land — tracked by `macos-15` testing issues.
+Additional test **sources** still unwired under `ControlPlaneTests/` (IPv4 match, Context model, Packed IP). Wire them as mock seams land — tracked by remaining `macos-15` testing issues (#52, #53).
 
 ## User journeys to automate next
 

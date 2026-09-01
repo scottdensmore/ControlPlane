@@ -2,8 +2,9 @@
 //  CPRetiredSharingTestStubs.m
 //  ControlPlaneTests
 //
-//  Minimal Action/ToggleableAction stubs so retired sharing action tests
-//  do not link the full ActionSetController registry from Action.m.
+//  Minimal Action/ToggleableAction implementations so logic tests can exercise
+//  registry, toggleable parameter parsing, and retired sharing actions without
+//  linking Action.m's ActionSetController (PrefsWindowController / full registry).
 //
 
 #import "Action.h"
@@ -29,9 +30,45 @@
 
 @implementation Action
 
++ (NSString *)typeForClass:(Class)klass
+{
+    NSString *className = NSStringFromClass(klass);
+    return [className substringToIndex:([className length] - 6)];
+}
+
++ (Class)classForType:(NSString *)type
+{
+    NSString *classString = [NSString stringWithFormat:@"%@Action", type];
+    Class klass = NSClassFromString(classString);
+    if (!klass) {
+        return nil;
+    }
+    return klass;
+}
+
++ (Action *)actionFromDictionary:(NSDictionary *)dict
+{
+    NSString *type = [dict valueForKey:@"type"];
+    if (!type) {
+        return nil;
+    }
+    Action *obj = [[[Action classForType:type] alloc] initWithDictionary:dict];
+    return [obj autorelease];
+}
+
 + (BOOL)isActionApplicableToSystem
 {
     return YES;
+}
+
++ (BOOL)shouldWaitForScreensaverExit
+{
+    return NO;
+}
+
++ (BOOL)shouldWaitForScreenUnlock
+{
+    return NO;
 }
 
 - (id)init
@@ -39,7 +76,7 @@
     if (!(self = [super init])) {
         return nil;
     }
-    type = [@"" retain];
+    type = [[Action typeForClass:[self class]] retain];
     context = [@"" retain];
     when = [@"Arrival" retain];
     delay = [[NSNumber numberWithDouble:0] retain];
@@ -49,9 +86,10 @@
 
 - (id)initWithDictionary:(NSDictionary *)dict
 {
-    if (!(self = [self init])) {
+    if (!(self = [super init])) {
         return nil;
     }
+    type = [[Action typeForClass:[self class]] retain];
     NSString *contextValue = [dict valueForKey:@"context"];
     context = [(contextValue ?: @"") retain];
     NSString *whenValue = [dict valueForKey:@"when"];
@@ -69,6 +107,17 @@
     [delay release];
     [enabled release];
     [super dealloc];
+}
+
+- (NSMutableDictionary *)dictionary
+{
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:
+            [[type copy] autorelease], @"type",
+            [[context copy] autorelease], @"context",
+            [[when copy] autorelease], @"when",
+            [[delay copy] autorelease], @"delay",
+            [[enabled copy] autorelease], @"enabled",
+            nil];
 }
 
 - (NSString *)description
@@ -108,7 +157,7 @@
 
 - (id)initWithDictionary:(NSDictionary *)dict
 {
-    if (!(self = [super init])) {
+    if (!(self = [super initWithDictionary:dict])) {
         return nil;
     }
     NSObject *val = [dict valueForKey:@"parameter"];
@@ -127,6 +176,23 @@
     self = [super init];
     turnOn = [option boolValue];
     return self;
+}
+
+- (NSMutableDictionary *)dictionary
+{
+    NSMutableDictionary *dict = [super dictionary];
+    [dict setObject:[NSNumber numberWithBool:turnOn] forKey:@"parameter"];
+    return dict;
+}
+
++ (NSArray *)limitedOptions
+{
+    return [NSArray arrayWithObjects:
+            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], @"option",
+             NSLocalizedString(@"on", @"Used in toggling actions"), @"description", nil],
+            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:NO], @"option",
+             NSLocalizedString(@"off", @"Used in toggling actions"), @"description", nil],
+            nil];
 }
 
 @end
