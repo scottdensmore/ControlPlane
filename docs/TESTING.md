@@ -4,9 +4,10 @@
 
 - **Debug build:** works (`xcodebuild -scheme ControlPlane -configuration Debug`)
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
-- **UI tests:** `ControlPlaneUITests` target exists for prefs journeys; status-item clicks are unreliable under XCUITest
+- **UI tests:** `ControlPlaneUITests` for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
 - **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-15`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
+- **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` runs `ControlPlaneUITests` with `continue-on-error: true`
 
 ## Commands
 
@@ -16,6 +17,11 @@ xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
   -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
   CODE_SIGNING_ALLOWED=NO test -only-testing:ControlPlaneTests
 
+# UI tests (prefs journeys; set CPUITestRunning to skip notification auth UI)
+xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
+  -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
+  CODE_SIGNING_ALLOWED=NO test -only-testing:ControlPlaneUITests
+
 # Full local smoke (Debug + Release + unit tests)
 ./scripts/smoke-build.sh
 
@@ -23,7 +29,7 @@ xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
 SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 
-## What day-1 unit tests cover
+## What unit tests cover
 
 | Suite | Behavior |
 | :--- | :--- |
@@ -38,17 +44,37 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
 | `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
 | `ApplicabilityCharacterizationTests` | Retired sharing gates NO; ScreenSaverPassword wait flags |
+| `PackedIPAddressTests` | IPv4/IPv6 pack validation |
+| `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
+| `ContextModelTests` | Context UUID, root flag, dictionary round-trip |
+| `WiFiRuleMatchTests` | SSID matching with injected CoreWLAN state |
+| `USBRuleMatchTests` | Vendor/product matching with injected device list |
+| `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
+| `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
 
-Additional test **sources** still unwired under `ControlPlaneTests/` (IPv4 match, Context model, Packed IP). Wire them as mock seams land — tracked by remaining `macos-15` testing issues (#52, #53).
+## UI test accessibility identifiers
 
-## User journeys to automate next
+| Identifier | Control |
+| :--- | :--- |
+| `prefs.window` | Preferences window |
+| `prefs.general.useNotifications` | Use Notifications checkbox |
+| `prefs.tab.general` | General tab content view |
+| `prefs.tab.evidencesources` | Evidence Sources tab content view |
 
-1. Launch → Preferences open (`Debug OpenPrefsAtStartup`)
-2. Toggle Enable Notifications and assert defaults
-3. Enable an evidence source row
-4. Create a context + rule + mute action (end-to-end) with mocked evidence
-5. Context switch confidence threshold behavior
+Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `ControlPlaneUITests.m`).
+
+## Manual status-item smoke (not automatable under XCUITest)
+
+1. Launch ControlPlane; confirm menu bar icon appears.
+2. Click status item → **Preferences** opens.
+3. Click status item → **Active Contexts** submenu lists contexts.
+4. Force a context from the menu; confirm menu bar label/icon updates.
+5. Enable **Hide from status bar**; confirm icon reappears after relaunch.
 
 ## Gaps / follow-ups
 
-See GitHub issues labeled `macos-15` + `testing` (or search “XCTest”). Do not expand host-based app tests until LaunchAction malloc/`libgmalloc` inheritance is kept off the TestAction (`shouldUseLaunchSchemeArgsEnv=NO`).
+- Context + rule + mute action end-to-end journey (needs mock evidence seam)
+- Confidence threshold behavior under UI test
+- Promote `ControlPlaneUITests` from quarantine to blocking CI when stable on `macOS-15` runners
+
+Do not expand host-based app tests until LaunchAction malloc/`libgmalloc` inheritance is kept off the TestAction (`shouldUseLaunchSchemeArgsEnv=NO`).

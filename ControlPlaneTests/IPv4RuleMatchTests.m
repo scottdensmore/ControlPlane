@@ -13,7 +13,7 @@
 @implementation IPv4RuleMatchTests
 
 - (IPAddrEvidenceSource *)sourceWithAddress:(NSString *)ip {
-    IPAddrEvidenceSource *source = [[IPAddrEvidenceSource alloc] init];
+    IPAddrEvidenceSource *source = [[IPAddrEvidenceSource alloc] initForMatchingTests];
     PackedIPv4Address *packed = [[PackedIPv4Address alloc] initWithString:ip];
     XCTAssertNotNil(packed);
     [source setValue:@[packed] forKey:@"packedIPv4Addresses"];
@@ -23,7 +23,7 @@
 
 - (void)testSubnetMatch {
     IPAddrEvidenceSource *source = [self sourceWithAddress:@"192.168.1.50"];
-    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source];
+    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source matchingOnly:YES];
     NSMutableDictionary *rule = [@{
         @"parameter": @"192.168.1.0,255.255.255.0"
     } mutableCopy];
@@ -32,7 +32,7 @@
 
 - (void)testSubnetMiss {
     IPAddrEvidenceSource *source = [self sourceWithAddress:@"10.0.0.5"];
-    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source];
+    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source matchingOnly:YES];
     NSMutableDictionary *rule = [@{
         @"parameter": @"192.168.1.0,255.255.255.0"
     } mutableCopy];
@@ -41,7 +41,7 @@
 
 - (void)testCorruptParameterDoesNotMatch {
     IPAddrEvidenceSource *source = [self sourceWithAddress:@"192.168.1.50"];
-    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source];
+    IPv4RuleType *ruleType = [[IPv4RuleType alloc] initWithEvidenceSource:source matchingOnly:YES];
     NSMutableDictionary *rule = [@{ @"parameter": @"bad" } mutableCopy];
     XCTAssertFalse([ruleType doesRuleMatch:rule]);
 }

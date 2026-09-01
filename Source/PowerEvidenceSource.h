@@ -13,6 +13,9 @@
 
 - (id)init;
 
+- (id)initForMatchingTests;
+- (void)setPowerStatusForTesting:(NSString *)statusString;
+
 - (void)start;
 - (void)stop;
 
