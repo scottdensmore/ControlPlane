@@ -6,6 +6,7 @@
 
 #import "AboutPanel.h"
 #import "Action.h"
+#import "CPLoginItemService.h"
 #import "DSLogger.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
@@ -288,7 +289,7 @@
     // display options for the menu bar
 
 
-    [startAtLoginStatus setState:[self willStartAtLogin:[self appPath]] ? 1:0];
+    [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
     [menuBarDisplayOptionsController addObject:
         [NSMutableDictionary dictionaryWithObjectsAndKeys:
             @"Icon",@"option", 
@@ -852,134 +853,48 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     return [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
 }
 
-- (void)startAtLogin
-{
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList != NULL) {
-#ifdef DEBUG_MODE
-        DSLog(@"Adding ControlPlane to startup items");
-#endif
-        
-        LSSharedFileListItemRef newItem = LSSharedFileListInsertItemURL(loginItemList,
-                                                                        kLSSharedFileListItemBeforeFirst,
-                                                                        NULL, NULL,
-                                                                        (__bridge CFURLRef)[self appPath],
-                                                                        NULL, NULL);
-        if (newItem != NULL) {
-            CFRelease(newItem);
-        }
-        CFRelease(loginItemList);
-    }
-}
-
-- (void) disableStartAtLogin
-{
-    NSURL *appPath = [self appPath];
-    
-    // Creates shared file list reference to be used for changing list and reading its various properties.
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList == NULL) {
-        return;
-    }
-    
-    // take a snapshot of the list creating an array out of it
-    UInt32 seedValue = 0;
-    CFArrayRef currentLoginItems = LSSharedFileListCopySnapshot(loginItemList, &seedValue);
-    
-    if (currentLoginItems != NULL) {
-        
-        // walk the array looking for an entry that belongs to us
-        for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
-            LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
-            
-            BOOL startupItemFound = NO;
-            CFErrorRef error = NULL;
-            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, 0, &error);
-
-            if (pathOfCurrentItem != NULL) {
-                startupItemFound = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
-                CFRelease(pathOfCurrentItem);
-            } else if (error != NULL) {
-                // Handle error if needed
-                CFRelease(error);
-            }
-            
-            if (startupItemFound) {
-#ifdef DEBUG_MODE
-                DSLog(@"Removing ControlPlan from startup items");
-#endif
-                
-                LSSharedFileListItemRemove(loginItemList, itemToCheck);
-                break;
-            }
-        }
-        
-        CFRelease(currentLoginItems);
-    }
-    
-    CFRelease(loginItemList);
-}
-
 - (BOOL)willStartAtLogin:(NSURL *)appPath
 {
-    if (appPath == NULL) {
-        return NO;
-    }
-    
-    // Creates shared file list reference to be used for changing list and reading its various properties.
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList == NULL) {
-        return NO;
-    }
-    
-    // check to see if ControlPlane is already listed in Start Up Items
-    BOOL isControlPlaneListed = NO;
-    
-    // take a snapshot of the list creating an array out of it
-    UInt32 seedValue = 0;
-    CFArrayRef currentLoginItems = LSSharedFileListCopySnapshot(loginItemList, &seedValue);
-    
-    if (currentLoginItems != NULL) {
-        const UInt32 resolveFlags = (kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes);
-        
-        // walk the array looking for an entry that belongs to us
-        for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
-            LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
-                        
-            CFErrorRef error = NULL;
-            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, resolveFlags, &error);
+    (void)appPath;
+    return [[CPLoginItemService sharedService] checkboxOn];
+}
 
-            if (pathOfCurrentItem != NULL) {
-                isControlPlaneListed = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
-                CFRelease(pathOfCurrentItem);
-            }
-            else if (error != NULL) {
-                // Optional: handle error here
-                CFRelease(error);
-            }
-                        
-            if (isControlPlaneListed) {
-                break;
-            }
+- (void)startAtLogin
+{
+    NSError *error = nil;
+    if (![[CPLoginItemService sharedService] setEnabled:YES error:&error]) {
+        DSLog(@"Unable to enable Start at Login: %@", error);
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = NSLocalizedString(@"Could Not Enable Start at Login",
+                                              @"Alert title when SMAppService register fails");
+        alert.informativeText = error.localizedDescription ?: NSLocalizedString(@"Open System Settings → General → Login Items and allow ControlPlane.",
+                                                                                @"Fallback guidance when login item registration fails");
+        [alert addButtonWithTitle:NSLocalizedString(@"Open Login Items Settings", @"Button to open Login Items")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
+            [CPLoginItemService openLoginItemsSettings];
         }
-        
-        CFRelease(currentLoginItems);
     }
-    
-    CFRelease(loginItemList);
-	
-    return isControlPlaneListed;
+}
+
+- (void)disableStartAtLogin
+{
+    NSError *error = nil;
+    if (![[CPLoginItemService sharedService] setEnabled:NO error:&error]) {
+        DSLog(@"Unable to disable Start at Login: %@", error);
+    }
 }
 
 - (IBAction)toggleStartAtLoginAction:(id)sender
 {
-    if ([self willStartAtLogin:[self appPath]]) {
+    (void)sender;
+    BOOL currentlyOn = [[CPLoginItemService sharedService] checkboxOn];
+    if (currentlyOn) {
         [self disableStartAtLogin];
-    }
-    else {
+    } else {
         [self startAtLogin];
     }
-    [startAtLoginStatus setState:[self willStartAtLogin:[self appPath]] ? 1:0];
+    [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
 
