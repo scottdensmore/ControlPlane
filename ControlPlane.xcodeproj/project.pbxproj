@@ -151,6 +151,9 @@
 		DAAA7FAE1953E2C500C06DBB /* MountedVolumeEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAA7FAD1953E2C500C06DBB /* MountedVolumeEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DAAF16B61413174400F5D915 /* ToggleTimeMachineAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAAF16B51413174400F5D915 /* ToggleTimeMachineAction.m */; };
 		DAB1A7E215C3776D00CF65E8 /* CPNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A7B8C9D0E1F2031425364758 /* CPLoginItemService.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* CPLoginItemService.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* CPLoginItemService.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */; };
 		DABE3F6A16C44236004F5E63 /* OpenAndHideAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DABE3F6916C44236004F5E63 /* OpenAndHideAction.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DABF656617910AB600AA5B86 /* CPSystemInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = DABF656517910AB600AA5B86 /* CPSystemInfo.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DAC45F2014CDEC170007F5EF /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; };
@@ -627,6 +630,9 @@
 		DAAF16B41413174400F5D915 /* ToggleTimeMachineAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleTimeMachineAction.h; path = Source/ToggleTimeMachineAction.h; sourceTree = "<group>"; };
 		DAAF16B51413174400F5D915 /* ToggleTimeMachineAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleTimeMachineAction.m; path = Source/ToggleTimeMachineAction.m; sourceTree = "<group>"; };
 		DAB1A7E015C3776D00CF65E8 /* CPNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPNotifications.h; path = Source/CPNotifications.h; sourceTree = "<group>"; };
+		A8B9C0D1E2F3041526374869 /* CPLoginItemService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPLoginItemService.h; path = Source/CPLoginItemService.h; sourceTree = "<group>"; };
+		B8C9D0E1F203142536475869 /* CPLoginItemService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPLoginItemService.m; path = Source/CPLoginItemService.m; sourceTree = "<group>"; };
+		E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPLoginItemServiceTests.m; sourceTree = "<group>"; };
 		DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPNotifications.m; path = Source/CPNotifications.m; sourceTree = "<group>"; };
 		DABE3F6816C44236004F5E63 /* OpenAndHideAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenAndHideAction.h; path = Source/OpenAndHideAction.h; sourceTree = "<group>"; };
 		DABE3F6916C44236004F5E63 /* OpenAndHideAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenAndHideAction.m; path = Source/OpenAndHideAction.m; sourceTree = "<group>"; };
@@ -843,6 +849,8 @@
 				8D90E51E0B71C4C9007D39FD /* CPController.m */,
 				DAB1A7E015C3776D00CF65E8 /* CPNotifications.h */,
 				DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */,
+				A8B9C0D1E2F3041526374869 /* CPLoginItemService.h */,
+				B8C9D0E1F203142536475869 /* CPLoginItemService.m */,
 				8D8C9E320BBB89320074D5B3 /* DB.h */,
 				8D8C9E330BBB89320074D5B3 /* DB.m */,
 				DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */,
@@ -1021,6 +1029,7 @@
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
+				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
 				086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */,
 				5AB01456A891A29FF1EE3792 /* ContextModelTests.m */,
 				C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */,
@@ -1785,6 +1794,7 @@
 				DAC672FE152235E800F1C7A1 /* ToggleWebSharingAction.m in Sources */,
 				DA8E283F156BCAD50040FC35 /* ToggleRemoteLoginAction.m in Sources */,
 				DAB1A7E215C3776D00CF65E8 /* CPNotifications.m in Sources */,
+				A7B8C9D0E1F2031425364758 /* CPLoginItemService.m in Sources */,
 				DADFF79715D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m in Sources */,
 				DA7EAF4715D9F7F2008DF67C /* ActiveApplicationEvidenceSource.m in Sources */,
 				DA04D57215DC119E004B9E1C /* ToggleContextStickinessAction.m in Sources */,
@@ -1817,6 +1827,8 @@
 				90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */,
 				E6F718293A4B5C6D7E8F90A1 /* InfoPlistPrivacyTests.m in Sources */,
+				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
+				C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */,
 				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
 				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
 				A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */,
@@ -2128,6 +2140,8 @@
 					IOKit,
 					"-framework",
 					UserNotifications,
+					"-framework",
+					ServiceManagement,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2167,6 +2181,8 @@
 					IOKit,
 					"-framework",
 					UserNotifications,
+					"-framework",
+					ServiceManagement,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
