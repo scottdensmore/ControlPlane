@@ -39,18 +39,12 @@
 	return nil;
 }
 
-- (id)initWithEvidenceSource:(EvidenceSource *)src
+- (id)initWithEvidenceSource:(EvidenceSource *)src matchingOnly:(BOOL)matchingOnly
 {
 	if ([[self class] isEqualTo:[RuleType class]]) {
 		[NSException raise:@"Abstract Class Exception"
                     format:@"Error, attempting to instantiate RuleType directly."];
 	}
-
-    NSString *nibName = [[self class] panelNibName];
-    if (!nibName) {
-        NSLog(@"%@ >> no nib name provided!", [self class]);
-        return nil;
-    }
 
     self = [super init];
     if (self == nil) {
@@ -58,6 +52,17 @@
     }
 
     _evidenceSource = src;
+    if (matchingOnly) {
+        return self;
+    }
+
+    NSString *nibName = [[self class] panelNibName];
+    if (!nibName) {
+        NSLog(@"%@ >> no nib name provided!", [self class]);
+        self = nil;
+        return nil;
+    }
+
     _panel = [EvidenceSource getPanelFromNibNamed:nibName instantiatedWithOwner:self];
     if (_panel == nil) {
         self = nil;
@@ -65,6 +70,11 @@
     }
 
     return self;
+}
+
+- (id)initWithEvidenceSource:(EvidenceSource *)src
+{
+    return [self initWithEvidenceSource:src matchingOnly:NO];
 }
 
 - (BOOL)validatePanelParams

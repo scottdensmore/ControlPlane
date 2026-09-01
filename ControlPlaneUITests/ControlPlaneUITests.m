@@ -17,41 +17,49 @@
     self.continueAfterFailure = NO;
 }
 
-- (void)testLaunchAndOpenPreferences {
+- (XCUIApplication *)launchWithPrefsOpen {
     XCUIApplication *app = [[XCUIApplication alloc] init];
-    app.launchEnvironment = @{
-        @"CPUITestRunning": @"1"
-    };
-    // Force prefs open via the app's documented debug default.
+    app.launchEnvironment = @{ @"CPUITestRunning": @"1" };
     app.launchArguments = @[ @"-Debug OpenPrefsAtStartup", @"YES" ];
     [app launch];
-
-    XCUIElement *window = app.windows.firstMatch;
-    XCTAssertTrue([window waitForExistenceWithTimeout:10], @"Preferences (or main) window should appear");
-
-    // Prefer finding by title containing Preferences / ControlPlane
-    BOOL foundPrefs = NO;
-    for (XCUIElement *w in app.windows.allElementsBoundByIndex) {
-        NSString *title = w.title;
-        if (title.length == 0) {
-            continue;
-        }
-        if ([title.lowercaseString containsString:@"preference"] ||
-            [title.lowercaseString containsString:@"controlplane"]) {
-            foundPrefs = YES;
-            break;
-        }
-    }
-    // Soft assert: some builds title the window differently; existence of any window is the floor.
-    if (!foundPrefs) {
-        XCTAssertTrue(window.exists, @"Expected at least one window after OpenPrefsAtStartup");
-    }
+    return app;
 }
 
-- (void)testApplicationStarts {
-    XCUIApplication *app = [[XCUIApplication alloc] init];
-    [app launch];
-    XCTAssertEqual(app.state, XCUIApplicationStateRunningForeground);
+- (void)testLaunchAndOpenPreferences {
+    XCUIApplication *app = [self launchWithPrefsOpen];
+
+    XCUIElement *window = app.windows[@"prefs.window"];
+    if (![window waitForExistenceWithTimeout:10]) {
+        window = app.windows.firstMatch;
+    }
+    XCTAssertTrue(window.exists, @"Preferences window should appear after OpenPrefsAtStartup");
+}
+
+- (void)testToggleEnableNotificationsOff {
+    XCUIApplication *app = [self launchWithPrefsOpen];
+
+    XCUIElement *checkbox = app.checkBoxes[@"prefs.general.useNotifications"];
+    XCTAssertTrue([checkbox waitForExistenceWithTimeout:10], @"Use Notifications checkbox should exist");
+
+    if ([checkbox value] == nil || [[checkbox value] boolValue]) {
+        [checkbox click];
+    }
+
+    XCTAssertFalse([[checkbox value] boolValue], @"Use Notifications should be off after toggle");
+}
+
+- (void)testNavigateToEvidenceSourcesTab {
+    XCUIApplication *app = [self launchWithPrefsOpen];
+
+    XCUIElement *evidenceTab = app.toolbars.buttons[@"Evidence Sources"];
+    if (![evidenceTab waitForExistenceWithTimeout:5]) {
+        evidenceTab = app.buttons[@"Evidence Sources"];
+    }
+    XCTAssertTrue(evidenceTab.exists, @"Evidence Sources toolbar item should exist");
+    [evidenceTab click];
+
+    XCUIElement *evidenceView = app.otherElements[@"prefs.tab.evidencesources"];
+    XCTAssertTrue([evidenceView waitForExistenceWithTimeout:5], @"Evidence Sources tab view should appear");
 }
 
 @end

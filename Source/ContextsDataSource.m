@@ -212,6 +212,7 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
     [strongGeneralPreferencesUseNotifications setToolTip:NSLocalizedString(@"Check this option if you want ControlPlane to issue notifications for context changes and other events.", @"")];
     [strongGeneralPreferencesUseNotifications setTarget:self];
     [strongGeneralPreferencesUseNotifications setAction:@selector(notificationsPreferenceChanged:)];
+    [strongGeneralPreferencesUseNotifications setAccessibilityIdentifier:@"prefs.general.useNotifications"];
     
     NSButton *strongGeneralPreferencesCheckForUpdates = generalPreferencesCheckForUpdates;
     [strongGeneralPreferencesCheckForUpdates setToolTip:NSLocalizedString(@"If checked, ControlPlane will check for updates when it starts.", @"")];
@@ -246,6 +247,10 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
         return;
     }
     if ([(NSButton *)sender state] != NSControlStateValueOn) {
+        return;
+    }
+
+    if ([[[NSProcessInfo processInfo] environment][@"CPUITestRunning"] isEqualToString:@"1"]) {
         return;
     }
 

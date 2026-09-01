@@ -18,6 +18,14 @@
 	return self;
 }
 
+- (id)initForMatchingTests
+{
+	if (!(self = [super initWithPanel:nil]))
+		return nil;
+
+	return self;
+}
+
 - (NSString *) description {
     return NSLocalizedString(@"No description provided", @"");
 }

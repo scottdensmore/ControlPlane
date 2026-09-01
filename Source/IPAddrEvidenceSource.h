@@ -34,6 +34,8 @@
 @property (atomic, retain, readonly) NSArray *packedIPv6Addresses;
 
 - (id)init;
+
+- (id)initForMatchingTests;
 - (void)dealloc;
 
 - (void)start;

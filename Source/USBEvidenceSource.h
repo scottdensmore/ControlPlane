@@ -19,6 +19,7 @@
 }
 
 - (id)init;
+- (id)initForMatchingTests;
 - (void)dealloc;
 
 - (void)start;

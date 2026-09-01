@@ -104,6 +104,26 @@
 		A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4E7F90C178917007E7E41 /* MuteAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71CB770C17C01700E56526 /* ScreenSaverPasswordAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52IPKT01WIRE5252000001 /* PackedIPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB66EF6F6A8923E600D9ED3 /* PackedIPAddressTests.m */; };
+		B52IPV401WIRE5252000002 /* IPv4RuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */; };
+		B52CTX01WIRE5252000003 /* ContextModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB01456A891A29FF1EE3792 /* ContextModelTests.m */; };
+		B52WIFI01WIRE5252000004 /* WiFiRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52WIFIFILE5252000004 /* WiFiRuleMatchTests.m */; };
+		B52USB01WIRE5252000005 /* USBRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52USBFILE5252000005 /* USBRuleMatchTests.m */; };
+		B52PWR01WIRE5252000006 /* PowerRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52PWRFILE5252000006 /* PowerRuleMatchTests.m */; };
+		B52TOD01WIRE5252000007 /* TimeOfDayRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52TODFILE5252000007 /* TimeOfDayRuleMatchTests.m */; };
+		B52STUB01WIRE5252000008 /* CPEvidenceMatchingTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = B52STUBFILE5252000008 /* CPEvidenceMatchingTestStubs.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52STUB02WIRE5252000009 /* CPContextTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = B52STUBFILE5252000009 /* CPContextTestStubs.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52STUB03WIRE5252000010 /* CPDBTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = B52STUBFILE5252000010 /* CPDBTestStubs.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52IPADDR01WIRE525200011 /* IPAddrEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6D94581747A1BE00D5B9C7 /* IPAddrEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52IPV4T01WIRE525200012 /* IPv4RuleType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6D945B1747A1F300D5B9C7 /* IPv4RuleType.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52IPV6T01WIRE525200013 /* IPv6RuleType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C4855BF174941C500D8EB84 /* IPv6RuleType.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52MULTI01WIRE525200014 /* MultiRuleEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C42F30916FB9D47000EE57B /* MultiRuleEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52RULE01WIRE525200015 /* RuleType.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C42F30116FB8960000EE57B /* RuleType.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B52GEN01WIRE525200016 /* GenericEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4C00F0C4EE60700511590 /* GenericEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52PWRSRC01WIRE525200017 /* PowerEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBF4FD0BE5B11F00A01414 /* PowerEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52USBSRC01WIRE525200018 /* USBEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D35A34D0BBBA0CB006ACBB0 /* USBEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52WLANSRC01WIRE525200019 /* CoreWLANEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA83A21C13D0FE8F00074503 /* CoreWLANEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B52TODSRC01WIRE525200020 /* TimeOfDayEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE428FA0C5084D00073499A /* TimeOfDayEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C3D4E5F60718293A4B5C6D7E /* CPNotificationsMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */; };
 		A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */; };
 		E6F718293A4B5C6D7E8F90A1 /* InfoPlistPrivacyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */; };
@@ -362,6 +382,13 @@
 		0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ApplicabilityCharacterizationTests.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		B52WIFIFILE5252000004 /* WiFiRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = WiFiRuleMatchTests.m; sourceTree = "<group>"; };
+		B52USBFILE5252000005 /* USBRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = USBRuleMatchTests.m; sourceTree = "<group>"; };
+		B52PWRFILE5252000006 /* PowerRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PowerRuleMatchTests.m; sourceTree = "<group>"; };
+		B52TODFILE5252000007 /* TimeOfDayRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = TimeOfDayRuleMatchTests.m; sourceTree = "<group>"; };
+		B52STUBFILE5252000008 /* CPEvidenceMatchingTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPEvidenceMatchingTestStubs.m; sourceTree = "<group>"; };
+		B52STUBFILE5252000009 /* CPContextTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPContextTestStubs.m; sourceTree = "<group>"; };
+		B52STUBFILE5252000010 /* CPDBTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPDBTestStubs.m; sourceTree = "<group>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -1042,7 +1069,14 @@
 				429E8B6B4153B81493E8C483 /* InfoPlistSmokeTests.m */,
 				F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */,
 				F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */,
+				B52STUBFILE5252000008 /* CPEvidenceMatchingTestStubs.m */,
+				B52STUBFILE5252000009 /* CPContextTestStubs.m */,
+				B52STUBFILE5252000010 /* CPDBTestStubs.m */,
 				8BB66EF6F6A8923E600D9ED3 /* PackedIPAddressTests.m */,
+				B52WIFIFILE5252000004 /* WiFiRuleMatchTests.m */,
+				B52USBFILE5252000005 /* USBRuleMatchTests.m */,
+				B52PWRFILE5252000006 /* PowerRuleMatchTests.m */,
+				B52TODFILE5252000007 /* TimeOfDayRuleMatchTests.m */,
 				309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */,
 				B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */,
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
@@ -1842,6 +1876,26 @@
 				A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */,
 				A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */,
 				A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */,
+				B52IPKT01WIRE5252000001 /* PackedIPAddressTests.m in Sources */,
+				B52IPV401WIRE5252000002 /* IPv4RuleMatchTests.m in Sources */,
+				B52CTX01WIRE5252000003 /* ContextModelTests.m in Sources */,
+				B52WIFI01WIRE5252000004 /* WiFiRuleMatchTests.m in Sources */,
+				B52USB01WIRE5252000005 /* USBRuleMatchTests.m in Sources */,
+				B52PWR01WIRE5252000006 /* PowerRuleMatchTests.m in Sources */,
+				B52TOD01WIRE5252000007 /* TimeOfDayRuleMatchTests.m in Sources */,
+				B52STUB01WIRE5252000008 /* CPEvidenceMatchingTestStubs.m in Sources */,
+				B52STUB02WIRE5252000009 /* CPContextTestStubs.m in Sources */,
+				B52STUB03WIRE5252000010 /* CPDBTestStubs.m in Sources */,
+				B52IPADDR01WIRE525200011 /* IPAddrEvidenceSource.m in Sources */,
+				B52IPV4T01WIRE525200012 /* IPv4RuleType.m in Sources */,
+				B52IPV6T01WIRE525200013 /* IPv6RuleType.m in Sources */,
+				B52MULTI01WIRE525200014 /* MultiRuleEvidenceSource.m in Sources */,
+				B52RULE01WIRE525200015 /* RuleType.m in Sources */,
+				B52GEN01WIRE525200016 /* GenericEvidenceSource.m in Sources */,
+				B52PWRSRC01WIRE525200017 /* PowerEvidenceSource.m in Sources */,
+				B52USBSRC01WIRE525200018 /* USBEvidenceSource.m in Sources */,
+				B52WLANSRC01WIRE525200019 /* CoreWLANEvidenceSource.m in Sources */,
+				B52TODSRC01WIRE525200020 /* TimeOfDayEvidenceSource.m in Sources */,
 				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
 				A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */,
 				B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */,
@@ -2158,6 +2212,10 @@
 					CoreAudio,
 					"-framework",
 					AudioToolbox,
+					"-framework",
+					SystemConfiguration,
+					"-framework",
+					CoreWLAN,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2203,6 +2261,10 @@
 					CoreAudio,
 					"-framework",
 					AudioToolbox,
+					"-framework",
+					SystemConfiguration,
+					"-framework",
+					CoreWLAN,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

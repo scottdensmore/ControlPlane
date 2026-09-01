@@ -252,7 +252,13 @@
 		NSSize frameSize = [view frame].size;
 		group[@"min_width"]  = @(frameSize.width);
 		group[@"min_height"] = @(frameSize.height);
+		NSString *groupName = group[@"name"];
+		if ([groupName isKindOfClass:[NSString class]]) {
+			[view setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.tab.%@", [groupName lowercaseString]]];
+		}
 	}
+
+	[prefsWindow setAccessibilityIdentifier:@"prefs.window"];
 
 	// Init. toolbar
 	prefsToolbar = [[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];

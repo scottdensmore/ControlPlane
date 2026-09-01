@@ -16,6 +16,7 @@
 @property BOOL currentNetworkIsSecure;
 
 - (id)init;
+- (id)initForMatchingTests;
 - (void)dealloc;
 
 - (void)clearCollectedData;
