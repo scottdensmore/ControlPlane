@@ -24,11 +24,8 @@
 + (NSString *) helpText;
 + (NSString *) creationHelpText;
 
++ (BOOL) isActionApplicableToSystem;
 + (NSArray *) limitedOptions;
 - (id) initWithOption: (NSString *) option;
 
-- (void) tediumNotInstalledAlert;
-
-
 @end
-
