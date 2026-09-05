@@ -18,48 +18,6 @@
 #import "VPNAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
-// #33: Network Location / VPN / Firewall Rule — gate on Sequoia rather than offer half-broken paths.
-
-- (void)testNetworkLocationActionIsNotApplicableOnSequoia {
-    XCTAssertFalse([NetworkLocationAction isActionApplicableToSystem]);
-}
-
-- (void)testLegacyNetworkLocationActionFailsClearly {
-    NetworkLocationAction *action = [[NetworkLocationAction alloc] initWithOption:@"Automatic"];
-    NSString *error = nil;
-    XCTAssertFalse([action execute:&error]);
-    XCTAssertNotNil(error);
-    XCTAssertTrue([error rangeOfString:@"Network Location"].location != NSNotFound);
-    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound);
-}
-
-- (void)testFirewallRuleActionIsNotApplicableOnSequoia {
-    XCTAssertFalse([FirewallRuleAction isActionApplicableToSystem]);
-}
-
-- (void)testLegacyFirewallRuleActionFailsClearly {
-    FirewallRuleAction *action = [[FirewallRuleAction alloc] initWithOption:@"+SomeRule"];
-    NSString *error = nil;
-    XCTAssertFalse([action execute:&error]);
-    XCTAssertNotNil(error);
-    XCTAssertTrue([error rangeOfString:@"Firewall Rule"].location != NSNotFound);
-    XCTAssertTrue([error rangeOfString:@"Snow Leopard"].location == NSNotFound);
-}
-
-- (void)testVPNActionIsNotApplicableOnSequoia {
-    XCTAssertFalse([VPNAction isActionApplicableToSystem]);
-}
-
-- (void)testLegacyVPNActionFailsClearly {
-    VPNAction *action = [[VPNAction alloc] initWithOption:@"+Example"];
-    NSString *error = nil;
-    XCTAssertFalse([action execute:&error]);
-    XCTAssertNotNil(error);
-    XCTAssertTrue([error rangeOfString:@"VPN"].location != NSNotFound);
-    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound);
-}
-
-
 @end
 
 @implementation ApplicabilityCharacterizationTests
@@ -171,6 +129,5 @@
     XCTAssertTrue([error rangeOfString:@"VPN"].location != NSNotFound);
     XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound);
 }
-
 
 @end
