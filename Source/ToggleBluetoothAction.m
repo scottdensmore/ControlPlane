@@ -6,35 +6,19 @@
 //
 
 #import "ToggleBluetoothAction.h"
-#import <IOBluetooth/objc/IOBluetoothHostController.h>
-
-/*
- * PRIVATE API WARNING (issue #29):
- *
- * IOBluetoothPreferenceGetControllerPowerState and IOBluetoothPreferenceSetControllerPowerState
- * are PRIVATE, undocumented functions in IOBluetooth.framework. They are not part of any public
- * Apple API and are subject to removal or behavioral change in future macOS releases.
- *
- * Public alternatives (as of macOS 15):
- * - No supported system API to toggle Bluetooth radio power.
- * - CoreBluetooth (CBCentralManager) only controls app-level BLE scanning, not radio hardware.
- * - Shortcuts.app can toggle Bluetooth but cannot be called programmatically in a menu-bar agent.
- *
- * Risk acceptance:
- * This action is kept for user convenience on macOS 15, where the private APIs still work.
- * Future OS upgrades may require gating this action with isActionApplicableToSystem or replacing
- * it with a Shortcuts-based approach (if Apple adds programmable Shortcuts support).
- *
- * See: https://github.com/dustinrue/ControlPlane/issues/11
- *      http://dmaclach.blogspot.com/2010/10/its-dead-jim.html
- */
-
-// requires IOBluetooth.framework
-int IOBluetoothPreferenceGetControllerPowerState(void);
-void IOBluetoothPreferenceSetControllerPowerState(int);
-
 
 @implementation ToggleBluetoothAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    // PRIVATE API WARNING (issue #83 / formerly #29):
+    // IOBluetoothPreferenceGet/SetControllerPowerState are undocumented private
+    // IOBluetooth.framework symbols. There is no public API to toggle Bluetooth
+    // radio power (CoreBluetooth is app-scoped only). Gate on Tahoe rather than
+    // silently calling private APIs in Release. Prefer Control Center / System
+    // Settings, or a Shortcuts + ShellScript action (shortcuts run "...").
+    return NO;
+}
 
 - (NSString *)description
 {
@@ -44,75 +28,31 @@ void IOBluetoothPreferenceSetControllerPowerState(int);
 		return NSLocalizedString(@"Turning Bluetooth off.", @"");
 }
 
-// IOBluetooth.framework is not thread-safe, so all IOBluetooth calls need to be done in the main thread.
-- (void)setPowerState
-{
-	IOBluetoothPreferenceSetControllerPowerState(turnOn ? 1 : 0);
-
-}
-
 - (BOOL)execute:(NSString **)errorString
 {
-	int state = (turnOn ? 1 : 0);
-    int i = 0;
-    IOBluetoothHostController *hostController = [IOBluetoothHostController defaultController];
-	
-    
-    // IOBluetoothPreferenceGetControllerPowerState but 
-    // there definitely needs to be some amount of time between
-    // when the bluetooth controller is enabled or disabled
-    // to when you attempt to get the bluetooth conroller's power state
-    // ControlPlane attempts to sleep here for 5 seconds to give bluetooth
-    // some time to settle.  This check was originally done on the main thread
-    // but ControlPlane shouldn't block the main thread for that long
-    // so it was moved here, hopefully it doesn't cause harm.
-    
-    // this and more is "documented" at http://dmaclach.blogspot.com/2010/10/its-dead-jim.html
-    // and https://github.com/dustinrue/ControlPlane/issues/11, thanks to David Jennes for finding
-    // this tip. This will still cause an error should the bluetooth controller take more than
-	// the mentioned 5 seconds to switch, generating a delayed error notification (Growl)
-
-    
-    // It's been reported more than once that BT will fail to enable or disable under certain
-    // circumstances.  In an attempt to make this a bit more reliable while simulaneously putting
-    // in the least amount of effort, ControlPlane simply tries to get the Bluetooth
-    // host controller into the desired state a few times.
-    
-    
-    setState = -1;
-    
-    // try 5 times to change the bluetooth controller state
-    while (state != setState && i < 5) {
-        [self performSelectorOnMainThread:@selector(setPowerState) withObject:nil waitUntilDone:YES];
-        [NSThread sleepForTimeInterval:2];
-        setState = hostController.powerState;
-        i++;
-    }
-    
-    
-	if (state != setState) {
-		if (turnOn) 
-			*errorString = NSLocalizedString(@"Failed turning Bluetooth on.", @"");
-		else
-			*errorString = NSLocalizedString(@"Failed turning Bluetooth off.", @"");
-		return NO;
+	if (errorString != NULL) {
+		*errorString = NSLocalizedString(
+			@"Bluetooth cannot be toggled on this version of macOS. "
+			@"Use Control Center or System Settings → Bluetooth, or create a "
+			@"Shortcut that sets Bluetooth power and run it with a ShellScript "
+			@"action (for example: shortcuts run \"Toggle Bluetooth\").",
+			@"Error when ToggleBluetoothAction runs on modern macOS");
 	}
-
-    
-    NSLog(@"Successfully toggled bluetooth after %d %@", i, (i > 1) ? @"tries":@"try");
-	return YES;
+	return NO;
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for ToggleBluetooth actions is either \"1\" "
 				 "or \"0\", depending on whether you want your Bluetooth controller's power "
-				 "turned on or off.", @"");
+				 "turned on or off. This action is not available on modern macOS; "
+				 "use Control Center, System Settings, or a Shortcuts toggle via a "
+				 "ShellScript action instead.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	return NSLocalizedString(@"Turn Bluetooth", @"Will be followed by 'on' or 'off'");
+	return NSLocalizedString(@"Turn Bluetooth (unsupported on this macOS)", @"Will be followed by 'on' or 'off'");
 }
 
 + (NSString *) friendlyName {

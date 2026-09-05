@@ -17,6 +17,7 @@
 #import "FirewallRuleAction.h"
 #import "VPNAction.h"
 #import "ToggleNotificationCenterAlertsAction.h"
+#import "ToggleBluetoothAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -151,5 +152,24 @@
                   [error rangeOfString:@"Do Not Disturb"].location != NSNotFound);
 }
 
+
+
+// #83: Private IOBluetoothPreference power APIs are gated on Tahoe.
+
+- (void)testToggleBluetoothActionIsNotApplicableOnTahoe {
+    // #83: No public API to toggle Bluetooth radio; private Preference APIs are a liability.
+    XCTAssertFalse([ToggleBluetoothAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyToggleBluetoothActionFailsClearly {
+    ToggleBluetoothAction *action = [[ToggleBluetoothAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Bluetooth"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"Control Center"].location != NSNotFound ||
+                  [error rangeOfString:@"System Settings"].location != NSNotFound ||
+                  [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
 
 @end

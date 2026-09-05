@@ -173,10 +173,19 @@
         </p>
         
 
-	<h2><em>Toggle Bluetooth</em> and <em>Toggle WiFi</em> actions</h2>
-	<p>Actions of type <em>ToggleBluetooth</em> or
-	<em>ToggleWiFi</em> allow you to control the power state of
-	your computer's built-in Bluetooth and WiFi controllers.
+	<h2><em>Toggle Bluetooth</em> action</h2>
+	<p><strong>Unsupported on modern macOS.</strong> Actions of type
+	<em>ToggleBluetooth</em> previously used private Bluetooth power APIs
+	and are not available on Tahoe. Existing actions fail with a clear error
+	and no longer call undocumented IOBluetooth Preference symbols. Use
+	Control Center or System Settings → Bluetooth, or a <em>ShellScript</em>
+	action that runs a Bluetooth Shortcut (for example
+	<tt>shortcuts run "Toggle Bluetooth"</tt>).
+	</p>
+
+	<h2><em>Toggle WiFi</em> action</h2>
+	<p>Actions of type <em>ToggleWiFi</em> allow you to control the power
+	state of your computer's built-in WiFi controller.
 	</p>
 
 	<h2><em>Toggle ControlPlane Context is Sticky</em>
@@ -237,6 +246,7 @@
 			<li><em>Toggle Web Sharing</em> — retired</li>
 			<li><em>Toggle Internet Sharing</em> — retired</li>
 			<li><em>AFP</em> file sharing options — retired (SMB-only file sharing may still apply where offered)</li>
+			<li><em>Toggle Bluetooth</em> — unavailable</li>
 			<li><em>Toggle Natural Scrolling</em> — unavailable</li>
 			<li><em>Screen Saver Password</em> — unavailable</li>
 			<li><em>Toggle Notification Center Alerts</em> (legacy Do Not Disturb) — unavailable</li>
