@@ -73,7 +73,18 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 - `Utilities/Uninstall.sh` — current `com.scottdensmore.CPHelperTool`
 - `Utilities/remove_helper_tool.sh` — also removes legacy `com.dustinrue.*` labels
 
-`Utilities/SMJobBlessUtil.py` is Apple’s old Python 2 checker and expects app-level `SMPrivilegedExecutables`; it does **not** match this XPC-bless topology. Do not treat it as the SSOT checker until a Python 3 rewrite exists (#46-adjacent).
+### SMJobBlessUtil (Python 3)
+
+`Utilities/SMJobBlessUtil.py` is Apple’s classic SMJobBless checker, ported to **Python 3** (`#!/usr/bin/env python3`). It validates the textbook layout: helpers under `Contents/Library/LaunchServices` and app-level `SMPrivilegedExecutables`.
+
+ControlPlane blesses via **CPXPCService**, so this util is **not** the SSOT for our topology. Prefer `HelperSigningRequirementTests` and the checklist above for day-to-day verification. Use the util when debugging a classic SMJobBless app layout or comparing against Apple’s sample:
+
+```bash
+python3 Utilities/SMJobBlessUtil.py --help
+python3 Utilities/SMJobBlessUtil.py check /path/to/SomeApp.app
+```
+
+On this product, `check` against `ControlPlane.app` is expected to report a missing `Contents/Library/LaunchServices` tool directory (XPC-bless, not app-bless).
 
 ## Explicit non-goals (follow-ups)
 
