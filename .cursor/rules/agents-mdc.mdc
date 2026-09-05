@@ -6,5 +6,5 @@ alwaysApply: true
 # ControlPlane agents
 
 - Obey root `AGENTS.md` for workflow, OS-upgrade branching, TDD, and merge rules.
-- Pick GitHub issues labeled for the **current** OS branch (`macos-15`, …); do not pull later-OS scope forward.
+- Pick GitHub issues labeled for the **current** OS branch (`macos-16`, …); do not pull later-OS scope forward.
 - Use project subagents/skills under `.cursor/agents/` and `.cursor/skills/` for planner, implementer, UI review, verify, and code review.
