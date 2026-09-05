@@ -35,6 +35,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | Suite | Behavior |
 | :--- | :--- |
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
+| `CPMenuBarImageTests` | Menu-bar template image flag + LSUIElement activation source checks (#89) |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
@@ -71,10 +72,19 @@ Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `Contro
 ## Manual status-item smoke (not automatable under XCUITest)
 
 1. Launch ControlPlane; confirm menu bar icon appears.
-2. Click status item → **Preferences** opens.
+2. Click status item → **Preferences** opens and is key/front (LSUIElement activation).
 3. Click status item → **Active Contexts** submenu lists contexts.
 4. Force a context from the menu; confirm menu bar label/icon updates.
 5. Enable **Hide from status bar**; confirm icon reappears after relaunch.
+
+### Tahoe / Liquid Glass (#89)
+
+On macOS 26 with the default translucent menu bar:
+
+1. Confirm the status-item icon remains readable (template rendering).
+2. Toggle System Settings → Appearance / wallpaper contrast; icon should stay usable.
+3. Open **Preferences** and **About** from the status menu; windows must activate and accept input.
+4. If context icon colors look washed out on Liquid Glass, track polish under #32 (Asset Catalog / SF Symbols)—do not block #89.
 
 ## Gaps / follow-ups
 

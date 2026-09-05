@@ -89,6 +89,9 @@
 		8DFA46170CC33E46003EAC16 /* QuitApplicationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA46150CC33E46003EAC16 /* QuitApplicationAction.m */; };
 		8DFD0DA60CEBBC8A00E79049 /* UnmountAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DFD0DA40CEBBC8A00E79049 /* UnmountAction.m */; };
 		90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */; };
+		B89MBAR01WIRE890000001 /* CPMenuBarImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B89MBAR01FILE890000002 /* CPMenuBarImage.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B89MBAR01WIRE890000002 /* CPMenuBarImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B89MBAR01FILE890000002 /* CPMenuBarImage.m */; };
+		B89MBAR01WIRE890000003 /* CPMenuBarImageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B89MBAR01FILE890000003 /* CPMenuBarImageTests.m */; };
 		E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */; };
 		F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4384152161D900E94A1D /* ToggleFTPAction.m */; };
 		F81830AB5C6D7E8F9012AB /* ToggleNaturalScrollingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4ED9C31520055100E6A8CE /* ToggleNaturalScrollingAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -407,6 +410,7 @@
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SharedNumberFormatterTests.m; sourceTree = "<group>"; };
+		B89MBAR01FILE890000003 /* CPMenuBarImageTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPMenuBarImageTests.m; sourceTree = "<group>"; };
 		31D5A1CE49EAB53E8FC4B984 /* ControlPlaneUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32CA4F630368D1EE00C91783 /* ControlPlane_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlPlane_Prefix.pch; path = Source/ControlPlane_Prefix.pch; sourceTree = "<group>"; };
 		3A469C54740862F2CA73424A /* ToggleableActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ToggleableActionTests.m; sourceTree = "<group>"; };
@@ -460,6 +464,8 @@
 		7C6D945B1747A1F300D5B9C7 /* IPv4RuleType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IPv4RuleType.m; path = Source/IPv4RuleType.m; sourceTree = "<group>"; };
 		7C73BDE017D09A4100EBFB80 /* SharedNumberFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharedNumberFormatter.h; path = Source/SharedNumberFormatter.h; sourceTree = "<group>"; };
 		7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SharedNumberFormatter.m; path = Source/SharedNumberFormatter.m; sourceTree = "<group>"; };
+		B89MBAR01FILE890000001 /* CPMenuBarImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPMenuBarImage.h; path = Source/CPMenuBarImage.h; sourceTree = "<group>"; };
+		B89MBAR01FILE890000002 /* CPMenuBarImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPMenuBarImage.m; path = Source/CPMenuBarImage.m; sourceTree = "<group>"; };
 		7C8574EA16FB52AF0081659A /* DNSEvidenceSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DNSEvidenceSource.h; path = Source/DNSEvidenceSource.h; sourceTree = "<group>"; };
 		7C8574EB16FB52AF0081659A /* DNSEvidenceSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DNSEvidenceSource.m; path = Source/DNSEvidenceSource.m; sourceTree = "<group>"; };
 		7C8574EF16FB53180081659A /* ServerAddressRuleType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ServerAddressRuleType.h; path = Source/ServerAddressRuleType.h; sourceTree = "<group>"; };
@@ -912,6 +918,8 @@
 				8D82F0A20AA81411009ADA44 /* PrefsWindowController.m */,
 				7C73BDE017D09A4100EBFB80 /* SharedNumberFormatter.h */,
 				7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */,
+				B89MBAR01FILE890000001 /* CPMenuBarImage.h */,
+				B89MBAR01FILE890000002 /* CPMenuBarImage.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1092,6 +1100,7 @@
 				B52PWRFILE5252000006 /* PowerRuleMatchTests.m */,
 				B52TODFILE5252000007 /* TimeOfDayRuleMatchTests.m */,
 				309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */,
+				B89MBAR01FILE890000003 /* CPMenuBarImageTests.m */,
 				B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */,
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
 				B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */,
@@ -1873,6 +1882,7 @@
 				7CA6847717947E2200563601 /* LaptopLidEvidenceSource.m in Sources */,
 				DA69D7E217BD04C30062FBBC /* HostAvailabilityEvidenceSource.m in Sources */,
 				7C73BDE217D09A4100EBFB80 /* SharedNumberFormatter.m in Sources */,
+				B89MBAR01WIRE890000001 /* CPMenuBarImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1884,6 +1894,8 @@
 				C3D4E5F60718293A4B5C6D7E /* CPNotificationsMigrationTests.m in Sources */,
 				62CD2363CFB9175C9363FECD /* CPSystemInfoTests.m in Sources */,
 				90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */,
+				B89MBAR01WIRE890000003 /* CPMenuBarImageTests.m in Sources */,
+				B89MBAR01WIRE890000002 /* CPMenuBarImage.m in Sources */,
 			A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */,
 			E6F718293A4B5C6D7E8F90A1 /* InfoPlistPrivacyTests.m in Sources */,
 			DACEA98B1410560497D2361F /* DefaultBrowserUTITests.m in Sources */,
@@ -2246,6 +2258,8 @@
 					SystemConfiguration,
 					"-framework",
 					CoreWLAN,
+					"-framework",
+					CoreLocation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2295,6 +2309,8 @@
 					SystemConfiguration,
 					"-framework",
 					CoreWLAN,
+					"-framework",
+					CoreLocation,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
