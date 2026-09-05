@@ -24,6 +24,11 @@
     XCTAssertFalse([ToggleWebSharingAction isActionApplicableToSystem]);
 }
 
+- (void)testScreenSaverPasswordActionIsNotApplicableOnSequoia {
+    // #41: Lock Screen is no longer toggled via com.apple.screensaver askForPassword.
+    XCTAssertFalse([ScreenSaverPasswordAction isActionApplicableToSystem]);
+}
+
 - (void)testScreenSaverPasswordWaitFlags {
     XCTAssertTrue([ScreenSaverPasswordAction shouldWaitForScreensaverExit]);
     XCTAssertTrue([ScreenSaverPasswordAction shouldWaitForScreenUnlock]);
@@ -31,6 +36,14 @@
 
 - (void)testScreenSaverPasswordLimitedOptions {
     XCTAssertEqual([ScreenSaverPasswordAction limitedOptions].count, 2u);
+}
+
+- (void)testLegacyScreenSaverPasswordActionFailsClearly {
+    ScreenSaverPasswordAction *action = [[ScreenSaverPasswordAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Lock Screen"].location != NSNotFound);
 }
 
 // FireWireEvidenceSource's isEvidenceSourceApplicableToSystem override is commented
