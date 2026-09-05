@@ -29,6 +29,20 @@ Designated requirements use **team OU** (`certificate leaf[subject.OU] = "27ZDER
 
 Blessing is performed by the **XPC service**, not the main app Info.plist.
 
+## Hardened Runtime and Entitlements
+
+All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelperTool) use hardened runtime with explicit entitlements:
+
+| Target | Entitlements file | Key entitlements |
+| :--- | :--- | :--- |
+| ControlPlane | `ControlPlane.entitlements` | `com.apple.security.cs.disable-library-validation` (Sparkle) |
+| CPXPCService | `CPXPCService/CPXPCService.entitlements` | none (empty hardened-runtime plist) |
+| com.scottdensmore.CPHelperTool | `CPHelperTool/CPHelperTool.entitlements` | none (empty hardened-runtime plist) |
+
+**Note:** `com.apple.security.cs.disable-library-validation` is **app-only**, required because Sparkle.framework is a separately-signed universal binary. Do **not** grant it to the privileged helper or XPC service. The app does **not** use `--deep` signing; `CodeSignOnCopy` covers Sparkle.framework, CPXPCService.xpc, and the helper.
+
+**No App Sandbox.** ControlPlane requires non-sandboxed access for Wi-Fi (CoreWLAN), Bluetooth, USB (IOKit), and other evidence sources.
+
 ## Local signed build + bless smoke
 
 1. Open `ControlPlane.xcodeproj` in Xcode with access to team `27ZDER873F`.
@@ -47,6 +61,13 @@ Blessing is performed by the **XPC service**, not the main app Info.plist.
 2. Notarize and staple the app (standard `notarytool` / Xcode Organizer flow).
 3. On a fresh Mac: install, run, bless as above. Requirements must accept Developer ID (OID `1.2.840.113635.100.6.2.6`), not only Apple Development.
 
+**Notarization notes:**
+
+- All binaries use hardened runtime with entitlements (see table above).
+- `disable-library-validation` is acceptable for notarization when Sparkle or other separately-signed frameworks are embedded.
+- Sparkle.framework must be a properly-signed universal binary (arm64 + x86_64) from upstream.
+- The app, XPC service, and helper tool are signed individually during the build via `CodeSignOnCopy`; no `--deep` flag is used.
+
 ## Uninstall / legacy helpers
 
 - `Utilities/Uninstall.sh` — current `com.scottdensmore.CPHelperTool`
@@ -58,8 +79,8 @@ Blessing is performed by the **XPC service**, not the main app Info.plist.
 
 - Migrating blessing to `SMAppService` (later OS line)
 - Replacing remaining helper `system()` / `sprintf` shelling with safer spawn APIs (prefer remove/gate commands first)
-- Removing app `--deep` codesign flags (tracked with entitlements work, #48)
 - Broadening helper command surface
+- Narrowing Sparkle so the app can drop `disable-library-validation`
 
 ## Automated checks
 
