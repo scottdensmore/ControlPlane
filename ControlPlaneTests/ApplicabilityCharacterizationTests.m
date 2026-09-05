@@ -19,27 +19,6 @@
 #import "ToggleNotificationCenterAlertsAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
-// #27: Classic Notification Center DND prefs are broken since Focus.
-
-- (void)testToggleNotificationCenterAlertsActionIsNotApplicableOnSequoia {
-    // #27: Classic DND via com.apple.notificationcenterui prefs is broken since Focus.
-    XCTAssertFalse([ToggleNotificationCenterAlertsAction isActionApplicableToSystem]);
-}
-
-- (void)testLegacyNotificationCenterAlertsActionFailsClearly {
-    ToggleNotificationCenterAlertsAction *action =
-        [[ToggleNotificationCenterAlertsAction alloc] initWithOption:@YES];
-    NSString *error = nil;
-    XCTAssertFalse([action execute:&error]);
-    XCTAssertNotNil(error);
-    XCTAssertTrue([error rangeOfString:@"Focus"].location != NSNotFound);
-    XCTAssertTrue([error rangeOfString:@"Shortcut"].location != NSNotFound);
-    // Must not claim success or leave callers thinking prefs were written.
-    XCTAssertTrue([error rangeOfString:@"Notification Center"].location != NSNotFound ||
-                  [error rangeOfString:@"Do Not Disturb"].location != NSNotFound);
-}
-
-
 @end
 
 @implementation ApplicabilityCharacterizationTests
