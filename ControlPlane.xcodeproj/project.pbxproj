@@ -93,6 +93,9 @@
 		F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4384152161D900E94A1D /* ToggleFTPAction.m */; };
 		F81830AB5C6D7E8F9012AB /* ToggleNaturalScrollingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA4ED9C31520055100E6A8CE /* ToggleNaturalScrollingAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A51NLOC01B51WIRE00000033 /* NetworkLocationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6762150C3B8D8D000B63EC /* NetworkLocationAction.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		A51FWRU01B51WIRE00000033 /* FirewallRuleAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB43560C4DBABD00E71D28 /* FirewallRuleAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A51VPNA01B51WIRE00000033 /* VPNAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643DDB0C4F1F0D006D8ECC /* VPNAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4380152161C800E94A1D /* ToggleTFTPAction.m */; };
 		B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
 		B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA922E9C144FC95200920B40 /* ToggleInternetSharingAction.m */; };
@@ -1913,6 +1916,9 @@
 				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
 				F81830AB5C6D7E8F9012AB /* ToggleNaturalScrollingAction.m in Sources */,
 				A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */,
+				A51NLOC01B51WIRE00000033 /* NetworkLocationAction.m in Sources */,
+				A51FWRU01B51WIRE00000033 /* FirewallRuleAction.m in Sources */,
+				A51VPNA01B51WIRE00000033 /* VPNAction.m in Sources */,
 				A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */,
 				B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */,
 				B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */,
