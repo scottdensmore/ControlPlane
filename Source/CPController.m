@@ -14,6 +14,7 @@
 #import "NSTimer+Invalidation.h"
 #import "CPNotifications.h"
 #import "SharedNumberFormatter.h"
+#import "CPMenuBarImage.h"
 #import <libkern/OSAtomic.h>
 //#import <HockeySDK/HockeySDK.h>
 
@@ -214,13 +215,13 @@ static NSSet *sharedActiveContexts = nil;
     return;
 }
 
-// Helper: Load a named image, and scale it to be suitable for menu bar use.
+// Helper: Load a named image, scale it, and mark it as a template so AppKit can
+// keep contrast on translucent Tahoe / Liquid Glass menu bars (#89).
+// Full Asset Catalog / SF Symbol work remains in #32.
 - (NSImage *)prepareImageForMenubar:(NSString *)name {
 	NSImage *img = [NSImage imageNamed:name];
-    // TODO: provide images for retina displays
-	[img setSize:NSMakeSize(18, 18)];
-
-	return img;
+	// TODO (#32): provide scale-aware assets / SF Symbols instead of fixed 18pt icns.
+	return [CPMenuBarImage configureAsMenuBarTemplate:img size:NSMakeSize(18, 18)];
 }
 
 - (void) interfaceThemeDidChange {
@@ -250,7 +251,6 @@ static NSSet *sharedActiveContexts = nil;
     }
 
 	sbImageTemplate = [[self prepareImageForMenubar:@"cp-icon"] retain];
-    [sbImageTemplate setTemplate:YES];
 
 	sbItem = nil;
 	sbHideTimer = nil;
@@ -779,7 +779,10 @@ static NSSet *sharedActiveContexts = nil;
 	}
 
 	sbItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
-    sbItem.button.cell.highlighted = YES;
+	// Prefer button API (NSStatusItem.button) over legacy setters; template imagery
+	// is applied via prepareImageForMenubar: / CPMenuBarImage (#89 / #32).
+	sbItem.button.imagePosition = NSImageLeft;
+	sbItem.button.appearsDisabled = NO;
 
     [self updateMenuBarImage];
 
@@ -1852,6 +1855,8 @@ static NSSet *sharedActiveContexts = nil;
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag {
     [self showInStatusBar:self];
     [self startOrStopHidingFromStatusBar];
+    // LSUIElement agent: activate so Preferences is key/front on Tahoe.
+    [NSApp activateIgnoringOtherApps:YES];
     [prefsWindow makeKeyAndOrderFront:self];
 	return YES;
 }
