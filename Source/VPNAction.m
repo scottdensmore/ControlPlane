@@ -5,13 +5,19 @@
 //  Created by Mark Wallis on 18/07/07.
 //  Updated by Dustin Rue on 8/3/2011.
 //
+//  #33: ScriptingBridge System Events VPN path is unreliable on modern macOS.
+//  NEVPNManager rewrite is out of scope; keep this action gated with clear messaging.
+//
 
 #import "VPNAction.h"
-#import <ScriptingBridge/SBApplication.h>
-#import "System Events.h"
-#import "DSLogger.h"
 
 @implementation VPNAction
+
++ (BOOL)isActionApplicableToSystem
+{
+	// Keep disabled: no Sequoia-ready public path in this slice (NEVPNManager deferred).
+	return NO;
+}
 
 - (id)init
 {
@@ -51,11 +57,10 @@
 
 - (NSString *)description
 {
-	// Strip off the first character which indicates either enabled or disabled
 	bool enabledPrefix = false;
-	if ([vpnType characterAtIndex:0] == '+')
+	if ([vpnType length] > 0 && [vpnType characterAtIndex:0] == '+')
 		enabledPrefix = true;
-	NSString *strippedVPNType = [vpnType substringFromIndex:1];
+	NSString *strippedVPNType = [vpnType length] > 0 ? [vpnType substringFromIndex:1] : @"";
 
 	if (enabledPrefix == true)
 		return [NSString stringWithFormat:NSLocalizedString(@"Connecting to VPN '%@'.", @""),
@@ -65,85 +70,33 @@
 			strippedVPNType];
 }
 
-- (BOOL) execute: (NSString **) errorString {
-	// TODO: maybe port this to use SCNetworkConnection
-	
-	@try {
-		BOOL connect = ([vpnType characterAtIndex:0] == '+' ? YES : NO);
-		NSString *tVPNName = [vpnType substringFromIndex: 1];
-		SystemEventsApplication *SEvents = [SBApplication applicationWithBundleIdentifier: @"com.apple.systemevents"];
-		
-		// find service
-		SystemEventsLocation *location = SEvents.networkPreferences.currentLocation;
-		SystemEventsService *service = [location.services objectWithName:[NSString stringWithFormat:@"%@", tVPNName]];
-        
-        // no service found? try legacy format.
-		service = service ? service : [location.services objectWithName:[NSString stringWithFormat:@"VPN (%@)", tVPNName]];
-		
-		// connect/disconnect
-		if (service) {
-			if (connect)
-				[SEvents connect: service];
-			else
-				[SEvents disconnect: service];
-		}
-	} @catch (NSException *e) {
-		DSLog(@"Exception: %@", e);
-		*errorString = NSLocalizedString(@"Couldn't configure VPN!", @"In VPNAction");
-		return NO;
+- (BOOL)execute:(NSString **)errorString
+{
+	if (errorString != NULL) {
+		*errorString = NSLocalizedString(
+			@"VPN actions are not supported on this version of macOS. "
+			@"Connect or disconnect VPN from System Settings → VPN, or use Shortcuts.",
+			@"Error when VPNAction runs on modern macOS");
 	}
-	
-	return YES;
+	return NO;
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for VPN action is the name of the "
-				 "VPN connection you wish to establish or disconnect.", @"");
+				 "VPN connection you wish to establish or disconnect. "
+				 "This action is not available on modern macOS; use System Settings "
+				 "or Shortcuts instead.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	return NSLocalizedString(@"Establish/Disconnect the following VPN:", @"");
+	return NSLocalizedString(@"Establish/Disconnect VPN (unsupported on this macOS)", @"");
 }
 
 + (NSArray *)limitedOptions
 {
-	NSMutableArray *opts = [NSMutableArray array];
-    
-    // loop through all services
-    SystemEventsApplication *SEvents = [SBApplication applicationWithBundleIdentifier: @"com.apple.systemevents"];
-    SystemEventsLocation *location = SEvents.networkPreferences.currentLocation;
-    
-    for (SystemEventsService *service in location.services)
-    {
-        // only add vpns, not other services
-        if (!(service.kind == 10 || service.kind == 12 || service.kind == 15)) continue;
-        
-        [opts addObject:
-         @{
-            @"option": [NSString stringWithFormat:@"+%@", service.name],
-            @"description": [NSString stringWithFormat:@"Connect VPN '%@'", service.name]
-         }];
-        [opts addObject:
-         @{
-            @"option": [NSString stringWithFormat:@"-%@", service.name],
-            @"description": [NSString stringWithFormat:@"Disconnect VPN '%@'", service.name]
-         }];
-    }
-    
-    [opts addObject:
-     @{
-        @"option": @"+<name>",
-        @"description": @"Connect other VPN"
-     }];
-    [opts addObject:
-     @{
-        @"option": @"-<name>",
-        @"description": @"Disconnect other VPN"
-     }];
-    
-	return opts;
+	return [NSArray array];
 }
 
 - (id)initWithOption:(NSString *)option
@@ -154,7 +107,7 @@
 	return self;
 }
 
-+ (NSString *) friendlyName {
++ (NSString *)friendlyName {
     return NSLocalizedString(@"VPN", @"");
 }
 

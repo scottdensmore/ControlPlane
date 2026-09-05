@@ -266,6 +266,7 @@
 #import "ToggleWebSharingAction.h"
 #import "ToggleWiFiAction.h"
 #import "UnmountAction.h"
+// #33: VPN stays out of the shipping registry (ScriptingBridge path retired; NEVPNManager deferred).
 //#import "VPNAction.h"
 
 @interface ActionSetController (Private)
@@ -322,6 +323,7 @@
                [ToggleWebSharingAction class],
 			   [ToggleWiFiAction class],
 			   [UnmountAction class],
+			   // #33: Keep VPN disabled — do not re-add without a Sequoia-ready implementation.
 			   //[VPNAction class],
 			nil];
 	

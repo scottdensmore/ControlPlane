@@ -12,6 +12,32 @@
 
 @implementation ToggleFileSharingAction
 
++ (BOOL)parameterRequiresAFP:(NSNumber *)parameter
+{
+    if (parameter == nil) {
+        return NO;
+    }
+    switch ([parameter intValue]) {
+        case kCPAFPEnable:
+        case kCPAFPAndSMBEnable:
+        case kCPAFPDisable:
+        case kCPAFPAndSMBDisable:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
++ (NSArray *)smbOnlyLimitedOptions
+{
+    return [NSArray arrayWithObjects:
+            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPSMBEnable], @"option",
+             NSLocalizedString(@"SMB Sharing ON", @"Used in toggling actions"), @"description", nil],
+            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPSMBDisable], @"option",
+             NSLocalizedString(@"SMB Sharing OFF", @"Used in toggling actions"), @"description", nil],
+            nil];
+}
+
 - (NSString *) description {
 	if (([turnOn intValue] == kCPAFPEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable) || ([turnOn intValue] == kCPSMBEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable))
 		return NSLocalizedString(@"Enabling File Sharing.", @"Act of turning on or enabling File Sharing is being performed");
@@ -20,62 +46,42 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    
-    BOOL afpStatusFailed = NO;
+    if ([[self class] parameterRequiresAFP:turnOn]) {
+        if (errorString != NULL) {
+            *errorString = NSLocalizedString(@"AFP file sharing is not supported on this version of macOS.",
+                                             @"Error when a legacy AFP file sharing action runs on modern macOS");
+        }
+        return NO;
+    }
+
     BOOL smbdStatusFailed = NO;
     BOOL enabling = NO;
-        
-    if (([turnOn intValue] == kCPAFPEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable)) {
-        enabling = YES;
-        if (![self helperToolPerformAction:kCPHelperEnableAFPFileSharingCommand withParameter:kCPHelperAFPServiceName])
-            afpStatusFailed = YES;
-    }
-    else if (([turnOn intValue] == kCPAFPDisable) || ([turnOn intValue] == kCPAFPAndSMBDisable)) {
-        if (![self helperToolPerformAction:kCPHelperDisableAFPFileSharingCommand withParameter:kCPHelperAFPServiceName])
-            afpStatusFailed = YES;
-    }
-    
-    
-    if (([turnOn intValue] == kCPSMBEnable) || ([turnOn intValue] == kCPAFPAndSMBEnable)) {
+
+    if ([turnOn intValue] == kCPSMBEnable) {
         enabling = YES;
         if (![self helperToolPerformAction:kCPHelperEnableSMBFileSharingCommand withParameter:kCPHelperSMBDServiceName]) {
             smbdStatusFailed = YES;
         }
-    }
-    else if (([turnOn intValue] == kCPSMBDisable) || ([turnOn intValue] == kCPAFPAndSMBDisable)) {
-        if (![self helperToolPerformAction:kCPHelperDisableSMBFileSharingCommand withParameter:kCPHelperSMBDServiceName])
+    } else if ([turnOn intValue] == kCPSMBDisable) {
+        if (![self helperToolPerformAction:kCPHelperDisableSMBFileSharingCommand withParameter:kCPHelperSMBDServiceName]) {
             smbdStatusFailed = YES;
-            
+        }
     }
-    
-    
-	if (afpStatusFailed || smbdStatusFailed) {
-		if (enabling)
+
+	if (smbdStatusFailed) {
+		if (enabling) {
 			*errorString = NSLocalizedString(@"Failed enabling File Sharing.", @"Act of turning off or disabling File Sharing failed");
-		else
+        } else {
 			*errorString = NSLocalizedString(@"Failed disabling File Sharing.", @"Act of turning off or disabling File Sharing failed");
+        }
 	}
 
-    
-	return (!afpStatusFailed && !smbdStatusFailed);
+	return !smbdStatusFailed;
 }
 
 + (NSArray *)limitedOptions
 {
-	return [NSArray arrayWithObjects:
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPAFPEnable], @"option",
-             NSLocalizedString(@"AFP Sharing ON", @"Used in toggling actions"), @"description", nil],
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPSMBEnable], @"option",
-             NSLocalizedString(@"SMB Sharing ON", @"Used in toggling actions"), @"description", nil],
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPAFPAndSMBEnable], @"option",
-             NSLocalizedString(@"AFP & SMB Sharing ON", @"Used in toggling actions"), @"description", nil],
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPAFPDisable], @"option",
-             NSLocalizedString(@"AFP Sharing OFF", @"Used in toggling actions"), @"description", nil],
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPSMBDisable], @"option",
-             NSLocalizedString(@"SMB Sharing OFF", @"Used in toggling actions"), @"description", nil],
-            [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:kCPAFPAndSMBDisable], @"option",
-             NSLocalizedString(@"AFP & SMB Sharing OFF", @"Used in toggling actions"), @"description", nil],
-            nil];
+	return [self smbOnlyLimitedOptions];
 }
 
 + (NSString *) helpText {

@@ -19,6 +19,10 @@
 
 - (id)init;
 
+- (id)initForMatchingTests;
++ (void)setNowForTesting:(NSDate *)date;
++ (void)clearNowForTesting;
+
 - (NSMutableDictionary *)readFromPanel;
 - (void)writeToPanel:(NSDictionary *)dict usingType:(NSString *)type;
 

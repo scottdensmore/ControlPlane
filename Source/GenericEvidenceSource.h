@@ -14,6 +14,7 @@
 }
 
 - (id)init;
+- (id)initForMatchingTests;
 
 // Need to be implemented by descendant classes
 - (NSString *)getSuggestionLeadText:(NSString *)type;

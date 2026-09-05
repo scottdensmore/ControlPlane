@@ -39,3 +39,8 @@ oui.txt
 usb-vendors.txt
 Resources/oui.txt
 Resources/usb-vendors.txt
+
+# Claude Code local settings only — track shared agents/skills
+.claude/settings.local.json
+.claude/settings.json
+.claude/*.local.*

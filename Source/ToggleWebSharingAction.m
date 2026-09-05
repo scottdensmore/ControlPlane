@@ -7,9 +7,13 @@
 //
 
 #import "ToggleWebSharingAction.h"
-#import "Action+HelperTool.h"
 
 @implementation ToggleWebSharingAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -19,21 +23,11 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    
-    NSString *command = turnOn ? kCPHelperEnableWebSharingCommand : kCPHelperDisableWebSharingCommand;
-	
-	BOOL success = [self helperToolPerformAction: command];
-    
-	if (!success) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling Web Sharing Service.", @"Act of turning on or enabling Web Sharing Service failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling Web Sharing Service.", @"Act of turning off or disabling Web Sharing Service failed");
-	}
-    
-    
-    
-	return success;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(@"Web sharing is not supported on this version of macOS.",
+                                         @"Error when a retired sharing action runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *) helpText {

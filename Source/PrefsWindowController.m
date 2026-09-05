@@ -6,6 +6,7 @@
 
 #import "AboutPanel.h"
 #import "Action.h"
+#import "CPLoginItemService.h"
 #import "DSLogger.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
@@ -251,15 +252,42 @@
 		NSSize frameSize = [view frame].size;
 		group[@"min_width"]  = @(frameSize.width);
 		group[@"min_height"] = @(frameSize.height);
+		NSString *groupName = group[@"name"];
+		if ([groupName isKindOfClass:[NSString class]]) {
+			[view setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.tab.%@", [groupName lowercaseString]]];
+		}
 	}
+
+	[prefsWindow setAccessibilityIdentifier:@"prefs.window"];
 
 	// Init. toolbar
 	prefsToolbar = [[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
 	[prefsToolbar setDelegate:self];
 	[prefsToolbar setAllowsUserCustomization:NO];
 	[prefsToolbar setAutosavesConfiguration:NO];
-    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+    [prefsToolbar setVisible:YES];
+    [prefsToolbar setSizeMode:NSToolbarSizeModeRegular];
+    [prefsToolbar setShowsBaselineSeparator:NO];
+
+    // Force traditional toolbar style and maximum space utilization
+    if (@available(macOS 11.0, *)) {
+        [prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
+    }
+
+    // Allow user customization to ensure all items are shown
+    [prefsToolbar setAllowsUserCustomization:YES];
+
 	[prefsWindow setToolbar:prefsToolbar];
+
+	// Debug: Log toolbar setup
+	NSLog(@"PrefsGroups count: %lu", (unsigned long)[prefsGroups count]);
+	for (NSMutableDictionary *group in prefsGroups) {
+		NSLog(@"Group: %@ - View: %@", group[@"name"], group[@"view"] ? @"SET" : @"NIL");
+	}
+	NSLog(@"Toolbar created with %lu items", (unsigned long)[[prefsToolbar items] count]);
+	NSLog(@"Toolbar visible: %@", [prefsToolbar isVisible] ? @"YES" : @"NO");
+	NSLog(@"Window toolbar: %@", [prefsWindow toolbar] ? @"SET" : @"NOT SET");
 
 	currentPrefsGroup = nil;
 	[self switchToView:@"General"];
@@ -267,7 +295,7 @@
     // display options for the menu bar
 
 
-    [startAtLoginStatus setState:[self willStartAtLogin:[self appPath]] ? 1:0];
+    [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
     [menuBarDisplayOptionsController addObject:
         [NSMutableDictionary dictionaryWithObjectsAndKeys:
             @"Icon",@"option", 
@@ -556,18 +584,37 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
      itemForItemIdentifier:(NSString *)groupId
  willBeInsertedIntoToolbar:(BOOL)flag
 {
+	NSLog(@"=== TOOLBAR ITEM CREATION ===");
+	NSLog(@"Requesting item for ID: %@", groupId);
+	NSLog(@"Will be inserted: %@", flag ? @"YES" : @"NO");
+
 	NSDictionary *group = [self groupById:groupId];
 	if (group == nil) {
-		NSLog(@"Oops! toolbar delegate is trying to use '%@' as an ID!", groupId);
+		NSLog(@"ERROR: No group found for ID '%@'", groupId);
 		return nil;
 	}
 
+	NSString *displayName = [group objectForKey:@"display_name"];
+	NSString *iconName = [group objectForKey:@"icon"];
+	NSImage *image = [NSImage imageNamed:iconName];
+
+	NSLog(@"Group data - ID: %@, Display: %@, Icon: %@", groupId, displayName, iconName);
+	NSLog(@"Image loaded: %@", image ? @"YES" : @"NO");
+	if (image) {
+		NSLog(@"Image size: %.1f x %.1f", image.size.width, image.size.height);
+	}
+
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
-	[item setLabel:[group objectForKey:@"display_name"]];
-	[item setPaletteLabel:[group objectForKey:@"display_name"]];
-	[item setImage:[NSImage imageNamed:[group objectForKey:@"icon"]]];
+	[item setLabel:displayName];
+	[item setPaletteLabel:displayName];
+	[item setImage:image];
 	[item setTarget:self];
 	[item setAction:@selector(switchToViewFromToolbar:)];
+
+	// Log final item properties
+	NSLog(@"Final item - Label: '%@', Image: %@", item.label, item.image ? @"SET" : @"MISSING");
+	NSLog(@"Item view: %@", item.view ? @"HAS CUSTOM VIEW" : @"STANDARD");
+	NSLog(@"================================");
 
 	return item;
 }
@@ -576,16 +623,28 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 {
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[prefsGroups count]];
 
+	NSLog(@"=== TOOLBAR ALLOWED ITEMS ===");
 	for (NSDictionary *group in prefsGroups) {
-		[array addObject:group[@"name"]];
+		NSString *groupId = group[@"name"];  // This is the key used for identifiers
+		[array addObject:groupId];
+		NSLog(@"Allowed: %@ (display: %@)", groupId, group[@"display_name"]);
     }
+	NSLog(@"Total allowed: %lu", (unsigned long)[array count]);
+	NSLog(@"===============================");
 
 	return array;
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
 {
-	return [self toolbarAllowedItemIdentifiers:toolbar];
+	NSArray *defaultItems = [self toolbarAllowedItemIdentifiers:toolbar];
+	NSLog(@"=== TOOLBAR DEFAULT ITEMS ===");
+	for (NSString *itemId in defaultItems) {
+		NSLog(@"Default: %@", itemId);
+	}
+	NSLog(@"Total default: %lu", (unsigned long)[defaultItems count]);
+	NSLog(@"==============================");
+	return defaultItems;
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
@@ -800,134 +859,48 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     return [NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]];
 }
 
-- (void)startAtLogin
-{
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList != NULL) {
-#ifdef DEBUG_MODE
-        DSLog(@"Adding ControlPlane to startup items");
-#endif
-        
-        LSSharedFileListItemRef newItem = LSSharedFileListInsertItemURL(loginItemList,
-                                                                        kLSSharedFileListItemBeforeFirst,
-                                                                        NULL, NULL,
-                                                                        (__bridge CFURLRef)[self appPath],
-                                                                        NULL, NULL);
-        if (newItem != NULL) {
-            CFRelease(newItem);
-        }
-        CFRelease(loginItemList);
-    }
-}
-
-- (void) disableStartAtLogin
-{
-    NSURL *appPath = [self appPath];
-    
-    // Creates shared file list reference to be used for changing list and reading its various properties.
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList == NULL) {
-        return;
-    }
-    
-    // take a snapshot of the list creating an array out of it
-    UInt32 seedValue = 0;
-    CFArrayRef currentLoginItems = LSSharedFileListCopySnapshot(loginItemList, &seedValue);
-    
-    if (currentLoginItems != NULL) {
-        
-        // walk the array looking for an entry that belongs to us
-        for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
-            LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
-            
-            BOOL startupItemFound = NO;
-            CFErrorRef error = NULL;
-            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, 0, &error);
-
-            if (pathOfCurrentItem != NULL) {
-                startupItemFound = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
-                CFRelease(pathOfCurrentItem);
-            } else if (error != NULL) {
-                // Handle error if needed
-                CFRelease(error);
-            }
-            
-            if (startupItemFound) {
-#ifdef DEBUG_MODE
-                DSLog(@"Removing ControlPlan from startup items");
-#endif
-                
-                LSSharedFileListItemRemove(loginItemList, itemToCheck);
-                break;
-            }
-        }
-        
-        CFRelease(currentLoginItems);
-    }
-    
-    CFRelease(loginItemList);
-}
-
 - (BOOL)willStartAtLogin:(NSURL *)appPath
 {
-    if (appPath == NULL) {
-        return NO;
-    }
-    
-    // Creates shared file list reference to be used for changing list and reading its various properties.
-    LSSharedFileListRef loginItemList = LSSharedFileListCreate(NULL, kLSSharedFileListSessionLoginItems, NULL);
-    if (loginItemList == NULL) {
-        return NO;
-    }
-    
-    // check to see if ControlPlane is already listed in Start Up Items
-    BOOL isControlPlaneListed = NO;
-    
-    // take a snapshot of the list creating an array out of it
-    UInt32 seedValue = 0;
-    CFArrayRef currentLoginItems = LSSharedFileListCopySnapshot(loginItemList, &seedValue);
-    
-    if (currentLoginItems != NULL) {
-        const UInt32 resolveFlags = (kLSSharedFileListNoUserInteraction | kLSSharedFileListDoNotMountVolumes);
-        
-        // walk the array looking for an entry that belongs to us
-        for (id currentLoginItem in (__bridge NSArray *)currentLoginItems) {
-            LSSharedFileListItemRef itemToCheck = (__bridge LSSharedFileListItemRef)currentLoginItem;
-                        
-            CFErrorRef error = NULL;
-            CFURLRef pathOfCurrentItem = LSSharedFileListItemCopyResolvedURL(itemToCheck, resolveFlags, &error);
+    (void)appPath;
+    return [[CPLoginItemService sharedService] checkboxOn];
+}
 
-            if (pathOfCurrentItem != NULL) {
-                isControlPlaneListed = CFEqual(pathOfCurrentItem, (__bridge CFURLRef)appPath);
-                CFRelease(pathOfCurrentItem);
-            }
-            else if (error != NULL) {
-                // Optional: handle error here
-                CFRelease(error);
-            }
-                        
-            if (isControlPlaneListed) {
-                break;
-            }
+- (void)startAtLogin
+{
+    NSError *error = nil;
+    if (![[CPLoginItemService sharedService] setEnabled:YES error:&error]) {
+        DSLog(@"Unable to enable Start at Login: %@", error);
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = NSLocalizedString(@"Could Not Enable Start at Login",
+                                              @"Alert title when SMAppService register fails");
+        alert.informativeText = error.localizedDescription ?: NSLocalizedString(@"Open System Settings → General → Login Items and allow ControlPlane.",
+                                                                                @"Fallback guidance when login item registration fails");
+        [alert addButtonWithTitle:NSLocalizedString(@"Open Login Items Settings", @"Button to open Login Items")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
+            [CPLoginItemService openLoginItemsSettings];
         }
-        
-        CFRelease(currentLoginItems);
     }
-    
-    CFRelease(loginItemList);
-	
-    return isControlPlaneListed;
+}
+
+- (void)disableStartAtLogin
+{
+    NSError *error = nil;
+    if (![[CPLoginItemService sharedService] setEnabled:NO error:&error]) {
+        DSLog(@"Unable to disable Start at Login: %@", error);
+    }
 }
 
 - (IBAction)toggleStartAtLoginAction:(id)sender
 {
-    if ([self willStartAtLogin:[self appPath]]) {
+    (void)sender;
+    BOOL currentlyOn = [[CPLoginItemService sharedService] checkboxOn];
+    if (currentlyOn) {
         [self disableStartAtLogin];
-    }
-    else {
+    } else {
         [self startAtLogin];
     }
-    [startAtLoginStatus setState:[self willStartAtLogin:[self appPath]] ? 1:0];
+    [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
 

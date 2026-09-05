@@ -141,6 +141,8 @@ static NSSet *sharedActiveContexts = nil;
 @synthesize goingToSleep;
 
 + (void)initialize {
+	[CPNotifications migrateLegacyGrowlPreferenceIfNeeded];
+
 	NSMutableDictionary *appDefaults = [NSMutableDictionary dictionary];
 
 	[appDefaults setValue:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
@@ -523,6 +525,10 @@ static NSSet *sharedActiveContexts = nil;
 	}
     
     [self sanitizeUserDefaults];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"EnableNotifications"]) {
+        [CPNotifications requestAuthorizationIfNeededWithCompletion:nil];
+    }
 
     // set default screen saver and screen lock status
     [self setScreenLocked:NO];
@@ -1002,7 +1008,7 @@ static NSSet *sharedActiveContexts = nil;
         [self decreaseActionsInProgress];
 
         if (!success) {
-            NSString *title = NSLocalizedString(@"Failure", @"Growl message title");
+            NSString *title = NSLocalizedString(@"Failure", @"Notification message title");
             [CPNotifications postUserNotification:title withMessage:errorString];
         }
     }
@@ -1015,9 +1021,9 @@ static NSSet *sharedActiveContexts = nil;
         // Aggregate notification messages for all actions
         NSString *title, *msg = [actions componentsAtIndexes:indexes joinedByString:@"\n* "];
         if ([indexes count] == 1) {
-            title = NSLocalizedString(@"Performing Action", @"Growl message title");
+            title = NSLocalizedString(@"Performing Action", @"Notification message title");
         } else {
-            title = NSLocalizedString(@"Performing Actions", @"Growl message title");
+            title = NSLocalizedString(@"Performing Actions", @"Notification message title");
             msg = [@"* " stringByAppendingString:msg];
         }
 
@@ -1355,11 +1361,9 @@ static NSSet *sharedActiveContexts = nil;
 }
 
 - (void)postNotificationsOnContextTransitionWhenForcedByUserIs:(BOOL)isManuallyTriggered {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"EnableGrowl"]) {
-        NSString *msg = [self getMesssageForChangingToContextWhenForcedByUserIs:isManuallyTriggered];
-        [CPNotifications postUserNotification:NSLocalizedString(@"Activating Context", @"Growl message title")
-                                  withMessage:msg];
-    }
+    NSString *msg = [self getMesssageForChangingToContextWhenForcedByUserIs:isManuallyTriggered];
+    [CPNotifications postUserNotification:NSLocalizedString(@"Activating Context", @"Notification title for context change")
+                              withMessage:msg];
     
     // Notify subscribed apps
     NSDistributedNotificationCenter *dnc = [NSDistributedNotificationCenter defaultCenter];

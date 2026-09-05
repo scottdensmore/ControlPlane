@@ -11,6 +11,8 @@
 #import "DSLogger.h"
 #import "RuleType.h"
 
+static NSDate *sTimeOfDayTestNow = nil;
+
 @interface TimeOfDayEvidenceSource ()
 
 // Returns NO on failure
@@ -83,6 +85,30 @@
 		nil]];
 
 	return self;
+}
+
++ (void)setNowForTesting:(NSDate *)date
+{
+    sTimeOfDayTestNow = date;
+}
+
++ (void)clearNowForTesting
+{
+    sTimeOfDayTestNow = nil;
+}
+
+- (id)initForMatchingTests
+{
+    self = [super initWithPanel:nil];
+    if (self == nil) {
+        return nil;
+    }
+
+    formatter = [[NSDateFormatter alloc] init];
+    [formatter setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [formatter setDateFormat:@"HH:mm"];
+
+    return self;
 }
 
 
@@ -191,7 +217,7 @@
     }
 
     // NSCalendarDate is deprecated, replace with NSDate and NSCalendar
-    NSDate *now = [NSDate date];
+    NSDate *now = sTimeOfDayTestNow ?: [NSDate date];
     NSCalendar *calendar = [NSCalendar currentCalendar];
     
     // Check day first

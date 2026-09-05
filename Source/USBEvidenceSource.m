@@ -46,6 +46,17 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 	return self;
 }
 
+- (id)initForMatchingTests
+{
+    if (!(self = [super initForMatchingTests]))
+        return nil;
+
+    lock = [[NSLock alloc] init];
+    devices = [[NSMutableArray alloc] init];
+
+    return self;
+}
+
 - (void)dealloc
 {
 	[lock release];

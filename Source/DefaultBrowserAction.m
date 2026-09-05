@@ -77,8 +77,7 @@
         LSSetDefaultHandlerForURLScheme((CFStringRef) @"https", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
         LSSetDefaultRoleHandlerForContentType(kUTTypeHTML, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
         LSSetDefaultRoleHandlerForContentType(kUTTypeURL, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeFileURL, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeText, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
+        // Removed kUTTypeFileURL and kUTTypeText registrations to narrow handler claims to browser-specific types only
 
     }
     LSSetDefaultHandlerForURLScheme((CFStringRef) @"http", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);

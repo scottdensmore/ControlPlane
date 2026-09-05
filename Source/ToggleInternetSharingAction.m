@@ -7,10 +7,13 @@
 //
 
 #import "ToggleInternetSharingAction.h"
-#import "Action+HelperTool.h"
 
 @implementation ToggleInternetSharingAction
 
++ (BOOL)isActionApplicableToSystem
+{
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -20,18 +23,11 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    NSString *command = turnOn ? kCPHelperEnableISCommand : kCPHelperDisableISCommand;
-	
-	BOOL result = [self helperToolPerformAction: command];
-	
-	if (!result) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling internet sharing.", @"Act of turning on or enabling internet sharing failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling internet sharing.", @"Act of turning off or disabling internet sharing failed");
-	}
-	
-	return result;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(@"Internet Sharing is not supported on this version of macOS.",
+                                         @"Error when a retired sharing action runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *) helpText {

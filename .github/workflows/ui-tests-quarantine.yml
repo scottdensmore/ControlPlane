@@ -1,0 +1,62 @@
+name: UI tests (quarantine)
+
+on:
+  pull_request:
+    branches:
+      - macOS-15
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ui-tests-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-tests:
+    name: ControlPlaneUITests (non-blocking)
+    runs-on: macos-15
+    timeout-minutes: 30
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          if [ -d /Applications/Xcode.app ]; then
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
+          xcodebuild -version
+
+      - name: Debug build
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
+        run: |
+          set -euo pipefail
+          mkdir -p "$DERIVED_DATA_PATH"
+          xcodebuild \
+            -project ControlPlane.xcodeproj \
+            -scheme ControlPlane \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY=- \
+            build
+
+      - name: UI tests (ControlPlaneUITests)
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/DerivedData
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project ControlPlane.xcodeproj \
+            -scheme ControlPlane \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            -derivedDataPath "$DERIVED_DATA_PATH" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY=- \
+            test \
+            -only-testing:ControlPlaneUITests

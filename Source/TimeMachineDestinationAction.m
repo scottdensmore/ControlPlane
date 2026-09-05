@@ -13,6 +13,16 @@
 
 @synthesize destinationVolumePath;
 
++ (BOOL)isActionApplicableToSystem
+{
+    // Time Machine destination switching is implemented by AppleScripting the
+    // Tedium companion (com.scottdensmore.Tedium). Upstream dustinrue/Tedium is
+    // archived (last push 2015); tediumapp.com no longer resolves (NXDOMAIN).
+    // No Sequoia-maintained companion found under scottdensmore or local siblings.
+    // Gate until a supported companion or in-app replacement exists (#44).
+    return NO;
+}
+
 - (id)init
 {
 	if (!(self = [super init]))
@@ -54,70 +64,32 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-
-    NSString *script = [NSString stringWithFormat:
-                            @"tell application \"Tedium\"\n"
-                            "    set current destination to \"%@\"\n"
-                            "end tell\n", destinationVolumePath];
-        
-    if (![self executeAppleScript:script]) {
-        *errorString = NSLocalizedString(@"Unable to set set Time Machine backup destination!", @"In TimeMachineDestinationAction");
-        return NO;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Time Machine Destination cannot be changed on this version of macOS. "
+            @"This action requires the Tedium companion app, which is not available for macOS 15.",
+            @"Error when TimeMachineDestinationAction runs without Tedium support");
     }
-
-	
-	return YES;
+    return NO;
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for TimeMachine actions is the name of the "
-							 "new Time Machine backup destination.", @"");
+							 "new Time Machine backup destination. This action is not "
+							 "available on modern macOS; it requires the Tedium companion "
+							 "app, which is not maintained for macOS 15.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	return NSLocalizedString(@"Set Time Machine's backup destination to", @"");
+	return NSLocalizedString(@"Set Time Machine's backup destination (unsupported on this macOS)", @"");
 }
 
 + (NSArray *) limitedOptions {
-    NSURL *tediumURL = [[NSWorkspace sharedWorkspace]
-                            URLForApplicationWithBundleIdentifier:@"com.scottdensmore.Tedium"];
-    
-    NSString* TediumPath = [tediumURL path];
-    if (!TediumPath) {
-        [[[self new] autorelease] performSelectorOnMainThread:@selector(tediumNotInstalledAlert) withObject:self waitUntilDone:YES];
-        return nil;
-    }
-	NSMutableArray *opts = nil;
-    
-    @try {
-        NSString *script =
-		@"tell application \"Tedium\"\n"
-		"  get destinationVolumeName of every destination\n"
-		"end tell\n";
-        
-        NSArray *list = [[[self new] autorelease] executeAppleScriptReturningListOfStrings:script];
-        if (!list)		// failure
-            return [NSArray array];
-
-        opts = [NSMutableArray arrayWithCapacity:[list count]];
-    
-		for (NSString *destination in list) {
-			[opts addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-							 destination, @"option", 
-                             destination, @"description", nil]];
-        }
-		
-	} @catch (NSException *e) {
-		DSLog(@"Exception: %@", e);
-		opts = [NSMutableArray array];
-	}
-
-
-	return opts;
+    // Gated: do not probe for Tedium or offer a download link to a dead site.
+    return [NSArray array];
 }
-             
 
 - (id)initWithOption:(NSString *)option
 {
@@ -125,23 +97,6 @@
 	[destinationVolumePath autorelease];
 	destinationVolumePath = [option copy];
 	return self;
-}
-         
--(void) tediumNotInstalledAlert {
-    
-    NSAlert *alert = [[NSAlert alloc] init];
-
-    [alert setMessageText:NSLocalizedString(@"This feature requires Tedium",@"Tedium is not installed")];
-    [alert setInformativeText:NSLocalizedString(@"To switch Time Machine backup destinations, you need to have Tedium installed.  Click 'Get Tedium' to visit the Tedium website",@"")];
-    
-    [alert addButtonWithTitle:NSLocalizedString(@"Get Tedium",@"Get Tedium")];
-    [alert addButtonWithTitle:NSLocalizedString(@"OK","Dismiss the alert without doing anything, but not a cancel")];
-
-    if ([alert runModal] == NSAlertFirstButtonReturn) {
-        NSURL *downloadURL = [NSURL URLWithString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"TediumURL"]];
-        [[NSWorkspace sharedWorkspace] openURL:downloadURL];
-    }
-    [alert release];
 }
 
 + (NSString *) friendlyName {

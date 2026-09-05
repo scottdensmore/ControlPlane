@@ -7,16 +7,16 @@
 //
 
 #import "ToggleNaturalScrollingAction.h"
-#include <ApplicationServices/ApplicationServices.h>
-
-
-
-typedef int CGSConnection;
-extern CGSConnection _CGSDefaultConnection(void);
-extern void CGSSetSwipeScrollDirection(const CGSConnection cid, BOOL dir);
-
 
 @implementation ToggleNaturalScrollingAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    // Natural Scrolling toggle requires private CGS API (CGSSetSwipeScrollDirection).
+    // Writing com.apple.swipescrolldirection alone does not apply changes to live input
+    // on modern macOS. No reliable public API exists on Sequoia.
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -26,40 +26,24 @@ extern void CGSSetSwipeScrollDirection(const CGSConnection cid, BOOL dir);
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    
-    NSMutableDictionary *globalSettings = [[[NSUserDefaults standardUserDefaults] persistentDomainForName:NSGlobalDomain] mutableCopy];
-    
-    const CGSConnection cid = _CGSDefaultConnection();
-    CGSSetSwipeScrollDirection(cid, turnOn);  // YES == natural, NO = unnatural
-    
-    [globalSettings setValue:[NSNumber numberWithBool:turnOn] forKey:@"com.apple.swipescrolldirection"];
-    
-    [[NSUserDefaults standardUserDefaults] setPersistentDomain:globalSettings forName:NSGlobalDomain];
-    BOOL success = [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [globalSettings release];
-    
-    
-	if (!success) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling Natural Scrolling.", @"Act of turning on or enabling Natural Scrolling failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling Natural Scrolling.", @"Act of turning off or disabling Natural Scrolling failed");
-	}
-
-    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:@"SwipeScrollDirectionDidChangeNotification" object:nil userInfo:nil];
-    
-	return success;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Natural Scrolling cannot be toggled on this version of macOS. "
+            @"Use System Settings → Trackpad → Natural Scrolling instead.",
+            @"Error when ToggleNaturalScrollingAction runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *) helpText {
 	return NSLocalizedString(@"The parameter for ToggleNaturalScrolling actions is either \"1\" "
                              "or \"0\", depending on whether you want Natural Scrolling "
-                             "turned on or off.", @"");
+                             "turned on or off. This action is not available on modern macOS; "
+                             "configure Natural Scrolling in System Settings instead.", @"");
 }
 
 + (NSString *) creationHelpText {
-	return NSLocalizedString(@"Set Natural Scrolling", @"Will be followed by 'on' or 'off'");
+	return NSLocalizedString(@"Set Natural Scrolling (unsupported on this macOS)", @"Will be followed by 'on' or 'off'");
 }
 
 + (NSString *) friendlyName {

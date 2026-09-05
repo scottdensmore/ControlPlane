@@ -22,32 +22,33 @@ static NSDictionary *usbVendorDb = nil;
         
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"oui" ofType:@"txt"];
 		FILE *f = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
-        
-		// TODO: handle failure
-		while (!feof(f)) {
-			char buf[200];
-            if (!fgets(buf, sizeof(buf), f)) {
-                break;
+        if (f != nil) {
+            // TODO: handle failure
+            while (!feof(f)) {
+                char buf[200];
+                if (!fgets(buf, sizeof(buf), f)) {
+                    break;
+                }
+                // Line format:  00-00-4C   \t\tNEC CORPORATION
+                NSString *line = [NSString stringWithCString:buf encoding:NSASCIIStringEncoding];
+                if (line == nil) {
+                    continue;	// bad line
+                }
+                NSScanner *scan = [NSScanner scannerWithString:line];
+                NSString *prefix = nil, *vendorName = nil;
+                BOOL successfulScan = (   [scan scanUpToString:@"\t" intoString:&prefix]
+                                       // (NSScanner will skip over the white space)
+                                       && [scan scanUpToString:@"\n" intoString:&vendorName] );
+                if (successfulScan) {
+                    prefix = [prefix uppercaseString];
+                    [dict setValue:vendorName forKey:prefix];
+                } else {
+                    DSLog(@"Failed to parse file \"oui.txt\": unexpected format of line \"%@\"", line);
+                    break;
+                }
             }
-			// Line format:  00-00-4C   \t\tNEC CORPORATION
-			NSString *line = [NSString stringWithCString:buf encoding:NSASCIIStringEncoding];
-            if (line == nil) {
-                continue;	// bad line
-            }
-			NSScanner *scan = [NSScanner scannerWithString:line];
-			NSString *prefix = nil, *vendorName = nil;
-            BOOL successfulScan = (   [scan scanUpToString:@"\t" intoString:&prefix]
-                                   // (NSScanner will skip over the white space)
-                                   && [scan scanUpToString:@"\n" intoString:&vendorName] );
-            if (successfulScan) {
-                prefix = [prefix uppercaseString];
-                [dict setValue:vendorName forKey:prefix];
-            } else {
-                DSLog(@"Failed to parse file \"oui.txt\": unexpected format of line \"%@\"", line);
-                break;
-            }
-		}
-		fclose(f);
+            fclose(f);
+        }
         
 		ouiDb = dict;
 	}
@@ -62,29 +63,30 @@ static NSDictionary *usbVendorDb = nil;
         
 		NSString *path = [[NSBundle mainBundle] pathForResource:@"usb-vendors" ofType:@"txt"];
 		FILE *f = fopen([path cStringUsingEncoding:NSUTF8StringEncoding], "r");
-		// TODO: handle failure
-		while (!feof(f)) {
-			char buf[200];
-            if (!fgets(buf, sizeof(buf), f)) {
-                break;
+        if (f != nil) {
+            // TODO: handle failure
+            while (!feof(f)) {
+                char buf[200];
+                if (!fgets(buf, sizeof(buf), f)) {
+                    break;
+                }
+                // Line format:  1033|NEC Corporation
+                NSString *delimiter = @"|";
+                NSString *line = [NSString stringWithCString:buf encoding:NSUTF8StringEncoding];
+                NSScanner *scan = [NSScanner scannerWithString:line];
+                NSString *vendorID = nil, *vendorName = nil;
+                BOOL successfulScan = (   [scan scanUpToString:delimiter intoString:&vendorID]
+                                       && [scan scanString:delimiter intoString:NULL]
+                                       && [scan scanUpToString:@"\n" intoString:&vendorName] );
+                if (successfulScan) {
+                    [dict setValue:vendorName forKey:vendorID];
+                } else {
+                    DSLog(@"Failed to parse file \"usb-vendors.txt\": unexpected format of line \"%@\"", line);
+                    break;
+                }
             }
-			// Line format:  1033|NEC Corporation
-            NSString *delimiter = @"|";
-			NSString *line = [NSString stringWithCString:buf encoding:NSUTF8StringEncoding];
-			NSScanner *scan = [NSScanner scannerWithString:line];
-			NSString *vendorID = nil, *vendorName = nil;
-            BOOL successfulScan = (   [scan scanUpToString:delimiter intoString:&vendorID]
-                                   && [scan scanString:delimiter intoString:NULL]
-                                   && [scan scanUpToString:@"\n" intoString:&vendorName] );
-            if (successfulScan) {
-                [dict setValue:vendorName forKey:vendorID];
-            } else {
-                DSLog(@"Failed to parse file \"usb-vendors.txt\": unexpected format of line \"%@\"", line);
-                break;
-            }
-		}
-		fclose(f);
-        
+            fclose(f);
+        }
 		usbVendorDb = dict;
 	}
     

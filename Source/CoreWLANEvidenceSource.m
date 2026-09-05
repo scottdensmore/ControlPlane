@@ -58,6 +58,15 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
     return self;
 }
 
+- (id)initForMatchingTests {
+    self = [super initForMatchingTests];
+    if (!self) {
+        return nil;
+    }
+
+    return self;
+}
+
 - (void)dealloc {
     [self doStop];
 

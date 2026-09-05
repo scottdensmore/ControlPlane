@@ -37,7 +37,7 @@
 	return nil;
 }
 
-- (id)initWithRules:(NSArray *)ruleTypeClasses {
+- (id)initWithRules:(NSArray *)ruleTypeClasses matchingOnly:(BOOL)matchingOnly {
     self = [super initWithPanel:nil];
     if (!self) {
         return nil;
@@ -57,7 +57,7 @@
             return nil;
         }
 
-        RuleType *ruleType = [(RuleType *) [typeClass alloc] initWithEvidenceSource:self];
+        RuleType *ruleType = [(RuleType *) [typeClass alloc] initWithEvidenceSource:self matchingOnly:matchingOnly];
         if (!ruleType) {
             NSLog(@"%@ >> failed to create an object of class '%@'!", [self class], typeClass);
             [typeNames release];
@@ -76,6 +76,10 @@
     ruleTypeNames = (NSArray *) typeNames;
 
     return self;
+}
+
+- (id)initWithRules:(NSArray *)ruleTypeClasses {
+    return [self initWithRules:ruleTypeClasses matchingOnly:NO];
 }
 
 - (void)dealloc {

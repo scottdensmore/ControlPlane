@@ -8,10 +8,80 @@
 //
 
 #import <UserNotifications/UserNotifications.h>
+#import <AppKit/AppKit.h>
 #import "CPNotifications.h"
 
-
 @implementation CPNotifications
+
++ (void)migrateLegacyGrowlPreferenceInDefaults:(NSUserDefaults *)defaults
+{
+    if (defaults == nil) {
+        return;
+    }
+    if ([defaults objectForKey:@"EnableGrowl"] == nil) {
+        return;
+    }
+    if ([defaults objectForKey:@"EnableNotifications"] == nil) {
+        [defaults setBool:[defaults boolForKey:@"EnableGrowl"] forKey:@"EnableNotifications"];
+    }
+    [defaults removeObjectForKey:@"EnableGrowl"];
+}
+
++ (void)migrateLegacyGrowlPreferenceIfNeeded
+{
+    [self migrateLegacyGrowlPreferenceInDefaults:[NSUserDefaults standardUserDefaults]];
+}
+
++ (void)requestAuthorizationIfNeededWithCompletion:(void (^)(BOOL granted))completion
+{
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
+        if (settings.authorizationStatus == UNAuthorizationStatusAuthorized
+            || settings.authorizationStatus == UNAuthorizationStatusProvisional) {
+            if (completion != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(YES);
+                });
+            }
+            return;
+        }
+        if (settings.authorizationStatus == UNAuthorizationStatusDenied) {
+            if (completion != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(NO);
+                });
+            }
+            return;
+        }
+
+        [center requestAuthorizationWithOptions:(UNAuthorizationOptionAlert | UNAuthorizationOptionSound)
+                              completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            if (error != nil) {
+                NSLog(@"Notification authorization request failed: %@", error);
+            }
+            if (completion != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(granted);
+                });
+            }
+        }];
+    }];
+}
+
++ (void)showAuthorizationDeniedAlert
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = NSLocalizedString(@"Notifications Are Disabled",
+                                          @"Alert title when notification permission is denied");
+    alert.informativeText = NSLocalizedString(@"ControlPlane cannot show notifications until you allow them in System Settings > Notifications.",
+                                                @"Alert detail when notification permission is denied");
+    [alert addButtonWithTitle:NSLocalizedString(@"Open System Settings", @"Button to open notification settings")];
+    [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+    if ([alert runModal] == NSAlertFirstButtonReturn) {
+        NSURL *settingsURL = [NSURL URLWithString:@"x-apple.systempreferences:com.apple.Notifications-Settings.extension"];
+        [[NSWorkspace sharedWorkspace] openURL:settingsURL];
+    }
+}
 
 + (void)postUserNotification:(NSString *)title withMessage:(NSString *)message
 {

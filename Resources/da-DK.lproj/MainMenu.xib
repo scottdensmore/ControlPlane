@@ -305,12 +305,12 @@
                 <button id="1887">
                     <rect key="frame" x="18" y="223" width="86" height="18"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    <buttonCell key="cell" type="check" title="Use Growl" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1888">
+                    <buttonCell key="cell" type="check" title="Use Notifications" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="1888">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <binding destination="288" name="value" keyPath="values.EnableGrowl" id="1890"/>
+                        <binding destination="288" name="value" keyPath="values.EnableNotifications" id="1890"/>
                     </connections>
                 </button>
                 <button id="1891">

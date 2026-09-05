@@ -23,6 +23,7 @@ enum FileSharingOptions {
 
 - (NSString *) description;
 - (BOOL) execute: (NSString **) errorString;
++ (BOOL)parameterRequiresAFP:(NSNumber *)parameter;
 + (NSString *) helpText;
 + (NSString *) creationHelpText;
 

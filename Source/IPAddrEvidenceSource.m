@@ -103,7 +103,7 @@ static void ipAddrChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *
 @synthesize packedIPv6Addresses = _packedIPv6Addresses;
 
 - (id)init {
-    self = [super initWithRules:@[ [IPv4RuleType class], [IPv6RuleType class] ]];
+    self = [super initWithRules:@[ [IPv4RuleType class], [IPv6RuleType class] ] matchingOnly:NO];
     if (!self) {
         return nil;
     }
@@ -111,6 +111,17 @@ static void ipAddrChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *
     [self setDataCollected:YES];
     
 	return self;
+}
+
+- (id)initForMatchingTests {
+    self = [super initWithRules:@[ [IPv4RuleType class], [IPv6RuleType class] ] matchingOnly:YES];
+    if (!self) {
+        return nil;
+    }
+
+    [self setDataCollected:YES];
+
+    return self;
 }
 
 - (void)dealloc {

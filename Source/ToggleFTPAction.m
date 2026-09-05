@@ -7,9 +7,13 @@
 //
 
 #import "ToggleFTPAction.h"
-#import "Action+HelperTool.h"
 
 @implementation ToggleFTPAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -19,20 +23,11 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    
-    NSString *command = turnOn ? kCPHelperEnableFTPCommand : kCPHelperDisableFTPCommand;
-	
-	BOOL success = [self helperToolPerformAction: command];
-    
-    
-	if (!success) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling FTP Service.", @"Act of turning on or enabling FTP Service failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling FTP Service.", @"Act of turning off or disabling FTP Service failed");
-	}
-    
-	return success;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(@"FTP sharing is not supported on this version of macOS.",
+                                         @"Error when a retired sharing action runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *) helpText {

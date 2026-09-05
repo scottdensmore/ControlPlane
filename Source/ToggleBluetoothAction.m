@@ -8,6 +8,27 @@
 #import "ToggleBluetoothAction.h"
 #import <IOBluetooth/objc/IOBluetoothHostController.h>
 
+/*
+ * PRIVATE API WARNING (issue #29):
+ *
+ * IOBluetoothPreferenceGetControllerPowerState and IOBluetoothPreferenceSetControllerPowerState
+ * are PRIVATE, undocumented functions in IOBluetooth.framework. They are not part of any public
+ * Apple API and are subject to removal or behavioral change in future macOS releases.
+ *
+ * Public alternatives (as of macOS 15):
+ * - No supported system API to toggle Bluetooth radio power.
+ * - CoreBluetooth (CBCentralManager) only controls app-level BLE scanning, not radio hardware.
+ * - Shortcuts.app can toggle Bluetooth but cannot be called programmatically in a menu-bar agent.
+ *
+ * Risk acceptance:
+ * This action is kept for user convenience on macOS 15, where the private APIs still work.
+ * Future OS upgrades may require gating this action with isActionApplicableToSystem or replacing
+ * it with a Shortcuts-based approach (if Apple adds programmable Shortcuts support).
+ *
+ * See: https://github.com/dustinrue/ControlPlane/issues/11
+ *      http://dmaclach.blogspot.com/2010/10/its-dead-jim.html
+ */
+
 // requires IOBluetooth.framework
 int IOBluetoothPreferenceGetControllerPowerState(void);
 void IOBluetoothPreferenceSetControllerPowerState(int);

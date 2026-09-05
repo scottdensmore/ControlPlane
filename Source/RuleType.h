@@ -17,6 +17,7 @@
 + (NSString *)panelNibName;
 
 - (id)initWithEvidenceSource:(EvidenceSource *)src;
+- (id)initWithEvidenceSource:(EvidenceSource *)src matchingOnly:(BOOL)matchingOnly;
 
 // To be implemented by descendant classes.
 - (NSString *)name;

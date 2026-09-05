@@ -29,6 +29,21 @@
 	return self;
 }
 
+- (id)initForMatchingTests {
+    self = [super initForMatchingTests];
+    if (!self) {
+        return nil;
+    }
+
+    return self;
+}
+
+- (void)setPowerStatusForTesting:(NSString *)statusString {
+    [status release];
+    status = [statusString copy];
+    [self setDataCollected:YES];
+}
+
 - (void)dealloc {
     [status release];
     [super dealloc];

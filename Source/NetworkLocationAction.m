@@ -18,6 +18,14 @@
 
 @implementation NetworkLocationAction
 
++ (BOOL)isActionApplicableToSystem {
+    // #33: Network Locations UI was removed in Ventura+. scselect -l is gone;
+    // SCNetworkSet/scselect can still list legacy sets, but creating and managing
+    // locations is no longer a reliable user-facing path on Sequoia. Prefer gate
+    // over offering a half-broken action.
+    return NO;
+}
+
 #pragma mark Utility methods
 
 + (NSDictionary *)getAllSets {
@@ -94,54 +102,23 @@
 }
 
 - (BOOL)execute:(NSString **)errorString {
-    if ([self isRequiredNetworkLocationAlreadySet]) {
-#ifdef DEBUG_MODE
-        NSLog(@"Network location is already set to '%@'", networkLocation);
-#endif
-        return YES;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Network Location cannot be changed on this version of macOS. "
+            @"Network Locations were removed from System Settings.",
+            @"Error when NetworkLocationAction runs on modern macOS");
     }
-
-    __block NSString *networkSetId = nil;
-
-	NSDictionary *allSets = [[self class] getAllSets];
-    [allSets enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *subdict, BOOL *stop) {
-        if ([subdict isKindOfClass:[NSDictionary class]]) {
-            id userDefinedName = subdict[(NSString *)kSCPropUserDefinedName];
-            if ( (userDefinedName != nil)
-                && [userDefinedName isKindOfClass:[NSString class]]
-                && [userDefinedName isEqualToString:self->networkLocation] )
-            {
-                networkSetId = key;
-                *stop = YES;
-            }
-        }
-    }];
-
-	if (!networkSetId) {
-		NSString *format = NSLocalizedString(@"No network location named \"%@\" exists!", @"Action error message");
-        *errorString = [NSString stringWithFormat:format, networkLocation];
-		return NO;
-	}
-
-    // Using SCPreferences* to change the location requires a setuid binary,
-	// so we just execute /usr/sbin/scselect to do the heavy lifting.
-	NSTask *task = [NSTask launchedTaskWithLaunchPath:@"/usr/sbin/scselect" arguments:@[ networkSetId ]];
-	[task waitUntilExit];
-	if ([task terminationStatus] != 0) {
-		*errorString = NSLocalizedString(@"Failed changing network location", @"Action error message");
-		return NO;
-	}
-
-	return YES;
+    return NO;
 }
 
 + (NSString *)helpText {
 	return NSLocalizedString(@"The parameter for NetworkLocation actions is the name of the "
-                             "network location to select.", @"");
+                             "network location to select. This action is not available on modern macOS; "
+                             "Network Locations were removed from System Settings.", @"");
 }
 
 + (NSString *)creationHelpText {
-	return NSLocalizedString(@"Changing network location to", @"");
+	return NSLocalizedString(@"Changing network location (unsupported on this macOS)", @"");
 }
 
 + (NSArray *)limitedOptions {
