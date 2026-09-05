@@ -10,7 +10,7 @@ This repository is the **[scottdensmore/ControlPlane](https://github.com/scottde
 | :--- | :--- |
 | Host OS | macOS 15 Sequoia (recommended for day-to-day work on this branch) |
 | Xcode | 16 or newer |
-| Deployment target | **14.5** (raising to 15.x is tracked separately; do not bump casually) |
+| Deployment target | **15.0** |
 | Project | `ControlPlane.xcodeproj` |
 | Scheme | `ControlPlane` |
 

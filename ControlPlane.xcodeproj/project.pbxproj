@@ -111,6 +111,7 @@
 		A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */; };
 		B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B45HELPFILE450000001 /* HelpScrubTests.m */; };
+		B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B40DEPLFILE400000001 /* DeploymentTargetTests.m */; };
 		B52IPKT01WIRE5252000001 /* PackedIPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB66EF6F6A8923E600D9ED3 /* PackedIPAddressTests.m */; };
 		B52IPV401WIRE5252000002 /* IPv4RuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */; };
 		B52CTX01WIRE5252000003 /* ContextModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB01456A891A29FF1EE3792 /* ContextModelTests.m */; };
@@ -399,6 +400,7 @@
 		B52STUBFILE5252000010 /* CPDBTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPDBTestStubs.m; sourceTree = "<group>"; };
 		B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelperSigningRequirementTests.m; sourceTree = "<group>"; };
 		B45HELPFILE450000001 /* HelpScrubTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelpScrubTests.m; sourceTree = "<group>"; };
+		B40DEPLFILE400000001 /* DeploymentTargetTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DeploymentTargetTests.m; sourceTree = "<group>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -1093,6 +1095,7 @@
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
 				B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */,
 				B45HELPFILE450000001 /* HelpScrubTests.m */,
+				B40DEPLFILE400000001 /* DeploymentTargetTests.m */,
 				3A469C54740862F2CA73424A /* ToggleableActionTests.m */,
 			);
 			name = ControlPlaneTests;
@@ -1885,6 +1888,7 @@
 			DACEA98B1410560497D2361F /* DefaultBrowserUTITests.m in Sources */,
 			B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */,
 			B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */,
+			B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
 				C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */,
 				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
@@ -2219,7 +2223,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2268,7 +2272,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -2304,7 +2308,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -2442,7 +2446,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2517,7 +2521,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = ControlPlane;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2710,7 +2714,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
