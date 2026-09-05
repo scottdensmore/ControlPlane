@@ -61,6 +61,30 @@ end tell
 		</p>
 	</div>
 
+	<div summary="How to set Focus with a Shortcut" class="taskbox">
+		<p>
+		<strong>To set Focus when entering a context:</strong>
+		<ol>
+		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets the Focus you want
+		(for example Do Not Disturb or Work). Name it something memorable, such as
+		<em>Enable Work Focus</em>.</li>
+		<li>Save a shell script, for example <tt>~/bin/enable-work-focus.sh</tt>:
+<pre>
+#!/bin/bash
+shortcuts run "Enable Work Focus"
+</pre>
+		</li>
+		<li>Make the script executable (<tt>chmod +x ~/bin/enable-work-focus.sh</tt>).</li>
+		<li>In ControlPlane, add a <em>ShellScript</em> arrival action on the context and
+		select that script as the parameter.</li>
+		</ol>
+		</p>
+		<p>
+		The legacy <em>Toggle Notification Center Alerts</em> action is unsupported on
+		modern macOS; do not rely on private Notification Center preferences.
+		</p>
+	</div>
+
 	<h2 class="seealso">See also</h2>
 	<p class="seealso">
 		<a href="actions.html">Setting up ControlPlane's actions</a><br />

@@ -148,6 +148,13 @@
 	be passed to the script by using a pipe character ("|") as a
 	separator in the parameter. (e.g. <tt>/path/to/script.sh|argument1|argument2</tt>)
 	</p>
+	<p>To engage <em>Focus</em> (the modern replacement for Do Not Disturb)
+	from a context, create a Shortcut in the Shortcuts app that sets your
+	desired Focus, save a small shell script that runs
+	<tt>shortcuts run "Your Focus Shortcut"</tt>, and point a
+	<em>ShellScript</em> action at that script. See
+	<a href="tips.html">Tips and tricks</a> for a step-by-step example.
+	</p>
 
         
         <h2><em>Speak</em> action</h2>
@@ -190,9 +197,11 @@
         </p>
 
         <h2><em>Toggle Notification Center Alerts</em></h2>
-        <p><strong>Unavailable on macOS 15.</strong> This is a legacy
-        Notification Center / Do Not Disturb style toggle from older macOS
-        releases. Focus modes on Sequoia are not controlled by this action.
+        <p><strong>Unsupported on macOS 15.</strong> This legacy Do Not Disturb
+        action is not supported on modern macOS (Focus replaced classic Notification
+        Center DND). Existing actions fail with a clear error and no longer write
+        Notification Center preferences. Use a <em>ShellScript</em> action that runs
+        a Focus Shortcut instead (see Help tips).
         </p>
         
         <h2><em>Toggle Printer Sharing</em> action</h2>
