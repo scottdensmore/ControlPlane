@@ -8,6 +8,7 @@
 - **Smoke script:** `scripts/smoke-build.sh`
 - **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-15`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
 - **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` runs `ControlPlaneUITests` with `continue-on-error: true`
+- **Signing / helper bless:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot bless)
 
 ## Commands
 
@@ -51,6 +52,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
+| `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
 
 ## UI test accessibility identifiers
 

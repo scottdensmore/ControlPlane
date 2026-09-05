@@ -104,6 +104,7 @@
 		A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4E7F90C178917007E7E41 /* MuteAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71CB770C17C01700E56526 /* ScreenSaverPasswordAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */; };
 		B52IPKT01WIRE5252000001 /* PackedIPAddressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB66EF6F6A8923E600D9ED3 /* PackedIPAddressTests.m */; };
 		B52IPV401WIRE5252000002 /* IPv4RuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */; };
 		B52CTX01WIRE5252000003 /* ContextModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB01456A891A29FF1EE3792 /* ContextModelTests.m */; };
@@ -233,7 +234,7 @@
 		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
 		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
 		DE762B7E2D98BA310095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7D2D98BA310095F733 /* main.m */; };
-		DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = DE762B772D98BA310095F733 /* CPXPCService.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DE762B822D98BA310095F733 /* CPXPCService.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = DE762B772D98BA310095F733 /* CPXPCService.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DE762B9F2D98C1BE0095F733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B9E2D98C1BE0095F733 /* main.m */; };
 		DE762BA52D98C2A80095F733 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE99DE3B28C034910014E380 /* Foundation.framework */; };
 		DE762BA62D98C2B40095F733 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
@@ -389,6 +390,7 @@
 		B52STUBFILE5252000008 /* CPEvidenceMatchingTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPEvidenceMatchingTestStubs.m; sourceTree = "<group>"; };
 		B52STUBFILE5252000009 /* CPContextTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPContextTestStubs.m; sourceTree = "<group>"; };
 		B52STUBFILE5252000010 /* CPDBTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPDBTestStubs.m; sourceTree = "<group>"; };
+		B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelperSigningRequirementTests.m; sourceTree = "<group>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
@@ -1080,6 +1082,7 @@
 				309AC2C9D18B61088DA26BA9 /* SharedNumberFormatterTests.m */,
 				B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */,
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
+				B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */,
 				3A469C54740862F2CA73424A /* ToggleableActionTests.m */,
 			);
 			name = ControlPlaneTests;
@@ -1867,6 +1870,7 @@
 				90279E7BD70E09BC0CFD3E39 /* SharedNumberFormatterTests.m in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */,
 				E6F718293A4B5C6D7E8F90A1 /* InfoPlistPrivacyTests.m in Sources */,
+				B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
 				C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */,
 				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
