@@ -11,6 +11,7 @@
 #import "ToggleTFTPAction.h"
 #import "ToggleWebSharingAction.h"
 #import "ScreenSaverPasswordAction.h"
+#import "ToggleNaturalScrollingAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -51,5 +52,19 @@
 // The implementation calls +isFireWireAvailable which queries IOKit for IOFireWireController.
 // Direct unit testing requires linking FireWireEvidenceSource into the test target, which would
 // pull the full evidence stack. The gate is verified by code review and integration smoke testing.
+
+- (void)testToggleNaturalScrollingActionIsNotApplicableOnSequoia {
+    // #47: Natural Scrolling toggle requires private CGS API; no reliable public alternative.
+    XCTAssertFalse([ToggleNaturalScrollingAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyNaturalScrollingActionFailsClearly {
+    ToggleNaturalScrollingAction *action = [[ToggleNaturalScrollingAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Natural Scrolling"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound);
+}
 
 @end
