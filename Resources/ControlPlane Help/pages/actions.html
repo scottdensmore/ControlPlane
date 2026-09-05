@@ -28,6 +28,10 @@
 		time from the action being triggered until the context is
 		switched.
 		</p>
+		<p>On macOS 15 (Sequoia), some historical actions are gated or
+		retired and will not appear as supported options. See
+		<em>Unavailable on macOS 15</em> below.
+		</p>
 
 		<!-- =================================================== -->
 		<hr />
@@ -82,7 +86,8 @@
 
 	<h2><em>Mount</em> actions</h2>
 	<p>Actions of type <em>Mount</em> attempt to mount a network
-	volume (afp://, smb://, etc.).
+	volume (typically <tt>smb://</tt>; legacy <tt>afp://</tt> URLs may
+	fail on modern macOS where AFP is unavailable).
 	</p>
         
 
@@ -92,8 +97,10 @@
 	</p>
 
 	<h2><em>Network Location</em> actions</h2>
-	<p>Actions of type <em>NetworkLocation</em> will change your
-	current Mac OS X Network Location.
+	<p><strong>Unsupported on macOS 15.</strong> Actions of type
+	<em>NetworkLocation</em> historically changed your Mac OS X Network
+	Location. Prefer other networking actions or System Settings; do not
+	rely on this action on Sequoia.
 	</p>
 
 	<h2><em>Open</em> actions</h2>
@@ -121,8 +128,10 @@
         
 
 	<h2><em>Screen Saver Password</em> actions</h2>
-	<p>Actions of type <em>ScreenSaverPassword</em> either enable
-	or disable your screen saver's password.
+	<p><strong>Unavailable on macOS 15.</strong> Actions of type
+	<em>ScreenSaverPassword</em> historically enabled or disabled the
+	screen saver password. Lock Screen settings are no longer controllable
+	this way on Sequoia.
 	</p>
         
         <h2><em>Start Screen Saver Now</em> action</h2>
@@ -150,9 +159,10 @@
         
       
         <h2><em>Time Machine Destination</em> action</h2>
-        <p>This action requires that you have Tedium installed (available at
-        <a href="http://www.tediumapp.com/">http://www.tediumapp.com/</a>). This action
-        will allow you to automatically change your Time Machine destination disk.</p>
+        <p><strong>Unsupported on macOS 15.</strong> This action historically
+        required the third-party Tedium app to change the Time Machine
+        destination disk. Treat it as unavailable on Sequoia.
+        </p>
         
 
 	<h2><em>Toggle Bluetooth</em> and <em>Toggle WiFi</em> actions</h2>
@@ -166,30 +176,58 @@
 	until you manually select a different one.  If you only want a single context to be sticky, remember to set an associated "untoggle" on departure.</p>
 	
         <h2><em>Toggle Firewall</em> action</h2>
-        <p>Toggle the firewall on or off.  This will globally enable or disable
-        any rules you have configured, it does not allow you to modify firewall rules</p>
+        <p><strong>Unsupported on macOS 15.</strong> Historically toggled the
+        application firewall on or off globally. Do not rely on this action
+        (or Firewall Rule) on Sequoia.
+        </p>
 
         <h2><em>Toggle Notification Center Alerts</em></h2>
-        <p>Allows you to toggle Notification Center alerts, only works on Mountain Lion or newer</p>
+        <p><strong>Unavailable on macOS 15.</strong> This is a legacy
+        Notification Center / Do Not Disturb style toggle from older macOS
+        releases. Focus modes on Sequoia are not controlled by this action.
+        </p>
         
         <h2><em>Toggle Printer Sharing</em> action</h2>
         <p>Toggle Printer Sharing</p>
 
         <h2><em>Toggle Remote Login</em> action</h2>
-        <p>Allows you to toggle OS X's ssh service (Remote Login)</p>
+        <p>Allows you to toggle macOS's ssh service (Remote Login)</p>
 
         <h2><em>Toggle Time Machine</em> action</h2>
         <p>Toggles Time Machine on or off.  This action requires additional privileges and when first invoked will ask you to install a helper application.  Simply click install to install the helper application.</p>
-        
-        <p>Under Lion this will enable/disable hourly backups to external drives and Time Capsules but leaves local backups enabled (MobileBackups).  Under Snow Leopard this action simply enables or disables Time Machine.  NOTE: Under Snow Leopard, the Time Machine icon may not faithfully display Time Machine's actual status.</p>
 
         <h2><em>Unmount</em> action</h2>
         <p>Unmounts a given disk</p>
 
 	<h2><em>VPN</em> actions</h2>
-	<p>Actions of type <em>VPN</em> can establish or disconnect
-	from your default PPTP, L2TP VPN or Cisco IPSec.
+	<p><strong>Unsupported on macOS 15.</strong> Actions of type
+	<em>VPN</em> historically established or disconnected PPTP, L2TP, or
+	Cisco IPSec connections. Prefer System Settings / modern VPN tooling;
+	do not treat this action as working on Sequoia.
 	</p>
+
+		<hr />
+
+		<h2>Unavailable on macOS 15</h2>
+		<p>The following actions are retired or gated and are
+		<strong>not supported</strong> on macOS 15. They are listed here so
+		older documentation and configs are not mistaken for current
+		guidance:
+		</p>
+		<ul>
+			<li><em>Toggle FTP Sharing</em> — retired</li>
+			<li><em>Toggle TFTP Sharing</em> — retired</li>
+			<li><em>Toggle Web Sharing</em> — retired</li>
+			<li><em>Toggle Internet Sharing</em> — retired</li>
+			<li><em>AFP</em> file sharing options — retired (SMB-only file sharing may still apply where offered)</li>
+			<li><em>Toggle Natural Scrolling</em> — unavailable</li>
+			<li><em>Screen Saver Password</em> — unavailable</li>
+			<li><em>Toggle Notification Center Alerts</em> (legacy Do Not Disturb) — unavailable</li>
+			<li><em>Network Location</em> — unsupported</li>
+			<li><em>VPN</em> — unsupported</li>
+			<li><em>Toggle Firewall</em> / <em>Firewall Rule</em> — unsupported</li>
+			<li><em>Time Machine Destination</em> (Tedium) — unsupported</li>
+		</ul>
 
 <!--
 		<p style="text-align: center;">

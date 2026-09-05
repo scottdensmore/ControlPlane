@@ -53,6 +53,9 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
 | `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
+| `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45) |
+
+Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/ControlPlane` and Growl recommendation phrases.
 
 ## UI test accessibility identifiers
 
