@@ -775,6 +775,9 @@
 		DE762B9E2D98C1BE0095F733 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DE762BA32D98C2440095F733 /* HelperTool-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Info.plist"; sourceTree = "<group>"; };
 		DE762BA42D98C2440095F733 /* HelperTool-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HelperTool-Launchd.plist"; sourceTree = "<group>"; };
+		79CEE32DC85F49B99D04FA44BB1E6EB9 /* ControlPlane.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = ControlPlane.entitlements; sourceTree = "<group>"; };
+		B63E7D3828C7472694473D3FDEFE2DDE /* CPXPCService.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = CPXPCService.entitlements; sourceTree = "<group>"; };
+		6FFCAA2E073E45928234D18A26644421 /* CPHelperTool.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = CPHelperTool.entitlements; sourceTree = "<group>"; };
 		DE99DE3B28C034910014E380 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		DEA3DAF12D7566C10034FCFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Resources/Base.lproj/ShellScriptRule.xib; sourceTree = "<group>"; };
 		DEA3DAF22D7566C10034FCFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
@@ -978,6 +981,7 @@
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				590802566597ECA19A40D838 /* ControlPlaneTests */,
 				13F6E1D2328D35053CD00A4A /* ControlPlaneUITests */,
+				79CEE32DC85F49B99D04FA44BB1E6EB9 /* ControlPlane.entitlements */,
 			);
 			name = ControlPlane;
 			sourceTree = "<group>";
@@ -1419,6 +1423,7 @@
 				DE762B7B2D98BA310095F733 /* CPXPCService.m */,
 				DE762B7D2D98BA310095F733 /* main.m */,
 				DE762B7F2D98BA310095F733 /* Info.plist */,
+				B63E7D3828C7472694473D3FDEFE2DDE /* CPXPCService.entitlements */,
 			);
 			path = CPXPCService;
 			sourceTree = "<group>";
@@ -1434,6 +1439,7 @@
 				DE184AF22D98C8A50072F8ED /* CPHelperToolProtocol.h */,
 				DE184AFA2D98DA0E0072F8ED /* CPHelperCommon.h */,
 				DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */,
+				6FFCAA2E073E45928234D18A26644421 /* CPHelperTool.entitlements */,
 			);
 			path = CPHelperTool;
 			sourceTree = "<group>";
@@ -2292,6 +2298,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = ControlPlane.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2308,7 +2315,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = "";
 				MARKETING_VERSION = 2.0.0;
-				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
@@ -2322,6 +2328,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_RECEIVER_WEAK = YES;
+				CODE_SIGN_ENTITLEMENTS = ControlPlane.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -2339,7 +2346,6 @@
 				LIBRARY_SEARCH_PATHS = "";
 				LLVM_LTO = YES;
 				MARKETING_VERSION = 2.0.0;
-				OTHER_CODE_SIGN_FLAGS = "--deep";
 				OTHER_LDFLAGS = "-Wl,-rpath,@loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
@@ -2514,6 +2520,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = CPXPCService/CPXPCService.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2555,6 +2562,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = CPXPCService/CPXPCService.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -2592,6 +2600,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = CPHelperTool/CPHelperTool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -2641,6 +2650,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = CPHelperTool/CPHelperTool.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;

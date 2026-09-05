@@ -29,6 +29,20 @@ Designated requirements use **team OU** (`certificate leaf[subject.OU] = "27ZDER
 
 Blessing is performed by the **XPC service**, not the main app Info.plist.
 
+## Hardened Runtime and Entitlements
+
+All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelperTool) use hardened runtime with explicit entitlements:
+
+| Target | Entitlements file | Key entitlements |
+| :--- | :--- | :--- |
+| ControlPlane | `ControlPlane.entitlements` | `com.apple.security.cs.disable-library-validation` |
+| CPXPCService | `CPXPCService/CPXPCService.entitlements` | `com.apple.security.cs.disable-library-validation` |
+| com.scottdensmore.CPHelperTool | `CPHelperTool/CPHelperTool.entitlements` | `com.apple.security.cs.disable-library-validation` |
+
+**Note:** `com.apple.security.cs.disable-library-validation` is required because Sparkle.framework is a separately-signed universal binary embedded in the app bundle. The app does **not** use `--deep` signing; instead, `CodeSignOnCopy` is set for Sparkle.framework, CPXPCService.xpc, and the helper tool in the Xcode build phases.
+
+**No App Sandbox.** ControlPlane requires non-sandboxed access for Wi-Fi (CoreWLAN), Bluetooth, USB (IOKit), and other evidence sources.
+
 ## Local signed build + bless smoke
 
 1. Open `ControlPlane.xcodeproj` in Xcode with access to team `27ZDER873F`.
@@ -46,6 +60,13 @@ Blessing is performed by the **XPC service**, not the main app Info.plist.
 1. Archive with **Developer ID Application** for team `27ZDER873F`.
 2. Notarize and staple the app (standard `notarytool` / Xcode Organizer flow).
 3. On a fresh Mac: install, run, bless as above. Requirements must accept Developer ID (OID `1.2.840.113635.100.6.2.6`), not only Apple Development.
+
+**Notarization notes:**
+
+- All binaries use hardened runtime with entitlements (see table above).
+- `disable-library-validation` is acceptable for notarization when Sparkle or other separately-signed frameworks are embedded.
+- Sparkle.framework must be a properly-signed universal binary (arm64 + x86_64) from upstream.
+- The app, XPC service, and helper tool are signed individually during the build via `CodeSignOnCopy`; no `--deep` flag is used.
 
 ## Uninstall / legacy helpers
 
