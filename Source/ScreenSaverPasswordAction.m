@@ -6,12 +6,17 @@
 //
 
 #import "ScreenSaverPasswordAction.h"
-#import "DSLogger.h"
-#import "CPNotifications.h"
-#import "CPSystemInfo.h"
-
 
 @implementation ScreenSaverPasswordAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    // Sequoia Lock Screen ("Require password after …") is managed via sysadminctl
+    // / login-keychain state, not com.apple.screensaver askForPassword. Writing the
+    // old preference is a silent no-op relative to System Settings. Do not shell
+    // sysadminctl with a password from ControlPlane.
+    return NO;
+}
 
 - (NSString *)description
 {
@@ -21,74 +26,28 @@
 		return NSLocalizedString(@"Disabling screen saver password.", @"");
 }
 
-- (BOOL)execute:(NSString **)errorString {
-    NSInteger version = [CPSystemInfo getOSVersion];
-    
-    if (version > 1100) {
-
-        BOOL success;
-        
-        NSNumber *val = [NSNumber numberWithBool:turnOn];
-        CFPreferencesSetValue(CFSTR("askForPassword"), (CFPropertyListRef) val,
-                      CFSTR("com.apple.screensaver"),
-                      kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-        success = CFPreferencesSynchronize(CFSTR("com.apple.screensaver"),
-                     kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-
-        // Notify login process
-        // not sure this does or why it must be called...anyone? (DBR)
-        if (success) {
-            CFMessagePortRef port = CFMessagePortCreateRemote(NULL, CFSTR("com.apple.loginwindow.notify"));
-            if (port) {
-                success = (CFMessagePortSendRequest(port, 500, 0, 0, 0, 0, 0) == kCFMessagePortSuccess);
-                CFRelease(port);
-            }
-        }
-        
-        if (!success) {
-            *errorString = NSLocalizedString(@"Failed toggling screen saver password!", @"");
-            return NO;
-        }
+- (BOOL)execute:(NSString **)errorString
+{
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Screen Saver Password cannot change Lock Screen settings on this version of macOS. "
+            @"Use System Settings → Lock Screen instead.",
+            @"Error when ScreenSaverPasswordAction runs on modern macOS");
     }
-    else {
-        NSTask *task = [[NSTask alloc] init];
-        if (turnOn)
-            [task setLaunchPath:[[NSBundle mainBundle] pathForResource:@"enable_screensaver" ofType:@"sh"]];
-        else
-            [task setLaunchPath:[[NSBundle mainBundle] pathForResource:@"disable_screensaver" ofType:@"sh"]];
-        
-        [task setStandardOutput:[NSPipe pipe]];
-        [task setStandardInput:[NSPipe pipe]];
-        
-        task.terminationHandler = ^(NSTask *terminatedTask) {
-            int terminationStatus = terminatedTask.terminationStatus;
-            if (terminationStatus != 0) {
-                DSLog(@"Failed to toggle screensaver password. (script terminated with a non-zero status '%d')",
-                      terminationStatus);
-                NSString *title = NSLocalizedString(@"Failure", @"Notification message title");
-                NSString *errorMsg = NSLocalizedString(@"Failed executing shell script! (see log for details)", @"");
-                [CPNotifications postUserNotification:title withMessage:errorMsg];
-                return;
-            }
-        };
-        
-        [task launch];
-    }
-
-	return YES;
+    return NO;
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for ScreenSaverPasswordAction actions is either \"1\" "
 				 "or \"0\", depending on whether you want your screen saver password "
-				 "enabled or disabled.", @"");
+				 "enabled or disabled. This action is not available on modern macOS; "
+				 "configure Lock Screen in System Settings instead.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	// FIXME: is there some useful text we could use?
-	return @"";
+	return NSLocalizedString(@"Toggle screen saver password (unsupported on this macOS)", @"");
 }
 
 + (NSArray *)limitedOptions
@@ -101,7 +60,7 @@
 		nil];
 }
 
-+ (NSString *) friendlyName {
++ (NSString *)friendlyName {
     return NSLocalizedString(@"Screen Saver Password", @"");
 }
 
@@ -109,11 +68,11 @@
     return NSLocalizedString(@"System Preferences", @"");
 }
 
-+ (BOOL) shouldWaitForScreensaverExit {
++ (BOOL)shouldWaitForScreensaverExit {
     return YES;
 }
 
-+ (BOOL) shouldWaitForScreenUnlock {
++ (BOOL)shouldWaitForScreenUnlock {
     return YES;
 }
 

@@ -18,4 +18,6 @@
 
 + (NSArray *)limitedOptions;
 
++ (BOOL)isActionApplicableToSystem;
+
 @end
