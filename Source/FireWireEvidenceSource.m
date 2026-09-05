@@ -184,30 +184,27 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 	IOObjectRelease(iterator);
 }
 
-/*
-+ (BOOL) isFireWireAvailable {
++ (BOOL)isFireWireAvailable {
     kern_return_t kr;
 	io_iterator_t iterator = 0;
-    BOOL test = FALSE;
+    BOOL available = NO;
     
-	// Create matching dictionary for I/O Kit enumeration
-	CFMutableDictionaryRef matchDict = IOServiceMatching("IOFireWireController");
+    // Create matching dictionary for I/O Kit enumeration
+    CFMutableDictionaryRef matchDict = IOServiceMatching("IOFireWireController");
     
-	kr = IOServiceGetMatchingServices(kIOMasterPortDefault, matchDict, &iterator);
+    kr = IOServiceGetMatchingServices(kIOMainPortDefault, matchDict, &iterator);
     
     if (kr != KERN_SUCCESS)
-        return test;
+        return available;
     
-    // assume that if we have a valid iterator then
-    // we found a FW controller
+    // assume that if we have a valid iterator then we found a FW controller
     if (IOIteratorIsValid(iterator)) {
-        test = TRUE;
+        available = YES;
         IOObjectRelease(iterator);
     }
     
-    return test;
+    return available;
 }
- */
 
 - (void)devRemoved:(io_iterator_t)iterator
 {
@@ -346,11 +343,10 @@ static void devRemoved(void *ref, io_iterator_t iterator)
     return NSLocalizedString(@"Attached FireWire Device", @"");
 }
 
-/* bring this check back when we can respond to
-   a thunderbolt firewire adapter being inserted at run time
-+ (BOOL) isEvidenceSourceApplicableToSystem {
++ (BOOL)isEvidenceSourceApplicableToSystem {
+    // FireWire is irrelevant on Apple Silicon and modern Thunderbolt-only Macs.
+    // Only register this evidence source when IOKit reports a FireWire controller.
     return [FireWireEvidenceSource isFireWireAvailable];
 }
- */
 
 @end

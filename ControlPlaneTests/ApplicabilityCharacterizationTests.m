@@ -46,8 +46,10 @@
     XCTAssertTrue([error rangeOfString:@"Lock Screen"].location != NSNotFound);
 }
 
-// FireWireEvidenceSource's isEvidenceSourceApplicableToSystem override is commented
-// out in production (see #29). Characterizing the real IOKit gate belongs there;
-// linking GenericLoopingEvidenceSource here would pull the full evidence stack.
+// #29: FireWireEvidenceSource now implements +isEvidenceSourceApplicableToSystem to gate
+// FireWire on systems without a FireWire controller (Apple Silicon, modern Thunderbolt-only Macs).
+// The implementation calls +isFireWireAvailable which queries IOKit for IOFireWireController.
+// Direct unit testing requires linking FireWireEvidenceSource into the test target, which would
+// pull the full evidence stack. The gate is verified by code review and integration smoke testing.
 
 @end
