@@ -98,9 +98,9 @@
 
 	<h2><em>Network Location</em> actions</h2>
 	<p><strong>Unsupported on macOS 15.</strong> Actions of type
-	<em>NetworkLocation</em> historically changed your Mac OS X Network
-	Location. Prefer other networking actions or System Settings; do not
-	rely on this action on Sequoia.
+	<em>NetworkLocation</em> are not available on modern macOS. Network
+	Locations were removed from System Settings (Ventura and later), so
+	ControlPlane no longer offers this action.
 	</p>
 
 	<h2><em>Open</em> actions</h2>
@@ -182,6 +182,13 @@
         (or Firewall Rule) on Sequoia.
         </p>
 
+        <h2><em>Firewall Rule</em> actions</h2>
+        <p>Actions of type <em>FirewallRule</em> are not available on modern macOS.
+        Per-rule firewall preferences from older OS X releases are no longer supported.
+        Use <em>Toggle Firewall</em> to enable or disable the application firewall, or
+        configure rules in System Settings → Network → Firewall.
+        </p>
+
         <h2><em>Toggle Notification Center Alerts</em></h2>
         <p><strong>Unavailable on macOS 15.</strong> This is a legacy
         Notification Center / Do Not Disturb style toggle from older macOS
@@ -202,9 +209,9 @@
 
 	<h2><em>VPN</em> actions</h2>
 	<p><strong>Unsupported on macOS 15.</strong> Actions of type
-	<em>VPN</em> historically established or disconnected PPTP, L2TP, or
-	Cisco IPSec connections. Prefer System Settings / modern VPN tooling;
-	do not treat this action as working on Sequoia.
+	<em>VPN</em> are not available on modern macOS. ControlPlane does not
+	connect or disconnect VPN sessions in this release. Use System Settings
+	→ VPN, or Shortcuts, instead.
 	</p>
 
 		<hr />

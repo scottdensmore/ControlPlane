@@ -25,6 +25,13 @@ static NSLock *sharedLock = nil;
 	sharedLock = [[NSLock alloc] init];
 }
 
++ (BOOL)isActionApplicableToSystem
+{
+	// #33: Per-rule firewall prefs (com.apple.sharing.firewall) are long dead.
+	// ToggleFirewall via helper remains the supported on/off path.
+	return NO;
+}
+
 - (BOOL)isEnableRule
 {
 	return ([ruleName characterAtIndex:0] == '+');
@@ -82,73 +89,27 @@ static NSLock *sharedLock = nil;
 }
 
 - (BOOL)execute:(NSString **)errorString {
-	*errorString = @"Sorry, FirewallRuleAction isn't supported in Snow Leopard (or higher) yet.";
+	if (errorString != NULL) {
+		*errorString = NSLocalizedString(
+			@"Firewall Rule actions are not supported on this version of macOS. "
+			@"Use Toggle Firewall to enable or disable the application firewall, "
+			@"or configure rules in System Settings → Network → Firewall.",
+			@"Error when FirewallRuleAction runs on modern macOS");
+	}
 	return NO;
-	
-/** 
-	// Strip off the first character which indicates either enabled or disabled
-	BOOL isEnable = [self isEnableRule];
-	NSString *name = [self strippedRuleName];
-
-	[sharedLock lock];
-
-	// Locate the firewall preferences dictionary
-	CFDictionaryRef dict = (CFDictionaryRef) CFPreferencesCopyAppValue(CFSTR("firewall"), CFSTR("com.apple.sharing.firewall"));
-
-	// Create a mutable copy that we can update
-	CFMutableDictionaryRef newDict = CFDictionaryCreateMutableCopy(NULL, 0, dict);
-	CFRelease(dict);
-
-	// Find the specific rule we wish to enable
-	CFMutableDictionaryRef val = (CFMutableDictionaryRef) CFDictionaryGetValue(newDict, name);
-
-	if (!val) {
-		*errorString = NSLocalizedString(@"Couldn't find requested firewall rule!", @"In FirewallRuleAction");
-		[sharedLock unlock];
-		return NO;
-	}
-
-	// Alter the dictionary to set the enable flag
-	uint32_t enabledVal = isEnable ? 1 : 0;
-	CFNumberRef enabledRef = CFNumberCreate(NULL, kCFNumberIntType, &enabledVal);
-	CFDictionarySetValue(val, @"enable", enabledRef);
-
-	// Write the changes to the preferences
-	CFPreferencesSetValue(CFSTR("firewall"), newDict, CFSTR("com.apple.sharing.firewall"),
-			      kCFPreferencesAnyUser, kCFPreferencesCurrentHost);
-	CFPreferencesSynchronize(CFSTR("com.apple.sharing.firewall"), kCFPreferencesAnyUser,
-				 kCFPreferencesCurrentHost);
-	CFRelease(newDict);
-
-	// Call the FirewallTool utility to reload the firewall rules from the preferences
-	// TODO: Look for better ways todo this that don't require admin privileges.
-	NSString *script = @"do shell script \"/usr/libexec/FirewallTool\" with administrator privileges";
-
-	NSDictionary *errorDict;
-	NSAppleScript *appleScript = [[[NSAppleScript alloc] initWithSource:script] autorelease];
-	NSAppleEventDescriptor *returnDescriptor = [appleScript executeAndReturnError:&errorDict];
-
-	[sharedLock unlock];
-
-	if (!returnDescriptor) {
-		*errorString = NSLocalizedString(@"Couldn't restart firewall with new configuration!",
-						 @"In FirewallRuleAction");
-		return NO;
-	}
-
-	return YES;*/
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for FirewallRule action is the name of the "
 				 "firewall rule you wish to modify, prefixed with '+' or '-' to "
-				 "enable or disable it, respectively.", @"");
+				 "enable or disable it, respectively. This action is not available "
+				 "on modern macOS; use Toggle Firewall or System Settings instead.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	return NSLocalizedString(@"Set the following firewall rule:", @"");
+	return NSLocalizedString(@"Set firewall rule (unsupported on this macOS)", @"");
 }
 
 + (NSArray *)limitedOptions
