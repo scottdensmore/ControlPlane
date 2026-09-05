@@ -1,42 +1,73 @@
-ControlPlane
-============
+# ControlPlane
 
-Try these alternatives
-----------------------
+ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, and more) and runs **Actions**.
 
-Thank you @gouldenstein for these suggestions:
+This repository is the **[scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)** fork of the classic Objective‑C / XIB app. Active development for Sequoia lives on the `macOS-15` branch. Upstream [`dustinrue/ControlPlane`](https://github.com/dustinrue/ControlPlane) may contain a separate Swift rewrite—do not assume shared code with this ObjC line.
 
-https://github.com/dustinrue/ControlPlane/issues/518#issue-1635500278
+## Requirements (macOS-15 line)
 
-Looking for new maintainer
---------------------------
+| Item | Value |
+| :--- | :--- |
+| Host OS | macOS 15 Sequoia (recommended for day-to-day work on this branch) |
+| Xcode | 16 or newer |
+| Deployment target | **14.5** (raising to 15.x is tracked separately; do not bump casually) |
+| Project | `ControlPlane.xcodeproj` |
+| Scheme | `ControlPlane` |
 
-This project is looking for a new maintainer. If this is you please contact me via twitter @dustinrue.
+Targets of note: the main app, embedded `CPXPCService`, and privileged helper `CPHelperTool` (blessed via SMJobBless). Unsigned CI/local smoke builds **cannot** install the helper—see [docs/signing.md](docs/signing.md).
 
-What is ControlPlane
---------------------
+## Clone and Debug build
 
-ControlPlane, a fork of MarcoPolo, brings context and location sensitive awareness to OS X.  With ControlPlane you can intelligently reconfigure your Mac or perform any number of actions based on input from a wide variety of evidence sources including but not limited to available WiFi networks, current location, connected monitors, connected and nearby bluetooth devices, currently running apps and other configurable sources.  You will find a full feature list at <http://www.controlplaneapp.com/feature-list>.
+```bash
+git clone https://github.com/scottdensmore/ControlPlane.git
+cd ControlPlane
+git checkout macOS-15
+open ControlPlane.xcodeproj
+```
 
-How ControlPlane Works
-----------------------
+In Xcode: select the **ControlPlane** scheme → **My Mac** → **Product → Build** (Debug).
 
-Using fuzzy logic, ControlPlane decides where you are and/or what you are doing (called a Context) using rules that you configure to then carry out any number of configured actions.
+Or from the command line (unsigned, CI-shaped):
 
-An example of how to use ControlPlane may include disabling the screensaver password while at work but enabling it when away from work.  Another example would be to set your Adium status.
+```bash
+xcodebuild \
+  -project ControlPlane.xcodeproj \
+  -scheme ControlPlane \
+  -configuration Debug \
+  -destination 'platform=macOS' \
+  CODE_SIGNING_ALLOWED=NO \
+  CODE_SIGN_IDENTITY=- \
+  build
+```
 
-How to Get ControlPlane
------------------------
+Full local smoke (Debug + Release + unit tests):
 
-You can download the most recent version of ControlPlane from [the ControlPlane website](http://www.controlplaneapp.com). Once installed you will be automatically notified of any new updates that become available.
+```bash
+./scripts/smoke-build.sh
+# CI-shaped (skip Release):
+SKIP_RELEASE=1 ./scripts/smoke-build.sh
+```
 
-Building ControlPlane from Source
----------------------------------
+## Continuous integration
 
-ControlPlane is free, open source software hosted at <https://github.com/dustinrue/ControlPlane>.  Before you can build ControlPlane you will need the following:
+GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and PRs targeting `macOS-15` and `master`:
 
-1. Xcode 15.4.
-2. A git client if you don't wish to use Xcode itself, the command line tools for Xcode include the Git command line client.
-3. OS X version 14.6.
+- Debug `xcodebuild` of the app (`CODE_SIGNING_ALLOWED=NO`)
+- `ControlPlaneTests` only (no helper bless)
+- Basic Info.plist / architecture smoke
 
-If you wish to build ControlPlane yourself you can do so by cloning the ControlPlane code to your computer using Xcode or your preferred git client.  Once cloned, open the project file in Xcode and edit the Action.h file to enable or disable the building of the iChat action.
+UI tests run in a separate quarantine workflow and are non-blocking. Details: [docs/TESTING.md](docs/TESTING.md).
+
+## Docs map
+
+| Doc | Purpose |
+| :--- | :--- |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, OS-line branching, localization, ARC |
+| [AGENTS.md](AGENTS.md) | Full agent workflow (SSOT for coding agents) |
+| [docs/TESTING.md](docs/TESTING.md) | Unit vs UI tests, smoke commands |
+| [docs/signing.md](docs/signing.md) | Identities, entitlements, helper bless, notarization notes |
+| [docs/releasing.md](docs/releasing.md) | Release checklist (archive, notarize, Sparkle, verify) |
+
+## License / history
+
+ControlPlane is free, open source software derived from MarcoPolo. Product history and older marketing pages may still point at controlplaneapp.com; **source of truth for this fork is GitHub**.
