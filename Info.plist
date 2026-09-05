@@ -120,13 +120,6 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>tediumapp.com</key>
-			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
 			<key>crashreport.controlplaneapp.com</key>
 			<dict>
 				<key>NSIncludesSubdomains</key>
@@ -152,7 +145,5 @@
 	<string>dsa_pub.pem</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>86400</integer>
-	<key>TediumURL</key>
-	<string>https://www.tediumapp.com/get-tedium/</string>
 </dict>
 </plist>

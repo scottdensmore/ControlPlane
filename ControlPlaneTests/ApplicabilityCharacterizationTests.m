@@ -12,6 +12,7 @@
 #import "ToggleWebSharingAction.h"
 #import "ScreenSaverPasswordAction.h"
 #import "ToggleNaturalScrollingAction.h"
+#import "TimeMachineDestinationAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -65,6 +66,24 @@
     XCTAssertNotNil(error);
     XCTAssertTrue([error rangeOfString:@"Natural Scrolling"].location != NSNotFound);
     XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound);
+}
+
+- (void)testTimeMachineDestinationActionIsNotApplicableOnSequoia {
+    // #44: Destination switching requires Tedium companion; archived / unavailable on Sequoia.
+    XCTAssertFalse([TimeMachineDestinationAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyTimeMachineDestinationActionFailsClearly {
+    TimeMachineDestinationAction *action = [[TimeMachineDestinationAction alloc] initWithOption:@"BackupDisk"];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Time Machine Destination"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"Tedium"].location != NSNotFound);
+}
+
+- (void)testTimeMachineDestinationLimitedOptionsEmptyWhenGated {
+    XCTAssertEqual([TimeMachineDestinationAction limitedOptions].count, 0u);
 }
 
 @end
