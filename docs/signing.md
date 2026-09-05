@@ -35,11 +35,11 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 | Target | Entitlements file | Key entitlements |
 | :--- | :--- | :--- |
-| ControlPlane | `ControlPlane.entitlements` | `com.apple.security.cs.disable-library-validation` |
-| CPXPCService | `CPXPCService/CPXPCService.entitlements` | `com.apple.security.cs.disable-library-validation` |
-| com.scottdensmore.CPHelperTool | `CPHelperTool/CPHelperTool.entitlements` | `com.apple.security.cs.disable-library-validation` |
+| ControlPlane | `ControlPlane.entitlements` | `com.apple.security.cs.disable-library-validation` (Sparkle) |
+| CPXPCService | `CPXPCService/CPXPCService.entitlements` | none (empty hardened-runtime plist) |
+| com.scottdensmore.CPHelperTool | `CPHelperTool/CPHelperTool.entitlements` | none (empty hardened-runtime plist) |
 
-**Note:** `com.apple.security.cs.disable-library-validation` is required because Sparkle.framework is a separately-signed universal binary embedded in the app bundle. The app does **not** use `--deep` signing; instead, `CodeSignOnCopy` is set for Sparkle.framework, CPXPCService.xpc, and the helper tool in the Xcode build phases.
+**Note:** `com.apple.security.cs.disable-library-validation` is **app-only**, required because Sparkle.framework is a separately-signed universal binary. Do **not** grant it to the privileged helper or XPC service. The app does **not** use `--deep` signing; `CodeSignOnCopy` covers Sparkle.framework, CPXPCService.xpc, and the helper.
 
 **No App Sandbox.** ControlPlane requires non-sandboxed access for Wi-Fi (CoreWLAN), Bluetooth, USB (IOKit), and other evidence sources.
 
@@ -79,8 +79,8 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 - Migrating blessing to `SMAppService` (later OS line)
 - Replacing remaining helper `system()` / `sprintf` shelling with safer spawn APIs (prefer remove/gate commands first)
-- Removing app `--deep` codesign flags (tracked with entitlements work, #48)
 - Broadening helper command surface
+- Narrowing Sparkle so the app can drop `disable-library-validation`
 
 ## Automated checks
 
