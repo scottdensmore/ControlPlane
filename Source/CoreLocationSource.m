@@ -34,6 +34,7 @@
 
 @implementation CoreLocationSource {
 	CLLocationManager *locationManager;
+	CLGeocoder *geocoder;
 	CLLocation *current, *selectedRule;
 	NSDate *startDate;
 	
@@ -44,8 +45,6 @@
 	NSString *accuracy;
 }
 
-static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api/geocode/json?";
-
 
 - (id)init {
     self = [super initWithNibNamed:@"CoreLocationRule"];
@@ -53,6 +52,8 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
         return nil;
     }
     
+	geocoder = [[CLGeocoder alloc] init];
+	
 	// for custom panel
 	address = @"";
 	coordinates = @"0.0, 0.0";
@@ -67,6 +68,8 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 
 - (void)dealloc {
 	[self stop];
+	[geocoder cancelGeocode];
+	geocoder = nil;
 }
 
 - (void)start {
@@ -390,76 +393,112 @@ static const NSString *kGoogleAPIPrefix = @"https://maps.googleapis.com/maps/api
 
 
 + (BOOL)geocodeAddress:(NSString **)address toLocation:(CLLocation **)location {
-	NSString *param = [*address stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-	NSString *url = [NSString stringWithFormat:@"%@address=%@&sensor=false", kGoogleAPIPrefix, param];
-#ifdef DEBUG_MODE
-	DSLog(@"%@", url);
-#endif
-	
-	// fetch and parse response
-	NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-	if (!jsonData) {
+	if (!address || !*address || [*address length] == 0) {
 		return NO;
-    }
+	}
 	
-    NSError *error = nil;
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-    if (!data) {
-        DSLog(@"Failed to decode JSON object: '%@'", [error localizedFailureReason]);
-        return NO;
-    }
+	__block BOOL success = NO;
+	__block CLLocation *resultLocation = nil;
+	__block NSString *resultAddress = nil;
 	
-	// check response status
-	if (![data[@"status"] isEqualToString:@"OK"]) {
+	dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+	CLGeocoder *localGeocoder = [[CLGeocoder alloc] init];
+	
+	[localGeocoder geocodeAddressString:*address completionHandler:^(NSArray<CLPlacemark *> *placemarks, NSError *error) {
+		if (error) {
+			DSLog(@"Geocode address failed: %@", [error localizedDescription]);
+		} else if (placemarks && [placemarks count] > 0) {
+			CLPlacemark *placemark = placemarks[0];
+			resultLocation = placemark.location;
+			
+			// Format the address from placemark components
+			NSMutableArray *addressParts = [NSMutableArray array];
+			if (placemark.subThoroughfare) [addressParts addObject:placemark.subThoroughfare];
+			if (placemark.thoroughfare) [addressParts addObject:placemark.thoroughfare];
+			if (placemark.locality) [addressParts addObject:placemark.locality];
+			if (placemark.administrativeArea) [addressParts addObject:placemark.administrativeArea];
+			if (placemark.postalCode) [addressParts addObject:placemark.postalCode];
+			if (placemark.country) [addressParts addObject:placemark.country];
+			
+			if ([addressParts count] > 0) {
+				resultAddress = [addressParts componentsJoinedByString:@", "];
+			}
+			success = YES;
+		}
+		dispatch_semaphore_signal(semaphore);
+	}];
+	
+	// Wait up to 10 seconds for geocoding to complete
+	dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC);
+	long result = dispatch_semaphore_wait(semaphore, timeout);
+	
+	if (result != 0) {
+		// Timeout occurred
+		DSLog(@"Geocode address timed out");
+		[localGeocoder cancelGeocode];
 		return NO;
-    }
+	}
 	
-	// check number of results
-	if ([data[@"results"] count] == 0) {
-		return NO;
-    }
-	NSDictionary *result = data[@"results"][0];
+	if (success && resultLocation) {
+		*location = resultLocation;
+		if (resultAddress) {
+			*address = resultAddress;
+		}
+	}
 	
-	*address = [result[@"formatted_address"] copy];
-    
-    NSDictionary *resultLocation = result[@"geometry"][@"location"];
-	double lat = [resultLocation[@"lat"] doubleValue];
-	double lon = [resultLocation[@"lng"] doubleValue];
-	*location = [[CLLocation alloc] initWithLatitude:lat longitude:lon];
-	
-	return YES;
+	return success;
 }
 
 + (BOOL)geocodeLocation:(CLLocation *)location toAddress:(NSString **)address {
-	NSString *url = [NSString stringWithFormat:@"%@latlng=%f,%f&sensor=false",
-					 kGoogleAPIPrefix, location.coordinate.latitude, location.coordinate.longitude];
-	
-	// fetch and parse response
-	NSData *jsonData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
-	if (!jsonData) {
+	if (!location) {
 		return NO;
-    }
-    
-    NSError *error = nil;
-    NSDictionary *data = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-    if (!data) {
-        DSLog(@"Failed to decode JSON object: '%@'", [error localizedFailureReason]);
-        return NO;
-    }
+	}
 	
-	// check response status
-	if (![data[@"status"] isEqualToString: @"OK"]) {
+	__block BOOL success = NO;
+	__block NSString *resultAddress = nil;
+	
+	dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+	CLGeocoder *localGeocoder = [[CLGeocoder alloc] init];
+	
+	[localGeocoder reverseGeocodeLocation:location completionHandler:^(NSArray<CLPlacemark *> *placemarks, NSError *error) {
+		if (error) {
+			DSLog(@"Reverse geocode failed: %@", [error localizedDescription]);
+		} else if (placemarks && [placemarks count] > 0) {
+			CLPlacemark *placemark = placemarks[0];
+			
+			// Format the address from placemark components
+			NSMutableArray *addressParts = [NSMutableArray array];
+			if (placemark.subThoroughfare) [addressParts addObject:placemark.subThoroughfare];
+			if (placemark.thoroughfare) [addressParts addObject:placemark.thoroughfare];
+			if (placemark.locality) [addressParts addObject:placemark.locality];
+			if (placemark.administrativeArea) [addressParts addObject:placemark.administrativeArea];
+			if (placemark.postalCode) [addressParts addObject:placemark.postalCode];
+			if (placemark.country) [addressParts addObject:placemark.country];
+			
+			if ([addressParts count] > 0) {
+				resultAddress = [addressParts componentsJoinedByString:@", "];
+				success = YES;
+			}
+		}
+		dispatch_semaphore_signal(semaphore);
+	}];
+	
+	// Wait up to 10 seconds for geocoding to complete
+	dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC);
+	long result = dispatch_semaphore_wait(semaphore, timeout);
+	
+	if (result != 0) {
+		// Timeout occurred
+		DSLog(@"Reverse geocode timed out");
+		[localGeocoder cancelGeocode];
 		return NO;
-    }
+	}
 	
-	// check number of results
-	NSArray *results = data[@"results"];
-	if ([results count] == 0) {
-		return NO;
-    }
+	if (success && resultAddress) {
+		*address = resultAddress;
+	}
 	
-	*address = results[0][@"formatted_address"];
-	return YES;
+	return success;
 }
 
 - (BOOL)isValidLocation:(CLLocation *)newLocation withOldLocation:(CLLocation *)oldLocation {
