@@ -44,7 +44,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
 | `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
-| `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + Network Location / VPN / Firewall Rule gated; clear execute failures |
+| `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + TM Destination + Network Location/VPN/Firewall Rule + Notification Center Alerts/DND gated; clear execute failures |
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |

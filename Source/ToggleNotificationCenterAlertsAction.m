@@ -7,9 +7,17 @@
 //
 
 #import "ToggleNotificationCenterAlertsAction.h"
-#import "CPSystemInfo.h"
 
 @implementation ToggleNotificationCenterAlertsAction
+
++ (BOOL)isActionApplicableToSystem
+{
+    // Classic Do Not Disturb via com.apple.notificationcenterui prefs +
+    // launchctl stop of notificationcenterui.agent has been broken since Focus
+    // replaced DND (Monterey+). Do not write those prefs; use a Shortcuts-based
+    // Focus toggle via ShellScript instead (see Help).
+    return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -19,95 +27,25 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    BOOL success = NO;
-    
-    if (turnOn) {
-        
-        success = [self enableAlerts:errorString];
-        
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Notification Center Alerts / Do Not Disturb cannot be toggled on this version of macOS. "
+            @"Create a Shortcut that sets Focus, then run it with a ShellScript action "
+            @"(for example: shortcuts run \"Your Focus Shortcut\").",
+            @"Error when ToggleNotificationCenterAlertsAction runs on modern macOS");
     }
-    else {
-        success = [self disableAlerts:errorString];
-    }
-    
-    return success;
+    return NO;
 }
-
-- (BOOL) enableAlerts:(NSString **)errorString {
-    BOOL success = NO;
-   
-    CFPreferencesSetValue(CFSTR("doNotDisturb"), kCFBooleanFalse, CFSTR("com.apple.notificationcenterui"),
-                          kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    CFDateRef date = CFDateCreate(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent());
-    
-    CFPreferencesSetValue(CFSTR("doNotDisturbDate"), NULL, CFSTR("com.apple.notificationcenterui"),
-                          kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    success = CFPreferencesSynchronize(CFSTR("com.apple.notificationcenterui"),
-                                       kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    CFRelease(date);
-    
-    if (success) {
-        NSArray *args = [NSArray arrayWithObjects:@"stop", @"com.apple.notificationcenterui.agent", nil];
-        
-        NSTask *task = [NSTask launchedTaskWithLaunchPath:@"/bin/launchctl" arguments:args];
-        
-        [task waitUntilExit];
-        
-        if (task.terminationStatus != 0) {
-            *errorString = NSLocalizedString(@"Failed to enable Notification Center Alerts", @"");
-            success = NO;
-        }
-    }
-    
-    return success;
-}
-
-- (BOOL) disableAlerts:(NSString **)errorString {
-    BOOL success = NO;
-
-    CFPreferencesSetValue(CFSTR("doNotDisturb"), kCFBooleanTrue, CFSTR("com.apple.notificationcenterui"),
-                          kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    CFDateRef date = CFDateCreate(kCFAllocatorDefault, CFAbsoluteTimeGetCurrent());
-    
-    CFPreferencesSetValue(CFSTR("doNotDisturbDate"), date, CFSTR("com.apple.notificationcenterui"),
-                          kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    success = CFPreferencesSynchronize(CFSTR("com.apple.notificationcenterui"),
-                                       kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-    
-    CFRelease(date);
-    
-    if (success) {
-        NSArray *args = [NSArray arrayWithObjects:@"stop", @"com.apple.notificationcenterui.agent", nil];
-        
-        NSTask *task = [NSTask launchedTaskWithLaunchPath:@"/bin/launchctl" arguments:args];
-        
-        [task waitUntilExit];
-        
-        if (task.terminationStatus != 0) {
-            *errorString = NSLocalizedString(@"Failed to disable Notification Center Alerts", @"");
-            success = NO;
-        }
-    }
-
-    
-    return success;
-}
-
-
 
 + (NSString *) helpText {
-	return NSLocalizedString(@"The parameter for ToggleNaturalScrolling actions is either \"1\" "
+	return NSLocalizedString(@"The parameter for ToggleNotificationCenterAlerts actions is either \"1\" "
                              "or \"0\", depending on whether you want Notification Center Alerts "
-                             "turned on or off.", @"");
+                             "turned on or off. This action is not available on modern macOS; "
+                             "use a Shortcuts Focus toggle via a ShellScript action instead.", @"");
 }
 
 + (NSString *) creationHelpText {
-	return NSLocalizedString(@"Set Notification Center Alerts", @"Will be followed by 'on' or 'off'");
+	return NSLocalizedString(@"Set Notification Center Alerts (unsupported on this macOS)", @"Will be followed by 'on' or 'off'");
 }
 
 + (NSString *) friendlyName {
@@ -116,18 +54,6 @@
 
 + (NSString *)menuCategory {
     return NSLocalizedString(@"System Preferences", @"");
-}
-
-+ (BOOL) isActionApplicableToSystem {
-
-    NSLog(@"%d", (int)[CPSystemInfo getOSVersion]);
-    if ([CPSystemInfo getOSVersion] >= MAC_OS_X_VERSION_10_8) {
-        return YES;
-    }
-    else {
-        return NO;
-    }
-
 }
 
 @end
