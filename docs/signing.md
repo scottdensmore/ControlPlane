@@ -85,3 +85,7 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 ## Automated checks
 
 `HelperSigningRequirementTests` asserts source plists use team OU requirements and do not pin a personal Development CN. They do **not** perform SMJobBless.
+
+## Release checklist
+
+For archive → notarize → Sparkle/appcast → `spctl` verification, see [releasing.md](releasing.md).
