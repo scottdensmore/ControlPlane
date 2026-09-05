@@ -35,7 +35,7 @@ codesign -dv --verbose=4 /path/to/ControlPlane.app
 
 - Helper bless in CI (`CODE_SIGNING_ALLOWED=NO` cannot bless).
 - Migrating SMJobBless → `SMAppService` (later OS line).
-- Raising `MACOSX_DEPLOYMENT_TARGET` to 15.x (tracked separately).
+- ~~Raising `MACOSX_DEPLOYMENT_TARGET` to 15.x~~ — done on this branch (`15.0`; see #40).
 
 ## Related docs
 
