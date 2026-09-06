@@ -149,7 +149,7 @@
         goingToSleep = YES;
         if ([self isRunning]) {
             startAfterSleep = YES;
-            DSLog(@"Stopping %@ for sleep.", [self class]);
+            DSLogEvidence(@"Stopping %@ for sleep.", [self class]);
             [self stop];
         }
     }
@@ -160,7 +160,7 @@
         goingToSleep = NO;
         if (startAfterSleep && ![self isRunning]) {
             startAfterSleep = NO;
-            DSLog(@"Starting %@ after sleep.", [self class]);
+            DSLogEvidence(@"Starting %@ after sleep.", [self class]);
             [self start];
         }
     }
@@ -510,7 +510,7 @@
             @autoreleasepool {
                 EvidenceSource *src = [[class alloc] init];
                 if (!src) {
-                    DSLog(@"%@ failed to init properly", class);
+                    DSLogEvidence(@"%@ failed to init properly", class);
                     continue;
                 }
                 [srcList addObject:src];
@@ -583,7 +583,7 @@
 
 - (void)startEvidenceSource:(EvidenceSource *)src {
     if (![src isRunning]) {
-        DSLog(@"Starting %@ evidence source", [src name]);
+        DSLogEvidence(@"Starting %@ evidence source", [src name]);
         [src start];
 
         [enabledSourcesForRuleTypes removeAllObjects]; // reset cache
@@ -592,7 +592,7 @@
 
 - (void)stopEvidenceSource:(EvidenceSource *)src {
     if ([src isRunning]) {
-        DSLog(@"Stopping %@ evidence source", [src name]);
+        DSLogEvidence(@"Stopping %@ evidence source", [src name]);
         [src stop];
 
         [enabledSourcesForRuleTypes removeAllObjects]; // reset cache
@@ -645,7 +645,7 @@
                             usingBlock:^(EvidenceSource *src, NSUInteger idx, BOOL *stop) {
         if ([src isRunning]) {
 #if DEBUG_MODE
-            DSLog(@"checking EvidenceSource %@ for matching rules", src);
+            DSLogEvidence(@"checking EvidenceSource %@ for matching rules", src);
 #endif
             if ([src doesRuleMatch:rule]) {
                 result = RuleDoesMatch;

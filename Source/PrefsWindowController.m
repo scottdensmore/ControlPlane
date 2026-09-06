@@ -9,7 +9,9 @@
 #import "CPConfigTransfer.h"
 #import "CPLoginItemService.h"
 #import "CPPrefsSettingsShellController.h"
+#import "CPDiagnosticsSnapshot.h"
 #import "DSLogger.h"
+#import "SharedNumberFormatter.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
 
@@ -152,16 +154,28 @@
 
 #pragma mark -
 
-@interface PrefsWindowController ()
+@interface PrefsWindowController () <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic,strong) NSDate *logBufferUnchangedSince;
 @property (nonatomic,strong) CPPrefsSettingsShellController *settingsShell;
+@property (nonatomic,strong) NSView *diagnosticsPrefsView;
+@property (nonatomic,strong) NSTextField *diagnosticsCurrentContextField;
+@property (nonatomic,strong) NSTextField *diagnosticsLeadingContextField;
+@property (nonatomic,strong) NSTextField *diagnosticsExplanationField;
+@property (nonatomic,strong) NSTextView *diagnosticsEvidenceView;
+@property (nonatomic,strong) NSTableView *diagnosticsRulesTable;
+@property (nonatomic,copy) NSArray *diagnosticsRuleRows;
+@property (nonatomic,strong) NSTimer *diagnosticsRefreshTimer;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
 - (void)updateLogBuffer:(NSTimer *)timer;
 - (void)onPrefsWindowClose:(NSNotification *)notification;
 - (void)applyPresentationForGroupId:(NSString *)groupId;
+- (NSView *)buildDiagnosticsPrefsView;
+- (void)refreshDiagnosticsPane:(id)sender;
+- (void)startDiagnosticsRefreshTimer;
+- (void)stopDiagnosticsRefreshTimer;
 
 @end
 
@@ -248,6 +262,13 @@
 			@"AdvancedPrefs", @"icon",
             @YES, @"resizeableHeight",
 			advancedPrefsView, @"view", nil],
+		[NSMutableDictionary dictionaryWithObjectsAndKeys:
+			@"Diagnostics", @"name",
+			NSLocalizedString(@"Diagnostics", "Preferences section"), @"display_name",
+			@"AdvancedPrefs", @"icon",
+            @YES, @"resizeableWidth",
+            @YES, @"resizeableHeight",
+			[self buildDiagnosticsPrefsView], @"view", nil],
 		];
 
 	// Store initial sizes of each prefs NSView as their "minimum" size
@@ -418,6 +439,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 - (void)onPrefsWindowClose:(NSNotification *)notification {
     [self stopLogBufferTimer];
+    [self stopDiagnosticsRefreshTimer];
     [self persistCurrentViewSize];
 }
 
@@ -706,6 +728,13 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	} else {
 		[self stopLogBufferTimer];
 	}
+
+    if ([groupId isEqualToString:@"Diagnostics"]) {
+        [self refreshDiagnosticsPane:nil];
+        [self startDiagnosticsRefreshTimer];
+    } else {
+        [self stopDiagnosticsRefreshTimer];
+    }
 
 	currentPrefsView = group[@"view"];
 	[self.settingsShell selectPaneNamed:groupId];
@@ -1063,6 +1092,276 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
             [logBufferView scrollRangeToVisible:NSMakeRange([buf length] - 2, 1)];
         }
 	}
+}
+
+#pragma mark Diagnostics pane (#35)
+
+- (NSTextField *)diagnosticsLabelWithString:(NSString *)string bold:(BOOL)bold
+{
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSZeroRect];
+    field.translatesAutoresizingMaskIntoConstraints = NO;
+    field.editable = NO;
+    field.bordered = NO;
+    field.drawsBackground = NO;
+    field.selectable = YES;
+    field.stringValue = string ?: @"";
+    field.font = bold ? [NSFont boldSystemFontOfSize:12.0] : [NSFont systemFontOfSize:12.0];
+    field.maximumNumberOfLines = 0;
+    field.lineBreakMode = NSLineBreakByWordWrapping;
+    return field;
+}
+
+- (NSView *)buildDiagnosticsPrefsView
+{
+    if (self.diagnosticsPrefsView) {
+        return self.diagnosticsPrefsView;
+    }
+
+    NSView *root = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 480)];
+    root.translatesAutoresizingMaskIntoConstraints = NO;
+
+    NSTextField *title = [self diagnosticsLabelWithString:NSLocalizedString(@"Rule Diagnostics", @"Diagnostics pane title")
+                                                     bold:YES];
+    title.font = [NSFont boldSystemFontOfSize:14.0];
+
+    NSButton *refreshButton = [[NSButton alloc] initWithFrame:NSZeroRect];
+    refreshButton.translatesAutoresizingMaskIntoConstraints = NO;
+    refreshButton.bezelStyle = NSBezelStyleRounded;
+    refreshButton.title = NSLocalizedString(@"Refresh", @"Diagnostics refresh button");
+    refreshButton.target = self;
+    refreshButton.action = @selector(refreshDiagnosticsPane:);
+    refreshButton.accessibilityIdentifier = @"prefs.diagnostics.refresh";
+
+    self.diagnosticsCurrentContextField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsLeadingContextField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsExplanationField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsExplanationField.accessibilityIdentifier = @"prefs.diagnostics.explanation";
+
+    NSScrollView *tableScroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+    tableScroll.translatesAutoresizingMaskIntoConstraints = NO;
+    tableScroll.hasVerticalScroller = YES;
+    tableScroll.borderType = NSBezelBorder;
+    tableScroll.autohidesScrollers = YES;
+
+    NSTableView *table = [[NSTableView alloc] initWithFrame:NSZeroRect];
+    table.delegate = self;
+    table.dataSource = self;
+    table.allowsEmptySelection = YES;
+    table.allowsMultipleSelection = NO;
+    table.usesAlternatingRowBackgroundColors = YES;
+    table.accessibilityIdentifier = @"prefs.diagnostics.rulesTable";
+
+    NSArray *columns = @[
+        @[@"match", NSLocalizedString(@"Match", @"Diagnostics column"), @56],
+        @[@"type", NSLocalizedString(@"Type", @"Diagnostics column"), @90],
+        @[@"description", NSLocalizedString(@"Description", @"Diagnostics column"), @160],
+        @[@"context", NSLocalizedString(@"Context", @"Diagnostics column"), @100],
+        @[@"ruleConf", NSLocalizedString(@"Rule %", @"Diagnostics column"), @70],
+        @[@"ctxConf", NSLocalizedString(@"Context %", @"Diagnostics column"), @80],
+    ];
+    for (NSArray *col in columns) {
+        NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:col[0]];
+        column.title = col[1];
+        column.width = [col[2] doubleValue];
+        column.minWidth = 40;
+        [table addTableColumn:column];
+    }
+    tableScroll.documentView = table;
+    self.diagnosticsRulesTable = table;
+
+    NSTextField *evidenceLabel = [self diagnosticsLabelWithString:NSLocalizedString(@"Evidence snapshot", @"Diagnostics evidence heading")
+                                                             bold:YES];
+
+    NSScrollView *evidenceScroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+    evidenceScroll.translatesAutoresizingMaskIntoConstraints = NO;
+    evidenceScroll.hasVerticalScroller = YES;
+    evidenceScroll.borderType = NSBezelBorder;
+    evidenceScroll.autohidesScrollers = YES;
+
+    NSTextView *evidenceView = [[NSTextView alloc] initWithFrame:NSZeroRect];
+    evidenceView.editable = NO;
+    evidenceView.richText = NO;
+    evidenceView.font = [NSFont monospacedSystemFontOfSize:11.0 weight:NSFontWeightRegular];
+    evidenceView.accessibilityIdentifier = @"prefs.diagnostics.evidence";
+    evidenceScroll.documentView = evidenceView;
+    self.diagnosticsEvidenceView = evidenceView;
+
+    NSTextField *logHint = [self diagnosticsLabelWithString:
+                            [NSString stringWithFormat:
+                             NSLocalizedString(@"Unified logging subsystem: %@. Categories: Evidence, Rules, Actions, Helper, General. Example: log stream --predicate 'subsystem == \"%@\"'",
+                                               @"Diagnostics logging hint"),
+                             [DSLogger unifiedLoggingSubsystem],
+                             [DSLogger unifiedLoggingSubsystem]]
+                                                       bold:NO];
+    logHint.textColor = [NSColor secondaryLabelColor];
+    logHint.font = [NSFont systemFontOfSize:11.0];
+
+    NSArray *views = @[title, refreshButton, self.diagnosticsCurrentContextField,
+                       self.diagnosticsLeadingContextField, self.diagnosticsExplanationField,
+                       tableScroll, evidenceLabel, evidenceScroll, logHint];
+    for (NSView *view in views) {
+        [root addSubview:view];
+    }
+
+    NSDictionary *viewsDict = @{
+        @"title": title,
+        @"refresh": refreshButton,
+        @"current": self.diagnosticsCurrentContextField,
+        @"leading": self.diagnosticsLeadingContextField,
+        @"explanation": self.diagnosticsExplanationField,
+        @"table": tableScroll,
+        @"evidenceLabel": evidenceLabel,
+        @"evidence": evidenceScroll,
+        @"logHint": logHint,
+    };
+
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[title]-8-[refresh]-16-|"
+                                                                 options:NSLayoutFormatAlignAllCenterY
+                                                                 metrics:nil
+                                                                   views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[current]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[leading]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[explanation]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[table]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[evidenceLabel]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[evidence]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[logHint]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[title]-8-[current]-2-[leading]-6-[explanation]-8-[table(>=160)]-8-[evidenceLabel]-4-[evidence(>=90)]-8-[logHint]-12-|"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewsDict]];
+
+    // Give the view a concrete size for prefs min size measurement.
+    [root setFrameSize:NSMakeSize(560, 480)];
+    self.diagnosticsPrefsView = root;
+    self.diagnosticsRuleRows = @[];
+    return root;
+}
+
+- (void)refreshDiagnosticsPane:(id)sender
+{
+    (void)sender;
+    CPController *controller = (CPController *)[NSApp delegate];
+    if (![controller isKindOfClass:[CPController class]]) {
+        return;
+    }
+
+    NSDictionary *snap = [controller refreshDiagnosticsSnapshot];
+    if (![snap isKindOfClass:[NSDictionary class]]) {
+        snap = controller.lastDiagnosticsSnapshot;
+    }
+    if (![snap isKindOfClass:[NSDictionary class]]) {
+        self.diagnosticsCurrentContextField.stringValue = NSLocalizedString(@"Current context: (unavailable)", @"Diagnostics");
+        self.diagnosticsLeadingContextField.stringValue = @"";
+        self.diagnosticsExplanationField.stringValue = NSLocalizedString(@"No diagnostics snapshot yet. Wait for a rule evaluation cycle or click Refresh.", @"Diagnostics empty state");
+        self.diagnosticsRuleRows = @[];
+        [self.diagnosticsRulesTable reloadData];
+        self.diagnosticsEvidenceView.string = @"";
+        return;
+    }
+
+    NSNumberFormatter *pct = [SharedNumberFormatter percentStyleFormatter];
+    NSString *currentPct = [pct stringFromNumber:snap[@"currentContextConfidence"]] ?: @"—";
+    NSString *leadingPct = [pct stringFromNumber:snap[@"leadingContextConfidence"]] ?: @"—";
+    NSString *minPct = [pct stringFromNumber:snap[@"minimumConfidenceRequired"]] ?: @"—";
+
+    self.diagnosticsCurrentContextField.stringValue =
+        [NSString stringWithFormat:NSLocalizedString(@"Current context: %@ (%@) — path %@", @"Diagnostics current context line"),
+         snap[@"currentContextName"] ?: @"",
+         currentPct,
+         snap[@"currentContextPath"] ?: @""];
+    self.diagnosticsLeadingContextField.stringValue =
+        [NSString stringWithFormat:NSLocalizedString(@"Leading guess: %@ (%@); minimum to switch %@", @"Diagnostics leading context line"),
+         snap[@"leadingContextName"] ?: @"",
+         leadingPct,
+         minPct];
+    self.diagnosticsExplanationField.stringValue = snap[@"explanation"] ?: @"";
+
+    self.diagnosticsRuleRows = snap[@"ruleRows"] ?: @[];
+    [self.diagnosticsRulesTable reloadData];
+
+    NSMutableString *evidenceText = [NSMutableString string];
+    for (NSDictionary *row in snap[@"evidenceSources"] ?: @[]) {
+        [evidenceText appendFormat:@"%@ (%@): running=%@ data=%@ — %@\n",
+         row[@"friendlyName"] ?: row[@"name"] ?: @"?",
+         row[@"name"] ?: @"",
+         [row[@"running"] boolValue] ? @"yes" : @"no",
+         [row[@"dataCollected"] boolValue] ? @"yes" : @"no",
+         row[@"summary"] ?: @""];
+    }
+    if (evidenceText.length == 0) {
+        [evidenceText appendString:NSLocalizedString(@"(no evidence sources)", @"Diagnostics empty evidence")];
+    }
+    self.diagnosticsEvidenceView.string = evidenceText;
+}
+
+- (void)startDiagnosticsRefreshTimer
+{
+    if (self.diagnosticsRefreshTimer == nil) {
+        self.diagnosticsRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                                                        target:self
+                                                                      selector:@selector(refreshDiagnosticsPane:)
+                                                                      userInfo:nil
+                                                                       repeats:YES];
+        if ([self.diagnosticsRefreshTimer respondsToSelector:@selector(setTolerance:)]) {
+            [self.diagnosticsRefreshTimer setTolerance:1.0];
+        }
+    }
+}
+
+- (void)stopDiagnosticsRefreshTimer
+{
+    if (self.diagnosticsRefreshTimer != nil) {
+        if (self.diagnosticsRefreshTimer.isValid) {
+            [self.diagnosticsRefreshTimer invalidate];
+        }
+        self.diagnosticsRefreshTimer = nil;
+    }
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    if (tableView != self.diagnosticsRulesTable) {
+        return 0;
+    }
+    return (NSInteger)self.diagnosticsRuleRows.count;
+}
+
+- (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    if (tableView != self.diagnosticsRulesTable || row < 0 || row >= (NSInteger)self.diagnosticsRuleRows.count) {
+        return nil;
+    }
+    NSDictionary *ruleRow = self.diagnosticsRuleRows[(NSUInteger)row];
+    NSString *identifier = tableColumn.identifier;
+    NSNumberFormatter *pct = [SharedNumberFormatter percentStyleFormatter];
+
+    if ([identifier isEqualToString:@"match"]) {
+        NSString *status = ruleRow[@"matchStatus"];
+        if ([status isEqualToString:@"match"]) {
+            return @"✓";
+        }
+        if ([status isEqualToString:@"no-match"]) {
+            return @"";
+        }
+        return @"?";
+    }
+    if ([identifier isEqualToString:@"type"]) {
+        return ruleRow[@"type"];
+    }
+    if ([identifier isEqualToString:@"description"]) {
+        return ruleRow[@"description"];
+    }
+    if ([identifier isEqualToString:@"context"]) {
+        return ruleRow[@"contextName"];
+    }
+    if ([identifier isEqualToString:@"ruleConf"]) {
+        return [pct stringFromNumber:ruleRow[@"ruleConfidence"]];
+    }
+    if ([identifier isEqualToString:@"ctxConf"]) {
+        return [pct stringFromNumber:ruleRow[@"contextConfidence"]];
+    }
+    return nil;
 }
 
 @end

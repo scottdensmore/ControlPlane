@@ -10,6 +10,7 @@
 #import "DSLogger.h"
 #import "CPController.h"
 #import "CPController+SleepMonitor.h"
+#import "CPDiagnosticsSnapshot.h"
 #import "NetworkLocationAction.h"
 #import "NSTimer+Invalidation.h"
 #import "CPNotifications.h"
@@ -94,6 +95,7 @@
 
 @property (retain,atomic,readwrite) NSArray *rules;
 @property (assign,atomic,readwrite) BOOL forceOneFullUpdate;
+@property (copy,atomic,readwrite) NSDictionary *lastDiagnosticsSnapshot;
 
 - (void)setStatusTitle:(NSString *)title;
 - (void)showInStatusBar:(id)sender;
@@ -298,6 +300,55 @@ static NSSet *sharedActiveContexts = nil;
 
 - (NSArray *)activeRules {
     return [self.rules deepMutableCopy];
+}
+
+- (NSDictionary *)refreshDiagnosticsSnapshot {
+    NSArray *rules = self.activeRules ?: @[];
+    NSMutableArray *matchingRules = [NSMutableArray array];
+    for (NSDictionary *rule in rules) {
+        NSNumber *cached = rule[@"cachedStatus"];
+        if (cached && [cached intValue] == RuleDoesMatch) {
+            [matchingRules addObject:rule];
+        }
+    }
+
+    NSMutableDictionary *guesses = [self getGuessesForRules:matchingRules];
+    if (![self useMultipleActiveContexts]) {
+        [self applyDefaultContextTo:guesses];
+    }
+
+    NSMutableArray *evidenceRows = [NSMutableArray array];
+    for (EvidenceSource *src in [evidenceSources sourceEnumerator]) {
+        NSString *summary = [src description] ?: @"";
+        [evidenceRows addObject:@{
+            @"name": [src name] ?: @"",
+            @"friendlyName": [src friendlyName] ?: ([src name] ?: @""),
+            @"running": @([src isRunning]),
+            @"dataCollected": @([src dataCollected]),
+            @"summary": summary,
+        }];
+    }
+
+    Context *current = self.currentContext;
+    NSString *uuid = current.uuid;
+    double minConf = [[NSUserDefaults standardUserDefaults] floatForKey:@"MinimumConfidenceRequired"];
+
+    __weak CPController *weakSelf = self;
+    NSDictionary *snapshot = [CPDiagnosticsSnapshot snapshotWithCurrentContextName:self.currentContextName
+                                                                currentContextPath:self.currentContextPath
+                                                                currentContextUUID:uuid
+                                                                             rules:rules
+                                                                    contextGuesses:guesses
+                                                                 contextNameForUUID:^NSString *(NSString *ctxUUID) {
+        Context *ctx = [[weakSelf contextsDataSource] contextByUUID:ctxUUID];
+        return ctx.name ?: ctxUUID;
+    }
+                                                     minimumConfidenceRequired:minConf
+                                                               evidenceSources:evidenceRows];
+
+    self.lastDiagnosticsSnapshot = snapshot;
+    DSLogRules(@"Diagnostics snapshot: %@", snapshot[@"explanation"]);
+    return snapshot;
 }
 
 - (void)setActiveRules:(NSArray *)newRules {
@@ -1292,7 +1343,7 @@ static NSSet *sharedActiveContexts = nil;
     }
     
     [self.activeContexts addObject:context];
-    DSLog(@"Triggering arrival actions, if any, for '%@'", context.name);
+    DSLogActions(@"Triggering arrival actions, if any, for '%@'", context.name);
     [self triggerArrivalActionsOnWalk:[NSArray arrayWithObject:context]];
     [self updateActiveContextsMenuTitle];
     [self updateActiveContextsMenuList];
@@ -1303,7 +1354,7 @@ static NSSet *sharedActiveContexts = nil;
 - (void) deactivateContext:(Context *) context {
     if (context != nil) {
         [self.activeContexts removeObject:context];
-        DSLog(@"Triggering departure actions, if any, for '%@'", context.name);
+        DSLogActions(@"Triggering departure actions, if any, for '%@'", context.name);
         [self triggerDepartureActionsOnWalk:[NSArray arrayWithObject:context] usingReverseDelays:NO];
     }
     [self updateActiveContextsMenuTitle];
@@ -1370,7 +1421,7 @@ static NSSet *sharedActiveContexts = nil;
 	NSArray *leavingWalk = walks[0], *enteringWalk = walks[1];
     
     if ([leavingWalk count] > 0) {
-        DSLog(@"Triggering departure actions, if any, for '%@'", [self currentContextName]);
+        DSLogActions(@"Triggering departure actions, if any, for '%@'", [self currentContextName]);
         
         // Originally CP was implemented so that deactivating the current (single) active context
         // was done with departure actions being triggered based on their _reverse_ delays.
@@ -1382,7 +1433,7 @@ static NSSet *sharedActiveContexts = nil;
     [self postNotificationsOnContextTransitionWhenForcedByUserIs:isManuallyTriggered];
     
     if ([enteringWalk count] > 0) {
-        DSLog(@"Triggering arrival actions, if any, for '%@'", [self currentContextName]);
+        DSLogActions(@"Triggering arrival actions, if any, for '%@'", [self currentContextName]);
         [self triggerArrivalActionsOnWalk:enteringWalk];
     }
     [CPController setSharedActiveContexts:self.activeContexts];
@@ -1433,7 +1484,7 @@ static NSSet *sharedActiveContexts = nil;
 		ctxt = [contextsDataSource contextByUUID:[sender representedObject]];
     }
 	
-	DSLog(@"Going to '%@'", [ctxt name]);
+	DSLogActions(@"Going to '%@'", [ctxt name]);
 
 	// Selecting any context in the force-context menu deselects the 'stick forced contexts' item,
 	// so we force it to be correct here.
@@ -1494,12 +1545,12 @@ static NSSet *sharedActiveContexts = nil;
     BOOL changed = NO;
     NSArray *matchingRules = [self getRulesThatMatchAndSetChangeFlag:&changed];
 #ifdef DEBUG_MODE
-    DSLog(@"Rules that match: %@", matchingRules);
+    DSLogRules(@"Rules that match: %@", matchingRules);
 #endif
     
     if (!changed && (smoothCounter == 0) && !self.forceOneFullUpdate) {
 #ifdef DEBUG_MODE
-        DSLog(@"Same rule are matching as on previous update. No further actions required.");
+        DSLogRules(@"Same rule are matching as on previous update. No further actions required.");
 #endif
         return;
     }
@@ -1515,9 +1566,10 @@ static NSSet *sharedActiveContexts = nil;
     if (![self useMultipleActiveContexts])
         [self applyDefaultContextTo:guesses];
     
-    DSLog(@"Context guesses: %@", guesses);
+    DSLogRules(@"Context guesses: %@", guesses);
     
     [contextsDataSource updateConfidencesFromGuesses:guesses];
+    [self refreshDiagnosticsSnapshot];
     
     
     
@@ -1789,7 +1841,7 @@ static NSSet *sharedActiveContexts = nil;
     NSString *guessUUID = guessContext.uuid;
     NSNumber *guessConf = guessContext.confidence;
 
-    DSLog(@"Checking '%@' (%@) with confidence %@", guessContext.name, guessUUID, guessConf);
+    DSLogRules(@"Checking '%@' (%@) with confidence %@", guessContext.name, guessUUID, guessConf);
 
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 

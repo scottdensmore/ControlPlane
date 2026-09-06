@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B35DIAG01WIRE350000001 /* CPDiagnosticsSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */; };
+		B35DIAG01WIRE350000003 /* CPDiagnosticsSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */; };
+		B35DIAG01WIRE350000004 /* DSLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000004 /* DSLoggerTests.m */; };
+		B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */; };
 		1FEFFA3BD6B2819FF7211BE0 /* CPNotificationsGateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */; };
 		219B32CE9D162BFC281FC26F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D419BE299040054FF3A50FF1 /* Cocoa.framework */; };
 		2AB8108CD7D6793254E6F19B /* CPConfigTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 38E53E4422DEA1BEE7D30F3F /* CPConfigTransfer.m */; };
@@ -404,6 +408,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B35DIAG01FILE350000001 /* CPDiagnosticsSnapshot.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CPDiagnosticsSnapshot.h; path = Source/CPDiagnosticsSnapshot.h; sourceTree = "<group>"; };
+		B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CPDiagnosticsSnapshot.m; path = Source/CPDiagnosticsSnapshot.m; sourceTree = "<group>"; };
+		B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CPDiagnosticsSnapshotTests.m; path = CPDiagnosticsSnapshotTests.m; sourceTree = "<group>"; };
+		B35DIAG01FILE350000004 /* DSLoggerTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DSLoggerTests.m; path = DSLoggerTests.m; sourceTree = "<group>"; };
 		042739F2DDC950F687D3730B /* DefaultBrowserUTITests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DefaultBrowserUTITests.m; sourceTree = "<group>"; };
 		086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPSystemInfoTests.m; sourceTree = "<group>"; };
 		0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ApplicabilityCharacterizationTests.m; sourceTree = "<group>"; };
@@ -945,6 +953,8 @@
 				8D82F0A10AA81411009ADA44 /* PrefsWindowController.h */,
 				8D82F0A20AA81411009ADA44 /* PrefsWindowController.m */,
 				B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */,
+				B35DIAG01FILE350000001 /* CPDiagnosticsSnapshot.h */,
+				B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */,
 				B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */,
 				7C73BDE017D09A4100EBFB80 /* SharedNumberFormatter.h */,
 				7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */,
@@ -1114,6 +1124,8 @@
 				A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */,
 				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
 				B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */,
+				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
+				B35DIAG01FILE350000004 /* DSLoggerTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
@@ -1823,6 +1835,7 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				8D82F0A30AA81411009ADA44 /* PrefsWindowController.m in Sources */,
 				B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */,
+				B35DIAG01WIRE350000001 /* CPDiagnosticsSnapshot.m in Sources */,
 				8D90E51F0B71C4C9007D39FD /* CPController.m in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
@@ -1953,6 +1966,9 @@
 				A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */,
 				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
 				B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */,
+				B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */,
+				B35DIAG01WIRE350000003 /* CPDiagnosticsSnapshotTests.m in Sources */,
+				B35DIAG01WIRE350000004 /* DSLoggerTests.m in Sources */,
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
