@@ -215,13 +215,10 @@ static NSSet *sharedActiveContexts = nil;
     return;
 }
 
-// Helper: Load a named image, scale it, and mark it as a template so AppKit can
-// keep contrast on translucent Tahoe / Liquid Glass menu bars (#89).
-// Full Asset Catalog / SF Symbol work remains in #32.
+// Helper: Load a named Asset Catalog image and prepare it as a menu-bar template
+// (#89 template path; #32 catalog). SF Symbols / MenuBarExtra remain deferred.
 - (NSImage *)prepareImageForMenubar:(NSString *)name {
-	NSImage *img = [NSImage imageNamed:name];
-	// TODO (#32): provide scale-aware assets / SF Symbols instead of fixed 18pt icns.
-	return [CPMenuBarImage configureAsMenuBarTemplate:img size:NSMakeSize(18, 18)];
+	return [CPMenuBarImage menuBarImageNamed:name size:NSMakeSize(18, 18)];
 }
 
 - (void) interfaceThemeDidChange {
@@ -779,8 +776,8 @@ static NSSet *sharedActiveContexts = nil;
 	}
 
 	sbItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
-	// Prefer button API (NSStatusItem.button) over legacy setters; template imagery
-	// is applied via prepareImageForMenubar: / CPMenuBarImage (#89 / #32).
+	// Prefer button API (NSStatusItem.button) over legacy setters; catalog + template
+	// imagery via prepareImageForMenubar: / CPMenuBarImage (#89 / #32).
 	sbItem.button.imagePosition = NSImageLeft;
 	sbItem.button.appearsDisabled = NO;
 
