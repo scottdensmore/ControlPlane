@@ -10,7 +10,7 @@ This repository is the **[scottdensmore/ControlPlane](https://github.com/scottde
 | :--- | :--- |
 | Host OS | macOS 26 Tahoe (macOS 16 internally; required for day-to-day work on `macOS-16`) |
 | Xcode | **26+** (CI uses the default Xcode on `macos-26` runners) |
-| Deployment target | **15.0** until #82 raises it to **16.0** |
+| Deployment target | **16.0** |
 | Project | `ControlPlane.xcodeproj` |
 | Scheme | `ControlPlane` |
 

@@ -2,7 +2,7 @@
 //  DeploymentTargetTests.m
 //  ControlPlaneTests
 //
-//  Ensures the macOS-15 product line declares MACOSX_DEPLOYMENT_TARGET 15.0 (#40).
+//  Ensures the macOS-16 product line declares MACOSX_DEPLOYMENT_TARGET 16.0 (#82).
 //
 
 #import <XCTest/XCTest.h>
@@ -35,32 +35,36 @@
 
 - (void)assertNoStaleDeploymentTargetInFile:(NSString *)relativePath {
     NSString *text = [self contentsOfRelativePath:relativePath];
+    XCTAssertFalse([text containsString:@"MACOSX_DEPLOYMENT_TARGET = 15.0"],
+                   @"%@ still sets MACOSX_DEPLOYMENT_TARGET to 15.0", relativePath);
+    XCTAssertFalse([text containsString:@"MACOSX_DEPLOYMENT_TARGET'] = '15.0'"],
+                   @"%@ still sets MACOSX_DEPLOYMENT_TARGET to 15.0", relativePath);
     XCTAssertFalse([text containsString:@"MACOSX_DEPLOYMENT_TARGET = 14.5"],
                    @"%@ still sets MACOSX_DEPLOYMENT_TARGET to 14.5", relativePath);
     XCTAssertFalse([text containsString:@"MACOSX_DEPLOYMENT_TARGET'] = '14.5'"],
                    @"%@ still sets MACOSX_DEPLOYMENT_TARGET to 14.5", relativePath);
     // xcodeprojgen / new_target platform version literal
     NSRegularExpression *legacyPlatform =
-        [NSRegularExpression regularExpressionWithPattern:@":osx,\\s*'14\\.5'"
+        [NSRegularExpression regularExpressionWithPattern:@":osx,\\s*'(?:14\\.5|15\\.0)'"
                                                   options:0
                                                     error:NULL];
     NSUInteger legacyHits =
         [legacyPlatform numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
-    XCTAssertEqual(legacyHits, 0u, @"%@ still uses :osx, '14.5' for test targets", relativePath);
+    XCTAssertEqual(legacyHits, 0u, @"%@ still uses a pre-16.0 :osx platform version for test targets", relativePath);
 }
 
-- (void)testMainProjectDeclaresFifteen {
+- (void)testMainProjectDeclaresSixteen {
     NSString *pbx = [self contentsOfRelativePath:@"ControlPlane.xcodeproj/project.pbxproj"];
-    XCTAssertTrue([pbx containsString:@"MACOSX_DEPLOYMENT_TARGET = 15.0"],
-                  @"ControlPlane.xcodeproj must set MACOSX_DEPLOYMENT_TARGET = 15.0");
+    XCTAssertTrue([pbx containsString:@"MACOSX_DEPLOYMENT_TARGET = 16.0"],
+                  @"ControlPlane.xcodeproj must set MACOSX_DEPLOYMENT_TARGET = 16.0");
     [self assertNoStaleDeploymentTargetInFile:@"ControlPlane.xcodeproj/project.pbxproj"];
 }
 
-- (void)testAddTestTargetsScriptDeclaresFifteen {
+- (void)testAddTestTargetsScriptDeclaresSixteen {
     NSString *script = [self contentsOfRelativePath:@"scripts/add-test-targets.rb"];
-    XCTAssertTrue([script containsString:@"MACOSX_DEPLOYMENT_TARGET'] = '15.0'"] ||
-                  [script containsString:@":osx, '15.0'"],
-                  @"scripts/add-test-targets.rb must use 15.0");
+    XCTAssertTrue([script containsString:@"MACOSX_DEPLOYMENT_TARGET'] = '16.0'"] ||
+                  [script containsString:@":osx, '16.0'"],
+                  @"scripts/add-test-targets.rb must use 16.0");
     [self assertNoStaleDeploymentTargetInFile:@"scripts/add-test-targets.rb"];
 }
 
@@ -70,6 +74,8 @@
                   @"Info.plist must declare LSMinimumSystemVersion");
     XCTAssertTrue([plist containsString:@"${MACOSX_DEPLOYMENT_TARGET}"],
                   @"LSMinimumSystemVersion must use ${MACOSX_DEPLOYMENT_TARGET}");
+    XCTAssertFalse([plist containsString:@"<string>15.0</string>"],
+                   @"Info.plist must not hardcode 15.0");
     XCTAssertFalse([plist containsString:@"<string>14.5</string>"],
                    @"Info.plist must not hardcode 14.5");
 }

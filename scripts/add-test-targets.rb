@@ -27,7 +27,7 @@ def add_sources(project, group, target, paths)
 end
 
 # --- Unit test target ---
-unit = project.new_target(:unit_test_bundle, 'ControlPlaneTests', :osx, '15.0')
+unit = project.new_target(:unit_test_bundle, 'ControlPlaneTests', :osx, '16.0')
 unit_group = project.main_group.new_group('ControlPlaneTests', 'ControlPlaneTests')
 unit_sources = Dir[ROOT.join('ControlPlaneTests/*.m').to_s].map { |p| Pathname.new(p).relative_path_from(ROOT).to_s }
 add_sources(project, unit_group, unit, unit_sources)
@@ -39,7 +39,7 @@ unit.frameworks_build_phases.clear
 end
 
 unit.build_configurations.each do |config|
-  config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '15.0'
+  config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '16.0'
   config.build_settings['GENERATE_INFOPLIST_FILE'] = 'YES'
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.scottdensmore.ControlPlaneTests'
   config.build_settings['TEST_HOST'] = '$(BUILT_PRODUCTS_DIR)/ControlPlane.app/Contents/MacOS/ControlPlane'
@@ -56,14 +56,14 @@ unit.build_configurations.each do |config|
 end
 
 # --- UI test target ---
-ui = project.new_target(:ui_test_bundle, 'ControlPlaneUITests', :osx, '15.0')
+ui = project.new_target(:ui_test_bundle, 'ControlPlaneUITests', :osx, '16.0')
 ui_group = project.main_group.new_group('ControlPlaneUITests', 'ControlPlaneUITests')
 ui_sources = Dir[ROOT.join('ControlPlaneUITests/*.m').to_s].map { |p| Pathname.new(p).relative_path_from(ROOT).to_s }
 add_sources(project, ui_group, ui, ui_sources)
 ui.add_dependency(app_target)
 
 ui.build_configurations.each do |config|
-  config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '15.0'
+  config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '16.0'
   config.build_settings['GENERATE_INFOPLIST_FILE'] = 'YES'
   config.build_settings['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.scottdensmore.ControlPlaneUITests'
   config.build_settings['TEST_TARGET_NAME'] = 'ControlPlane'
