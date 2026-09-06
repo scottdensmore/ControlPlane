@@ -52,73 +52,81 @@
 }
 
 + (io_service_t) IOServicePortFromCGDisplayID:(CGDirectDisplayID) displayID {
-    io_iterator_t iter;
+    // #88: Harden against missing IODisplayConnect / incomplete info dictionaries
+    // so callers (Monitor evidence, legacy brightness) never crash on lookup failure.
+    if (displayID == kCGNullDirectDisplay)
+        return 0;
+
+    io_iterator_t iter = 0;
     io_service_t serv, servicePort = 0;
-    
+
     CFMutableDictionaryRef matching = IOServiceMatching("IODisplayConnect");
-    
-    // releases matching for us
+    if (!matching)
+        return 0;
+
+    // releases matching for us on success
     kern_return_t err = IOServiceGetMatchingServices(kIOMainPortDefault,
                                                      matching,
                                                      &iter);
-    if (err)
+    if (err) {
+        // matching was not consumed on failure
+        CFRelease(matching);
         return 0;
-    
+    }
+
     while ((serv = IOIteratorNext(iter)) != 0)
     {
         CFDictionaryRef info;
-        CFIndex vendorID, productID, serialNumber = 0;
-        CFNumberRef vendorIDRef, productIDRef, serialNumberRef;
+        CFIndex vendorID = 0, productID = 0, serialNumber = 0;
+        CFNumberRef vendorIDRef, productIDRef;
         Boolean success;
-        
+
         info = IODisplayCreateInfoDictionary(serv,
                                              kIODisplayOnlyPreferredName);
-        
+        if (!info) {
+            IOObjectRelease(serv);
+            continue;
+        }
+
         vendorIDRef = CFDictionaryGetValue(info,
                                            CFSTR(kDisplayVendorID));
         productIDRef = CFDictionaryGetValue(info,
                                             CFSTR(kDisplayProductID));
-//        serialNumberRef = CFDictionaryGetValue(info,
-//                                               CFSTR(kDisplaySerialNumber));
-        
+        if (!vendorIDRef || !productIDRef) {
+            CFRelease(info);
+            IOObjectRelease(serv);
+            continue;
+        }
+
         success = CFNumberGetValue(vendorIDRef, kCFNumberCFIndexType,
                                    &vendorID);
         success &= CFNumberGetValue(productIDRef, kCFNumberCFIndexType,
                                     &productID);
-//        success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
-//                                        &serialNumber);
-        const void *serialNumberPtr;
-        if (CFDictionaryGetValueIfPresent(info, CFSTR(kDisplaySerialNumber), &serialNumberPtr)) {
-            serialNumberRef = (CFNumberRef)serialNumberPtr;
-            success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
+
+        const void *serialNumberPtr = NULL;
+        if (CFDictionaryGetValueIfPresent(info, CFSTR(kDisplaySerialNumber), &serialNumberPtr) &&
+            serialNumberPtr != NULL) {
+            success &= CFNumberGetValue((CFNumberRef)serialNumberPtr, kCFNumberCFIndexType,
                                         &serialNumber);
         }
-        
-        if (!success)
-        {
-            CFRelease(info);
-            continue;
-        }
-        
-        // If the vendor and product id along with the serial don't match
-        // then we are not looking at the correct monitor.
-        // NOTE: The serial number is important in cases where two monitors
-        //       are the exact same.
-        if (CGDisplayVendorNumber(displayID) != vendorID  ||
+
+        if (!success ||
+            CGDisplayVendorNumber(displayID) != vendorID  ||
             CGDisplayModelNumber(displayID) != productID  ||
             CGDisplaySerialNumber(displayID) != serialNumber)
         {
             CFRelease(info);
+            IOObjectRelease(serv);
             continue;
         }
-        
+
         // The VendorID, Product ID, and the Serial Number all Match Up!
         // Therefore we have found the appropriate display io_service
         servicePort = serv;
         CFRelease(info);
         break;
     }
-    
+
     IOObjectRelease(iter);
     return servicePort;
 }
