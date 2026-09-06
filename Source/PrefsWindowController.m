@@ -8,6 +8,7 @@
 #import "Action.h"
 #import "CPConfigTransfer.h"
 #import "CPLoginItemService.h"
+#import "CPPrefsSettingsShellController.h"
 #import "DSLogger.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
@@ -154,11 +155,13 @@
 @interface PrefsWindowController ()
 
 @property (nonatomic,strong) NSDate *logBufferUnchangedSince;
+@property (nonatomic,strong) CPPrefsSettingsShellController *settingsShell;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
 - (void)updateLogBuffer:(NSTimer *)timer;
 - (void)onPrefsWindowClose:(NSNotification *)notification;
+- (void)applyPresentationForGroupId:(NSString *)groupId;
 
 @end
 
@@ -268,34 +271,28 @@
 	[prefsWindow setAccessibilityLabel:NSLocalizedString(@"ControlPlane Preferences", @"VoiceOver label for prefs window")];
 	[self configureAgentApplicationMenu];
 
-	// Init. toolbar
-	prefsToolbar = [[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
-	[prefsToolbar setDelegate:self];
-	[prefsToolbar setAllowsUserCustomization:NO];
-	[prefsToolbar setAutosavesConfiguration:NO];
-    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
-    [prefsToolbar setVisible:YES];
-    [prefsToolbar setSizeMode:NSToolbarSizeModeRegular];
-    [prefsToolbar setShowsBaselineSeparator:NO];
-
-    // Force traditional toolbar style and maximum space utilization
-    if (@available(macOS 11.0, *)) {
-        [prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
-    }
-
-    // Allow user customization to ensure all items are shown
-    [prefsToolbar setAllowsUserCustomization:YES];
-
-	[prefsWindow setToolbar:prefsToolbar];
-
-	// Debug: Log toolbar setup
-	NSLog(@"PrefsGroups count: %lu", (unsigned long)[prefsGroups count]);
-	for (NSMutableDictionary *group in prefsGroups) {
-		NSLog(@"Group: %@ - View: %@", group[@"name"], group[@"view"] ? @"SET" : @"NIL");
+	// Settings-style shell (#100): preference toolbar hosted by NSTabViewController,
+	// embedding the existing XIB panes instead of a hand-rolled NSToolbar swap.
+	CPPrefsSettingsShellController *shell = [[CPPrefsSettingsShellController alloc] init];
+	[shell configureWithPaneGroups:prefsGroups];
+	__weak PrefsWindowController *weakSelf = self;
+	shell.paneSelectionHandler = ^(NSString *paneName) {
+		PrefsWindowController *strongSelf = weakSelf;
+		if (!strongSelf) {
+			return;
+		}
+		[strongSelf switchToView:paneName];
+	};
+	self.settingsShell = shell;
+	[prefsWindow setContentViewController:shell];
+	if (@available(macOS 11.0, *)) {
+		[prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
 	}
-	NSLog(@"Toolbar created with %lu items", (unsigned long)[[prefsToolbar items] count]);
-	NSLog(@"Toolbar visible: %@", [prefsToolbar isVisible] ? @"YES" : @"NO");
-	NSLog(@"Window toolbar: %@", [prefsWindow toolbar] ? @"SET" : @"NOT SET");
+	NSToolbar *shellToolbar = [prefsWindow toolbar];
+	[shellToolbar setAllowsUserCustomization:NO];
+	[shellToolbar setAutosavesConfiguration:NO];
+	[shellToolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+	[shellToolbar setShowsBaselineSeparator:NO];
 
 	currentPrefsGroup = nil;
 	[self switchToView:@"General"];
@@ -690,11 +687,6 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	return [prefsWindow frame].size.height - [[prefsWindow contentView] frame].size.height - [self toolbarHeight];
 }
 
-- (void)switchToViewFromToolbar:(NSToolbarItem *)item
-{
-	[self switchToView:[item itemIdentifier]];
-}
-
 - (void)switchToView:(NSString *)groupId
 {
 	NSDictionary *group = [self groupById:groupId];
@@ -703,51 +695,53 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 		return;
 	}
 
-	if (currentPrefsView == group[@"view"]) {
+	if ([currentPrefsGroup isEqualToString:groupId] && currentPrefsView == group[@"view"]) {
 		return;
-    }
+	}
 
-    [self persistCurrentViewSize];
+	[self persistCurrentViewSize];
 
 	if ([groupId isEqualToString:@"Advanced"]) {
-        [self startLogBufferTimer];
+		[self startLogBufferTimer];
 	} else {
-        [self stopLogBufferTimer];
-    }
+		[self stopLogBufferTimer];
+	}
 
 	currentPrefsView = group[@"view"];
+	[self.settingsShell selectPaneNamed:groupId];
+	[self applyPresentationForGroupId:groupId];
+	[self setValue:groupId forKey:@"currentPrefsGroup"];
+}
+
+- (void)applyPresentationForGroupId:(NSString *)groupId
+{
+	NSDictionary *group = [self groupById:groupId];
+	if (!group) {
+		return;
+	}
 
 	NSSize minSize = NSMakeSize([group[@"min_width"] floatValue], [group[@"min_height"] floatValue]);
-    NSSize size = minSize;
+	NSSize size = minSize;
 
-    NSValue *persistedSize = [self getPersistedSizeOfViewNamed:groupId];
-    if (persistedSize) {
-        size = [persistedSize sizeValue];
-        if (size.width < minSize.width) {
-            size.width = minSize.width;
-        }
-        if (size.height < minSize.height) {
-            size.height = minSize.height;
-        }
-    }
-    
-	NSView *blankPrefsView = [[NSView alloc] init];
-	[prefsWindow setContentView:blankPrefsView];
+	NSValue *persistedSize = [self getPersistedSizeOfViewNamed:groupId];
+	if (persistedSize) {
+		size = [persistedSize sizeValue];
+		if (size.width < minSize.width) {
+			size.width = minSize.width;
+		}
+		if (size.height < minSize.height) {
+			size.height = minSize.height;
+		}
+	}
+
 	[prefsWindow setTitle:[@"ControlPlane - " stringByAppendingString:group[@"display_name"]]];
-    
+
 	BOOL resizeableWidth  = [group[@"resizeableWidth"]  boolValue];
-    BOOL resizeableHeight = [group[@"resizeableHeight"] boolValue];
-    [self resizeWindowToSize:size withMinSize:minSize
-               limitMaxWidth:!resizeableWidth
-              limitMaxHeight:!resizeableHeight];
+	BOOL resizeableHeight = [group[@"resizeableHeight"] boolValue];
+	[self resizeWindowToSize:size withMinSize:minSize
+		       limitMaxWidth:!resizeableWidth
+		      limitMaxHeight:!resizeableHeight];
 	[prefsWindow setShowsResizeIndicator:(resizeableWidth || resizeableHeight)];
-
-	if ([prefsToolbar respondsToSelector:@selector(setSelectedItemIdentifier:)]) {
-		[prefsToolbar setSelectedItemIdentifier:groupId];
-    }
-
-	[prefsWindow setContentView:currentPrefsView];
-	[self setValue:groupId forKey:@"currentPrefsGroup"];
 }
 
 - (void)resizeWindowToSize:(NSSize)size
@@ -778,85 +772,6 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 	[prefsWindow setMinSize:minSize];
 	[prefsWindow setMaxSize:maxSize];
-}
-
-#pragma mark Toolbar delegates
-
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
-     itemForItemIdentifier:(NSString *)groupId
- willBeInsertedIntoToolbar:(BOOL)flag
-{
-	NSLog(@"=== TOOLBAR ITEM CREATION ===");
-	NSLog(@"Requesting item for ID: %@", groupId);
-	NSLog(@"Will be inserted: %@", flag ? @"YES" : @"NO");
-
-	NSDictionary *group = [self groupById:groupId];
-	if (group == nil) {
-		NSLog(@"ERROR: No group found for ID '%@'", groupId);
-		return nil;
-	}
-
-	NSString *displayName = [group objectForKey:@"display_name"];
-	NSString *iconName = [group objectForKey:@"icon"];
-	NSImage *image = [NSImage imageNamed:iconName];
-
-	NSLog(@"Group data - ID: %@, Display: %@, Icon: %@", groupId, displayName, iconName);
-	NSLog(@"Image loaded: %@", image ? @"YES" : @"NO");
-	if (image) {
-		NSLog(@"Image size: %.1f x %.1f", image.size.width, image.size.height);
-	}
-
-	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
-	[item setLabel:displayName];
-	[item setPaletteLabel:displayName];
-	[item setToolTip:displayName];
-	[item setImage:image];
-	[item setTarget:self];
-	[item setAction:@selector(switchToViewFromToolbar:)];
-	// NSToolbarItem adopts NSAccessibility; call via id to avoid header visibility gaps.
-	id axItem = item;
-	[axItem setAccessibilityLabel:displayName];
-	[axItem setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.toolbar.%@", [groupId lowercaseString]]];
-
-	// Log final item properties
-	NSLog(@"Final item - Label: '%@', Image: %@", item.label, item.image ? @"SET" : @"MISSING");
-	NSLog(@"Item view: %@", item.view ? @"HAS CUSTOM VIEW" : @"STANDARD");
-	NSLog(@"================================");
-
-	return item;
-}
-
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[prefsGroups count]];
-
-	NSLog(@"=== TOOLBAR ALLOWED ITEMS ===");
-	for (NSDictionary *group in prefsGroups) {
-		NSString *groupId = group[@"name"];  // This is the key used for identifiers
-		[array addObject:groupId];
-		NSLog(@"Allowed: %@ (display: %@)", groupId, group[@"display_name"]);
-    }
-	NSLog(@"Total allowed: %lu", (unsigned long)[array count]);
-	NSLog(@"===============================");
-
-	return array;
-}
-
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSArray *defaultItems = [self toolbarAllowedItemIdentifiers:toolbar];
-	NSLog(@"=== TOOLBAR DEFAULT ITEMS ===");
-	for (NSString *itemId in defaultItems) {
-		NSLog(@"Default: %@", itemId);
-	}
-	NSLog(@"Total default: %lu", (unsigned long)[defaultItems count]);
-	NSLog(@"==============================");
-	return defaultItems;
-}
-
-- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
-{
-	return [self toolbarAllowedItemIdentifiers:toolbar];
 }
 
 #pragma mark Rule creation/editing

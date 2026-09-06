@@ -219,6 +219,8 @@
 		A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */ = {isa = PBXBuildFile; fileRef = A34RSCA01FILWIRE000005 /* RunShortcutAction.m */; };
 		A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */; };
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
+		B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */; };
+		B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */; };
 		DDA2013A1411C0FB00DE570E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDA2013C1411C0FB00DE570E /* Localizable.strings */; };
 		DDA201441411C25A00DE570E /* GenericRule.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDA201461411C25A00DE570E /* GenericRule.xib */; };
 		DDA2014E1411C32F00DE570E /* IPRule.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDA201501411C32F00DE570E /* IPRule.xib */; };
@@ -742,6 +744,9 @@
 		A34RSCA01FILWIRE000005 /* RunShortcutAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RunShortcutAction.m; path = Source/RunShortcutAction.m; sourceTree = "<group>"; };
 		A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RunShortcutActionTests.m; sourceTree = "<group>"; };
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
+		B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPPrefsSettingsShellController.h; path = Source/CPPrefsSettingsShellController.h; sourceTree = "<group>"; };
+		B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPPrefsSettingsShellController.m; path = Source/CPPrefsSettingsShellController.m; sourceTree = "<group>"; };
+		B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsSettingsStyleShellTests.m; sourceTree = "<group>"; };
 		DD827505141188880098FA6E /* DisplayBrightnessAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayBrightnessAction.h; path = Source/DisplayBrightnessAction.h; sourceTree = "<group>"; };
 		DD827506141188880098FA6E /* DisplayBrightnessAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DisplayBrightnessAction.m; path = Source/DisplayBrightnessAction.m; sourceTree = "<group>"; };
 		DDA2013B1411C0FB00DE570E /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
@@ -939,6 +944,8 @@
 				DD7D2538149C338300BE7C8B /* NSTimer+Invalidation.m */,
 				8D82F0A10AA81411009ADA44 /* PrefsWindowController.h */,
 				8D82F0A20AA81411009ADA44 /* PrefsWindowController.m */,
+				B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */,
+				B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */,
 				7C73BDE017D09A4100EBFB80 /* SharedNumberFormatter.h */,
 				7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */,
 				B89MBAR01FILE890000001 /* CPMenuBarImage.h */,
@@ -1106,6 +1113,7 @@
 				B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */,
 				A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */,
 				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
+				B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
@@ -1814,6 +1822,7 @@
 				DAF36ECA143E7C5700350991 /* CoreLocationSource.m in Sources */,
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				8D82F0A30AA81411009ADA44 /* PrefsWindowController.m in Sources */,
+				B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */,
 				8D90E51F0B71C4C9007D39FD /* CPController.m in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
@@ -1943,6 +1952,7 @@
 				A51ATRT01B51WIRE00000001 /* ActionTypeRegistryTests.m in Sources */,
 				A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */,
 				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
+				B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */,
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
