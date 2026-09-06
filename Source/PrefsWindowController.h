@@ -45,6 +45,8 @@
 - (IBAction)runWebPage:(id)sender;
 - (IBAction)emailSupport:(id)sender;
 - (IBAction)donateToControlPlane:(id)sender;
+- (IBAction)exportConfiguration:(id)sender;
+- (IBAction)importConfiguration:(id)sender;
 - (IBAction)menuBarDisplayOptionChanged:(id)sender;
 - (IBAction)enableMultipleActiveContexts:(id)sender;
 - (IBAction)closeMultipleActiveContextsAlert:(id)sender;

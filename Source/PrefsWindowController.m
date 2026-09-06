@@ -4,8 +4,10 @@
 //  IMPORTANT: This code is intended to be compiled for the ARC mode
 //
 
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "AboutPanel.h"
 #import "Action.h"
+#import "CPConfigTransfer.h"
 #import "CPLoginItemService.h"
 #import "DSLogger.h"
 #import "PrefsWindowController.h"
@@ -352,6 +354,15 @@
         NSWindow *multipleActiveContextsNotification = self.multipleActiveContextsNotification;
         [multipleActiveContextsNotification makeKeyAndOrderFront:self];
     }
+
+    // Status menu entry points for versioned configuration transfer (#35).
+    PrefsWindowController *prefsController = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CPController *controller = (CPController *)[NSApp delegate];
+        if ([controller respondsToSelector:@selector(installStatusMenuItemsForConfigurationTransferWithTarget:)]) {
+            [controller installStatusMenuItemsForConfigurationTransferWithTarget:prefsController];
+        }
+    });
 }
 
 static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
@@ -442,6 +453,119 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     NSURL *url = [NSURL URLWithString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CPDonationURL"]];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
+
+- (IBAction)exportConfiguration:(id)sender {
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    panel.allowedContentTypes = @[
+        [UTType typeWithFilenameExtension:@"json"],
+        [UTType typeWithFilenameExtension:@"plist"]
+    ];
+    panel.canCreateDirectories = YES;
+    panel.nameFieldStringValue = @"ControlPlane-Config.json";
+    panel.message = NSLocalizedString(@"Export contexts, rules, actions, and related settings.",
+                                      @"Save panel message for configuration export");
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result != NSModalResponseOK || panel.URL == nil) {
+            return;
+        }
+
+        NSURL *url = panel.URL;
+        NSError *error = nil;
+        NSData *data = nil;
+        NSString *ext = url.pathExtension.lowercaseString;
+        if ([ext isEqualToString:@"plist"]) {
+            data = [CPConfigTransfer exportPropertyListDataFromDefaults:[NSUserDefaults standardUserDefaults]
+                                                                  error:&error];
+        } else {
+            data = [CPConfigTransfer exportJSONDataFromDefaults:[NSUserDefaults standardUserDefaults]
+                                                         error:&error];
+        }
+
+        if (data == nil || ![data writeToURL:url options:NSDataWritingAtomic error:&error]) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Export Failed", @"Alert title when config export fails");
+            alert.informativeText = error.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+    }];
+}
+
+- (IBAction)importConfiguration:(id)sender {
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    panel.allowedContentTypes = @[
+        [UTType typeWithFilenameExtension:@"json"],
+        [UTType typeWithFilenameExtension:@"plist"]
+    ];
+    panel.allowsMultipleSelection = NO;
+    panel.canChooseDirectories = NO;
+    panel.message = NSLocalizedString(@"Import a previously exported ControlPlane configuration. This replaces current contexts, rules, actions, and related settings.",
+                                      @"Open panel message for configuration import");
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result != NSModalResponseOK || panel.URL == nil) {
+            return;
+        }
+
+        NSError *readError = nil;
+        NSData *data = [NSData dataWithContentsOfURL:panel.URL options:0 error:&readError];
+        if (data == nil) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Import Failed", @"Alert title when config import fails");
+            alert.informativeText = readError.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+
+        NSAlert *confirm = [[NSAlert alloc] init];
+        confirm.alertStyle = NSAlertStyleInformational;
+        confirm.messageText = NSLocalizedString(@"Replace Current Configuration?",
+                                                @"Confirm title before importing configuration");
+        confirm.informativeText = NSLocalizedString(@"Importing will replace your current contexts, rules, actions, and related settings.",
+                                                    @"Confirm detail before importing configuration");
+        [confirm addButtonWithTitle:NSLocalizedString(@"Import", @"Confirm import button")];
+        [confirm addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+        if ([confirm runModal] != NSAlertFirstButtonReturn) {
+            return;
+        }
+
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSError *importError = nil;
+        NSString *ext = panel.URL.pathExtension.lowercaseString;
+        BOOL ok = NO;
+        if ([ext isEqualToString:@"plist"]) {
+            ok = [CPConfigTransfer importPropertyListData:data intoDefaults:defaults error:&importError];
+        } else {
+            ok = [CPConfigTransfer importJSONData:data intoDefaults:defaults error:&importError];
+        }
+
+        if (!ok) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Import Failed", @"Alert title when config import fails");
+            alert.informativeText = importError.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+
+        [contextsDataSource loadContexts];
+        CPController *controller = (CPController *)[NSApp delegate];
+        NSArray *rules = [defaults arrayForKey:@"Rules"] ?: @[];
+        [controller setActiveRules:rules];
+        [defaultContextButton setValue:[defaults valueForKey:@"DefaultContext"] forKey:@"selectedObject"];
+        [controller forceUpdate];
+
+        NSAlert *done = [[NSAlert alloc] init];
+        done.messageText = NSLocalizedString(@"Configuration Imported", @"Alert title after successful import");
+        done.informativeText = NSLocalizedString(@"Contexts, rules, actions, and settings were restored from the selected file.",
+                                                 @"Alert detail after successful import");
+        [done runModal];
+    }];
+}
+
 
 - (IBAction)menuBarDisplayOptionChanged:(id)sender {
 }

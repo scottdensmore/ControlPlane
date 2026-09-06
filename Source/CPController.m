@@ -1876,6 +1876,49 @@ static NSSet *sharedActiveContexts = nil;
 	[prefsWindow makeFirstResponder:nil];
 }
 
+
+- (void)installStatusMenuItemsForConfigurationTransferWithTarget:(id)target {
+    if (!sbMenu || !target) {
+        return;
+    }
+    if ([sbMenu itemWithTag:35001] != nil) {
+        return;
+    }
+
+    SEL runPreferencesSelector = NSSelectorFromString(@"runPreferences:");
+    SEL exportSelector = NSSelectorFromString(@"exportConfiguration:");
+    SEL importSelector = NSSelectorFromString(@"importConfiguration:");
+
+    NSInteger prefsIndex = -1;
+    for (NSInteger i = 0; i < [sbMenu numberOfItems]; i++) {
+        NSMenuItem *item = [sbMenu itemAtIndex:i];
+        if ([item action] == runPreferencesSelector) {
+            prefsIndex = i;
+            break;
+        }
+    }
+    if (prefsIndex < 0) {
+        return;
+    }
+
+    NSMenuItem *exportItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Export Configuration…",
+                                                                                  @"Status menu item to export configuration")
+                                                         action:exportSelector
+                                                  keyEquivalent:@""] autorelease];
+    [exportItem setTarget:target];
+    [exportItem setTag:35001];
+
+    NSMenuItem *importItem = [[[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Import Configuration…",
+                                                                                  @"Status menu item to import configuration")
+                                                         action:importSelector
+                                                  keyEquivalent:@""] autorelease];
+    [importItem setTarget:target];
+    [importItem setTag:35002];
+
+    [sbMenu insertItem:exportItem atIndex:prefsIndex];
+    [sbMenu insertItem:importItem atIndex:(prefsIndex + 1)];
+}
+
 #pragma mark NSUserDefaults notifications
 
 - (void)userDefaultsChanged:(NSNotification *)notification {
