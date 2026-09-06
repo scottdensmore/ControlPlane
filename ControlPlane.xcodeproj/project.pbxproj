@@ -111,6 +111,7 @@
 		A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4E7F90C178917007E7E41 /* MuteAction.m */; };
 		A51NLOC01B51WIRE00000033 /* NetworkLocationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D6762150C3B8D8D000B63EC /* NetworkLocationAction.m */; };
 		A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71CB770C17C01700E56526 /* ScreenSaverPasswordAction.m */; };
+		A51SSTA01B51WIRE00000120 /* ScreenSaverTimeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4EE450C4B2A6F00A5B559 /* ScreenSaverTimeAction.m */; };
 		A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A469C54740862F2CA73424A /* ToggleableActionTests.m */; };
 		A51TBTA01B51WIRE00000083 /* ToggleBluetoothAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D75A61E0BE6F68B0069DF3F /* ToggleBluetoothAction.m */; };
 		A51DBRA01B51WIRE00000088 /* DisplayBrightnessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD827506141188880098FA6E /* DisplayBrightnessAction.m */; };
@@ -1990,6 +1991,7 @@
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
 				A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */,
 				A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */,
+				A51SSTA01B51WIRE00000120 /* ScreenSaverTimeAction.m in Sources */,
 				A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */,
 				B52IPKT01WIRE5252000001 /* PackedIPAddressTests.m in Sources */,
 				B52IPV401WIRE5252000002 /* IPv4RuleMatchTests.m in Sources */,

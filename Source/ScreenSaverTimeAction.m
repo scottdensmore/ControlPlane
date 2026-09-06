@@ -10,6 +10,16 @@
 
 @implementation ScreenSaverTimeAction
 
++ (BOOL)isActionApplicableToSystem
+{
+    // #120: Writing com.apple.screensaver idleTime and poking
+    // com.apple.loginwindow.notify is unverified against System Settings →
+    // Screen Saver / Lock Screen on modern macOS. Without interactive
+    // confirmation or a public API, prefer gating (same pattern as
+    // ScreenSaverPasswordAction). Use System Settings or a Run Shortcut.
+    return NO;
+}
+
 - (id)init
 {
 	if (!(self = [super init]))
@@ -60,40 +70,27 @@
 
 - (BOOL)execute:(NSString **)errorString
 {
-	NSNumber *n = [NSNumber numberWithInt:[time intValue] * 60];	// minutes -> seconds
-
-	CFPreferencesSetValue(CFSTR("idleTime"), (CFPropertyListRef) n,
-			      CFSTR("com.apple.screensaver"),
-			      kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-	BOOL success = CFPreferencesSynchronize(CFSTR("com.apple.screensaver"),
-				 kCFPreferencesCurrentUser, kCFPreferencesCurrentHost);
-
-	// Notify login process
-	if (success) {
-		CFMessagePortRef port = CFMessagePortCreateRemote(NULL, CFSTR("com.apple.loginwindow.notify"));
-        if (port) {
-            success = (CFMessagePortSendRequest(port, 500, 0, 0, 0, 0, 0) == kCFMessagePortSuccess);
-            CFRelease(port);
-        }
-	}
-
-	if (!success) {
-		*errorString = NSLocalizedString(@"Failed setting screen saver idle time!", @"");
-		return NO;
-	}
-
-	return YES;
+    if (errorString != NULL) {
+        *errorString = NSLocalizedString(
+            @"Screen Saver Time cannot change idle time on this version of macOS. "
+            @"Use System Settings → Screen Saver / Lock Screen, or create a Shortcut "
+            @"and run it with the Run Shortcut action.",
+            @"Error when ScreenSaverTimeAction runs on modern macOS");
+    }
+    return NO;
 }
 
 + (NSString *)helpText
 {
 	return NSLocalizedString(@"The parameter for ScreenSaverTimeAction actions is the idle time "
-				 "(in minutes) before you want your screen saver to activate.", @"");
+				 "(in minutes) before you want your screen saver to activate. "
+				 "This action is not available on modern macOS; configure Screen Saver / "
+				 "Lock Screen in System Settings, or use a Run Shortcut instead.", @"");
 }
 
 + (NSString *)creationHelpText
 {
-	return NSLocalizedString(@"Set screen saver idle time to", @"");
+	return NSLocalizedString(@"Set screen saver idle time (unsupported on this macOS)", @"");
 }
 
 + (NSArray *)limitedOptions
