@@ -233,31 +233,15 @@
 
 - (void)enableFirewallAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-        return;
-    }
-
-    // defaults write …/com.apple.alf is dead on modern macOS; use socketfilterfw.
-    [self replyAfterRunning:kCPHelperPathSocketFilterFW
-                  arguments:[CPHelperCommandRunner argumentsForFirewallEnable]
-              failureMessage:@"Failed to enable Firewall"
-                      reply:reply];
+    // #124: app gates ToggleFirewall; do not let root helper toggle via XPC either.
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Firewall cannot be toggled on this version of macOS."]);
 }
 
 - (void)disableFirewallAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-        return;
-    }
-
-    [self replyAfterRunning:kCPHelperPathSocketFilterFW
-                  arguments:[CPHelperCommandRunner argumentsForFirewallDisable]
-              failureMessage:@"Failed to disable Firewall"
-                      reply:reply];
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Firewall cannot be toggled on this version of macOS."]);
 }
 
 #pragma mark - Display Settings Commands
@@ -285,30 +269,15 @@
 
 - (void)enablePrinterSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-        return;
-    }
-
-    [self replyAfterRunning:kCPHelperPathCupsctl
-                  arguments:[CPHelperCommandRunner argumentsForPrinterSharingEnable]
-              failureMessage:@"Failed to enable Printer Sharing"
-                      reply:reply];
+    // #124: app gates TogglePrinterSharing; do not let root helper toggle via XPC either.
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Printer Sharing cannot be toggled on this version of macOS."]);
 }
 
 - (void)disablePrinterSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error = [self checkAuthorization:authData command:_cmd];
-    if (error != nil) {
-        reply(NO, error);
-        return;
-    }
-
-    [self replyAfterRunning:kCPHelperPathCupsctl
-                  arguments:[CPHelperCommandRunner argumentsForPrinterSharingDisable]
-              failureMessage:@"Failed to disable Printer Sharing"
-                      reply:reply];
+    (void)authData;
+    reply(NO, [self errorWithCode:ENOTSUP description:@"Printer Sharing cannot be toggled on this version of macOS."]);
 }
 
 #pragma mark - File Sharing Commands

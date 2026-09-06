@@ -58,16 +58,45 @@
     }
 }
 
-- (void)testFirewallUsesSocketFilterFWNotALFDefaults
+- (void)testHelperRejectsGatedFirewallAndPrinterSharingCommands
 {
-    XCTAssertEqualObjects(kCPHelperPathSocketFilterFW,
-                          @"/usr/libexec/ApplicationFirewall/socketfilterfw");
-    XCTAssertEqualObjects([CPHelperCommandRunner argumentsForFirewallEnable],
-                          (@[ @"--setglobalstate", @"on" ]));
-    XCTAssertEqualObjects([CPHelperCommandRunner argumentsForFirewallDisable],
-                          (@[ @"--setglobalstate", @"off" ]));
-    XCTAssertTrue([[NSFileManager defaultManager] isExecutableFileAtPath:kCPHelperPathSocketFilterFW],
-                  @"socketfilterfw must exist on Tahoe; do not revive defaults write com.apple.alf");
+    // #124: app already gates ToggleFirewall / TogglePrinterSharing; root helper must
+    // refuse XPC toggles even if a client asks (same ENOTSUP pattern as Internet Sharing).
+    NSString *source = [self helperToolSource];
+
+    XCTAssertTrue([source containsString:@"Firewall cannot be toggled on this version of macOS"],
+                  @"enable/disableFirewall must reply with a clear unsupported status (#124)");
+    XCTAssertTrue([source containsString:@"Printer Sharing cannot be toggled on this version of macOS"],
+                  @"enable/disablePrinterSharing must reply with a clear unsupported status (#124)");
+
+    NSUInteger enotsupCount = 0;
+    NSString *needle = @"errorWithCode:ENOTSUP";
+    NSRange search = NSMakeRange(0, source.length);
+    while (search.location < source.length) {
+        NSRange found = [source rangeOfString:needle options:0 range:search];
+        if (found.location == NSNotFound) {
+            break;
+        }
+        enotsupCount++;
+        search.location = NSMaxRange(found);
+        search.length = source.length - search.location;
+    }
+    // Internet Sharing, AFP, FTP, TFTP, Web Sharing (5×2) + Firewall + Printer Sharing (2×2)
+    XCTAssertGreaterThanOrEqual(enotsupCount, 14,
+                                 @"Expected gated helpers to use ENOTSUP, including Firewall/Printer Sharing (#124)");
+
+    XCTAssertFalse([source containsString:@"argumentsForFirewallEnable"],
+                   @"Helper must not spawn socketfilterfw for EnableFirewall (#124)");
+    XCTAssertFalse([source containsString:@"argumentsForFirewallDisable"],
+                   @"Helper must not spawn socketfilterfw for DisableFirewall (#124)");
+    XCTAssertFalse([source containsString:@"argumentsForPrinterSharingEnable"],
+                   @"Helper must not spawn cupsctl for EnablePrinterSharing (#124)");
+    XCTAssertFalse([source containsString:@"argumentsForPrinterSharingDisable"],
+                   @"Helper must not spawn cupsctl for DisablePrinterSharing (#124)");
+    XCTAssertFalse([source containsString:@"kCPHelperPathSocketFilterFW"],
+                   @"Gated Firewall path must not remain in CPHelperTool.m (#124)");
+    XCTAssertFalse([source containsString:@"kCPHelperPathCupsctl"],
+                   @"Gated Printer Sharing path must not remain in CPHelperTool.m (#124)");
 }
 
 - (void)testTimeMachineArgvIsFixedLiterals
