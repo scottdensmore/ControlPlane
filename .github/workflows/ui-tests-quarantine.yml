@@ -15,7 +15,8 @@ concurrency:
 jobs:
   ui-tests:
     name: ControlPlaneUITests (non-blocking)
-    runs-on: macos-15
+    # GitHub has no macos-16 label; Tahoe images are macos-26 (Xcode 26.x).
+    runs-on: macos-26
     timeout-minutes: 30
     continue-on-error: true
 
