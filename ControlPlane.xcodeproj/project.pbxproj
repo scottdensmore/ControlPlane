@@ -218,6 +218,7 @@
 		A34RSCA01APPWIRE000001 /* RunShortcutAction.m in Sources */ = {isa = PBXBuildFile; fileRef = A34RSCA01FILWIRE000005 /* RunShortcutAction.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */ = {isa = PBXBuildFile; fileRef = A34RSCA01FILWIRE000005 /* RunShortcutAction.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */; };
+		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
 		DDA2013A1411C0FB00DE570E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDA2013C1411C0FB00DE570E /* Localizable.strings */; };
 		DDA201441411C25A00DE570E /* GenericRule.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDA201461411C25A00DE570E /* GenericRule.xib */; };
 		DDA2014E1411C32F00DE570E /* IPRule.xib in Resources */ = {isa = PBXBuildFile; fileRef = DDA201501411C32F00DE570E /* IPRule.xib */; };
@@ -740,6 +741,7 @@
 		A34RSCA01FILWIRE000004 /* RunShortcutAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RunShortcutAction.h; path = Source/RunShortcutAction.h; sourceTree = "<group>"; };
 		A34RSCA01FILWIRE000005 /* RunShortcutAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RunShortcutAction.m; path = Source/RunShortcutAction.m; sourceTree = "<group>"; };
 		A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RunShortcutActionTests.m; sourceTree = "<group>"; };
+		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
 		DD827505141188880098FA6E /* DisplayBrightnessAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayBrightnessAction.h; path = Source/DisplayBrightnessAction.h; sourceTree = "<group>"; };
 		DD827506141188880098FA6E /* DisplayBrightnessAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DisplayBrightnessAction.m; path = Source/DisplayBrightnessAction.m; sourceTree = "<group>"; };
 		DDA2013B1411C0FB00DE570E /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
@@ -1104,6 +1106,7 @@
 			children = (
 				B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */,
 				A34RSCA01FILWIRE000006 /* RunShortcutActionTests.m */,
+				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
@@ -1939,6 +1942,7 @@
 				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
 				A51ATRT01B51WIRE00000001 /* ActionTypeRegistryTests.m in Sources */,
 				A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */,
+				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,

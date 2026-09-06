@@ -122,7 +122,7 @@
                         <action selector="checkForUpdates:" target="476" id="478"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Preferências..." id="391">
+                <menuItem title="Preferências..." id="391" keyEquivalent=",">
                     <connections>
                         <action selector="runPreferences:" target="320" id="821"/>
                     </connections>
@@ -1514,12 +1514,19 @@ Gw
                         <items>
                             <menuItem title="Acerca do ControlPlane" id="1777">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
+                            
+                    <connections>
+                        <action selector="runAbout:" target="320" id="2090"/>
+                    </connections></menuItem>
                             <menuItem title="Procurar actualizações" id="1779"/>
                             <menuItem isSeparatorItem="YES" id="1781">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Preferências..." keyEquivalent="," id="1783"/>
+                            <menuItem title="Preferências..." keyEquivalent="," id="1783">
+<connections>
+                        <action selector="runPreferences:" target="320" id="2086"/>
+                    </connections>
+                </menuItem>
                             <menuItem isSeparatorItem="YES" id="1785">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1529,15 +1536,30 @@ Gw
                             <menuItem isSeparatorItem="YES" id="1775">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Ocultar o MarcoPolo" keyEquivalent="h" id="1776"/>
+                            <menuItem title="Ocultar o ControlPlane" keyEquivalent="h" id="1776">
+<connections>
+                        <action selector="hide:" target="-1" id="2087"/>
+                    </connections>
+                </menuItem>
                             <menuItem title="Ocultar outras aplicações" keyEquivalent="h" id="1778">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Mostrar tudo" id="1780"/>
+                            
+                    <connections>
+                        <action selector="hideOtherApplications:" target="-1" id="2091"/>
+                    </connections></menuItem>
+                            <menuItem title="Mostrar tudo" id="1780">
+<connections>
+                        <action selector="unhideAllApplications:" target="-1" id="2088"/>
+                    </connections>
+                </menuItem>
                             <menuItem isSeparatorItem="YES" id="1782">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Sair do MarcoPolo" keyEquivalent="q" id="1784"/>
+                            <menuItem title="Sair do ControlPlane" keyEquivalent="q" id="1784">
+<connections>
+                        <action selector="terminate:" target="-2" id="2089"/>
+                    </connections>
+                </menuItem>
                         </items>
                     </menu>
                 </menuItem>

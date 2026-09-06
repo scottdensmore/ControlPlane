@@ -5,7 +5,6 @@
 //
 
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
-#import "AboutPanel.h"
 #import "Action.h"
 #import "CPConfigTransfer.h"
 #import "CPLoginItemService.h"
@@ -255,12 +254,19 @@
 		group[@"min_width"]  = @(frameSize.width);
 		group[@"min_height"] = @(frameSize.height);
 		NSString *groupName = group[@"name"];
+		NSString *displayName = group[@"display_name"];
 		if ([groupName isKindOfClass:[NSString class]]) {
 			[view setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.tab.%@", [groupName lowercaseString]]];
+		}
+		if ([displayName isKindOfClass:[NSString class]]) {
+			[view setAccessibilityLabel:displayName];
+			[view setAccessibilityRoleDescription:NSLocalizedString(@"Preferences tab", @"VoiceOver role for prefs pane")];
 		}
 	}
 
 	[prefsWindow setAccessibilityIdentifier:@"prefs.window"];
+	[prefsWindow setAccessibilityLabel:NSLocalizedString(@"ControlPlane Preferences", @"VoiceOver label for prefs window")];
+	[self configureAgentApplicationMenu];
 
 	// Init. toolbar
 	prefsToolbar = [[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
@@ -429,12 +435,84 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 - (IBAction)runAbout:(id)sender
 {
 	[NSApp activateIgnoringOtherApps:YES];
-#if 0
-	[NSApp orderFrontStandardAboutPanelWithOptions:@{ @"Version": @"" }];
-#else
-	AboutPanel *ctl = [[AboutPanel alloc] init];
-	[ctl runPanel];
-#endif
+	// Standard About reads CFBundleShortVersionString / CFBundleVersion / Credits.html
+	[NSApp orderFrontStandardAboutPanel:sender];
+}
+
+/// LSUIElement agents still own a main menu for ⌘, / ⌘H / ⌘Q. Locale XIBs often
+/// leave the Apple menu unwired (and some still say MarcoPolo); fix that at runtime.
+- (void)configureAgentApplicationMenu
+{
+	NSMenu *mainMenu = [NSApp mainMenu];
+	if (mainMenu.numberOfItems < 1) {
+		return;
+	}
+	NSMenu *appleMenu = [[mainMenu itemAtIndex:0] submenu];
+	if (!appleMenu) {
+		return;
+	}
+
+	NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	if (appName.length == 0) {
+		appName = @"ControlPlane";
+	}
+
+	for (NSMenuItem *item in appleMenu.itemArray) {
+		if ([item isSeparatorItem]) {
+			continue;
+		}
+
+		NSString *title = item.title ?: @"";
+		NSString *fixedTitle = [title stringByReplacingOccurrencesOfString:@"MarcoPolo" withString:appName];
+		if (![fixedTitle isEqualToString:title]) {
+			item.title = fixedTitle;
+			title = fixedTitle;
+		}
+
+		NSString *ke = item.keyEquivalent.lowercaseString;
+		NSEventModifierFlags mods = item.keyEquivalentModifierMask;
+		BOOL optionDown = (mods & NSEventModifierFlagOption) != 0;
+
+		if ([ke isEqualToString:@","]) {
+			item.target = self;
+			item.action = @selector(runPreferences:);
+			continue;
+		}
+		if ([ke isEqualToString:@"q"] && !optionDown) {
+			item.target = NSApp;
+			item.action = @selector(terminate:);
+			continue;
+		}
+		if ([ke isEqualToString:@"h"]) {
+			if (optionDown) {
+				item.target = NSApp;
+				item.action = @selector(hideOtherApplications:);
+			} else {
+				item.target = NSApp;
+				item.action = @selector(hide:);
+			}
+			continue;
+		}
+
+		NSRange aboutRange = [title rangeOfString:@"About" options:NSCaseInsensitiveSearch];
+		if (aboutRange.location == NSNotFound) {
+			aboutRange = [title rangeOfString:@"Acerca" options:NSCaseInsensitiveSearch];
+		}
+		if (aboutRange.location != NSNotFound) {
+			item.target = self;
+			item.action = @selector(runAbout:);
+			continue;
+		}
+
+		NSRange showAllRange = [title rangeOfString:@"Show All" options:NSCaseInsensitiveSearch];
+		if (showAllRange.location == NSNotFound) {
+			showAllRange = [title rangeOfString:@"Mostrar tudo" options:NSCaseInsensitiveSearch];
+		}
+		if (showAllRange.location != NSNotFound) {
+			item.target = NSApp;
+			item.action = @selector(unhideAllApplications:);
+		}
+	}
 }
 
 - (IBAction)runWebPage:(id)sender
@@ -731,9 +809,14 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
 	[item setLabel:displayName];
 	[item setPaletteLabel:displayName];
+	[item setToolTip:displayName];
 	[item setImage:image];
 	[item setTarget:self];
 	[item setAction:@selector(switchToViewFromToolbar:)];
+	// NSToolbarItem adopts NSAccessibility; call via id to avoid header visibility gaps.
+	id axItem = item;
+	[axItem setAccessibilityLabel:displayName];
+	[axItem setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.toolbar.%@", [groupId lowercaseString]]];
 
 	// Log final item properties
 	NSLog(@"Final item - Label: '%@', Image: %@", item.label, item.image ? @"SET" : @"MISSING");
