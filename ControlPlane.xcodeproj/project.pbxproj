@@ -117,6 +117,9 @@
 		A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4380152161C800E94A1D /* ToggleTFTPAction.m */; };
 		B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
 		B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */; };
+		B86HELP01WIRE860000001 /* CPHelperCommandRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000002 /* CPHelperCommandRunner.m */; };
+		B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000002 /* CPHelperCommandRunner.m */; };
+		B86HELP01WIRE860000003 /* CPHelperCommandRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */; };
 		B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA922E9C144FC95200920B40 /* ToggleInternetSharingAction.m */; };
 		B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B40DEPLFILE400000001 /* DeploymentTargetTests.m */; };
 		B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B45HELPFILE450000001 /* HelpScrubTests.m */; };
@@ -597,6 +600,9 @@
 		ACD9A6C480EEC4EDA58D4550 /* CPConfigTransfer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CPConfigTransfer.h; path = Source/CPConfigTransfer.h; sourceTree = "<group>"; };
 		B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ActionTypeRegistryTests.m; sourceTree = "<group>"; };
 		B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelperSigningRequirementTests.m; sourceTree = "<group>"; };
+		B86HELP01FILE860000001 /* CPHelperCommandRunner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperCommandRunner.h; sourceTree = "<group>"; };
+		B86HELP01FILE860000002 /* CPHelperCommandRunner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperCommandRunner.m; sourceTree = "<group>"; };
+		B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPHelperCommandRunnerTests.m; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SparkleVendoredArchitectureTests.m; sourceTree = "<group>"; };
 		B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPNotificationsGateTests.m; sourceTree = "<group>"; };
 		B40DEPLFILE400000001 /* DeploymentTargetTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DeploymentTargetTests.m; sourceTree = "<group>"; };
@@ -1121,6 +1127,7 @@
 				B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */,
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
 				B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */,
+				B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */,
 				B45HELPFILE450000001 /* HelpScrubTests.m */,
 				B40DEPLFILE400000001 /* DeploymentTargetTests.m */,
 				3A469C54740862F2CA73424A /* ToggleableActionTests.m */,
@@ -1484,6 +1491,8 @@
 				DE184AF22D98C8A50072F8ED /* CPHelperToolProtocol.h */,
 				DE184AFA2D98DA0E0072F8ED /* CPHelperCommon.h */,
 				DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */,
+				B86HELP01FILE860000001 /* CPHelperCommandRunner.h */,
+				B86HELP01FILE860000002 /* CPHelperCommandRunner.m */,
 				6FFCAA2E073E45928234D18A26644421 /* CPHelperTool.entitlements */,
 			);
 			path = CPHelperTool;
@@ -1920,6 +1929,8 @@
 				E6F718293A4B5C6D7E8F90A1 /* InfoPlistPrivacyTests.m in Sources */,
 				DACEA98B1410560497D2361F /* DefaultBrowserUTITests.m in Sources */,
 				B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */,
+				B86HELP01WIRE860000003 /* CPHelperCommandRunnerTests.m in Sources */,
+				B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */,
 				B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */,
 				B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
@@ -1991,6 +2002,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE184AEB2D98C6D30072F8ED /* CPHelperTool.m in Sources */,
+				B86HELP01WIRE860000001 /* CPHelperCommandRunner.m in Sources */,
 				DE184AF72D98D73A0072F8ED /* CPAuthorization.m in Sources */,
 				DE762B9F2D98C1BE0095F733 /* main.m in Sources */,
 				DE184AFC2D98DA270072F8ED /* CPHelperCommon.m in Sources */,

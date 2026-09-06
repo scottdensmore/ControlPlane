@@ -8,10 +8,11 @@
 #import "CPHelperTool.h"
 #import "CPHelperToolProtocol.h"
 #import "CPHelperCommon.h"
+#import "CPHelperCommandRunner.h"
 #import "CPAuthorization.h"
 #import "CPCommonConstants.h"
 
-//NSString * const kHelperToolMachServiceName = @"com.scottdensmore.CPHelperTool";
+#include <errno.h>
 
 @interface CPHelperTool () <NSXPCListenerDelegate, CPHelperToolProtocol>
 
@@ -19,6 +20,10 @@
 
 - (NSError *)errorWithCode:(NSInteger)code description:(NSString *)description;
 - (NSError *)checkAuthorization:(NSData *)authData command:(SEL)command;
+- (void)replyAfterRunning:(NSString *)path
+                arguments:(NSArray<NSString *> *)arguments
+            failureMessage:(NSString *)failureMessage
+                    reply:(void (^)(BOOL success, NSError *error))reply;
 
 @end
 
@@ -105,6 +110,19 @@
     return error;
 }
 
+- (void)replyAfterRunning:(NSString *)path
+                arguments:(NSArray<NSString *> *)arguments
+            failureMessage:(NSString *)failureMessage
+                    reply:(void (^)(BOOL success, NSError *error))reply
+{
+    int retValue = [CPHelperCommandRunner runExecutable:path arguments:arguments];
+    if (retValue == 0) {
+        reply(YES, nil);
+    } else {
+        reply(NO, [self errorWithCode:retValue description:failureMessage]);
+    }
+}
+
 #pragma mark - NSXPCListenerDelegate implementation
 // Called by our XPC listener when a new connection comes in.  We configure the connection
 // with our protocol and ourselves as the main object.
@@ -143,130 +161,58 @@
 
 - (void)enableTimeMachineAuthorization:(NSData *)authData withReply:(void (^)(BOOL success, NSError *error))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    // if macOS 10.7 or greater
-    if ((major == 10 && minor >= 7) || major >= 11) {
-        sprintf(command, "/usr/bin/tmutil enable");
-        retValue = system(command);
-    } else {
-        sprintf(command, "/usr/bin/defaults write /Library/Preferences/com.apple.TimeMachine.plist %s %s %s", "AutoBackup", "-boolean", "TRUE");
-        retValue = system(command);
-    }
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Time Machine"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathTmutil
+                  arguments:[CPHelperCommandRunner argumentsForTmutilEnable]
+              failureMessage:@"Failed to enable Time Machine"
+                      reply:reply];
 }
 
 - (void)disableTimeMachineAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL success, NSError *error))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    // if macOS 10.7 or greater
-    if ((major == 10 && minor >= 7) || major >= 11) {
-        sprintf(command, "/usr/bin/tmutil disable");
-        retValue = system(command);
-    } else {
-        sprintf(command, "/usr/bin/defaults write /Library/Preferences/com.apple.TimeMachine.plist %s %s %s", "AutoBackup", "-boolean", "FALSE");
-        retValue = system(command);
-    }
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Time Machine"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathTmutil
+                  arguments:[CPHelperCommandRunner argumentsForTmutilDisable]
+              failureMessage:@"Failed to disable Time Machine"
+                      reply:reply];
 }
 
 - (void)startBackupTimeMachineAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    // if macOS 10.7 or greater
-    if ((major == 10 && minor >= 7) || major >= 11) {
-        sprintf(command, "/usr/bin/tmutil startbackup");
-        retValue = system(command);
-    } else {
-        sprintf(command, "/System/Library/CoreServices/backupd.bundle/Contents/Resources/backupd-helper &");
-        retValue = system(command);
-    }
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to start Time Machine backup"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathTmutil
+                  arguments:[CPHelperCommandRunner argumentsForTmutilStartBackup]
+              failureMessage:@"Failed to start Time Machine backup"
+                      reply:reply];
 }
 
 - (void)stopBackupTimeMachineAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    // if macOS 10.7 or greater
-    if ((major == 10 && minor >= 7) || major >= 11) {
-        sprintf(command, "/usr/bin/tmutil stopbackup");
-        retValue = system(command);
-    } else {
-        sprintf(command, "/usr/bin/killall backupd-helper");
-        retValue = system(command);
-    }
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to stop Time Machine backup"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathTmutil
+                  arguments:[CPHelperCommandRunner argumentsForTmutilStopBackup]
+              failureMessage:@"Failed to stop Time Machine backup"
+                      reply:reply];
 }
 
 #pragma mark - Internet Sharing Commands
@@ -287,101 +233,82 @@
 
 - (void)enableFirewallAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/usr/bin/defaults write /Library/Preferences/com.apple.alf globalstate -int 1");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Firewall"]);
-    }
+
+    // defaults write …/com.apple.alf is dead on modern macOS; use socketfilterfw.
+    [self replyAfterRunning:kCPHelperPathSocketFilterFW
+                  arguments:[CPHelperCommandRunner argumentsForFirewallEnable]
+              failureMessage:@"Failed to enable Firewall"
+                      reply:reply];
 }
 
 - (void)disableFirewallAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/usr/bin/defaults write /Library/Preferences/com.apple.alf globalstate -int 0");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Firewall"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathSocketFilterFW
+                  arguments:[CPHelperCommandRunner argumentsForFirewallDisable]
+              failureMessage:@"Failed to disable Firewall"
+                      reply:reply];
 }
 
 #pragma mark - Display Settings Commands
 
 - (void)setDisplaySleepTime:(NSInteger)minutes authorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/usr/bin/pmset -a displaysleep %ld", (long)minutes);
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to set display sleep time"]);
+
+    if (![CPHelperCommandRunner isValidDisplaySleepMinutes:minutes]) {
+        reply(NO, [self errorWithCode:EINVAL description:@"Invalid display sleep time"]);
+        return;
     }
+
+    [self replyAfterRunning:kCPHelperPathPmset
+                  arguments:[CPHelperCommandRunner argumentsForDisplaySleepMinutes:minutes]
+              failureMessage:@"Failed to set display sleep time"
+                      reply:reply];
 }
 
 #pragma mark - Printer Sharing Commands
 
 - (void)enablePrinterSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/usr/sbin/cupsctl --share-printers");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Printer Sharing"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathCupsctl
+                  arguments:[CPHelperCommandRunner argumentsForPrinterSharingEnable]
+              failureMessage:@"Failed to enable Printer Sharing"
+                      reply:reply];
 }
 
 - (void)disablePrinterSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/usr/sbin/cupsctl --no-share-printers");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Printer Sharing"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathCupsctl
+                  arguments:[CPHelperCommandRunner argumentsForPrinterSharingDisable]
+              failureMessage:@"Failed to disable Printer Sharing"
+                      reply:reply];
 }
 
 #pragma mark - File Sharing Commands
@@ -400,35 +327,18 @@
 
 - (void)enableSMBFileSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char sync_command[256];
-    char enable_command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    if ((major == 10 && minor >= 9) || major >= 11) {
-        sprintf(enable_command, "/bin/launchctl load -F /System/Library/LaunchDaemons/%s.plist", [kCPHelperSMBDServiceName UTF8String]);
-        sprintf(sync_command, "%s", [kCPHelperSMBSyncToolFilePathMavericks UTF8String]);
-    } else {
-        sprintf(enable_command, "/usr/bin/defaults write %s 'EnabledServices' -array 'disk'", [kCPHelperSMBPrefsFilePath UTF8String]);
-        sprintf(sync_command, "%s", [kCPHelperSMBSyncToolFilePath UTF8String]);
+
+    int retValue = [CPHelperCommandRunner runExecutable:kCPHelperPathLaunchctl
+                                              arguments:[CPHelperCommandRunner argumentsForSMBEnable]];
+    if (retValue == 0) {
+        retValue = [CPHelperCommandRunner runExecutable:kCPHelperPathSMBSyncPreferences arguments:nil];
     }
-    
-    retValue = system(enable_command);
-    
-    if (!retValue) {
-        retValue = system(sync_command);
-    }
-    
+
     if (retValue == 0) {
         reply(YES, nil);
     } else {
@@ -438,35 +348,18 @@
 
 - (void)disableSMBFileSharingAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char sync_command[256];
-    char disable_command[256];
-    int retValue = 0;
-    
-    // Get system version
-    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSInteger major = version.majorVersion;
-    NSInteger minor = version.minorVersion;
-    
-    if ((major == 10 && minor >= 9) || major >= 11) {
-        sprintf(disable_command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/%s.plist", [kCPHelperSMBDServiceName UTF8String]);
-        sprintf(sync_command, "%s", [kCPHelperSMBSyncToolFilePathMavericks UTF8String]);
-    } else {
-        sprintf(disable_command, "/usr/bin/defaults delete %s 'EnabledServices'", [kCPHelperSMBPrefsFilePath UTF8String]);
-        sprintf(sync_command, "%s", [kCPHelperSMBSyncToolFilePath UTF8String]);
+
+    int retValue = [CPHelperCommandRunner runExecutable:kCPHelperPathLaunchctl
+                                              arguments:[CPHelperCommandRunner argumentsForSMBDisable]];
+    if (retValue == 0) {
+        retValue = [CPHelperCommandRunner runExecutable:kCPHelperPathSMBSyncPreferences arguments:nil];
     }
-    
-    retValue = system(disable_command);
-    
-    if (!retValue) {
-        retValue = system(sync_command);
-    }
-    
+
     if (retValue == 0) {
         reply(YES, nil);
     } else {
@@ -520,40 +413,31 @@
 
 - (void)enableRemoteLoginAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl load -F /System/Library/LaunchDaemons/ssh.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to enable Remote Login"]);
-    }
+
+    // Prefer systemsetup over deprecated launchctl load of ssh.plist.
+    [self replyAfterRunning:kCPHelperPathSystemsetup
+                  arguments:[CPHelperCommandRunner argumentsForRemoteLoginEnable]
+              failureMessage:@"Failed to enable Remote Login"
+                      reply:reply];
 }
 
 - (void)disableRemoteLoginAuthorizaiton:(NSData *)authData withReply:(void (^)(BOOL, NSError *))reply
 {
-    NSError *error;
-    error = [self checkAuthorization:authData command:_cmd];
+    NSError *error = [self checkAuthorization:authData command:_cmd];
     if (error != nil) {
         reply(NO, error);
+        return;
     }
-    
-    char command[256];
-    sprintf(command, "/bin/launchctl unload -F /System/Library/LaunchDaemons/ssh.plist");
-    int retValue = system(command);
-    
-    if (retValue == 0) {
-        reply(YES, nil);
-    } else {
-        reply(NO, [self errorWithCode:retValue description:@"Failed to disable Remote Login"]);
-    }
+
+    [self replyAfterRunning:kCPHelperPathSystemsetup
+                  arguments:[CPHelperCommandRunner argumentsForRemoteLoginDisable]
+              failureMessage:@"Failed to disable Remote Login"
+                      reply:reply];
 }
 
 @end
