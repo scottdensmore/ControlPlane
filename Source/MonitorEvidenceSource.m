@@ -25,10 +25,10 @@
 
 - (void)dealloc
 {
-	[lock release];
-	[monitors release];
+	
+	
 
-	[super dealloc];
+	
 }
 
 
@@ -56,7 +56,7 @@
 
 		NSString *display_name = NSLocalizedString(@"(Unnamed display)", "String for unnamed monitors");
 		io_service_t dev = [CPSystemInfo IOServicePortFromCGDisplayID:display_id];
-		NSDictionary *dict = (NSDictionary *) IODisplayCreateInfoDictionary(dev, kIODisplayOnlyPreferredName);
+		NSDictionary *dict = CFBridgingRelease(IODisplayCreateInfoDictionary(dev, kIODisplayOnlyPreferredName));
 		if (!dict) {
 			NSLog(@"%@ >> Couldn't get info about display with ID 0x%08x!", [self class], display_id);
 			continue;
@@ -84,7 +84,7 @@
 		[display_array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 			[display_serial stringValue], @"serial", display_name, @"name", nil]];
 
-		[dict release];
+		
 	}
 
 	[lock lock];

@@ -32,15 +32,15 @@
 }
 
 - (void) dealloc {
-	[url release];
 	
-	[super dealloc];
+	
+	
 }
 
 - (NSMutableDictionary *) dictionary {
 	NSMutableDictionary *dict = [super dictionary];
 	
-	[dict setObject:[[url copy] autorelease] forKey: @"parameter"];
+	[dict setObject:[url copy] forKey: @"parameter"];
 	
 	return dict;
 }

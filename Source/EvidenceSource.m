@@ -82,7 +82,7 @@
 
 + (NSPanel *)getPanelFromNibNamed:(NSString *)name instantiatedWithOwner:(id)owner {
 	// load nib
-	NSNib *nib = [[[NSNib alloc] initWithNibNamed:name bundle:nil] autorelease];
+	NSNib *nib = [[NSNib alloc] initWithNibNamed:name bundle:nil];
 	if (!nib) {
 		NSLog(@"%@ >> failed loading nib named '%@'!", [self class], name);
 		return nil;
@@ -117,9 +117,9 @@
         return nil;
     }
     
-    panel = [[[self class] getPanelFromNibNamed:name instantiatedWithOwner:self] retain];
+    panel = [[self class] getPanelFromNibNamed:name instantiatedWithOwner:self];
     if (!panel) {
-        [self release];
+        
         return nil;
     }
 
@@ -130,13 +130,13 @@
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	[panel release];
+	
 
 	if (oldDescription) {
-		[oldDescription release];
+		
     }
 
-	[super dealloc];
+	
 }
 
 
@@ -211,7 +211,7 @@
 	[contextInfo setTarget:callbackObject];
 
 	[window beginSheet:panel completionHandler:^(NSModalResponse returnCode) {
-        [self sheetDidEnd:panel returnCode:returnCode contextInfo:contextInfo];
+        [self sheetDidEnd:panel returnCode:returnCode contextInfo:(__bridge void *)contextInfo];
     }];
 }
 
@@ -230,7 +230,7 @@
 // Private
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
 {
-    NSInvocation *inv = (NSInvocation *) contextInfo;
+    NSInvocation *inv = (__bridge NSInvocation *) contextInfo;
 
     if (returnCode == NSModalResponseOK) {
         NSDictionary *dict = [self readFromPanel];
@@ -238,7 +238,7 @@
         [inv invoke];
     }
 
-	[inv release];
+	
 }
 
 - (NSMutableDictionary *)readFromPanel
@@ -270,12 +270,12 @@
 	}
 
 	// Hang on to custom descriptions
-	[oldDescription autorelease];
+	oldDescription;
 	oldDescription = nil;
 	if ([dict objectForKey:@"description"]) {
 		NSString *desc = [dict valueForKey:@"description"];
 		if (desc && ([desc length] > 0))
-			oldDescription = [desc retain];
+			oldDescription = desc;
 	}
     
     if ([dict objectForKey:@"negate"]) {
@@ -296,14 +296,14 @@
     if ([rulesThatBelongToThisEvidenceSource count] > 0)
         [rulesThatBelongToThisEvidenceSource removeAllObjects];
 
-    NSMutableArray *tmp = [[[NSMutableArray alloc] init] autorelease];
+    NSMutableArray *tmp = [[NSMutableArray alloc] init];
     [tmp addObjectsFromArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"Rules"]];
     
     NSDictionary *currentRule;
 
     for (NSUInteger i = 0; i < [tmp count]; i++) {
         currentRule = [tmp objectAtIndex:i];
-        NSString *currentType = [[[NSString alloc] initWithString:[currentRule valueForKey:@"type"]] autorelease];
+        NSString *currentType = [[NSString alloc] initWithString:[currentRule valueForKey:@"type"]];
         
         if ([currentType isEqualToString:[[self typesOfRulesMatched] objectAtIndex:0]]) {
             [rulesThatBelongToThisEvidenceSource addObject:currentRule];
@@ -514,7 +514,7 @@
                     continue;
                 }
                 [srcList addObject:src];
-                [src release];
+                
             }
         }
     }
@@ -528,10 +528,10 @@
 - (void)dealloc {
     [self stopAllRunningEvidenceSources];
 
-    [enabledSourcesForRuleTypes release];
-	[sources release];
+    
+	
 
-	[super dealloc];
+	
 }
 
 /**
@@ -682,10 +682,10 @@
 			[it setAction:@selector(addRule:)];
 			[it setRepresentedObject:@[src, type]];
 			[submenu addItem:it];
-            [it release];
+            
 		}
 		[item setSubmenu:submenu];
-        [submenu release];
+        
 	} else {
 		[item setTarget:prefsWindowController];
 		[item setAction:@selector(addRule:)];

@@ -25,7 +25,7 @@ static NSString * const kWiFiLocationDeniedNotifiedKey = @"WiFiLocationAuthoriza
 static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info) {
     if (dispatch_get_specific(queueIsStopped) != queueIsStopped) {
         @autoreleasepool {
-            [(WiFiEvidenceSourceCoreWLAN *) info getInterfaceStateInfo];
+            [(__bridge WiFiEvidenceSourceCoreWLAN *) info getInterfaceStateInfo];
         }
     }
 }
@@ -81,16 +81,16 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 - (void)dealloc {
     [self doStop];
 
-    [locationAuthManager release];
+    
     locationAuthManager = nil;
 
-    [_networkSSIDs release];
-    [_networkBSSIDs release];
-    [_currentInterface release];
-    [_interfaceBSDName release];
-    [_interfaceData release];
+    
+    
+    
+    
+    
 
-    [super dealloc];
+    
 }
 
 + (BOOL) isEvidenceSourceApplicableToSystem {
@@ -166,7 +166,6 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
             dispatch_resume(serialQueue);
         }
         
-        dispatch_release(serialQueue);
         serialQueue = NULL;
     }
     
@@ -175,7 +174,7 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
         store = NULL;
     }
 
-    [locationAuthManager release];
+    
     locationAuthManager = nil;
     didLogLocationDeniedGuidance = NO;
 
@@ -394,7 +393,6 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 - (void)stopUpdateLoop:(BOOL)forceUpdate {
     if (pollingTimer) {
         dispatch_source_cancel(pollingTimer);
-        dispatch_release(pollingTimer);
         pollingTimer = NULL;
 
         if (forceUpdate) {
@@ -440,7 +438,7 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 }
 
 - (BOOL)registerForAsyncNotifications {
-	SCDynamicStoreContext ctxt = {0, self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
+	SCDynamicStoreContext ctxt = {0, (__bridge void *)self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
 	store = SCDynamicStoreCreate(NULL, CFSTR("ControlPlane"), linkDataChanged, &ctxt);
     if (!store) {
         return NO;
@@ -451,7 +449,7 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 
 	NSArray *keys = @[ [NSString stringWithFormat:@"State:/Network/Interface/%@/AirPort", self.interfaceBSDName],
                        [NSString stringWithFormat:@"State:/Network/Interface/%@/Link", self.interfaceBSDName] ];
-	return SCDynamicStoreSetNotificationKeys(store, (CFArrayRef) keys, NULL);
+	return SCDynamicStoreSetNotificationKeys(store, (__bridge CFArrayRef) keys, NULL);
 }
 
 #ifdef DEBUG_MODE
@@ -466,13 +464,13 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 - (void)getInterfaceStateInfo {
     NSDictionary *currentData = nil;
 
-    currentData = SCDynamicStoreCopyValue(store, (CFStringRef)[NSString stringWithFormat:@"State:/Network/Interface/%@/Link", self.interfaceBSDName]);
+    currentData = CFBridgingRelease(SCDynamicStoreCopyValue(store, (__bridge CFStringRef)[NSString stringWithFormat:@"State:/Network/Interface/%@/Link", self.interfaceBSDName]));
     [self setLinkActive:[[currentData valueForKey:@"Active"] boolValue]];
-    [currentData release];
+    
 
-    currentData = SCDynamicStoreCopyValue(store, (CFStringRef)[NSString stringWithFormat:@"State:/Network/Interface/%@/AirPort", self.interfaceBSDName]);
+    currentData = CFBridgingRelease(SCDynamicStoreCopyValue(store, (__bridge CFStringRef)[NSString stringWithFormat:@"State:/Network/Interface/%@/AirPort", self.interfaceBSDName]));
     [self setInterfaceData:currentData];
-    [currentData release];
+    
 
 #ifdef DEBUG_MODE
     [self dumpData];

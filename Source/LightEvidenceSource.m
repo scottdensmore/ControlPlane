@@ -54,7 +54,7 @@ enum {
 }
 
 - (void)dealloc {
-	[super dealloc];
+	
 }
 
 - (BOOL)openAppleLMUController {
@@ -185,7 +185,7 @@ enum {
 + (BOOL) isEvidenceSourceApplicableToSystem {
     LightEvidenceSource *les = [[LightEvidenceSource alloc] init];
     BOOL test = [les openAppleLMUController];
-    [les release];
+    
     
     return test;
 }

@@ -44,15 +44,15 @@
 
 - (void)dealloc
 {
-    [destinationVolumePath release];
-	[super dealloc];
+    
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	NSMutableDictionary *dict = [super dictionary];
     
-	[dict setObject:[[destinationVolumePath copy] autorelease] forKey:@"parameter"];
+	[dict setObject:[destinationVolumePath copy] forKey:@"parameter"];
     
 	return dict;
 }
@@ -94,7 +94,7 @@
 - (id)initWithOption:(NSString *)option
 {
 	self = [super init];
-	[destinationVolumePath autorelease];
+	destinationVolumePath;
 	destinationVolumePath = [option copy];
 	return self;
 }

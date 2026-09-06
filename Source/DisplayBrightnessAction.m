@@ -50,15 +50,15 @@
 }
 
 - (void) dealloc {
-	[brightnessText release];
 	
-	[super dealloc];
+	
+	
 }
 
 - (NSMutableDictionary *) dictionary {
 	NSMutableDictionary *dict = [super dictionary];
 	
-	[dict setObject: [[brightnessText copy] autorelease] forKey: @"parameter"];
+	[dict setObject: [brightnessText copy] forKey: @"parameter"];
 	
 	return dict;
 }

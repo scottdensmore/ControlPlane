@@ -44,7 +44,7 @@
     devicesRegisteredForDisconnectNotices = [[NSMutableArray alloc] init];
     
     // IOBluetoothDeviceInquiry object, used with found devices
-	inq = [[IOBluetoothDeviceInquiry inquiryWithDelegate:self] retain];
+	inq = [IOBluetoothDeviceInquiry inquiryWithDelegate:self];
 	[inq setUpdateNewDeviceNames:TRUE];
 	[inq setInquiryLength:6];
 
@@ -67,11 +67,11 @@
 #ifdef DEBUG_MODE
     DSLog(@"in dealloc");
 #endif
-	[lock release];
-	[devices release];
-	[inq release];
+	
+	
+	
 
-	[super dealloc];
+	
 }
 
 
@@ -116,11 +116,11 @@
 #ifdef DEBUG_MODE
     DSLog(@"setting 5 second timer to register for bluetooth connection notifications");
 #endif
-    registerForNotificationsTimer = [[NSTimer scheduledTimerWithTimeInterval: (NSTimeInterval) 5
+    registerForNotificationsTimer = [NSTimer scheduledTimerWithTimeInterval: (NSTimeInterval) 5
 																	  target: self
 																	selector: @selector(registerForNotifications:)
 																	userInfo: nil
-																	 repeats: NO] retain];
+																	 repeats: NO];
 
     // we now mark the evidence source as running
 	running = YES;
@@ -221,7 +221,7 @@
 	}
 	//[lock unlock];
     
-    [tmp release];
+    
 	return match;
 }
 
@@ -517,13 +517,13 @@
 		[dev setValue:expires forKey:@"expires"];
 	} else {
 		// Insert
-		NSString *mac = [[[device addressString] copy] autorelease];
+		NSString *mac = [[device addressString] copy];
 		NSString *vendor = [[self class] vendorByMAC:mac];
         
 		dev = [NSMutableDictionary dictionary];
 		[dev setValue:mac forKey:@"mac"];
 		if ([device name])
-			[dev setValue:[[[device name] copy] autorelease] forKey:@"device_name"];
+			[dev setValue:[[device name] copy] forKey:@"device_name"];
 		if (vendor)
 			[dev setValue:vendor forKey:@"vendor_name"];
 		[dev setValue:expires forKey:@"expires"];

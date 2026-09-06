@@ -106,8 +106,8 @@
 - (IBAction)browseForScript:(id)sender;
 
 
-@property (assign) IBOutlet NSString *currentFileName;
-@property (assign) IBOutlet NSString *scriptInterval;
+@property (strong) IBOutlet NSString *currentFileName;
+@property (strong) IBOutlet NSString *scriptInterval;
 
 
 

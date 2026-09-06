@@ -18,7 +18,6 @@
 #import <IOKit/pwr_mgt/IOPMLib.h>
 #import <IOKit/IOMessage.h>
 #import <IOKit/ps/IOPowerSources.h>
-#import <libkern/OSAtomic.h>
 
 
 // needed for sleep callback

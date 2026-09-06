@@ -32,16 +32,16 @@
 
 - (void)dealloc
 {
-	[path release];
+	
 
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	NSMutableDictionary *dict = [super dictionary];
 
-	[dict setObject:[[path copy] autorelease] forKey:@"parameter"];
+	[dict setObject:[path copy] forKey:@"parameter"];
 
 	return dict;
 }
@@ -86,7 +86,7 @@
 - (id)initWithFile:(NSString *)file
 {
 	self = [super init];
-	[path release];
+	
 	path = [file copy];
 	return self;
 }
