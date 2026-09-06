@@ -35,7 +35,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | Suite | Behavior |
 | :--- | :--- |
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
-| `CPMenuBarImageTests` | Menu-bar template image flag + LSUIElement activation source checks (#89) |
+| `CPMenuBarImageTests` | Menu-bar template prep (#89); Asset Catalog template/brand/AppIcon + button API checks (#32) |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
@@ -78,14 +78,19 @@ Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `Contro
 4. Force a context from the menu; confirm menu bar label/icon updates.
 5. Enable **Hide from status bar**; confirm icon reappears after relaunch.
 
-### Tahoe / Liquid Glass (#89)
+### Tahoe / Liquid Glass (#89 / #32)
 
 On macOS 26 with the default translucent menu bar:
 
-1. Confirm the status-item icon remains readable (template rendering).
+1. Confirm the status-item icon remains readable (Asset Catalog `cp-icon` + template rendering).
 2. Toggle System Settings → Appearance / wallpaper contrast; icon should stay usable.
-3. Open **Preferences** and **About** from the status menu; windows must activate and accept input.
-4. If context icon colors look washed out on Liquid Glass, track polish under #32 (Asset Catalog / SF Symbols)—do not block #89.
+3. Open **Preferences** and **About** from the status menu; windows must activate and accept input; About should show the colored `ControlPlane` brand image (not a washed-out template).
+4. Toggle menu-bar display prefs (icon / context / both) and **Hide from status bar**; confirm behavior is unchanged.
+
+### Deferred (out of scope for #32)
+
+- SwiftUI `MenuBarExtra` host — would risk ObjC `CPController` lifecycle / evidence wiring; stay on `NSStatusItem`.
+- SF Symbols for the status item — brand glyph already ships as template PNGs in `Images.xcassets`; revisit only if artwork needs redesign.
 
 ## Manual Wi‑Fi + Location TCC probe (#84, Tahoe)
 
