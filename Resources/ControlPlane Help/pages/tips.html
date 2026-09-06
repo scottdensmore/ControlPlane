@@ -68,15 +68,9 @@ end tell
 		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets the Focus you want
 		(for example Do Not Disturb or Work). Name it something memorable, such as
 		<em>Enable Work Focus</em>.</li>
-		<li>Save a shell script, for example <tt>~/bin/enable-work-focus.sh</tt>:
-<pre>
-#!/bin/bash
-shortcuts run "Enable Work Focus"
-</pre>
-		</li>
-		<li>Make the script executable (<tt>chmod +x ~/bin/enable-work-focus.sh</tt>).</li>
-		<li>In ControlPlane, add a <em>ShellScript</em> arrival action on the context and
-		select that script as the parameter.</li>
+		<li>In ControlPlane, add a <em>Run Shortcut</em> arrival action on the context and
+		enter that exact Shortcut name (or its identifier from
+		<tt>shortcuts list --show-identifiers</tt>) as the parameter.</li>
 		</ol>
 		</p>
 		<p>
@@ -92,15 +86,8 @@ shortcuts run "Enable Work Focus"
 		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets Bluetooth
 		on or off. Name it something memorable, such as
 		<em>Toggle Bluetooth</em>.</li>
-		<li>Save a shell script, for example <tt>~/bin/toggle-bluetooth.sh</tt>:
-<pre>
-#!/bin/bash
-shortcuts run "Toggle Bluetooth"
-</pre>
-		</li>
-		<li>Make the script executable (<tt>chmod +x ~/bin/toggle-bluetooth.sh</tt>).</li>
-		<li>In ControlPlane, add a <em>ShellScript</em> arrival action on the context and
-		select that script as the parameter.</li>
+		<li>In ControlPlane, add a <em>Run Shortcut</em> arrival action on the context and
+		enter <em>Toggle Bluetooth</em> (or the identifier) as the parameter.</li>
 		</ol>
 		</p>
 		<p>

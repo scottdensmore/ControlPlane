@@ -15,7 +15,7 @@
     // Classic Do Not Disturb via com.apple.notificationcenterui prefs +
     // launchctl stop of notificationcenterui.agent has been broken since Focus
     // replaced DND (Monterey+). Do not write those prefs; use a Shortcuts-based
-    // Focus toggle via ShellScript instead (see Help).
+    // Focus toggle via Run Shortcut instead (see Help).
     return NO;
 }
 
@@ -30,8 +30,8 @@
     if (errorString != NULL) {
         *errorString = NSLocalizedString(
             @"Notification Center Alerts / Do Not Disturb cannot be toggled on this version of macOS. "
-            @"Create a Shortcut that sets Focus, then run it with a ShellScript action "
-            @"(for example: shortcuts run \"Your Focus Shortcut\").",
+            @"Create a Shortcut that sets Focus, then use the Run Shortcut action "
+            @"(enter the Shortcut name, for example \"Your Focus Shortcut\").",
             @"Error when ToggleNotificationCenterAlertsAction runs on modern macOS");
     }
     return NO;
@@ -41,7 +41,7 @@
 	return NSLocalizedString(@"The parameter for ToggleNotificationCenterAlerts actions is either \"1\" "
                              "or \"0\", depending on whether you want Notification Center Alerts "
                              "turned on or off. This action is not available on modern macOS; "
-                             "use a Shortcuts Focus toggle via a ShellScript action instead.", @"");
+                             "use the Run Shortcut action with a Focus Shortcut instead.", @"");
 }
 
 + (NSString *) creationHelpText {

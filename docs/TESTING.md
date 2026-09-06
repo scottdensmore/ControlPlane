@@ -44,6 +44,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
+| `RunShortcutActionTests` | Run Shortcut (#34) type map, applicability gate, empty-name failure |
 | `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
 | `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + Toggle Bluetooth + TM Destination + Network Location/VPN/Firewall Rule + Notification Center Alerts/DND gated; clear execute failures |
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
@@ -103,3 +104,13 @@ Steps: enable Wi‑Fi evidence; toggle Location for ControlPlane in System Setti
 - Promote `ControlPlaneUITests` from quarantine to blocking CI when stable on `macOS-16` runners
 
 Do not expand host-based app tests until LaunchAction malloc/`libgmalloc` inheritance is kept off the TestAction (`shouldUseLaunchSchemeArgsEnv=NO`).
+
+
+### Run Shortcut (#34)
+
+1. Confirm `/usr/bin/shortcuts` exists (`which shortcuts`).
+2. In Shortcuts, create a shortcut that shows a notification (e.g. **CP Test Notify**).
+3. Preferences → Actions → add **Run Shortcut**, parameter `CP Test Notify`, arrival on a test context.
+4. Force that context from the status menu; confirm the Shortcut runs and ControlPlane does not error.
+5. Clear the parameter / use a blank name and trigger — confirm a clear failure message.
+6. Optional: `shortcuts list --show-identifiers` and run by UUID via the same action.
