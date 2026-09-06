@@ -154,7 +154,6 @@
 		DA07C11018FE04A3008FE8B5 /* ContextEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA07C10F18FE04A3008FE8B5 /* ContextEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		DA0CAE6516C4813600EDE2C5 /* PreventDisplaySleepAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0CAE6416C4813600EDE2C5 /* PreventDisplaySleepAction.m */; };
 		DA0E648615EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0E648515EC665000E77ABF /* AttachedPowerAdapterEvidenceSource.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
-		DA16392613D4B14A00E3F421 /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = DA16392513D4B14A00E3F421 /* dsa_pub.pem */; };
 		DA2479AC1C6647E900063E8E /* Sparkle.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DA2479B21C664CEC00063E8E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D20720E0B86AB0000D61A9E /* Sparkle.framework */; };
 		DA2523BD1968601400F717FC /* ConnectBluetoothDeviceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */; };
@@ -630,7 +629,6 @@
 		DA146F7D143F3C4000906DBF /* it */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = it; path = it.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
 		DA146F7E143F3C4000906DBF /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "da-DK"; path = "da-DK.lproj/CoreLocationRule.xib"; sourceTree = "<group>"; };
 		DA146F7F143F3C4000906DBF /* de */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = de; path = de.lproj/CoreLocationRule.xib; sourceTree = "<group>"; };
-		DA16392513D4B14A00E3F421 /* dsa_pub.pem */ = {isa = PBXFileReference; lastKnownFileType = text; name = dsa_pub.pem; path = Resources/dsa_pub.pem; sourceTree = "<group>"; };
 		DA2523BB1968601400F717FC /* ConnectBluetoothDeviceAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectBluetoothDeviceAction.h; path = Source/ConnectBluetoothDeviceAction.h; sourceTree = "<group>"; };
 		DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConnectBluetoothDeviceAction.m; path = Source/ConnectBluetoothDeviceAction.m; sourceTree = "<group>"; };
 		DA2B437F152161C800E94A1D /* ToggleTFTPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleTFTPAction.h; path = Source/ToggleTFTPAction.h; sourceTree = "<group>"; };
@@ -1051,7 +1049,6 @@
 				DDE1B067140438DB006564A6 /* ControlPlane.sdef */,
 				DDF4E594141588E80028DF4A /* CoreLocationMap.html */,
 				DA4A629413E25C9D00CE976F /* Credits.html */,
-				DA16392513D4B14A00E3F421 /* dsa_pub.pem */,
 				8D3A3D5E0C012564008EBF2A /* EvidenceSourcesPrefs.png */,
 				96454D3C18C3E6BE004F64E7 /* EvidenceSourcesPrefs@2x.png */,
 				8D4DBDC20BE1E3C00024DEA0 /* gear.png */,
@@ -1692,7 +1689,6 @@
 			files = (
 				DAA26B1517AB696100C585CF /* HostAvailability.xib in Resources */,
 				DA4A629513E25C9D00CE976F /* Credits.html in Resources */,
-				DA16392613D4B14A00E3F421 /* dsa_pub.pem in Resources */,
 				DA78A07D1C721FB100D4D0B2 /* enable_screensaver.sh in Resources */,
 				8D1A455B0BA00DE2004A6BC4 /* minus-8.png in Resources */,
 				96454D4418C3E6BE004F64E7 /* RulesPrefs@2x.png in Resources */,

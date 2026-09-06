@@ -36,10 +36,23 @@ test -n "$APP_DEBUG"
 echo "==> Archs (Debug)"
 lipo -archs "$APP_DEBUG/Contents/MacOS/ControlPlane"
 
-SPARKLE_DEBUG="$APP_DEBUG/Contents/Frameworks/Sparkle.framework/Versions/Current/Sparkle"
+SPARKLE_FW="$APP_DEBUG/Contents/Frameworks/Sparkle.framework"
+SPARKLE_DEBUG="$SPARKLE_FW/Versions/Current/Sparkle"
 if [[ -f "$SPARKLE_DEBUG" ]]; then
   echo "==> Sparkle archs (Debug bundle)"
   lipo -archs "$SPARKLE_DEBUG"
+  SPARKLE_VER=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' \
+    "$SPARKLE_FW/Versions/Current/Resources/Info.plist")
+  echo "==> Sparkle version (Debug bundle): $SPARKLE_VER"
+  case "$SPARKLE_VER" in
+    2.*) ;;
+    *) echo "ERROR: expected Sparkle 2.x, got $SPARKLE_VER" >&2; exit 1 ;;
+  esac
+  if /usr/libexec/PlistBuddy -c 'Print :SUPublicDSAKeyFile' "$APP_DEBUG/Contents/Info.plist" 2>/dev/null; then
+    echo "ERROR: SUPublicDSAKeyFile still present in app Info.plist" >&2
+    exit 1
+  fi
+  echo "Sparkle: no SUPublicDSAKeyFile in app Info.plist (ok)"
 fi
 
 if [[ "$SKIP_RELEASE" != "1" ]]; then
