@@ -204,8 +204,7 @@
         <h2><em>Firewall Rule</em> actions</h2>
         <p>Actions of type <em>FirewallRule</em> are not available on modern macOS.
         Per-rule firewall preferences from older OS X releases are no longer supported.
-        Use <em>Toggle Firewall</em> to enable or disable the application firewall, or
-        configure rules in System Settings → Network → Firewall.
+        Configure firewall settings in System Settings → Network → Firewall.
         </p>
 
         <h2><em>Toggle Notification Center Alerts</em></h2>
@@ -217,10 +216,17 @@
         </p>
         
         <h2><em>Toggle Printer Sharing</em> action</h2>
-        <p>Toggle Printer Sharing</p>
+        <p><strong>Unsupported on modern macOS (15/16).</strong> Printer Sharing
+        toggles require the privileged helper and are not reliable on current
+        macOS releases. Prefer System Settings → General → Sharing, or a
+        <em>ShellScript</em> action, instead of treating this as a supported
+        ControlPlane action.
+        </p>
 
         <h2><em>Toggle Remote Login</em> action</h2>
-        <p>Allows you to toggle macOS's ssh service (Remote Login)</p>
+        <p>Allows you to toggle macOS's ssh service (Remote Login). This action
+        uses the privileged helper when first needed.
+        </p>
 
         <h2><em>Toggle Time Machine</em> action</h2>
         <p>Toggles Time Machine on or off.  This action requires additional privileges and when first invoked will ask you to install a helper application.  Simply click install to install the helper application.</p>
@@ -229,7 +235,7 @@
         <p>Unmounts a given disk</p>
 
 	<h2><em>VPN</em> actions</h2>
-	<p><strong>Unsupported on macOS 15.</strong> Actions of type
+	<p><strong>Unsupported on modern macOS (15/16).</strong> Actions of type
 	<em>VPN</em> are not available on modern macOS. ControlPlane does not
 	connect or disconnect VPN sessions in this release. Use System Settings
 	→ VPN, or Shortcuts, instead.
@@ -237,9 +243,9 @@
 
 		<hr />
 
-		<h2>Unavailable on macOS 15</h2>
+		<h2>Unavailable on modern macOS (15/16)</h2>
 		<p>The following actions are retired or gated and are
-		<strong>not supported</strong> on macOS 15. They are listed here so
+		<strong>not supported</strong> on macOS 15/16. They are listed here so
 		older documentation and configs are not mistaken for current
 		guidance:
 		</p>
@@ -256,6 +262,7 @@
 			<li><em>Network Location</em> — unsupported</li>
 			<li><em>VPN</em> — unsupported</li>
 			<li><em>Toggle Firewall</em> / <em>Firewall Rule</em> — unsupported</li>
+			<li><em>Toggle Printer Sharing</em> — unsupported</li>
 			<li><em>Time Machine Destination</em> (Tedium) — unsupported</li>
 		</ul>
 

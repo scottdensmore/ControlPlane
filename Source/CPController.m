@@ -98,6 +98,7 @@
 
 - (void)setStatusTitle:(NSString *)title;
 - (void)showInStatusBar:(id)sender;
+- (void)configureStatusMenuAccessibility;
 - (void)hideFromStatusBar:(NSTimer *)theTimer;
 - (void)doHideFromStatusBar:(BOOL)forced;
 - (void)setMenuBarImage:(NSImage *)imageName;
@@ -780,6 +781,9 @@ static NSSet *sharedActiveContexts = nil;
 	// imagery via prepareImageForMenubar: / CPMenuBarImage (#89 / #32).
 	sbItem.button.imagePosition = NSImageLeft;
 	sbItem.button.appearsDisabled = NO;
+	sbItem.button.accessibilityLabel = NSLocalizedString(@"ControlPlane", @"VoiceOver label for status item");
+	sbItem.button.accessibilityIdentifier = @"status.item.controlplane";
+	[self configureStatusMenuAccessibility];
 
     [self updateMenuBarImage];
 
@@ -788,6 +792,39 @@ static NSSet *sharedActiveContexts = nil;
     }
 
 	[sbItem setMenu:sbMenu];
+}
+
+- (void)configureStatusMenuAccessibility {
+	if (!sbMenu) {
+		return;
+	}
+	[sbMenu setAccessibilityLabel:NSLocalizedString(@"ControlPlane", @"VoiceOver label for status menu")];
+	[sbMenu setAccessibilityIdentifier:@"status.menu.controlplane"];
+
+	for (NSMenuItem *item in sbMenu.itemArray) {
+		if ([item isSeparatorItem]) {
+			continue;
+		}
+		NSString *actionName = item.action ? NSStringFromSelector(item.action) : @"";
+		NSString *identifier = nil;
+		if ([actionName isEqualToString:@"runPreferences:"]) {
+			identifier = @"status.menu.preferences";
+		} else if ([actionName isEqualToString:@"runAbout:"]) {
+			identifier = @"status.menu.about";
+		} else if ([actionName isEqualToString:@"terminate:"]) {
+			identifier = @"status.menu.quit";
+		} else if ([actionName isEqualToString:@"showHelp:"]) {
+			identifier = @"status.menu.help";
+		} else if ([actionName isEqualToString:@"checkForUpdates:"]) {
+			identifier = @"status.menu.updates";
+		}
+		if (identifier) {
+			[item setAccessibilityIdentifier:identifier];
+			if (item.title.length > 0) {
+				[item setAccessibilityLabel:item.title];
+			}
+		}
+	}
 }
 
 - (void)hideFromStatusBar:(NSTimer *)theTimer {
