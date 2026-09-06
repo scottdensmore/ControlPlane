@@ -11,6 +11,7 @@
 #import "ToggleTFTPAction.h"
 #import "ToggleWebSharingAction.h"
 #import "ScreenSaverPasswordAction.h"
+#import "ScreenSaverTimeAction.h"
 #import "ToggleNaturalScrollingAction.h"
 #import "TimeMachineDestinationAction.h"
 #import "NetworkLocationAction.h"
@@ -60,6 +61,30 @@
     XCTAssertFalse([action execute:&error]);
     XCTAssertNotNil(error);
     XCTAssertTrue([error rangeOfString:@"Lock Screen"].location != NSNotFound);
+}
+
+
+- (void)testScreenSaverTimeActionIsNotApplicableOnTahoe {
+    // #120: com.apple.screensaver idleTime + loginwindow.notify are unverified on
+    // modern macOS without interactive System Settings confirmation; gate pending
+    // a public API. Prefer System Settings → Screen Saver / Lock Screen or Run Shortcut.
+    XCTAssertFalse([ScreenSaverTimeAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyScreenSaverTimeActionFailsClearly {
+    ScreenSaverTimeAction *action = [[ScreenSaverTimeAction alloc] initWithOption:@"15"];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Screen Saver"].location != NSNotFound ||
+                  [error rangeOfString:@"screen saver"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound ||
+                  [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
+
+- (void)testScreenSaverTimeLimitedOptionsStillEnumeratedWhenGated {
+    // Keep option catalog for legacy configs; applicability hides the action in UI.
+    XCTAssertGreaterThan([ScreenSaverTimeAction limitedOptions].count, 0u);
 }
 
 // #29: FireWireEvidenceSource now implements +isEvidenceSourceApplicableToSystem to gate

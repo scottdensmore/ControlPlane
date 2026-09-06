@@ -118,8 +118,11 @@
         <p>Starts the screen saver</p>
 
 	<h2><em>Screen Saver Time</em> actions</h2>
-	<p>Actions of type <em>ScreenSaverTime</em> can change the
-	idle time before your screen saver activates.
+	<p><strong>Unavailable on modern macOS.</strong> Actions of type
+	<em>ScreenSaverTime</em> historically changed the idle time before
+	your screen saver activates via <tt>com.apple.screensaver</tt> prefs.
+	That path is gated pending a public API; use System Settings → Screen
+	Saver / Lock Screen, or a <em>Run Shortcut</em> instead.
 	</p>
 
 	<h2><em>ShellScript</em> actions</h2>
@@ -253,6 +256,7 @@
 			<li><em>Lock Keychain</em> — unavailable (deprecated SecKeychain)</li>
 			<li><em>Toggle Natural Scrolling</em> — unavailable</li>
 			<li><em>Screen Saver Password</em> — unavailable</li>
+			<li><em>Screen Saver Time</em> — unavailable</li>
 			<li><em>Toggle Notification Center Alerts</em> (legacy Do Not Disturb) — unavailable</li>
 			<li><em>Network Location</em> — unsupported</li>
 			<li><em>VPN</em> — unsupported</li>

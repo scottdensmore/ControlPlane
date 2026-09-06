@@ -24,4 +24,6 @@
 + (NSArray *)limitedOptions;
 - (id)initWithOption:(NSString *)option;
 
++ (BOOL)isActionApplicableToSystem;
+
 @end
