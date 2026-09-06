@@ -41,6 +41,8 @@
 - (void)resumeRegularUpdatesWithDelay:(int64_t)nanoseconds;
 - (void)forceUpdate;
 
+- (void)installStatusMenuItemsForConfigurationTransferWithTarget:(id)target;
+
 - (NSString*)currentContextAsString;
 + (NSSet *) sharedActiveContexts;
 
