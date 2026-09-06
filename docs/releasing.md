@@ -1,16 +1,17 @@
-# Releasing ControlPlane (macOS-15 sketch)
+# Releasing ControlPlane (macOS-16 sketch)
 
-This is a practical release checklist for the ObjC fork. Signing identities, entitlements, SMJobBless topology, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here.
+This is a practical release checklist for the ObjC fork on the Tahoe / `macOS-16` line. Signing identities, entitlements, SMJobBless topology, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here.
 
-CI (`.github/workflows/ci.yml`) only proves unsigned Debug compile + `ControlPlaneTests`. A shippable build is always a **local signed archive**.
+CI (`.github/workflows/ci.yml`) only proves unsigned Debug compile + `ControlPlaneTests` on `macos-26` runners. A shippable build is always a **local signed archive**.
 
 ## Preconditions
 
-- [ ] On the correct tip (`macOS-15` for Sequoia line work, or `master` after an OS-line merge).
+- [ ] On the correct tip (`macOS-16` for Tahoe line work, `macOS-15` for Sequoia maintenance, or `master` after an OS-line merge).
 - [ ] Version bump intentional (`MARKETING_VERSION` / related plists)—coordinate with any open versioning issue.
 - [ ] `./scripts/smoke-build.sh` green locally (or at least Debug + `ControlPlaneTests`).
 - [ ] Team ID `27ZDER873F` Developer ID Application identity available (see [signing.md](signing.md)).
 - [ ] Hardened Runtime + entitlements as documented; **no `--deep`** signing (removed; use `CodeSignOnCopy` for Sparkle / XPC / helper).
+- [ ] Host toolchain is Xcode 26+ on macOS 26 Tahoe when cutting a `macOS-16` release.
 
 ## Archive and notarize
 
@@ -35,7 +36,7 @@ codesign -dv --verbose=4 /path/to/ControlPlane.app
 
 - Helper bless in CI (`CODE_SIGNING_ALLOWED=NO` cannot bless).
 - Migrating SMJobBless → `SMAppService` (later OS line).
-- ~~Raising `MACOSX_DEPLOYMENT_TARGET` to 15.x~~ — done on this branch (`15.0`; see #40).
+- Raising `MACOSX_DEPLOYMENT_TARGET` to **16.0** — deferred to #82; this branch remains at **15.0**.
 
 ## Related docs
 

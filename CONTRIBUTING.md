@@ -6,9 +6,9 @@ Coding agents should follow **[AGENTS.md](AGENTS.md)** as the single source of t
 
 ## Pick an issue
 
-1. Prefer issues labeled for the **current OS line** (`macos-15` on branch `macOS-15`).
+1. Prefer issues labeled for the **current OS line** (`macos-16` on branch `macOS-16`; Sequoia maintenance uses `macos-15` / `macOS-15`).
 2. Prefer issues also labeled **`agent-ready`** when using an agent: they should include summary, evidence (paths), tasks, and acceptance criteria so another session can execute without chat history.
-3. Do not pull `macos-16` (or later) scope onto the current branch unless the issue explicitly expands scope.
+3. Do not pull a later OS line’s scope onto the current branch unless the issue explicitly expands scope.
 4. One thin vertical slice per PR—smallest cohesive fix or feature that can be tested and reviewed alone.
 
 ## OS-line branching
@@ -21,9 +21,9 @@ Cut macOS-<N> from master → fix only macos-<N> issues → merge to master when
 
 | Rule | Detail |
 | :--- | :--- |
-| Base branch | OS work from latest `macOS-<N>` (currently `macOS-15`); integrate to `master` only when merging an OS line |
+| Base branch | OS work from latest `macOS-<N>` (currently `macOS-16` / Tahoe); integrate to `master` only when merging an OS line |
 | Never commit | Directly to `master` |
-| Deployment target | Match the branch’s OS line only when intentionally raising it; do not bump “for fun” (15.x bump is out of scope for drive-by docs/PRs) |
+| Deployment target | Match the branch’s OS line only when intentionally raising it; do not bump “for fun” (#82 raises to 16.0 last on this line) |
 | Labels | Set/respect `macos-15`, `macos-16`, … on issues |
 
 ## Local setup
@@ -50,4 +50,4 @@ Signed helper bless and notarization are **not** part of CI—see [docs/signing.
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- Wait for green CI (Debug build + `ControlPlaneTests`); squash short-lived feature branches when merging onto `macOS-15` or `master` as appropriate.
+- Wait for green CI (Debug build + `ControlPlaneTests`); squash short-lived feature branches when merging onto `macOS-16`, `macOS-15`, or `master` as appropriate.
