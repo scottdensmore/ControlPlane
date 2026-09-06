@@ -7,6 +7,7 @@
 //
 
 #import "DefaultBrowserAction.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 @interface DefaultBrowserAction (Private)
 
@@ -75,9 +76,9 @@
         [alert release];
         
         LSSetDefaultHandlerForURLScheme((CFStringRef) @"https", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeHTML, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeURL, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        // Removed kUTTypeFileURL and kUTTypeText registrations to narrow handler claims to browser-specific types only
+        // Narrow browser-document registration (#43): HTML + URL only via UniformTypeIdentifiers.
+        LSSetDefaultRoleHandlerForContentType((CFStringRef) UTTypeHTML.identifier, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
+        LSSetDefaultRoleHandlerForContentType((CFStringRef) UTTypeURL.identifier, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
 
     }
     LSSetDefaultHandlerForURLScheme((CFStringRef) @"http", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
