@@ -3,10 +3,10 @@
 //  ControlPlane
 //
 //  Created by Chris Lundie on 1/May/2014.
+//  Updated for #117: do not cascade through gated Toggle Bluetooth power APIs.
 //
 
 #import "ConnectBluetoothDeviceAction.h"
-#import "ToggleBluetoothAction.h"
 #import <IOBluetooth/IOBluetooth.h>
 
 @interface ConnectBluetoothDeviceAction ()
@@ -56,33 +56,55 @@
   return [NSString stringWithFormat:format, self.deviceAddressString];
 }
 
-- (BOOL)execute:(NSString **)errorString
++ (BOOL)bluetoothRadioPowered
 {
-  ToggleBluetoothAction *toggleAction =
-    [[ToggleBluetoothAction alloc] initWithOption:@YES];
-  NSString *error = nil;
-  BOOL didToggle = [toggleAction execute:&error];
-  if (!didToggle) {
-    NSLog(@"%s Aborting because Bluetooth could not be turned on",
-          __PRETTY_FUNCTION__);
-    *errorString = [error copy];
+  IOBluetoothHostController *controller = [IOBluetoothHostController defaultController];
+  if (!controller) {
     return NO;
   }
-  IOBluetoothDevice *device =
-    [IOBluetoothDevice deviceWithAddressString:self.deviceAddressString];
+  return [controller powerState] == kBluetoothHCIPowerStateON;
+}
+
+- (BOOL)execute:(NSString **)errorString
+{
+  if (![ConnectBluetoothDeviceAction bluetoothRadioPowered]) {
+    if (errorString) {
+      *errorString = NSLocalizedString(
+        @"Bluetooth is off. Turn it on in Control Center or System Settings → Bluetooth "
+        @"(or run a Shortcut that enables Bluetooth), then try Connect Bluetooth Device again. "
+        @"ControlPlane no longer toggles Bluetooth power via private APIs.",
+        @"Error when ConnectBluetoothDeviceAction runs with radio off");
+    }
+    return NO;
+  }
+
+  NSString *address = [self.deviceAddressString stringByTrimmingCharactersInSet:
+    [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  if (address.length == 0) {
+    if (errorString) {
+      *errorString = NSLocalizedString(@"Cannot connect: Bluetooth device address is empty.", @"");
+    }
+    return NO;
+  }
+
+  IOBluetoothDevice *device = [IOBluetoothDevice deviceWithAddressString:address];
   IOReturn ioReturn = [device openConnection];
   if (!device || (ioReturn != kIOReturnSuccess)) {
-    NSLog(@"%1$s Failed to connect to bluetooth device %2$@, return code %3$d",
-          __PRETTY_FUNCTION__, self.deviceAddressString, (int)ioReturn);
+    if (errorString) {
+      *errorString = [NSString stringWithFormat:
+        NSLocalizedString(@"Failed to connect to Bluetooth device '%@'.", @""), address];
+    }
+    return NO;
   }
-  return device && (ioReturn == kIOReturnSuccess);
+  return YES;
 }
 
 + (NSString *)helpText
 {
   return NSLocalizedString(
     @"The parameter for ConnectBluetoothDevice actions is the address of the"
-    @" device.",
+    @" device. Bluetooth must already be powered on (Control Center / System Settings"
+    @" or a Shortcut). ControlPlane does not turn Bluetooth on via private APIs.",
     @"");
 }
 
@@ -98,12 +120,13 @@
   for (IOBluetoothDevice *device in devices) {
     NSString *deviceName = device.nameOrAddress;
     NSString *deviceAddress = device.addressString;
-    if (deviceName && deviceAddress) {
-      [options addObject:@{
-        @"option": [deviceAddress copy],
-        @"description": [deviceName copy],
-      }];
+    if (!deviceAddress) {
+      continue;
     }
+    [options addObject:@{
+      @"option": deviceAddress,
+      @"description": deviceName ?: deviceAddress
+    }];
   }
   return options;
 }
@@ -115,7 +138,7 @@
 
 + (NSString *)menuCategory
 {
-  return NSLocalizedString(@"Networking", @"");
+  return NSLocalizedString(@"Bluetooth", @"");
 }
 
 @end

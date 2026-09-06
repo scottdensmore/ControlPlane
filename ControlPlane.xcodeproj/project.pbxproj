@@ -115,6 +115,8 @@
 		A51TBTA01B51WIRE00000083 /* ToggleBluetoothAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D75A61E0BE6F68B0069DF3F /* ToggleBluetoothAction.m */; };
 		A51DBRA01B51WIRE00000088 /* DisplayBrightnessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD827506141188880098FA6E /* DisplayBrightnessAction.m */; };
 		A51TFWA01B51WIRE00000112 /* ToggleFirewallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE893E514546897005FA13C /* ToggleFirewallAction.m */; };
+		A51LKEY01B51WIRE00000118 /* LockKeychainAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD8274F81411748B0098FA6E /* LockKeychainAction.m */; };
+		A51CBTA01B51WIRE00000117 /* ConnectBluetoothDeviceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2523BC1968601400F717FC /* ConnectBluetoothDeviceAction.m */; };
 		A51TPSA01B51WIRE00000112 /* TogglePrinterSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA49AF6B14C3E0AB00D03D6A /* TogglePrinterSharingAction.m */; };
 		A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; };
 		A51VPNA01B51WIRE00000033 /* VPNAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643DDB0C4F1F0D006D8ECC /* VPNAction.m */; };
@@ -2016,6 +2018,8 @@
 				A51TBTA01B51WIRE00000083 /* ToggleBluetoothAction.m in Sources */,
 				A51DBRA01B51WIRE00000088 /* DisplayBrightnessAction.m in Sources */,
 				A51TFWA01B51WIRE00000112 /* ToggleFirewallAction.m in Sources */,
+				A51LKEY01B51WIRE00000118 /* LockKeychainAction.m in Sources */,
+				A51CBTA01B51WIRE00000117 /* ConnectBluetoothDeviceAction.m in Sources */,
 				A51TPSA01B51WIRE00000112 /* TogglePrinterSharingAction.m in Sources */,
 				A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */,
 				A51NLOC01B51WIRE00000033 /* NetworkLocationAction.m in Sources */,
@@ -2348,6 +2352,8 @@
 					CoreLocation,
 					"-framework",
 					Intents,
+					"-framework",
+					IOBluetooth,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2401,6 +2407,8 @@
 					CoreLocation,
 					"-framework",
 					Intents,
+					"-framework",
+					IOBluetooth,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

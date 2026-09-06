@@ -3,8 +3,6 @@ name: UI tests (quarantine)
 on:
   pull_request:
     branches:
-      - macOS-15
-      - macOS-16
       - master
   workflow_dispatch:
 

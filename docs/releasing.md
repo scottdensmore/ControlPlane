@@ -1,17 +1,17 @@
-# Releasing ControlPlane (macOS-16 sketch)
+# Releasing ControlPlane (macOS 26 / deploy 16.0)
 
-This is a practical release checklist for the ObjC fork on the Tahoe / `macOS-16` line. Signing identities, entitlements, SMJobBless topology, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here.
+This is a practical release checklist for the ObjC fork targeting Tahoe / macOS 26 (`MACOSX_DEPLOYMENT_TARGET` **16.0**). Signing identities, entitlements, SMJobBless topology, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here.
 
 CI (`.github/workflows/ci.yml`) only proves unsigned Debug compile + `ControlPlaneTests` on `macos-26` runners. A shippable build is always a **local signed archive**.
 
 ## Preconditions
 
-- [ ] On the correct tip (`macOS-16` for Tahoe line work, `macOS-15` for Sequoia maintenance, or `master` after an OS-line merge).
+- [ ] On the correct tip (`master` for current Tahoe work).
 - [ ] Version bump intentional (`MARKETING_VERSION` / related plists)—coordinate with any open versioning issue.
 - [ ] `./scripts/smoke-build.sh` green locally (or at least Debug + `ControlPlaneTests`).
 - [ ] Team ID `27ZDER873F` Developer ID Application identity available (see [signing.md](signing.md)).
 - [ ] Hardened Runtime + entitlements as documented; **no `--deep`** signing (removed; use `CodeSignOnCopy` for Sparkle / XPC / helper).
-- [ ] Host toolchain is Xcode 26+ on macOS 26 Tahoe when cutting a `macOS-16` release.
+- [ ] Host toolchain is Xcode 26+ on macOS 26 Tahoe when cutting a release.
 - [ ] Maintainer EdDSA key present in Keychain (see [Sparkle / appcast](#sparkle--appcast) below). **Private keys are maintainer secrets**—never commit them or generate them in CI.
 
 ## Archive and notarize
@@ -115,7 +115,7 @@ Legacy `Utilities/make_*_image.sh` scripts no longer call the old Ruby DSA signe
 
 - Helper bless in CI (`CODE_SIGNING_ALLOWED=NO` cannot bless).
 - Migrating SMJobBless → `SMAppService` (later OS line).
-- `MACOSX_DEPLOYMENT_TARGET` is **16.0** on the `macOS-16` line (#82).
+- `MACOSX_DEPLOYMENT_TARGET` is **16.0** on current `master` (#82).
 - Publishing a production appcast or rotating the public marketing feed host (maintainer ops).
 
 ## Related docs
