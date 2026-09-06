@@ -28,8 +28,14 @@
 
 @property (copy,nonatomic,readwrite) NSArray *activeRules;
 
+/// Last rule/evidence diagnostics snapshot for the Diagnostics prefs pane (#35).
+@property (copy,atomic,readonly) NSDictionary *lastDiagnosticsSnapshot;
+
 - (ContextsDataSource *)contextsDataSource;
 - (BOOL)stickyContext;
+
+/// Rebuild diagnostics from current rules, guesses, and evidence (also updates lastDiagnosticsSnapshot).
+- (NSDictionary *)refreshDiagnosticsSnapshot;
 
 - (void)forceSwitch: (id) sender;
 - (IBAction)toggleSticky: (id) sender;

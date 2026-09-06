@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html401/sgml/loosedtd.html">
+<html>
+<head>
+	<title>Diagnostics and logging</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="diagnostics confidence rules logging console">
+	<meta name="description" content="Using ControlPlane Diagnostics to explain context switches and unified logging.">
+	<link media="all" rel="stylesheet" href="../css/topicPage.css" />
+</head>
+<body>
+	<div id="mainbox">
+		<div id="caticon">
+			<img class="icon" src="../gfx/icon.png" alt="ControlPlane Icon" />
+		</div>
+		<div id="pagetitle">
+			<h1>Diagnostics and logging</h1>
+		</div>
+		<p>The <b>Diagnostics</b> preferences pane shows why ControlPlane prefers one
+		context over another: current context, leading confidence guess, per-rule
+		match state, each rule’s confidence contribution, and a snapshot of enabled
+		evidence sources.
+		</p>
+
+		<h2>Reproducing a mis-switched context</h2>
+		<ol>
+			<li>Create contexts <b>Home</b> and <b>Work</b>.</li>
+			<li>Add a <b>Power</b> rule on Home (parameter Battery) with high confidence
+			(for example 90%).</li>
+			<li>Add a <b>Wi‑Fi</b> rule on Work for your office SSID with lower confidence
+			(for example 55%).</li>
+			<li>Set <b>Confidence required to switch</b> to about 75%.</li>
+			<li>Force <b>Work</b> from the status menu, then unplug AC power (or otherwise
+			match the Battery rule) while still associated with the office network.</li>
+			<li>Open <b>Preferences → Diagnostics</b>. The explanation should prefer
+			<b>Home</b> over current <b>Work</b>, list the matching Power rule as contributing
+			to the leading guess, and show evidence (Power / Wi‑Fi) in the snapshot.</li>
+		</ol>
+
+		<h2>Unified logging</h2>
+		<p>ControlPlane writes to the system unified log with subsystem
+		<code>com.scottdensmore.ControlPlane</code> and categories
+		<code>Evidence</code>, <code>Rules</code>, <code>Actions</code>,
+		<code>Helper</code>, and <code>General</code>.</p>
+		<p>Example:</p>
+		<pre>log stream --predicate 'subsystem == "com.scottdensmore.ControlPlane"' --level debug</pre>
+		<p>The Advanced preferences pane still shows an in-app ring buffer of recent
+		log lines for quick inspection without Console.</p>
+
+		<h2 class="seealso">See also</h2>
+		<p class="seealso">
+			<a href="maths.html">The maths behind ControlPlane</a><br />
+			<a href="advanced.html">Advanced settings</a><br />
+			<a href="rules.html">Configuring Rules</a>
+		</p>
+	</div>
+</body>
+</html>

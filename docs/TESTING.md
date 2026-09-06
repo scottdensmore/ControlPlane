@@ -59,6 +59,9 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
 | `CPHelperCommandRunnerTests` | Helper argv-array runner: no `system()`/`sprintf` in `CPHelperTool.m`; display-sleep validation; fixed firewall/`tmutil`/SMB/remote-login args (#86) |
 | `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
+| `CPConfigTransferTests` | Versioned config export/import round-trip (#35) |
+| `CPDiagnosticsSnapshotTests` | Diagnostics snapshot explains mis-switched context / per-rule contribution (#35) |
+| `DSLoggerTests` | Unified logging subsystem string + categories; ring buffer still captures (#35) |
 
 Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/ControlPlane` and Growl recommendation phrases.
 
@@ -91,6 +94,14 @@ On macOS 26 with the default translucent menu bar:
 2. Toggle System Settings → Appearance / wallpaper contrast; icon should stay usable.
 3. Open **Preferences** and **About** from the status menu; windows must activate and accept input; About should show the colored `ControlPlane` brand image (not a washed-out template).
 4. Toggle menu-bar display prefs (icon / context / both) and **Hide from status bar**; confirm behavior is unchanged.
+
+## Manual Diagnostics + logging probe (#35)
+
+1. Configure conflicting Home/Work rules (Power@Home high confidence, Wi‑Fi@Work lower; min confidence ~75%).
+2. Force Work, then match the Home Power rule; open **Preferences → Diagnostics**.
+3. Confirm the explanation prefers Home, the rules table shows Match / Rule % / Context %, and the evidence snapshot lists running sources.
+4. In Terminal: `log stream --predicate 'subsystem == "com.scottdensmore.ControlPlane"' --level debug` while switching contexts; confirm lines appear (categories Evidence / Rules / Actions / Helper / General).
+5. Optional: Advanced pane still shows the in-app log buffer.
 
 ### Deferred (out of scope for #32)
 

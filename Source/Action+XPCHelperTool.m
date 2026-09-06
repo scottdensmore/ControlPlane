@@ -6,6 +6,7 @@
 //
 
 #import "Action+XPCHelperTool.h"
+#import "DSLogger.h"
 #import "CPHelperToolProtocol.h"
 #import "CPXPCServiceProtocol.h"
 #import "CPAuthorization.h"
@@ -86,7 +87,7 @@
     static dispatch_once_t authOnceToken;
     dispatch_once(&authOnceToken, ^{
         [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-            NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+            DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
             success = NO;
             authOnceToken = 0;
         }] setupAuthorizationRights];
@@ -105,7 +106,7 @@
         // Set up error handling
         helperConnection.invalidationHandler = ^{
             // Connection was invalidated - could attempt to reconnect here
-            NSLog(@"Helper Tool connection invalidated");
+            DSLogHelper(@"Helper Tool connection invalidated");
             helperConnection = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 helperOnceToken = 0; // Allow recreation of connection on next call
@@ -114,7 +115,7 @@
         
         helperConnection.interruptionHandler = ^{
             // Connection was interrupted - could attempt to reconnect here
-            NSLog(@"Helper Tool connection interrupted");
+            DSLogHelper(@"Helper Tool connection interrupted");
         };
         
         [helperConnection resume];
@@ -133,7 +134,7 @@
         // Set up error handling
         xpcConnection.invalidationHandler = ^{
             // Connection was invalidated - could attempt to reconnect here
-            NSLog(@"XPC Service connection invalidated");
+            DSLogHelper(@"XPC Service connection invalidated");
             xpcConnection = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 xpcOnceToken = 0; // Allow recreation of connection on next call
@@ -142,7 +143,7 @@
         
         xpcConnection.interruptionHandler = ^{
             // Connection was interrupted - could attempt to reconnect here
-            NSLog(@"XPC Service connection interrupted");
+            DSLogHelper(@"XPC Service connection interrupted");
         };
         
         [xpcConnection resume];
@@ -160,7 +161,7 @@
     
     if (installedHelperJobData != nil) {
         [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-            NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+            DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
             error = xpcProxyError;
             success = NO;
         }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -180,14 +181,14 @@
     
     if (needToInstall == YES) {
         [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-            NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+            DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
             error = xpcProxyError;
             success = NO;
         }] installHelperToolWithReply:^(NSError * replyError) {
             if (replyError == nil) {
-                NSLog(@"installed helper tool successfuly");
+                DSLogHelper(@"installed helper tool successfully");
             } else {
-                NSLog(@"Failed to install privileged helper: %@", [replyError description]);
+                DSLogHelper(@"Failed to install privileged helper: %@", [replyError description]);
                 error = replyError;
                 success = NO;
             }
@@ -271,7 +272,7 @@
     } else if ([action isEqualToString:kCPHelperDisableRemoteLoginCommand]) {
         result = [self disableRemoteLogin];
     } else {
-        NSLog(@"Unsupported action: %@", action);
+        DSLogHelper(@"Unsupported action: %@", action);
         
         
         return result;
@@ -291,7 +292,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -315,7 +316,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -339,7 +340,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -363,7 +364,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -389,7 +390,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -413,7 +414,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -439,7 +440,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -463,7 +464,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -489,7 +490,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -515,7 +516,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -539,7 +540,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -565,7 +566,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -589,7 +590,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -613,7 +614,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -637,7 +638,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -663,7 +664,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -687,7 +688,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -713,7 +714,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -737,7 +738,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -763,7 +764,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -787,7 +788,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -813,7 +814,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
@@ -837,7 +838,7 @@
     __block BOOL success = YES;
     
     [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-        NSLog(@"Failed to conect to xpc service : %@", [xpcProxyError description]);
+        DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
         error = xpcProxyError;
         success = NO;
     }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
