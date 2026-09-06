@@ -105,6 +105,8 @@
 		9E863206F2BB3BCAC654DD2C /* CPNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */; };
 		A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */; };
 		A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */; };
+		B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */; };
+		B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */; };
 		A51ATRT01B51WIRE00000001 /* ActionTypeRegistryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */; };
 		A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; };
 		A51FWRU01B51WIRE00000033 /* FirewallRuleAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB43560C4DBABD00E71D28 /* FirewallRuleAction.m */; };
@@ -250,6 +252,7 @@
 		DDFF423114156B0A0047D311 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = DDFF423014156B0A0047D311 /* location.png */; };
 		DE02C5D62DC68D440041FA17 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE02C5D22DC67E000041FA17 /* MapKit.framework */; };
 		DE02C5D82DC68DA80041FA17 /* CoreWLAN.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */; };
+		F0NETFW01BUILD00000001 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0NETFW01FILE00000001 /* Network.framework */; };
 		DE06572F2DC6EFFC00156ADD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE06572E2DC6EFFC00156ADD /* AVFoundation.framework */; };
 		DE184AEB2D98C6D30072F8ED /* CPHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AEA2D98C6D30072F8ED /* CPHelperTool.m */; };
 		DE184AF62D98D73A0072F8ED /* CPAuthorization.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AF52D98D73A0072F8ED /* CPAuthorization.m */; };
@@ -424,6 +427,7 @@
 		042739F2DDC950F687D3730B /* DefaultBrowserUTITests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DefaultBrowserUTITests.m; sourceTree = "<group>"; };
 		086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPSystemInfoTests.m; sourceTree = "<group>"; };
 		0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ApplicabilityCharacterizationTests.m; sourceTree = "<group>"; };
+		B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HostAvailabilityRuleMatchTests.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -816,6 +820,7 @@
 		DDFF423014156B0A0047D311 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = location.png; path = Resources/location.png; sourceTree = "<group>"; };
 		DE02C5D22DC67E000041FA17 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreWLAN.framework; path = System/Library/Frameworks/CoreWLAN.framework; sourceTree = SDKROOT; };
+		F0NETFW01FILE00000001 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		DE06572E2DC6EFFC00156ADD /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		DE184AE92D98C6D30072F8ED /* CPHelperTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperTool.h; sourceTree = "<group>"; };
 		DE184AEA2D98C6D30072F8ED /* CPHelperTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperTool.m; sourceTree = "<group>"; };
@@ -885,6 +890,7 @@
 				DD6FCC691413EF6B0095E64F /* CoreLocation.framework in Frameworks */,
 				DAFC0E4514788ACB00DA6139 /* DisplayServices.framework in Frameworks */,
 				DE02C5D82DC68DA80041FA17 /* CoreWLAN.framework in Frameworks */,
+				F0NETFW01BUILD00000001 /* Network.framework in Frameworks */,
 				DE02C5D62DC68D440041FA17 /* MapKit.framework in Frameworks */,
 				DA2479B21C664CEC00063E8E /* Sparkle.framework in Frameworks */,
 				DE06572F2DC6EFFC00156ADD /* AVFoundation.framework in Frameworks */,
@@ -1114,6 +1120,7 @@
 				F0CUSA01FILWIRE000015 /* Intents.framework */,
 				DE87A87F01A87F0000000002 /* UniformTypeIdentifiers.framework */,
 				DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */,
+				F0NETFW01FILE00000001 /* Network.framework */,
 				DE02C5D22DC67E000041FA17 /* MapKit.framework */,
 				DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */,
 				DE99DE3B28C034910014E380 /* Foundation.framework */,
@@ -1140,6 +1147,7 @@
 				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
 				B35DIAG01FILE350000004 /* DSLoggerTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
+				B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
 				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
@@ -1991,6 +1999,8 @@
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
+				B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */,
+				B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */,
 				A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */,
 				A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */,
 				A51SSTA01B51WIRE00000120 /* ScreenSaverTimeAction.m in Sources */,
@@ -2356,6 +2366,8 @@
 					Intents,
 					"-framework",
 					IOBluetooth,
+					"-framework",
+					Network,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2411,6 +2423,8 @@
 					Intents,
 					"-framework",
 					IOBluetooth,
+					"-framework",
+					Network,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
