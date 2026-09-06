@@ -5,9 +5,9 @@
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>ControlPlane needs access to Bluetooth to create rules based on attached and nearby, discoverable bluetooth devices.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ControlPlane uses your location to match rules based on where you are.</string>
+	<string>ControlPlane uses your location to match rules based on where you are, and to read Wi‑Fi network names (SSID) for Wi‑Fi rules.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>ControlPlane uses your location to match rules based on where you are, including while the menu-bar agent is running.</string>
+	<string>ControlPlane uses your location to match rules based on where you are, and to read Wi‑Fi network names (SSID) while the menu-bar agent is running.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>ControlPlane browses local network services (Bonjour) to create rules based on devices and services on your network.</string>
 	<key>NSBonjourServices</key>

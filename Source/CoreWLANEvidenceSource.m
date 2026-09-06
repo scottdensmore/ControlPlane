@@ -9,12 +9,15 @@
 //
 
 #import <CoreWLAN/CoreWLAN.h>
+#import <CoreLocation/CoreLocation.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import "CoreWLANEvidenceSource.h"
+#import "CPNotifications.h"
 #import "DSLogger.h"
 
 
 static char * const queueIsStopped = "queueIsStopped";
+static NSString * const kWiFiLocationDeniedNotifiedKey = @"WiFiLocationAuthorizationDeniedNotified";
 
 
 #pragma mark C callbacks
@@ -34,6 +37,10 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
     // For SystemConfiguration asynchronous notifications
     SCDynamicStoreRef store;
     dispatch_queue_t serialQueue;
+
+    // Retained only long enough to request Location (SSID TCC); not used for updates.
+    CLLocationManager *locationAuthManager;
+    BOOL didLogLocationDeniedGuidance;
 }
 
 @property (atomic, retain, readwrite) NSDictionary *networkSSIDs;
@@ -44,6 +51,10 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 @property (atomic, retain, readwrite) NSDictionary *interfaceData;
 
 @property (atomic) BOOL linkActive;
+
+- (void)requestLocationAuthorizationIfNeeded;
+- (void)noteSSIDUnavailableDueToLocationAuthorization;
+- (CLAuthorizationStatus)currentLocationAuthorizationStatus;
 
 @end
 
@@ -70,6 +81,9 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
 - (void)dealloc {
     [self doStop];
 
+    [locationAuthManager release];
+    locationAuthManager = nil;
+
     [_networkSSIDs release];
     [_networkBSSIDs release];
     [_currentInterface release];
@@ -88,6 +102,12 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
     if (running) {
         return;
     }
+
+    didLogLocationDeniedGuidance = NO;
+
+    // Sonoma+: CoreWLAN withholds SSID/BSSID without Location Services.
+    // Request even when CoreLocation evidence is disabled.
+    [self requestLocationAuthorizationIfNeeded];
     
     serialQueue = dispatch_queue_create("com.scottdensmore.ControlPlane.CoreWLANEvidenceSource",
                                         DISPATCH_QUEUE_SERIAL);
@@ -155,13 +175,17 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
         store = NULL;
     }
 
+    [locationAuthManager release];
+    locationAuthManager = nil;
+    didLogLocationDeniedGuidance = NO;
+
     [self clearCollectedData];
 
     running = NO;
 }
 
 - (NSString *)description {
-    return NSLocalizedString(@"Create rules based on what WiFi networks are available or connected to.", @"");
+    return NSLocalizedString(@"Create rules based on what WiFi networks are available or connected to. macOS requires Location Services permission to read Wi‑Fi network names (SSID).", @"");
 }
 
 - (void)doUpdate {
@@ -186,11 +210,24 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
     if (!self.linkActive || [[NSUserDefaults standardUserDefaults] boolForKey:@"WiFiAlwaysScans"]) {
         DSLog(@"WiFi link is inactive, doing full scan");
         newNetworkSSIDs = [self scanForNetworks];
+        if ([newNetworkSSIDs count] == 0 &&
+            [WiFiEvidenceSourceCoreWLAN isLocationAuthorizationDeniedOrRestricted:[self currentLocationAuthorizationStatus]]) {
+            [self clearCollectedData];
+            [self noteSSIDUnavailableDueToLocationAuthorization];
+            return;
+        }
     } else {
         NSString *ssid = currentInterface.ssid, *bssid = currentInterface.bssid;
         if ((ssid == nil) || (bssid == nil)) {
             [self clearCollectedData];
-            DSLog(@"WiFi interface is active, but is not participating in a network yet (or network SSID is bad)");
+            if ([WiFiEvidenceSourceCoreWLAN isLocationAuthorizationDeniedOrRestricted:[self currentLocationAuthorizationStatus]]) {
+                [self noteSSIDUnavailableDueToLocationAuthorization];
+            } else if ([self currentLocationAuthorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+                DSLog(@"WiFi SSID unavailable; waiting for Location Services authorization (required for SSID/BSSID on modern macOS).");
+                [self requestLocationAuthorizationIfNeeded];
+            } else {
+                DSLog(@"WiFi interface is active, but is not participating in a network yet (or network SSID is bad)");
+            }
             return;
         }
 
@@ -446,6 +483,60 @@ static void linkDataChanged(SCDynamicStoreRef store, CFArrayRef changedKeys, voi
     dispatch_async(dispatch_get_main_queue(), ^{ // start/stop timers on the main loop to ensure synchronous changes
         [self toggleUpdateLoop:nil];
     });
+}
+
+#pragma mark - Location TCC (SSID/BSSID)
+
++ (BOOL)isLocationAuthorizationDeniedOrRestricted:(CLAuthorizationStatus)status
+{
+    return (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusRestricted);
+}
+
++ (BOOL)isLocationAuthorizationGranted:(CLAuthorizationStatus)status
+{
+    return (status == kCLAuthorizationStatusAuthorizedAlways);
+}
+
++ (NSString *)ssidUnavailableDueToLocationAuthorizationMessage
+{
+    return NSLocalizedString(@"Wi‑Fi network names (SSID) are unavailable because Location Services is denied for ControlPlane. Enable Location for ControlPlane in System Settings > Privacy & Security > Location Services.",
+                             @"User guidance when CoreWLAN withholds SSID without Location");
+}
+
+- (CLAuthorizationStatus)currentLocationAuthorizationStatus
+{
+    return [CLLocationManager authorizationStatus];
+}
+
+- (void)requestLocationAuthorizationIfNeeded
+{
+    CLAuthorizationStatus status = [self currentLocationAuthorizationStatus];
+    if (status != kCLAuthorizationStatusNotDetermined) {
+        return;
+    }
+
+    if (!locationAuthManager) {
+        locationAuthManager = [[CLLocationManager alloc] init];
+    }
+    [locationAuthManager requestWhenInUseAuthorization];
+    DSLog(@"Requested Location Services authorization so CoreWLAN can read Wi‑Fi SSID/BSSID.");
+}
+
+- (void)noteSSIDUnavailableDueToLocationAuthorization
+{
+    NSString *message = [[self class] ssidUnavailableDueToLocationAuthorizationMessage];
+    if (!didLogLocationDeniedGuidance) {
+        DSLog(@"%@", message);
+        didLogLocationDeniedGuidance = YES;
+    }
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults boolForKey:kWiFiLocationDeniedNotifiedKey]) {
+        [CPNotifications postUserNotification:NSLocalizedString(@"Wi‑Fi Evidence Needs Location",
+                                                                @"Notification title when Location denied blocks SSID")
+                                  withMessage:message];
+        [defaults setBool:YES forKey:kWiFiLocationDeniedNotifiedKey];
+    }
 }
 
 @end

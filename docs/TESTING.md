@@ -1,12 +1,12 @@
 # Testing ControlPlane
 
-## Current status (macOS-15)
+## Current status (macOS-16 / Tahoe)
 
 - **Debug build:** works (`xcodebuild -scheme ControlPlane -configuration Debug`)
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
 - **UI tests:** `ControlPlaneUITests` for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
-- **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-15`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
+- **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-16`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
 - **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` runs `ControlPlaneUITests` with `continue-on-error: true`
 - **Signing / helper bless:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot bless)
 
@@ -40,7 +40,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
 | `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is universal (`x86_64` + `arm64`) |
-| `InfoPlistPrivacyTests` | TCC usage strings present; ATS no longer allows arbitrary loads |
+| `InfoPlistPrivacyTests` | TCC usage strings present (Location mentions Wi‑Fi SSID); ATS no longer allows arbitrary loads |
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
@@ -49,12 +49,12 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |
-| `WiFiRuleMatchTests` | SSID matching with injected CoreWLAN state |
+| `WiFiRuleMatchTests` | SSID matching with injected CoreWLAN state; Location-denied empty collection; Location TCC helper messages (#84) |
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
 | `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
-| `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45) |
+| `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
 
 Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/ControlPlane` and Growl recommendation phrases.
 
@@ -86,10 +86,20 @@ On macOS 26 with the default translucent menu bar:
 3. Open **Preferences** and **About** from the status menu; windows must activate and accept input.
 4. If context icon colors look washed out on Liquid Glass, track polish under #32 (Asset Catalog / SF Symbols)—do not block #89.
 
+## Manual Wi‑Fi + Location TCC probe (#84, Tahoe)
+
+| Location for ControlPlane | Connected to Wi‑Fi | Expected |
+| :--- | :--- | :--- |
+| Authorized | Yes | SSID/BSSID collected; Wi‑Fi rules can match |
+| Denied / Restricted | Yes | No crash; empty SSID evidence; log + one-shot notification; Help/prefs mention Location |
+| Not Determined | Yes | Wi‑Fi evidence start requests Location; empty until user responds |
+
+Steps: enable Wi‑Fi evidence; toggle Location for ControlPlane in System Settings → Privacy & Security → Location Services; confirm Console/`DSLog` and optional notification when denied.
+
 ## Gaps / follow-ups
 
 - Context + rule + mute action end-to-end journey (needs mock evidence seam)
 - Confidence threshold behavior under UI test
-- Promote `ControlPlaneUITests` from quarantine to blocking CI when stable on `macOS-15` runners
+- Promote `ControlPlaneUITests` from quarantine to blocking CI when stable on `macOS-16` runners
 
 Do not expand host-based app tests until LaunchAction malloc/`libgmalloc` inheritance is kept off the TestAction (`shouldUseLaunchSchemeArgsEnv=NO`).
