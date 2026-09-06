@@ -18,6 +18,7 @@
 #import "VPNAction.h"
 #import "ToggleNotificationCenterAlertsAction.h"
 #import "ToggleBluetoothAction.h"
+#import "DisplayBrightnessAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -170,6 +171,39 @@
     XCTAssertTrue([error rangeOfString:@"Control Center"].location != NSNotFound ||
                   [error rangeOfString:@"System Settings"].location != NSNotFound ||
                   [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
+
+// #88: IOKit kIODisplayBrightnessKey / DisplayServices paths are unreliable on Tahoe;
+// private CoreDisplay/CoreBrightness alternatives are out of scope — gate instead.
+
+- (void)testDisplayBrightnessActionIsNotApplicableOnTahoe {
+    XCTAssertFalse([DisplayBrightnessAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyDisplayBrightnessActionFailsClearly {
+    DisplayBrightnessAction *action =
+        [[DisplayBrightnessAction alloc] initWithDictionary:@{
+            @"type": @"DisplayBrightness",
+            @"parameter": @"50",
+            @"context": @"",
+            @"when": @"Arrival",
+            @"delay": @0,
+            @"enabled": @YES
+        }];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"brightness"].location != NSNotFound ||
+                  [error rangeOfString:@"Brightness"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound ||
+                  [error rangeOfString:@"keyboard"].location != NSNotFound ||
+                  [error rangeOfString:@"Keyboard"].location != NSNotFound ||
+                  [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
+
+- (void)testDisplayBrightnessWaitFlags {
+    XCTAssertTrue([DisplayBrightnessAction shouldWaitForScreensaverExit]);
+    XCTAssertTrue([DisplayBrightnessAction shouldWaitForScreenUnlock]);
 }
 
 @end

@@ -27,4 +27,17 @@
     XCTAssertGreaterThan(model.length, 0u);
 }
 
+// #88: IOKit display bridge must not crash when no matching IODisplayConnect exists.
+- (void)testIOServicePortFromUnknownDisplayReturnsZeroWithoutCrash {
+    XCTAssertEqual([CPSystemInfo IOServicePortFromCGDisplayID:kCGNullDirectDisplay],
+                   (io_service_t)0);
+    // Bogus ID: must not crash. Prefer zero; tolerate a spurious match only if
+    // vendor/product/serial collide with an attached display (unlikely).
+    io_service_t service =
+        [CPSystemInfo IOServicePortFromCGDisplayID:(CGDirectDisplayID)0xDeadBeef];
+    if (service != 0) {
+        IOObjectRelease(service);
+    }
+}
+
 @end

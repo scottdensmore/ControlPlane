@@ -111,6 +111,7 @@
 		A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D71CB770C17C01700E56526 /* ScreenSaverPasswordAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A469C54740862F2CA73424A /* ToggleableActionTests.m */; };
 		A51TBTA01B51WIRE00000083 /* ToggleBluetoothAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D75A61E0BE6F68B0069DF3F /* ToggleBluetoothAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		A51DBRA01B51WIRE00000088 /* DisplayBrightnessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DD827506141188880098FA6E /* DisplayBrightnessAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A51VPNA01B51WIRE00000033 /* VPNAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643DDB0C4F1F0D006D8ECC /* VPNAction.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		A7B8C9D0E1F2031425364758 /* CPLoginItemService.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* CPLoginItemService.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
@@ -1956,6 +1957,7 @@
 				F718293A4B5C6D7E8F9012A /* ToggleFTPAction.m in Sources */,
 				F81830AB5C6D7E8F9012AB /* ToggleNaturalScrollingAction.m in Sources */,
 				A51TBTA01B51WIRE00000083 /* ToggleBluetoothAction.m in Sources */,
+				A51DBRA01B51WIRE00000088 /* DisplayBrightnessAction.m in Sources */,
 				A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */,
 				A51NLOC01B51WIRE00000033 /* NetworkLocationAction.m in Sources */,
 				A51FWRU01B51WIRE00000033 /* FirewallRuleAction.m in Sources */,

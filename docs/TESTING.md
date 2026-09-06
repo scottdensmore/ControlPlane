@@ -36,7 +36,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | :--- | :--- |
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
 | `CPMenuBarImageTests` | Menu-bar template prep (#89); Asset Catalog template/brand/AppIcon + button API checks (#32) |
-| `CPSystemInfoTests` | `getOSVersion` encoding + hardware model |
+| `CPSystemInfoTests` | `getOSVersion` encoding + hardware model; IOKit display bridge null-ID safety (#88) |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
 | `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is universal (`x86_64` + `arm64`) |
@@ -46,7 +46,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
 | `RunShortcutActionTests` | Run Shortcut (#34) type map, applicability gate, empty-name failure |
 | `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
-| `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + Toggle Bluetooth + TM Destination + Network Location/VPN/Firewall Rule + Notification Center Alerts/DND gated; clear execute failures |
+| `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + Toggle Bluetooth + Display Brightness + TM Destination + Network Location/VPN/Firewall Rule + Notification Center Alerts/DND gated; clear execute failures |
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |
