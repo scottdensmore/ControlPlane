@@ -65,7 +65,7 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 - All binaries use hardened runtime with entitlements (see table above).
 - `disable-library-validation` is acceptable for notarization when Sparkle or other separately-signed frameworks are embedded.
-- Sparkle.framework must be a properly-signed universal binary (arm64 + x86_64) from upstream.
+- Sparkle.framework must be a properly-signed universal **Sparkle 2.x** binary (arm64 + x86_64) from upstream (currently 2.9.6).
 - The app, XPC service, and helper tool are signed individually during the build via `CodeSignOnCopy`; no `--deep` flag is used.
 
 ## Uninstall / legacy helpers

@@ -146,7 +146,7 @@
                 </menuItem>
             </items>
         </menu>
-        <customObject id="476" userLabel="SUUpdater" customClass="SUUpdater"/>
+        <customObject id="476" userLabel="SPUStandardUpdaterController" customClass="SPUStandardUpdaterController"/>
         <arrayController avoidsEmptySelection="NO" id="513" userLabel="ActionsController" customClass="DNDArrayController">
             <declaredKeys>
                 <string>type</string>

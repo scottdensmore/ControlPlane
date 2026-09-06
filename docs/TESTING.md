@@ -39,7 +39,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model; IOKit display bridge null-ID safety (#88) |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
 | `CPNotificationsMigrationTests` | `EnableGrowl` migrates to `EnableNotifications` |
-| `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is universal (`x86_64` + `arm64`) |
+| `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is Sparkle 2.x + universal (`x86_64` + `arm64`); `Info.plist` has no `SUPublicDSAKeyFile` |
 | `InfoPlistPrivacyTests` | TCC usage strings present (Location mentions Wi‑Fi SSID); ATS no longer allows arbitrary loads |
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
