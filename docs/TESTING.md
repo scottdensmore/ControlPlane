@@ -35,6 +35,8 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | Suite | Behavior |
 | :--- | :--- |
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
+| `PrefsHIGShortTermTests` | Prefs a11y labels, agent menu shortcuts, standard About, Help accuracy (#31) |
+| `PrefsSettingsStyleShellTests` | Settings-style `NSTabViewController` shell presence + pane/⌘, continuity (#100) |
 | `CPMenuBarImageTests` | Menu-bar template prep (#89); Asset Catalog template/brand/AppIcon + button API checks (#32) |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model; IOKit display bridge null-ID safety (#88) |
 | `CPNotificationsGateTests` | `EnableNotifications` gates `postUserNotification` |
@@ -65,9 +67,11 @@ Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/Co
 | Identifier | Control |
 | :--- | :--- |
 | `prefs.window` | Preferences window |
+| `prefs.settingsShell` | Settings-style prefs shell (`NSTabViewController` host view) |
 | `prefs.general.useNotifications` | Use Notifications checkbox |
 | `prefs.tab.general` | General tab content view |
 | `prefs.tab.evidencesources` | Evidence Sources tab content view |
+| `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`) |
 
 Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `ControlPlaneUITests.m`).
 
