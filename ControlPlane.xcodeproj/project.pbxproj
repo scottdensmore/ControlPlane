@@ -253,6 +253,7 @@
 		DE762BA62D98C2B40095F733 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
 		DEE1B8A62D73C04A00A32CF6 /* NetFS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */; };
 		DEE7A5CF2DC6947F00C05EF4 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DEE7A5CE2DC6947F00C05EF4 /* UserNotifications.framework */; };
+		DE87A87F01A87F0000000001 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE87A87F01A87F0000000002 /* UniformTypeIdentifiers.framework */; };
 		DEEADC5228FCABBC000677F1 /* ToggleAutomaticSwitchingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */; };
 		DEF6F4B32DBF07D5004C88A1 /* DNDArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = DEF6F4B22DBF07D5004C88A1 /* DNDArrayController.m */; };
 		E4F5A6B7C8D9E0F11223344 /* CPRetiredSharingTestStubs.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -821,6 +822,7 @@
 		DEA3DAFB2D7566C20034FCFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/TimeOfDayRule.xib; sourceTree = "<group>"; };
 		DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetFS.framework; path = System/Library/Frameworks/NetFS.framework; sourceTree = SDKROOT; };
 		DEE7A5CE2DC6947F00C05EF4 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		DE87A87F01A87F0000000002 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		DEEADC4E28FCABBB000677F1 /* ToggleAutomaticSwitchingAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ToggleAutomaticSwitchingAction.m; path = Source/ToggleAutomaticSwitchingAction.m; sourceTree = "<group>"; };
 		DEEADC5128FCABBC000677F1 /* ToggleAutomaticSwitchingAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToggleAutomaticSwitchingAction.h; path = Source/ToggleAutomaticSwitchingAction.h; sourceTree = "<group>"; };
 		DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DNDArrayController.h; path = Source/DNDArrayController.h; sourceTree = "<group>"; };
@@ -860,6 +862,7 @@
 				8D481B0A0B6098DD0097CF9C /* IOKit.framework in Frameworks */,
 				DDAC3C55140D866200FBF29E /* ScriptingBridge.framework in Frameworks */,
 				DEE7A5CF2DC6947F00C05EF4 /* UserNotifications.framework in Frameworks */,
+				DE87A87F01A87F0000000001 /* UniformTypeIdentifiers.framework in Frameworks */,
 				DD8274FB141177750098FA6E /* Security.framework in Frameworks */,
 				8D82F06D0AA811CE009ADA44 /* SystemConfiguration.framework in Frameworks */,
 				8D3BFFB20C61CA5300B9B910 /* WebKit.framework in Frameworks */,
@@ -1079,6 +1082,7 @@
 			children = (
 				DE06572E2DC6EFFC00156ADD /* AVFoundation.framework */,
 				DEE7A5CE2DC6947F00C05EF4 /* UserNotifications.framework */,
+				DE87A87F01A87F0000000002 /* UniformTypeIdentifiers.framework */,
 				DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */,
 				DE02C5D22DC67E000041FA17 /* MapKit.framework */,
 				DEE1B8A52D73C04A00A32CF6 /* NetFS.framework */,
