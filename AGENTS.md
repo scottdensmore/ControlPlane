@@ -13,30 +13,28 @@ ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Contex
 - Objective-C + XIBs (no SwiftUI app yet)
 - Xcode project: `ControlPlane.xcodeproj`
 - Privileged helper: `CPHelperTool` + `CPXPCService` (SMJobBless / XPC)
-- Default branch: `master`
-- Active OS line: branch named `macOS-<N>` (currently `macOS-16`, Tahoe / macOS 26)
+- Default (and only durable) branch: `master`
+- Target platform: current macOS shipping line (Tahoe / deploy 16.0 today)
 
 Upstream `dustinrue/ControlPlane` may contain a separate Swift rewrite—**do not assume shared code** with this ObjC line.
 
 ---
 
-## OS upgrade branching (non-negotiable)
+## Branching (keep it simple)
 
-Upgrade **one major macOS at a time**. Each OS line must fully work before the next cut.
+Do **not** keep durable per-OS branches (`macOS-15`, `macOS-16`, …). Integrate on `master`.
 
-1. Cut `macOS-<N>` from latest `master`.
-2. Fix only what is required for ControlPlane to work well on that OS (issues labeled `macos-<N>`).
-3. Keep `macOS-<N>` as the durable branch for that OS.
-4. Merge `macOS-<N>` → `master` when the OS line is solid.
-5. Cut `macOS-<N+1>` from updated `master`; repeat.
+1. Cut a short-lived feature branch from latest `master`.
+2. Implement one thin vertical slice (TDD → verify → review).
+3. Open a PR into `master`; squash-merge when CI is green.
+4. Delete the feature branch after merge.
 
 **Rules**
 
-- Prefer the smallest change that restores or preserves behavior on the **current** OS branch.
-- Do not pull forward `macos-<N+1>` (or later) work onto the current branch unless the user explicitly expands scope.
-- When filing or picking issues, set/respect labels `macos-15`, `macos-16`, …
-- **Rescan at each new OS line:** before implementing `macOS-<N+1>`, re-audit the tree and refresh `macos-<N+1>` issues; prior labels are not automatically sufficient.
-- Deployment target should match the branch’s OS line when you intentionally raise it (e.g. `macOS-16` → 16.x); do not raise it “for fun.”
+- Prefer the smallest change that restores or improves behavior on current macOS.
+- Never commit directly to `master`.
+- Raise `MACOSX_DEPLOYMENT_TARGET` only intentionally (documented in the issue/PR)—not “for fun.”
+- Issue labels like `macos-16` remain optional metadata; they are not branch names.
 
 ---
 
@@ -45,7 +43,7 @@ Upgrade **one major macOS at a time**. Each OS line must fully work before the n
 ```text
 Plan/Spike → Inspect & Branch → Thin Slice → TDD
     → Diff Inspect → [UI Review if UI] → Verify → Code Review
-    → (loop on findings) → Commit → PR → Gated squash merge
+    → (loop on findings) → Commit → PR → Gated squash merge → master
 ```
 
 ### Phase 0 — Discovery & planning
@@ -54,12 +52,12 @@ Plan/Spike → Inspect & Branch → Thin Slice → TDD
 2. **Slice the work.** Ordered list of thin vertical slices (end-to-end, independently shippable).
 3. **Discard spike code.** Production work starts clean; rebuild under TDD—do not promote prototype spaghetti.
 
-Use the **planner** subagent / `os-upgrade-branch` skill when starting an OS line or a large issue.
+Use the **planner** subagent when starting a large issue or multi-slice epic.
 
 ### Phase 1 — Context & scoping
 
 4. **Inspect before mutating.** Read `git status`, branch, remotes, and relevant config. Preserve unrelated local changes.
-5. **Dedicated branch.** From latest appropriate base (`macOS-<N>` for OS work, or `master` only when integrating). Never commit directly to `master`.
+5. **Dedicated feature branch.** From latest `master`. Never commit directly to `master`.
 6. **One thin vertical slice.** Smallest cohesive outcome (fix, gate, or feature) that can be tested and reviewed alone—not a horizontal rewrite.
 
 ### Phase 2 — Test-driven implementation
@@ -94,7 +92,7 @@ Use the **implementer** subagent / `tdd-slice` skill.
 
     Explain *why* in the body when non-obvious. Types: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`.
 14. **Pull request** from the verified tip. Ready-for-review (no draft unless asked). Link the GitHub issue; checklist the acceptance criteria.
-15. **Gated merge.** Wait for required reviews; green CI; **squash** short-lived feature branches for linear history onto the OS branch or `master` as appropriate.
+15. **Gated merge.** Wait for required reviews; green CI; **squash** short-lived feature branches for linear history onto `master`. Delete the feature branch after merge.
 
 ---
 
@@ -149,6 +147,6 @@ Skills (progressive detail): `.cursor/skills/*/SKILL.md` (mirrored under `.claud
 
 ## Issue hygiene
 
-- Prefer existing issues labeled for the **current** OS branch (`macos-15`, …).
-- New issues need: summary, evidence (paths), tasks, acceptance criteria, target `macos-<N>` label, and enough detail for another agent to execute without chat history.
-- Epic: track OS-line progress in the branch-strategy epic; keep wave language out—use macOS labels.
+- Prefer existing open issues; optional `macos-<N>` labels are metadata only (not branch names).
+- New issues need: summary, evidence (paths), tasks, acceptance criteria, and enough detail for another agent to execute without chat history.
+- Prefer epics for multi-slice themes; keep feature branches short-lived.

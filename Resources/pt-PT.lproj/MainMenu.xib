@@ -122,7 +122,7 @@
                         <action selector="checkForUpdates:" target="476" id="478"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Preferências..." id="391" keyEquivalent=",">
+                <menuItem title="Definições..." id="391" keyEquivalent=",">
                     <connections>
                         <action selector="runPreferences:" target="320" id="821"/>
                     </connections>
@@ -945,7 +945,7 @@ IA
                 </scrollView>
             </subviews>
         </customView>
-        <window title="*Preferences - XXX*" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="910" userLabel="PrefsWindow" customClass="NSPanel">
+        <window title="*Settings*" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="910" userLabel="PrefsWindow">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" resizable="YES" unifiedTitleAndToolbar="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="238" y="414" width="477" height="323"/>
@@ -1522,7 +1522,7 @@ Gw
                             <menuItem isSeparatorItem="YES" id="1781">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Preferências..." keyEquivalent="," id="1783">
+                            <menuItem title="Definições..." keyEquivalent="," id="1783">
 <connections>
                         <action selector="runPreferences:" target="320" id="2086"/>
                     </connections>

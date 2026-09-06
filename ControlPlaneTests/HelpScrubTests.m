@@ -83,6 +83,44 @@
     }
 }
 
+- (void)testHelpScrubsGhostAppSections {
+    NSString *html = [self concatenatedHelpHTML];
+    NSArray<NSString *> *banned = @[
+        @"Play iTunes Playlist",
+        @"iChat/Messages Status",
+        @"Change Mail IMAP Server",
+        @"Change Mail SMTP Server",
+        @"Change New Mail Check Interval",
+        @"tell application \"Adium\"",
+        @"tell application \"iTunes\"",
+    ];
+    for (NSString *needle in banned) {
+        XCTAssertFalse([html containsString:needle],
+                       @"Help must not keep ghost guidance (%@)", needle);
+    }
+}
+
+- (void)testHelpMarksDisplayBrightnessUnsupported {
+    NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSError *error = nil;
+    NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    NSRange heading = [html rangeOfString:@"Display Brightness"];
+    XCTAssertTrue(heading.location != NSNotFound);
+    NSString *after = [html substringFromIndex:heading.location];
+    NSRange nextH2 = [after rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, after.length - 1)];
+    NSString *section = nextH2.location != NSNotFound ? [after substringToIndex:nextH2.location] : after;
+    XCTAssertTrue([section rangeOfString:@"Unsupported" options:NSCaseInsensitiveSearch].location != NSNotFound
+		  || [section rangeOfString:@"unavailable" options:NSCaseInsensitiveSearch].location != NSNotFound);
+}
+
+- (void)testHelpDocumentsFocusAndPowerExtensions {
+    NSString *html = [self concatenatedHelpHTML];
+    XCTAssertTrue([html rangeOfString:@"Focus" options:NSCaseInsensitiveSearch].location != NSNotFound);
+    XCTAssertTrue([html rangeOfString:@"Low Power Mode" options:NSCaseInsensitiveSearch].location != NSNotFound
+		  || [html rangeOfString:@"battery charge" options:NSCaseInsensitiveSearch].location != NSNotFound);
+}
+
 - (void)testHelpDocumentsWiFiNeedsLocation {
     NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/evidencesources.html"];
     NSError *error = nil;

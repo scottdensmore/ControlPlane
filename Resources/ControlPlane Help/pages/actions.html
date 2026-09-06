@@ -50,39 +50,18 @@
         
         
         <h2><em>Display Brightness</em> action</h2>
-        <p>Change display brightness to defined level.  Level is defined by a percentage</p>
+        <p><strong>Unsupported on modern macOS (Tahoe / 15/16).</strong>
+        Display brightness cannot be set reliably via public APIs on Apple silicon.
+        Use keyboard brightness keys, Control Center, System Settings → Displays,
+        or a <em>Run Shortcut</em> / <em>ShellScript</em> action instead.
+        </p>
 
 
         <h2><em>Display Sleep Time</em> action</h2>
         <p>Change the timeout for when the display will go to sleep</p>
-        
 
-	<h2><em>iChat/Messages Status</em> actions</h2>
-	<p>Actions of type <em>iChat</em> change your iChat or Messages status
-	message.
-	</p>
-        
-        <h2><em>Play iTunes Playlist</em> action</h2>
-        <p>Select an iTunes play list to play</p>
-        
-        
         <h2><em>Lock Keychain</em> action</h2>
         <p>Lock or unlock the key chain</p>
-        
-        
-        
-        <h2><em>Change Mail IMAP Server</em> Action</h2>
-        <p>Changes the IMAP server of an email account in Mail.app</p>
-
-	<h2><em>Change Mail SMTP Server</em> actions</h2>
-	<p>Actions of type <em>MailSMTPServer</em> change the default
-	SMTP server of your <tt>Mail.app</tt> accounts.
-	</p>
-        
-        <h2><em>Change New Mail Check Interval</em> action</h2>
-        <p>Change how often Mail.app checks for new messages</p>
-        
-        
 
 	<h2><em>Mount</em> actions</h2>
 	<p>Actions of type <em>Mount</em> attempt to mount a network
@@ -121,10 +100,9 @@
         
 
         <h2><em>Quit Application</em> action</h2>
-        <p>Enter the name of the app you wish to close.  For example, if you wish to close
-        Adium you would enter Adium.app.  To get the name of an app you wish to close, start
-        Activity Monitor and find the Process Name of the app you wish to quit.  Enter
-        the value into ControlPlane.</p>
+        <p>Enter the name of the app you wish to close (for example <tt>Safari.app</tt>).
+        To find the name, open Activity Monitor and use the Process Name, then enter
+        that value into ControlPlane.</p>
         
 
 	<h2><em>Screen Saver Password</em> actions</h2>
@@ -157,6 +135,13 @@
         is present (macOS 12+). Use this to set Focus, toggle Bluetooth, or run any
         other Shortcut when a context becomes active. See
         <a href="tips.html">Tips and tricks</a> for Focus examples.
+        </p>
+
+        <h2><em>Set Focus</em> action</h2>
+        <p>Convenience wrapper around <em>Run Shortcut</em> for Focus modes.
+        Create a Shortcut that uses the system “Set Focus” action for the desired
+        Focus (Do Not Disturb, Sleep, Work, …), then enter that Shortcut’s name.
+        ControlPlane does not write private Notification Center preferences.
         </p>
 
         
@@ -196,9 +181,10 @@
 	until you manually select a different one.  If you only want a single context to be sticky, remember to set an associated "untoggle" on departure.</p>
 	
         <h2><em>Toggle Firewall</em> action</h2>
-        <p><strong>Unsupported on macOS 15.</strong> Historically toggled the
-        application firewall on or off globally. Do not rely on this action
-        (or Firewall Rule) on Sequoia.
+        <p><strong>Unsupported on modern macOS (Tahoe / 15/16).</strong> Historically
+        toggled the application firewall on or off globally. Existing actions fail
+        with a clear error. Configure the firewall in System Settings → Network →
+        Firewall, or use a <em>Run Shortcut</em> action.
         </p>
 
         <h2><em>Firewall Rule</em> actions</h2>
@@ -264,6 +250,7 @@
 			<li><em>Toggle Firewall</em> / <em>Firewall Rule</em> — unsupported</li>
 			<li><em>Toggle Printer Sharing</em> — unsupported</li>
 			<li><em>Time Machine Destination</em> (Tedium) — unsupported</li>
+			<li><em>Display Brightness</em> — unsupported</li>
 		</ul>
 
 <!--

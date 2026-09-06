@@ -15,11 +15,13 @@
 
 - (id)initForMatchingTests;
 - (void)setPowerStatusForTesting:(NSString *)statusString;
+- (void)setBatteryPercentForTesting:(NSInteger)percent lowPowerMode:(BOOL)lpm;
 
 - (void)start;
 - (void)stop;
 
 - (NSString *)name;
+- (NSArray *)typesOfRulesMatched;
 - (BOOL)doesRuleMatch:(NSDictionary *)rule;
 - (NSString *)getSuggestionLeadText:(NSString *)type;
 - (NSArray *)getSuggestions;

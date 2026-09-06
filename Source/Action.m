@@ -243,6 +243,7 @@
 #import "PreventSystemSleepAction.h"
 #import "QuitApplicationAction.h"
 #import "RunShortcutAction.h"
+#import "SetFocusAction.h"
 #import "ScreenSaverPasswordAction.h"
 #import "ScreenSaverStartAction.h"
 #import "ScreenSaverTimeAction.h"
@@ -299,6 +300,7 @@
 			   [OpenURLAction class],
 			   [QuitApplicationAction class],
 			   [RunShortcutAction class],
+			   [SetFocusAction class],
                [PreventDisplaySleepAction class],
                [PreventSystemSleepAction class],
 			   [ScreenSaverPasswordAction class],

@@ -35,8 +35,6 @@
 	<string>ControlPlane Help</string>
 	<key>CFBundleHelpBookName</key>
 	<string>ControlPlane Help</string>
-	<key>CFBundleIconFile</key>
-	<string>controlplane.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -123,6 +121,8 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>ControlPlane needs access to Bluetooth to create rules based on attached and nearby, discoverable bluetooth devices.</string>
+	<key>NSFocusStatusUsageDescription</key>
+	<string>ControlPlane reads Focus status to create rules based on whether a Focus mode is currently on.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_services._dns-sd._udp</string>

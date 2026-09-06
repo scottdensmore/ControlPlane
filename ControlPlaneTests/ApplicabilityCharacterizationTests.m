@@ -19,6 +19,8 @@
 #import "ToggleNotificationCenterAlertsAction.h"
 #import "ToggleBluetoothAction.h"
 #import "DisplayBrightnessAction.h"
+#import "ToggleFirewallAction.h"
+#import "TogglePrinterSharingAction.h"
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -204,6 +206,37 @@
 - (void)testDisplayBrightnessWaitFlags {
     XCTAssertTrue([DisplayBrightnessAction shouldWaitForScreensaverExit]);
     XCTAssertTrue([DisplayBrightnessAction shouldWaitForScreenUnlock]);
+}
+
+// #112: Firewall / Printer Sharing gated on Tahoe like Display Brightness.
+
+- (void)testToggleFirewallActionIsNotApplicableOnTahoe {
+    XCTAssertFalse([ToggleFirewallAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyToggleFirewallActionFailsClearly {
+    ToggleFirewallAction *action = [[ToggleFirewallAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Firewall"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound ||
+                  [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
+
+- (void)testTogglePrinterSharingActionIsNotApplicableOnTahoe {
+    XCTAssertFalse([TogglePrinterSharingAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyTogglePrinterSharingActionFailsClearly {
+    TogglePrinterSharingAction *action =
+        [[TogglePrinterSharingAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Printer Sharing"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound ||
+                  [error rangeOfString:@"Shortcut"].location != NSNotFound);
 }
 
 @end

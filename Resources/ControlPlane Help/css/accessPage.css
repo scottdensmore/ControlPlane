@@ -27,3 +27,15 @@ a:hover { text-decoration: underline }
 .smlapp { height: 275px }
 .utility { margin-top: 6px; margin-bottom: 24px }
 .icon { margin-bottom: -10px }
+
+@media (prefers-color-scheme: dark) {
+	body { color: #f5f5f7; background-color: #1c1c1e; }
+	h1, h2, h3, h4 { color: #f5f5f7; }
+	a, a:hover, .bread, .leftborder, .letter, .seealso { color: #6cb6ff; }
+	#banner, #index, #letters { background-color: #2c2c2e; border-color: #48484a; }
+	#pagetitle { border-color: #1c1c1e; }
+	.taskbox, .blue, .select { background-color: #2c2c2e; border-color: #48484a; }
+	hr, .rules, .dots { border-color: #48484a; }
+	code { color: #f5f5f7; }
+	#contentright { border-left-color: #48484a; }
+}

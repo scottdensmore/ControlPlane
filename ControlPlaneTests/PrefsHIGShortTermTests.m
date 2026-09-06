@@ -38,7 +38,7 @@
 	NSString *xib = [self contentsOfRelativePath:@"Resources/Base.lproj/MainMenu.xib"];
 
 	XCTAssertTrue([xib containsString:@"keyEquivalent=\",\""],
-		      @"Preferences must use ⌘,");
+		      @"Settings must use ⌘,");
 	XCTAssertTrue([xib containsString:@"keyEquivalent=\"q\""],
 		      @"Quit must use ⌘Q");
 	XCTAssertTrue([xib containsString:@"keyEquivalent=\"h\""],
@@ -56,6 +56,42 @@
 	XCTAssertTrue([xib rangeOfString:@"runAbout:"].location != NSNotFound);
 	XCTAssertTrue([xib rangeOfString:@"selector=\"terminate:\""].location != NSNotFound);
 	XCTAssertTrue([xib rangeOfString:@"selector=\"hide:\""].location != NSNotFound);
+	XCTAssertTrue([xib containsString:@"Settings..."],
+		      @"Menu item should say Settings (HIG)");
+	XCTAssertFalse([xib containsString:@"Preferences..."],
+		       @"Menu item must not still say Preferences...");
+}
+
+- (void)testPrefsControllerUsesSettingsNamingAndTitle {
+	NSString *prefs = [self contentsOfRelativePath:@"Source/PrefsWindowController.m"];
+	XCTAssertTrue([prefs containsString:@"NSLocalizedString(@\"Settings\""],
+		      @"Window title should use localized Settings");
+	XCTAssertTrue([prefs containsString:@"ControlPlane Settings"] ||
+			  [prefs containsString:@"@\"Settings\""],
+		      @"VoiceOver / title should prefer Settings naming");
+	XCTAssertFalse([prefs containsString:@"ControlPlane - "],
+		       @"Do not use ControlPlane - {pane} window titles");
+}
+
+- (void)testLocalePrefsWindowsAreNSWindowNotNSPanel {
+	NSArray<NSString *> *locales = @[ @"de", @"fr", @"it", @"da-DK", @"pt-BR", @"pt-PT" ];
+	for (NSString *locale in locales) {
+		NSString *rel = [NSString stringWithFormat:@"Resources/%@.lproj/MainMenu.xib", locale];
+		NSString *xib = [self contentsOfRelativePath:rel];
+		// Prefs window id 910 must not declare customClass NSPanel (Base uses NSWindow).
+		NSRange prefsWin = [xib rangeOfString:@"id=\"910\" userLabel=\"PrefsWindow\""];
+		XCTAssertTrue(prefsWin.location != NSNotFound, @"Missing PrefsWindow in %@", locale);
+		NSString *windowLine = nil;
+		for (NSString *line in [xib componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+			if ([line rangeOfString:@"id=\"910\" userLabel=\"PrefsWindow\""].location != NSNotFound) {
+				windowLine = line;
+				break;
+			}
+		}
+		XCTAssertNotNil(windowLine);
+		XCTAssertFalse([windowLine containsString:@"customClass=\"NSPanel\""],
+			       @"%@ PrefsWindow must match Base NSWindow (no NSPanel)", locale);
+	}
 }
 
 - (void)testPrefsControllerWiresAgentMenuAndStandardAbout {
