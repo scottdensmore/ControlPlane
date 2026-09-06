@@ -1,14 +1,14 @@
 # ControlPlane
 
-ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, and more) and runs **Actions** (including **Run Shortcut** to invoke Shortcuts by name/ID).
+ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, Focus, power, and more) and runs **Actions** (including **Run Shortcut** / **Set Focus** via Shortcuts).
 
-This repository is the **[scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)** fork of the classic Objective‑C / XIB app. Active development for Tahoe (macOS 16 / 26) lives on the `macOS-16` branch; the Sequoia line remains on `macOS-15`. Upstream [`dustinrue/ControlPlane`](https://github.com/dustinrue/ControlPlane) may contain a separate Swift rewrite—do not assume shared code with this ObjC line.
+This repository is the **[scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)** fork of the classic Objective‑C / XIB app. Development integrates on **`master`** (short-lived feature branches). Upstream [`dustinrue/ControlPlane`](https://github.com/dustinrue/ControlPlane) may contain a separate Swift rewrite—do not assume shared code with this ObjC line.
 
-## Requirements (macOS-16 line)
+## Requirements
 
 | Item | Value |
 | :--- | :--- |
-| Host OS | macOS 26 Tahoe (macOS 16 internally; required for day-to-day work on `macOS-16`) |
+| Host OS | macOS 26 Tahoe (recommended for day-to-day work) |
 | Xcode | **26+** (CI uses the default Xcode on `macos-26` runners) |
 | Deployment target | **16.0** |
 | Project | `ControlPlane.xcodeproj` |
@@ -21,7 +21,7 @@ Targets of note: the main app, embedded `CPXPCService`, and privileged helper `C
 ```bash
 git clone https://github.com/scottdensmore/ControlPlane.git
 cd ControlPlane
-git checkout macOS-16
+git checkout master
 open ControlPlane.xcodeproj
 ```
 
@@ -50,7 +50,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 
 ## Continuous integration
 
-GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and PRs targeting `macOS-16`, `macOS-15`, and `master`:
+GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and PRs targeting **`master`**:
 
 - Debug `xcodebuild` of the app (`CODE_SIGNING_ALLOWED=NO`)
 - `ControlPlaneTests` only (no helper bless)
@@ -69,7 +69,7 @@ There is no `macos-16` label; GitHub names Tahoe images `macos-26` (marketing ve
 
 | Doc | Purpose |
 | :--- | :--- |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, OS-line branching, localization, ARC |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, branching, localization, ARC |
 | [AGENTS.md](AGENTS.md) | Full agent workflow (SSOT for coding agents) |
 | [docs/TESTING.md](docs/TESTING.md) | Unit vs UI tests, smoke commands |
 | [docs/signing.md](docs/signing.md) | Identities, entitlements, helper bless, notarization notes |

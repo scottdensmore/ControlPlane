@@ -6,7 +6,7 @@
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
 - **UI tests:** `ControlPlaneUITests` for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
-- **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`macOS-16`/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
+- **CI:** `.github/workflows/ci.yml` runs Debug build + `ControlPlaneTests` on PRs/`master` (no helper bless, `CODE_SIGNING_ALLOWED=NO`)
 - **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` runs `ControlPlaneUITests` with `continue-on-error: true`
 - **Signing / helper bless:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot bless)
 
@@ -81,7 +81,7 @@ Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `Contro
 ## Manual status-item smoke (not automatable under XCUITest)
 
 1. Launch ControlPlane; confirm menu bar icon appears.
-2. Click status item → **Preferences** opens and is key/front (LSUIElement activation).
+2. Click status item → **Settings** opens and is key/front (LSUIElement activation).
 3. Click status item → **Active Contexts** submenu lists contexts.
 4. Force a context from the menu; confirm menu bar label/icon updates.
 5. Enable **Hide from status bar**; confirm icon reappears after relaunch.
@@ -92,13 +92,13 @@ On macOS 26 with the default translucent menu bar:
 
 1. Confirm the status-item icon remains readable (Asset Catalog `cp-icon` + template rendering).
 2. Toggle System Settings → Appearance / wallpaper contrast; icon should stay usable.
-3. Open **Preferences** and **About** from the status menu; windows must activate and accept input; About should show the colored `ControlPlane` brand image (not a washed-out template).
+3. Open **Settings** and **About** from the status menu; windows must activate and accept input; About should show the colored `ControlPlane` brand image (not a washed-out template).
 4. Toggle menu-bar display prefs (icon / context / both) and **Hide from status bar**; confirm behavior is unchanged.
 
 ## Manual Diagnostics + logging probe (#35)
 
 1. Configure conflicting Home/Work rules (Power@Home high confidence, Wi‑Fi@Work lower; min confidence ~75%).
-2. Force Work, then match the Home Power rule; open **Preferences → Diagnostics**.
+2. Force Work, then match the Home Power rule; open **Settings → Diagnostics**.
 3. Confirm the explanation prefers Home, the rules table shows Match / Rule % / Context %, and the evidence snapshot lists running sources.
 4. In Terminal: `log stream --predicate 'subsystem == "com.scottdensmore.ControlPlane"' --level debug` while switching contexts; confirm lines appear (categories Evidence / Rules / Actions / Helper / General).
 5. Optional: Advanced pane still shows the in-app log buffer.

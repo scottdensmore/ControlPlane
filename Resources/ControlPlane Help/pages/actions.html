@@ -28,9 +28,9 @@
 		time from the action being triggered until the context is
 		switched.
 		</p>
-		<p>On macOS 15 (Sequoia), some historical actions are gated or
+		<p>On modern macOS (Tahoe / 15/16), some historical actions are gated or
 		retired and will not appear as supported options. See
-		<em>Unavailable on macOS 15</em> below.
+		<em>Unavailable on modern macOS</em> below.
 		</p>
 
 		<!-- =================================================== -->
@@ -61,7 +61,9 @@
         <p>Change the timeout for when the display will go to sleep</p>
 
         <h2><em>Lock Keychain</em> action</h2>
-        <p>Lock or unlock the key chain</p>
+        <p><strong>Unsupported on modern macOS.</strong> Legacy SecKeychain lock/unlock
+        APIs are deprecated. Use Keychain Access or a <em>Run Shortcut</em> action instead.
+        </p>
 
 	<h2><em>Mount</em> actions</h2>
 	<p>Actions of type <em>Mount</em> attempt to mount a network
@@ -154,12 +156,18 @@
         
       
         <h2><em>Time Machine Destination</em> action</h2>
-        <p><strong>Unsupported on macOS 15.</strong> This action previously required the
+        <p><strong>Unsupported on modern macOS.</strong> This action previously required the
         Tedium companion app to switch Time Machine backup destinations. Tedium is no
         longer maintained for current macOS; the action remains unavailable until a
         supported companion or replacement exists.
         </p>
         
+
+	<h2><em>Connect Bluetooth Device</em> action</h2>
+	<p>Connects to a paired Bluetooth device by address. Bluetooth must already
+	be powered on (Control Center, System Settings → Bluetooth, or a Shortcut).
+	ControlPlane does <strong>not</strong> turn Bluetooth power on via private APIs.
+	</p>
 
 	<h2><em>Toggle Bluetooth</em> action</h2>
 	<p><strong>Unsupported on modern macOS.</strong> Actions of type
@@ -242,6 +250,7 @@
 			<li><em>Toggle Internet Sharing</em> — retired</li>
 			<li><em>AFP</em> file sharing options — retired (SMB-only file sharing may still apply where offered)</li>
 			<li><em>Toggle Bluetooth</em> — unavailable</li>
+			<li><em>Lock Keychain</em> — unavailable (deprecated SecKeychain)</li>
 			<li><em>Toggle Natural Scrolling</em> — unavailable</li>
 			<li><em>Screen Saver Password</em> — unavailable</li>
 			<li><em>Toggle Notification Center Alerts</em> (legacy Do Not Disturb) — unavailable</li>

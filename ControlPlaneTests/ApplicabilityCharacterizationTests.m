@@ -21,6 +21,12 @@
 #import "DisplayBrightnessAction.h"
 #import "ToggleFirewallAction.h"
 #import "TogglePrinterSharingAction.h"
+#import "LockKeychainAction.h"
+#import "ConnectBluetoothDeviceAction.h"
+
+#ifndef CONTROLPLANE_SRCROOT
+#define CONTROLPLANE_SRCROOT ""
+#endif
 
 @interface ApplicabilityCharacterizationTests : XCTestCase
 @end
@@ -237,6 +243,49 @@
     XCTAssertTrue([error rangeOfString:@"Printer Sharing"].location != NSNotFound);
     XCTAssertTrue([error rangeOfString:@"System Settings"].location != NSNotFound ||
                   [error rangeOfString:@"Shortcut"].location != NSNotFound);
+}
+
+// #118: Lock Keychain gated off deprecated SecKeychain APIs.
+
+- (void)testLockKeychainActionIsNotApplicableOnTahoe {
+    XCTAssertFalse([LockKeychainAction isActionApplicableToSystem]);
+}
+
+- (void)testLegacyLockKeychainActionFailsClearly {
+    LockKeychainAction *action = [[LockKeychainAction alloc] initWithOption:@YES];
+    NSString *error = nil;
+    XCTAssertFalse([action execute:&error]);
+    XCTAssertNotNil(error);
+    XCTAssertTrue([error rangeOfString:@"Keychain"].location != NSNotFound);
+    XCTAssertTrue([error rangeOfString:@"Shortcut"].location != NSNotFound ||
+                  [error rangeOfString:@"Keychain Access"].location != NSNotFound);
+}
+
+// #117: Connect Bluetooth must not cascade through gated ToggleBluetooth.
+
+- (void)testConnectBluetoothSourceDoesNotImportToggleBluetooth {
+    NSString *root = @CONTROLPLANE_SRCROOT;
+    NSString *path = [root stringByAppendingPathComponent:@"Source/ConnectBluetoothDeviceAction.m"];
+    NSString *source = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    XCTAssertNotNil(source);
+    XCTAssertFalse([source containsString:@"ToggleBluetoothAction"],
+                   @"Connect must not call gated ToggleBluetoothAction (#117)");
+    XCTAssertTrue([source containsString:@"bluetoothRadioPowered"] ||
+                      [source containsString:@"powerState"],
+                  @"Connect should check radio power via public IOBluetooth APIs");
+}
+
+- (void)testConnectBluetoothEmptyAddressFailsClearly {
+    ConnectBluetoothDeviceAction *action =
+        [[ConnectBluetoothDeviceAction alloc] initWithOption:@"   "];
+    // If radio is off, we get the radio-off error first; either failure is fine.
+    NSString *error = nil;
+    BOOL ok = [action execute:&error];
+    if (ok) {
+        // Extremely unlikely with empty address; treat as failure of the test intent.
+        XCTFail(@"Empty address must not succeed");
+    }
+    XCTAssertNotNil(error);
 }
 
 @end

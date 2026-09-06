@@ -6,25 +6,27 @@ Coding agents should follow **[AGENTS.md](AGENTS.md)** as the single source of t
 
 ## Pick an issue
 
-1. Prefer issues labeled for the **current OS line** (`macos-16` on branch `macOS-16`; Sequoia maintenance uses `macos-15` / `macOS-15`).
-2. Prefer issues also labeled **`agent-ready`** when using an agent: they should include summary, evidence (paths), tasks, and acceptance criteria so another session can execute without chat history.
-3. Do not pull a later OS line’s scope onto the current branch unless the issue explicitly expands scope.
-4. One thin vertical slice per PR—smallest cohesive fix or feature that can be tested and reviewed alone.
+1. Prefer open issues on the [macOS 26 epic](https://github.com/scottdensmore/ControlPlane/issues/116) (or other open `agent-ready` issues). Optional `macos-16` labels are metadata only—not branch names.
+2. Prefer issues also labeled **`agent-ready`**: they should include summary, evidence (paths), tasks, and acceptance criteria so another session can execute without chat history.
+3. One thin vertical slice per PR—smallest cohesive fix or feature that can be tested and reviewed alone.
 
-## OS-line branching
+## Branching
 
-Upgrade **one major macOS at a time**. Each OS line must fully work before the next cut.
+Integrate on **`master`**. Do not keep durable per-OS branches.
 
 ```text
-Cut macOS-<N> from master → fix only macos-<N> issues → merge to master when solid → cut macOS-<N+1>
+git checkout master && git pull
+git checkout -b issue-<n>-short-slug
+# … TDD → verify → review …
+# PR → squash-merge into master → delete feature branch
 ```
 
 | Rule | Detail |
 | :--- | :--- |
-| Base branch | OS work from latest `macOS-<N>` (currently `macOS-16` / Tahoe); integrate to `master` only when merging an OS line |
+| Base branch | Latest `master` |
 | Never commit | Directly to `master` |
-| Deployment target | Match the branch’s OS line only when intentionally raising it; do not bump “for fun” (#82 raises to 16.0 last on this line) |
-| Labels | Set/respect `macos-15`, `macos-16`, … on issues |
+| Deployment target | Raise only intentionally (currently **16.0**); do not bump “for fun” |
+| Labels | Optional `macos-16` / priority labels for filtering |
 
 ## Local setup
 
@@ -50,4 +52,4 @@ Signed helper bless and notarization are **not** part of CI—see [docs/signing.
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- Wait for green CI (Debug build + `ControlPlaneTests`); squash short-lived feature branches when merging onto `macOS-16`, `macOS-15`, or `master` as appropriate.
+- Wait for green CI (Debug build + `ControlPlaneTests`); squash short-lived feature branches when merging onto `master`.
