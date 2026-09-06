@@ -88,9 +88,9 @@ NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
         drawInGrey = YES;
 
     if (drawInGrey)
-        [aCell setTextColor:[NSColor colorWithDeviceWhite:0.5 alpha:1.0]];
+        [aCell setTextColor:[NSColor secondaryLabelColor]];
     else
-        [aCell setTextColor:[NSColor colorWithDeviceWhite:0 alpha:1.0]];
+        [aCell setTextColor:[NSColor labelColor]];
 }
 
 #pragma mark -

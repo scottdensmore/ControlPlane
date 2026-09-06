@@ -56,6 +56,34 @@ Sparkle 2 uses EdDSA (`ed25519`), not DSA.
 
 4. Never commit Keychain exports (`generate_keys -x …`) or `SPARKLE_ED_KEY_FILE` contents. If automation needs a key file, keep it outside the repo and pass `SPARKLE_ED_KEY_FILE` only on the signing machine.
 
+### Maintainer EdDSA checklist (required before every public update)
+
+**Do not publish an appcast or ship a notarized build that expects Sparkle updates until every box is checked.**
+
+- [ ] On a secure maintainer Mac (not CI), run:
+
+  ```bash
+  ./Utilities/SparkleTools/generate_keys --account controlplane-scottdensmore
+  ```
+
+  Prefer a dedicated `--account` for this fork so keys are not mixed with unrelated Sparkle apps.
+
+- [ ] Confirm the **private** key remains only in the login Keychain (or an offline export kept outside the repo). Never commit Keychain exports (`generate_keys -x …`) or `SPARKLE_ED_KEY_FILE` contents.
+
+- [ ] Copy the printed **public** key into `Info.plist` as `SUPublicEDKey` (base64 string). Do **not** invent a placeholder key.
+
+  ```bash
+  ./Utilities/SparkleTools/generate_keys -p --account controlplane-scottdensmore
+  ```
+
+- [ ] Verify the shipping Info.plist contains a non-empty `SUPublicEDKey` and does **not** contain `SUPublicDSAKeyFile`.
+
+- [ ] Sign release archives with the matching private key (`Utilities/sparkle_sign_archive.sh` / `sign_update` / `generate_appcast`).
+
+- [ ] Manual N → N+1 update test (below) passes on a clean Mac.
+
+**Release gate:** If `SUPublicEDKey` is missing, **do not publish** Sparkle updates for this fork. The app may still build and run; signed update verification cannot work without the public key. Unit tests assert either a real key is present or this checklist forbids shipping unsigned updates.
+
 Until `SUPublicEDKey` is set, the app still **links and runs** Sparkle 2, but signed update installs cannot be verified—finish key setup before publishing an appcast.
 
 ### Sign an update archive

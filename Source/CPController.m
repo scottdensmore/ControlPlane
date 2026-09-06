@@ -224,13 +224,18 @@ static NSSet *sharedActiveContexts = nil;
 }
 
 - (void) interfaceThemeDidChange {
-    //[self changeActiveIconImageColorTo:self.currentContext.iconColor];
-    //[self changeInActiveIconImageColorTo:[[NSColor darkGrayColor] colorUsingColorSpaceName:NSCalibratedRGBColorSpace]];
+	// #110: refresh status item when light/dark appearance changes so templates re-tint.
+	sbImageTemplate = [self prepareImageForMenubar:@"cp-icon"];
+	[self updateMenuBarImage];
 }
 
 - (NSImage *)tintedIconImage:(NSImage *)image withTint:(NSColor *)color {
     if ((image != nil) && [image isTemplate]) {
-        if ((color != nil) && ([color alphaComponent] > 0.0) && ![color isEqualTo:[NSColor blackColor]]) {
+        // Skip semantic/default colors so the glyph stays a template under Liquid Glass.
+        if ((color != nil) && ([color alphaComponent] > 0.0) &&
+            ![color isEqualTo:[NSColor blackColor]] &&
+            ![color isEqualTo:[NSColor labelColor]] &&
+            ![color isEqualTo:[NSColor secondaryLabelColor]]) {
             NSImage *tintedImage = [image copy];
             [tintedImage setTemplate:NO];
             [tintedImage lockFocus];
@@ -786,7 +791,8 @@ static NSSet *sharedActiveContexts = nil;
         } else if (!usingMultipleActiveContexts && (self.currentContext != nil)) {
             iconColor = self.currentContext.iconColor;
         } else {
-            iconColor = [NSColor darkGrayColor]; // inactive icon color
+            // #110: keep the inactive/default icon as a template — do not bake darkGray.
+            iconColor = nil;
         }
         
         barImage = [self tintedIconImage:sbImageTemplate withTint:iconColor];

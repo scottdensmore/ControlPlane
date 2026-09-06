@@ -284,12 +284,12 @@
 		}
 		if ([displayName isKindOfClass:[NSString class]]) {
 			[view setAccessibilityLabel:displayName];
-			[view setAccessibilityRoleDescription:NSLocalizedString(@"Preferences tab", @"VoiceOver role for prefs pane")];
+			[view setAccessibilityRoleDescription:NSLocalizedString(@"Settings tab", @"VoiceOver role for prefs pane")];
 		}
 	}
 
 	[prefsWindow setAccessibilityIdentifier:@"prefs.window"];
-	[prefsWindow setAccessibilityLabel:NSLocalizedString(@"ControlPlane Preferences", @"VoiceOver label for prefs window")];
+	[prefsWindow setAccessibilityLabel:NSLocalizedString(@"ControlPlane Settings", @"VoiceOver label for prefs window")];
 	[self configureAgentApplicationMenu];
 
 	// Settings-style shell (#100): preference toolbar hosted by NSTabViewController,
@@ -763,7 +763,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 		}
 	}
 
-	[prefsWindow setTitle:[@"ControlPlane - " stringByAppendingString:group[@"display_name"]]];
+	[prefsWindow setTitle:NSLocalizedString(@"Settings", @"Settings window title")];
 
 	BOOL resizeableWidth  = [group[@"resizeableWidth"]  boolValue];
 	BOOL resizeableHeight = [group[@"resizeableHeight"] boolValue];

@@ -398,6 +398,7 @@
 #import "ContextEvidenceSource.h"
 #import "DNSEvidenceSource.h"
 #import "FireWireEvidenceSource.h"
+#import "FocusEvidenceSource.h"
 //#import "HostAvailabilityEvidenceSource.h"
 #import "IPAddrEvidenceSource.h"
 #import "LaptopLidEvidenceSource.h"
@@ -443,13 +444,14 @@
                         [NetworkLinkEvidenceSource class],
                         [IPAddrEvidenceSource class],
                         [FireWireEvidenceSource class],
+                        [FocusEvidenceSource class],
                         [MonitorEvidenceSource class],
                         [USBEvidenceSource class],
 						[AudioOutputEvidenceSource class],
                         //[HostAvailabilityEvidenceSource class],
 						[BluetoothEvidenceSource class],
                         [BonjourEvidenceSource class],	
-						[CoreLocationSource class],
+                        [CoreLocationSource class],
                         [DNSEvidenceSource class],
                         [LaptopLidEvidenceSource class],
 						[LightEvidenceSource class],

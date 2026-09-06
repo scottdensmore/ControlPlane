@@ -13,6 +13,12 @@
 
 @implementation ToggleFirewallAction
 
++ (BOOL)isActionApplicableToSystem
+{
+	// #112: Application firewall toggles via the privileged helper are unreliable
+	// on modern macOS. Prefer System Settings → Network → Firewall (or a Shortcut).
+	return NO;
+}
 
 - (NSString *) description {
 	if (turnOn)
@@ -22,28 +28,26 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    NSString *command = turnOn ? kCPHelperEnableFirewallCommand : kCPHelperDisableFirewallCommand;
-	
-	BOOL result = [self helperToolPerformAction: command];
-	
-	if (!result) {
-		if (turnOn)
-			*errorString = NSLocalizedString(@"Failed enabling firewall.", @"Act of turning on or enabling the firewall failed");
-		else
-			*errorString = NSLocalizedString(@"Failed disabling firewall.", @"Act of turning off or disabling the firewall failed");
+	if (errorString != NULL) {
+		*errorString = NSLocalizedString(
+			@"Firewall cannot be toggled on this version of macOS. "
+			@"Use System Settings → Network → Firewall, Control Center, "
+			@"or create a Shortcut that adjusts the firewall and run it with "
+			@"the Run Shortcut action.",
+			@"Error when ToggleFirewallAction runs on modern macOS");
 	}
-	
-	return result;
+	return NO;
 }
 
 + (NSString *) helpText {
 	return NSLocalizedString(@"The parameter for the Firewall action is either \"1\" "
-                             "or \"0\", depending on whether you want to enable or disable the firewall."
-                             "", @"");
+                             "or \"0\", depending on whether you want to enable or disable the firewall. "
+                             "This action is not available on modern macOS; configure the firewall in "
+                             "System Settings → Network → Firewall, or use a Run Shortcut action.", @"");
 }
 
 + (NSString *) creationHelpText {
-	return NSLocalizedString(@"Turn Firewall", @"Will be followed by 'on' or 'off'");
+	return NSLocalizedString(@"Turn Firewall (unsupported on this macOS)", @"Will be followed by 'on' or 'off'");
 }
 
 + (NSString *) friendlyName {

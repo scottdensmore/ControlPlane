@@ -17,7 +17,7 @@
 {
 	[super drawRect:aRect];
 
-	[[NSColor colorWithCalibratedWhite:0.925 alpha:1.0] set];
+	[[NSColor separatorColor] set];
 	NSFrameRect(aRect);
 }
 
@@ -67,8 +67,9 @@ static ToolTip *sharedToolTip = nil;
                                              defer:YES];
     
 	[window setOpaque:NO];
-	[window setAlphaValue:0.80];
-	[window setBackgroundColor:[NSColor colorWithDeviceRed:1.0 green:0.96 blue:0.76 alpha:1.0]];
+	[window setAlphaValue:0.95];
+	// #110: semantic tooltip colors (not baked cream RGB).
+	[window setBackgroundColor:[NSColor controlBackgroundColor]];
 	[window setHasShadow:YES];
 	[window setLevel:NSStatusWindowLevel];
 	[window setReleasedWhenClosed:YES];
@@ -80,6 +81,7 @@ static ToolTip *sharedToolTip = nil;
 	[textField setBezeled:NO];
 	[textField setBordered:NO];
 	[textField setDrawsBackground:NO];
+	[textField setTextColor:[NSColor labelColor]];
     [textField setAlignment:NSTextAlignmentCenter];
 	[textField setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
 	[textField setFont:[NSFont toolTipsFontOfSize:[NSFont systemFontSize]]];

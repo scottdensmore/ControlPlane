@@ -59,7 +59,8 @@
 
 - (void)testAssetCatalogMarksMenuBarIconsAsTemplate {
 	NSString *root = [self srcRoot];
-	NSArray<NSString *> *names = @[ @"cp-icon", @"cp-icon-active", @"cp-icon-inactive" ];
+	// Runtime uses cp-icon only; active/inactive imagesets were removed in wave 2.
+	NSArray<NSString *> *names = @[ @"cp-icon" ];
 	for (NSString *name in names) {
 		NSString *path =
 		    [root stringByAppendingPathComponent:
@@ -97,18 +98,24 @@
 	XCTAssertNil(error);
 	XCTAssertTrue([appJSON containsString:@"icon_512x512"],
 		      @"AppIcon.appiconset should include macOS icon slots");
+	XCTAssertTrue([appJSON containsString:@"\"appearance\" : \"luminosity\""] ||
+			  [appJSON containsString:@"\"appearance\": \"luminosity\""],
+		      @"AppIcon must declare dark luminosity appearances");
+	XCTAssertTrue([appJSON containsString:@"-dark.png"],
+		      @"AppIcon must include dark appearance PNG filenames");
 }
 
-- (void)testLegacyAppIcnsKeptForBundleIconFile {
+- (void)testAppIconCatalogIsSoleBundleIconSource {
 	NSString *root = [self srcRoot];
 	NSString *icns =
 	    [root stringByAppendingPathComponent:@"Resources/controlplane.icns"];
 	NSString *info =
 	    [root stringByAppendingPathComponent:@"Info.plist"];
-	XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:icns],
-		      @"Keep controlplane.icns for CFBundleIconFile legacy");
+	XCTAssertFalse([[NSFileManager defaultManager] fileExistsAtPath:icns],
+		       @"Legacy Resources/controlplane.icns must be retired");
 	NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:info];
-	XCTAssertEqualObjects(plist[@"CFBundleIconFile"], @"controlplane.icns");
+	XCTAssertNil(plist[@"CFBundleIconFile"],
+		     @"Prefer ASSETCATALOG_COMPILER_APPICON_NAME over CFBundleIconFile");
 }
 
 - (void)testStatusItemUsesButtonImageAPINotDeprecatedSetter {

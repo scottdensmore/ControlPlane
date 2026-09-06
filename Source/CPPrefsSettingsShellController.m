@@ -34,7 +34,7 @@
 {
 	[super viewDidLoad];
 	[self.view setAccessibilityIdentifier:@"prefs.settingsShell"];
-	[self.view setAccessibilityLabel:NSLocalizedString(@"Preferences", @"VoiceOver label for settings-style prefs shell")];
+	[self.view setAccessibilityLabel:NSLocalizedString(@"Settings", @"VoiceOver label for settings-style prefs shell")];
 }
 
 - (void)configureWithPaneGroups:(NSArray<NSDictionary *> *)groups
@@ -71,7 +71,10 @@
 		if ([iconName isKindOfClass:[NSString class]]) {
 			NSImage *image = [NSImage imageNamed:iconName];
 			if (image) {
-				item.image = image;
+				// Template so Settings toolbar icons adapt in dark mode / Liquid Glass.
+				NSImage *templateImage = [image copy];
+				templateImage.template = YES;
+				item.image = templateImage;
 			}
 		}
 

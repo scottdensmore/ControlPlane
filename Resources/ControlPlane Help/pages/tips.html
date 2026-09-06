@@ -18,57 +18,14 @@
 	<p>This page gives examples of useful ways that
 	ControlPlane can be used, especially via actions.
 	</p>
-
-			
-	<div summary="How to cause Adium to connect and set your status" class="taskbox">
-		<p>
-		<strong>To cause Adium to connect and set your status:</strong>
-		<ol>
-		<li>Use <em>Script Editor</em> to create an AppleScript such as:
-<pre>
-tell application "Adium"
-	activate
-	set my status message to "At home."
-	set my status type to available
-end tell
-</pre>
-		</li>
-		<li>Save it somewhere convenient.</li>
-		<li>Create an <em>Open</em> action in ControlPlane, selecting the saved script as its parameter.</li>
-		</ol>
-		</p>
-		<p>
-		You may replace <em>available</em> with <em>away</em> to have
-		Adium set your status as busy.
-		</p>
-	</div>
-
-	<div summary="How to launch iTunes and hide its window" class="taskbox">
-		<p>
-		<strong>To launch iTunes and hide its window:</strong>
-		<ol>
-		<li>Use <em>Script Editor</em> to create an AppleScript such as:
-<pre>
-tell application "iTunes"
-	launch
-	set visible of window 1 to false
-end tell
-</pre>
-		</li>
-		<li>Save it somewhere convenient.</li>
-		<li>Create an <em>Open</em> action in ControlPlane, selecting the saved script as its parameter.</li>
-		</ol>
-		</p>
-	</div>
-
-	<div summary="How to set Focus with a Shortcut" class="taskbox">
+<div summary="How to set Focus with a Shortcut" class="taskbox">
 		<p>
 		<strong>To set Focus when entering a context:</strong>
 		<ol>
 		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets the Focus you want
 		(for example Do Not Disturb or Work). Name it something memorable, such as
 		<em>Enable Work Focus</em>.</li>
-		<li>In ControlPlane, add a <em>Run Shortcut</em> arrival action on the context and
+		<li>In ControlPlane, add a <em>Set Focus</em> or <em>Run Shortcut</em> arrival action on the context and
 		enter that exact Shortcut name (or its identifier from
 		<tt>shortcuts list --show-identifiers</tt>) as the parameter.</li>
 		</ol>
