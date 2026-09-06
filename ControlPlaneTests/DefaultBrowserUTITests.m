@@ -4,15 +4,37 @@
 //
 //  Characterizes that ControlPlane does not claim over-broad UTI types (e.g. public.text)
 //  that would make it a default handler for generic text files under macOS Sequoia.
+//  Also locks DefaultBrowserAction to UniformTypeIdentifiers (no deprecated kUTType*).
 //
 
 #import <XCTest/XCTest.h>
 #import <CoreServices/CoreServices.h>
 
+#ifndef CONTROLPLANE_SRCROOT
+#define CONTROLPLANE_SRCROOT ""
+#endif
+
 @interface DefaultBrowserUTITests : XCTestCase
 @end
 
 @implementation DefaultBrowserUTITests
+
+- (NSString *)srcRoot {
+    NSString *root = @CONTROLPLANE_SRCROOT;
+    XCTAssertTrue(root.length > 0, @"CONTROLPLANE_SRCROOT must be set");
+    return root;
+}
+
+- (NSString *)defaultBrowserActionSource {
+    NSString *path = [self.srcRoot stringByAppendingPathComponent:@"Source/DefaultBrowserAction.m"];
+    NSError *error = nil;
+    NSString *text = [NSString stringWithContentsOfFile:path
+                                               encoding:NSUTF8StringEncoding
+                                                  error:&error];
+    XCTAssertNil(error, @"Failed reading %@: %@", path, error);
+    XCTAssertNotNil(text);
+    return text ?: @"";
+}
 
 - (NSDictionary *)infoDictionary {
     // When running tests, mainBundle is the test bundle, not the app bundle.
@@ -30,8 +52,48 @@
     return appBundle.infoDictionary;
 }
 
+- (void)testDefaultBrowserActionUsesUTTypeAPIsNotDeprecatedKUTType {
+    NSString *source = [self defaultBrowserActionSource];
+
+    XCTAssertTrue([source containsString:@"UniformTypeIdentifiers"],
+                  @"DefaultBrowserAction.m must import UniformTypeIdentifiers");
+    XCTAssertTrue([source containsString:@"UTTypeHTML"],
+                  @"DefaultBrowserAction.m must use UTTypeHTML");
+    XCTAssertTrue([source containsString:@"UTTypeURL"],
+                  @"DefaultBrowserAction.m must use UTTypeURL");
+
+    // No deprecated MobileCoreServices / LaunchServices UTI constants in this path
+    XCTAssertFalse([source containsString:@"kUTType"],
+                   @"DefaultBrowserAction.m must not use deprecated kUTType* constants");
+}
+
+- (NSUInteger)countOfRegex:(NSString *)pattern inString:(NSString *)source {
+    NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                        options:0
+                                                                          error:NULL];
+    return [re numberOfMatchesInString:source options:0 range:NSMakeRange(0, source.length)];
+}
+
+- (void)testDefaultBrowserActionKeepsNarrowBrowserContentTypes {
+    // Keep #43 policy: register HTML + URL only — never generic public.text.
+    NSString *source = [self defaultBrowserActionSource];
+    XCTAssertGreaterThan([self countOfRegex:@"\\bUTTypeHTML\\b" inString:source], 0u,
+                         @"Must register HTML content type for browser role");
+    XCTAssertGreaterThan([self countOfRegex:@"\\bUTTypeURL\\b" inString:source], 0u,
+                         @"Must register URL content type for browser role");
+    XCTAssertEqual([self countOfRegex:@"\\bpublic\\.text\\b" inString:source], 0u,
+                   @"Must not register generic public.text");
+    // Word-boundary avoids false hits on historical kUTTypeText / kUTTypeFileURL comments.
+    XCTAssertEqual([self countOfRegex:@"\\bUTTypeText\\b" inString:source], 0u,
+                   @"Must not register UTTypeText / generic text");
+    XCTAssertEqual([self countOfRegex:@"\\bUTTypePlainText\\b" inString:source], 0u,
+                   @"Must not register UTTypePlainText");
+    XCTAssertEqual([self countOfRegex:@"\\bUTTypeFileURL\\b" inString:source], 0u,
+                   @"Must not broaden to file URL claims");
+}
+
 - (void)testInfoPlistDoesNotClaimTextUTI {
-    // Verify Info.plist document types do not claim kUTTypeText (public.text)
+    // Verify Info.plist document types do not claim public.text
     NSArray *docTypes = self.infoDictionary[@"CFBundleDocumentTypes"];
     
     for (NSDictionary *docType in docTypes) {

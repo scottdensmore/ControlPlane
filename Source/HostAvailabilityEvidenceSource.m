@@ -27,12 +27,10 @@ static void HostAvailabilityReachabilityCallBack(SCNetworkReachabilityRef target
           (flags & kSCNetworkReachabilityFlagsIsDirect)             ? 'd' : '-'
           );
 #endif
-    NSAutoreleasePool *autoreleasePool = [[NSAutoreleasePool alloc] init];
-    
-    BOOL hostIsReachable = (flags & kSCNetworkFlagsReachable && !(flags & kSCNetworkFlagsTransientConnection)) ? YES:NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"hostAvailabilityChanged" object:@{@"target" : [NSValue value:&target withObjCType:@encode(void *)], @"availability" : [NSNumber numberWithBool:hostIsReachable]}];
-    
-    [autoreleasePool release];
+    @autoreleasepool {
+        BOOL hostIsReachable = (flags & kSCNetworkFlagsReachable && !(flags & kSCNetworkFlagsTransientConnection)) ? YES:NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"hostAvailabilityChanged" object:@{@"target" : [NSValue value:&target withObjCType:@encode(void *)], @"availability" : [NSNumber numberWithBool:hostIsReachable]}];
+    }
 }
 
 - (id)init
@@ -47,8 +45,8 @@ static void HostAvailabilityReachabilityCallBack(SCNetworkReachabilityRef target
 }
 
 - (void) dealloc {
-    [_monitoredHosts release];
-    [super dealloc];
+    
+    
 }
 
 - (void) hostAvailabilityHasChanged:(NSNotification *) context
@@ -62,7 +60,7 @@ static void HostAvailabilityReachabilityCallBack(SCNetworkReachabilityRef target
                 NSMutableDictionary *mutableMonitoredHosts = [self.monitoredHosts mutableCopy];
                 [mutableMonitoredHosts setObject:@{@"available" : data[@"availability"], @"target" : currentTarget} forKey:key];
                 self.monitoredHosts = mutableMonitoredHosts;
-                [mutableMonitoredHosts release];
+                
             }
         }];
     }
@@ -105,7 +103,7 @@ static void HostAvailabilityReachabilityCallBack(SCNetworkReachabilityRef target
     }
     
     self.monitoredHosts = mutableMonitoredHosts;
-    [mutableMonitoredHosts release];
+    
 
 }
 

@@ -53,7 +53,7 @@
         return nil;
     }
     Action *obj = [[[Action classForType:type] alloc] initWithDictionary:dict];
-    return [obj autorelease];
+    return obj;
 }
 
 + (BOOL)isActionApplicableToSystem
@@ -76,11 +76,11 @@
     if (!(self = [super init])) {
         return nil;
     }
-    type = [[Action typeForClass:[self class]] retain];
-    context = [@"" retain];
-    when = [@"Arrival" retain];
-    delay = [[NSNumber numberWithDouble:0] retain];
-    enabled = [[NSNumber numberWithBool:YES] retain];
+    type = [Action typeForClass:[self class]];
+    context = @"";
+    when = @"Arrival";
+    delay = [NSNumber numberWithDouble:0];
+    enabled = [NSNumber numberWithBool:YES];
     return self;
 }
 
@@ -89,34 +89,34 @@
     if (!(self = [super init])) {
         return nil;
     }
-    type = [[Action typeForClass:[self class]] retain];
+    type = [Action typeForClass:[self class]];
     NSString *contextValue = [dict valueForKey:@"context"];
-    context = [(contextValue ?: @"") retain];
+    context = (contextValue ?: @"");
     NSString *whenValue = [dict valueForKey:@"when"];
-    when = [(whenValue ?: @"Arrival") retain];
-    delay = [[dict valueForKey:@"delay"] retain] ?: [[NSNumber numberWithDouble:0] retain];
-    enabled = [[dict valueForKey:@"enabled"] retain] ?: [[NSNumber numberWithBool:YES] retain];
+    when = (whenValue ?: @"Arrival");
+    delay = [dict valueForKey:@"delay"] ?: [NSNumber numberWithDouble:0];
+    enabled = [dict valueForKey:@"enabled"] ?: [NSNumber numberWithBool:YES];
     return self;
 }
 
 - (void)dealloc
 {
-    [type release];
-    [context release];
-    [when release];
-    [delay release];
-    [enabled release];
-    [super dealloc];
+    
+    
+    
+    
+    
+    
 }
 
 - (NSMutableDictionary *)dictionary
 {
     return [NSMutableDictionary dictionaryWithObjectsAndKeys:
-            [[type copy] autorelease], @"type",
-            [[context copy] autorelease], @"context",
-            [[when copy] autorelease], @"when",
-            [[delay copy] autorelease], @"delay",
-            [[enabled copy] autorelease], @"enabled",
+            [type copy], @"type",
+            [context copy], @"context",
+            [when copy], @"when",
+            [delay copy], @"delay",
+            [enabled copy], @"enabled",
             nil];
 }
 
@@ -162,7 +162,7 @@
     }
     NSObject *val = [dict valueForKey:@"parameter"];
     if ([val isKindOfClass:[NSNumber class]]) {
-        turnOn = [val boolValue];
+        turnOn = [(NSNumber *)val boolValue];
     } else if ([val isEqual:@"on"] || [val isEqual:@"1"]) {
         turnOn = YES;
     } else {

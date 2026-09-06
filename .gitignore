@@ -44,3 +44,8 @@ Resources/usb-vendors.txt
 .claude/settings.local.json
 .claude/settings.json
 .claude/*.local.*
+
+# Sparkle 2 EdDSA private key material (never commit)
+*.eddsa
+*_eddsa_private*
+sparkle_eddsa_private*

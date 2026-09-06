@@ -25,8 +25,14 @@
 
 - (void)testLocationUsageDescriptionsPresent {
     NSDictionary *plist = [self shippingInfoPlist];
-    XCTAssertNotNil(plist[@"NSLocationWhenInUseUsageDescription"]);
-    XCTAssertNotNil(plist[@"NSLocationAlwaysAndWhenInUseUsageDescription"]);
+    NSString *whenInUse = plist[@"NSLocationWhenInUseUsageDescription"];
+    NSString *always = plist[@"NSLocationAlwaysAndWhenInUseUsageDescription"];
+    XCTAssertNotNil(whenInUse);
+    XCTAssertNotNil(always);
+    XCTAssertTrue([whenInUse rangeOfString:@"Wi" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"Location usage string should mention Wi‑Fi SSID (#84)");
+    XCTAssertTrue([always rangeOfString:@"Wi" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"Always Location usage string should mention Wi‑Fi SSID (#84)");
 }
 
 - (void)testLocalNetworkAndBonjourKeysPresent {

@@ -105,7 +105,7 @@
 - (id)initWithDictionary:(NSDictionary *)dict {
 
     self = [super initWithDictionary:dict];
-    [turnOn autorelease];
+    turnOn;
     turnOn = [[dict valueForKey:@"parameter"] copy];
 
     return self;

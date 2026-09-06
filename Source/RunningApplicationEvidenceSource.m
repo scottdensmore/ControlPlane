@@ -23,9 +23,9 @@
 
 - (void)dealloc
 {
-	[applications release];
+	
 
-	[super dealloc];
+	
 }
 
 
@@ -61,7 +61,7 @@
     #endif
     }
 	
-	[apps release];
+	
 }
 
 - (void)start {

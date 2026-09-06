@@ -1,4 +1,4 @@
-# Signing, notarization, and privileged helper (macOS-15)
+# Signing, notarization, and privileged helper (macOS-16)
 
 ControlPlane’s privileged path:
 
@@ -65,7 +65,7 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 - All binaries use hardened runtime with entitlements (see table above).
 - `disable-library-validation` is acceptable for notarization when Sparkle or other separately-signed frameworks are embedded.
-- Sparkle.framework must be a properly-signed universal binary (arm64 + x86_64) from upstream.
+- Sparkle.framework must be a properly-signed universal **Sparkle 2.x** binary (arm64 + x86_64) from upstream (currently 2.9.6).
 - The app, XPC service, and helper tool are signed individually during the build via `CodeSignOnCopy`; no `--deep` flag is used.
 
 ## Uninstall / legacy helpers
@@ -86,16 +86,52 @@ python3 Utilities/SMJobBlessUtil.py check /path/to/SomeApp.app
 
 On this product, `check` against `ControlPlane.app` is expected to report a missing `Contents/Library/LaunchServices` tool directory (XPC-bless, not app-bless).
 
+## CPHelperTool command inventory (#86)
+
+Privileged commands no longer use `system()` / `sprintf` shelling. Survivors run via `CPHelperCommandRunner` (`posix_spawn` argv arrays). Dead sharing CLIs remain gated with `ENOTSUP` in the helper and `isActionApplicableToSystem` in the app.
+
+| Helper method | Tool / API | Args (fixed unless noted) | Status on Tahoe |
+| :--- | :--- | :--- | :--- |
+| `enable`/`disableTimeMachine…` | `/usr/bin/tmutil` | `enable` / `disable` | Active |
+| `start`/`stopBackupTimeMachine…` | `/usr/bin/tmutil` | `startbackup` / `stopbackup` | Active |
+| `enable`/`disableFirewall…` | `/usr/libexec/ApplicationFirewall/socketfilterfw` | `--setglobalstate on\|off` | Active (replaced dead `defaults write …/com.apple.alf`) |
+| `setDisplaySleepTime:…` | `/usr/bin/pmset` | `-a displaysleep <minutes>` | Active; minutes validated `0…1440` before spawn |
+| `enable`/`disablePrinterSharing…` | `/usr/sbin/cupsctl` | `--share-printers` / `--no-share-printers` | Active |
+| `enable`/`disableSMBFileSharing…` | `/bin/launchctl` + `/usr/libexec/smb-sync-preferences` | `load\|unload -F` fixed `com.apple.smbd.plist` path | Active; pre-10.9 defaults path removed |
+| `enable`/`disableRemoteLogin…` | `/usr/sbin/systemsetup` | `-setremotelogin on\|off` | Active (replaced `launchctl load` of `ssh.plist`) |
+| Internet Sharing / AFP / FTP / TFTP / Web Sharing | — | — | Gated (`ENOTSUP`); app actions not applicable |
+
+**User-controlled input:** only display-sleep minutes (integer). It is range-checked and passed as its own argv element — never concatenated into a shell string.
+
+### Helper bless + privileged toggle smoke (manual)
+
+CI cannot bless (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Release build:
+
+1. Optional clean slate: `./Utilities/Uninstall.sh`
+2. Launch ControlPlane; trigger **Display Sleep Time** or **Toggle Firewall** (not a gated sharing action).
+3. Complete authorization / bless UI.
+4. Confirm `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` and `launchctl print system/com.scottdensmore.CPHelperTool`.
+5. Confirm the toggle took effect (System Settings → Lock Screen / Network → Firewall, or `pmset -g` / `socketfilterfw --getglobalstate`).
+
+### Residual risks
+
+- Helper still runs Apple CLIs as root; a compromised client that passes Authorization still gets those fixed operations.
+- `launchctl load`/`unload` for SMB is legacy relative to `bootstrap`/`bootout`; revisit if smbd toggle fails on a future OS.
+- `systemsetup -setremotelogin` and `socketfilterfw` behavior can change without notice; keep characterization tests and this inventory current per OS line.
+- No App Sandbox (by design); see Hardened Runtime section above.
+
 ## Explicit non-goals (follow-ups)
 
 - Migrating blessing to `SMAppService` (later OS line)
-- Replacing remaining helper `system()` / `sprintf` shelling with safer spawn APIs (prefer remove/gate commands first)
 - Broadening helper command surface
 - Narrowing Sparkle so the app can drop `disable-library-validation`
+- Rewriting the helper in Swift / typed non-CLI system APIs for every toggle
 
 ## Automated checks
 
 `HelperSigningRequirementTests` asserts source plists use team OU requirements and do not pin a personal Development CN. They do **not** perform SMJobBless.
+
+`CPHelperCommandRunnerTests` asserts helper sources no longer call `system()`/`sprintf`, validates display-sleep bounds, and characterizes fixed argv arrays (including `socketfilterfw` for firewall).
 
 ## Release checklist
 

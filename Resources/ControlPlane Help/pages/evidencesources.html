@@ -29,7 +29,7 @@
                     headphones, internal speakers or whatever else is available on the system</li>
                   <li><b>Bluetooth</b>: Connected and/or nearby bluetooth devices</li>
                   <li><b>Bonjour</b>: Services and devices located on your local network</li>
-                  <li><b>CoreLocation</b>: Your current location</li>
+                  <li><b>CoreLocation</b>: Your current location. Enabling this (or Wi‑Fi) will prompt for Location Services.</li>
                   <li><b>FireWire</b>: Connected FireWire devices — only registered when IOKit reports a FireWire controller. Unavailable on Apple Silicon and most modern Thunderbolt-only Macs; do not expect this evidence source on macOS 15 hardware without FireWire.</li>
                   <li><b>IP</b>: Current assigned IP addresses (IPV4 only)</li>
                   <li><b>Light</b>: How bright is your location, provided by the ambient light sensor</li>
@@ -42,7 +42,7 @@
                   <li><b>Sleep/Wake</b>: Allows ControlPlane to react to sleep and wake events</li>
                   <li><b>TimeOfDay</b>: Match a given time</li>
                   <li><b>USB</b>: Monitor attached USB devices</li>
-                  <li><b>WiFi</b>: Connected or nearby WiFi access points</li>
+                  <li><b>WiFi</b>: Connected or nearby WiFi access points. On modern macOS (Sonoma and later, including Tahoe), reading Wi‑Fi network names (SSID) and BSSID requires Location Services for ControlPlane. If Wi‑Fi rules stop matching, open System Settings &gt; Privacy &amp; Security &gt; Location Services and allow ControlPlane.</li>
                 </ul>
 <!--
 		<p style="text-align: center;">

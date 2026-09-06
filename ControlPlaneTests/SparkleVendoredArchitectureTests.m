@@ -52,10 +52,23 @@ static BOOL CPBinaryIncludesArchitecture(NSString *binaryPath, cpu_type_t cpuTyp
     return found;
 }
 
-- (NSString *)vendoredSparkleBinaryPath {
+- (NSString *)vendoredSparkleFrameworkRoot {
     NSString *root = @CONTROLPLANE_SRCROOT;
     XCTAssertTrue(root.length > 0, @"CONTROLPLANE_SRCROOT must be set for Sparkle arch tests");
-    return [root stringByAppendingPathComponent:@"Frameworks/Sparkle.framework/Versions/Current/Sparkle"];
+    return [root stringByAppendingPathComponent:@"Frameworks/Sparkle.framework"];
+}
+
+- (NSString *)vendoredSparkleBinaryPath {
+    return [[self vendoredSparkleFrameworkRoot]
+            stringByAppendingPathComponent:@"Versions/Current/Sparkle"];
+}
+
+- (NSDictionary *)vendoredSparkleInfoDictionary {
+    NSString *infoPath = [[self vendoredSparkleFrameworkRoot]
+                          stringByAppendingPathComponent:@"Versions/Current/Resources/Info.plist"];
+    NSDictionary *info = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+    XCTAssertNotNil(info, @"Expected Sparkle Info.plist at %@", infoPath);
+    return info;
 }
 
 - (void)testVendoredSparkleIncludesArm64 {
@@ -70,6 +83,23 @@ static BOOL CPBinaryIncludesArchitecture(NSString *binaryPath, cpu_type_t cpuTyp
     NSString *sparkleBinary = [self vendoredSparkleBinaryPath];
     XCTAssertTrue(CPBinaryIncludesArchitecture(sparkleBinary, CPU_TYPE_X86_64),
                   @"Vendored Sparkle must include x86_64 for Intel Macs");
+}
+
+- (void)testVendoredSparkleIsVersion2 {
+    NSDictionary *info = [self vendoredSparkleInfoDictionary];
+    NSString *shortVersion = info[@"CFBundleShortVersionString"];
+    XCTAssertTrue([shortVersion hasPrefix:@"2."],
+                  @"Expected Sparkle 2.x, got %@", shortVersion);
+}
+
+- (void)testInfoPlistUsesEdDSANotDSA {
+    NSString *root = @CONTROLPLANE_SRCROOT;
+    NSString *plistPath = [root stringByAppendingPathComponent:@"Info.plist"];
+    NSDictionary *info = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    XCTAssertNotNil(info, @"Expected Info.plist at %@", plistPath);
+    XCTAssertNil(info[@"SUPublicDSAKeyFile"],
+                 @"DSA public key file must not be required for Sparkle 2 releases");
+    XCTAssertNotNil(info[@"SUFeedURL"], @"SUFeedURL should remain configured");
 }
 
 @end

@@ -3,7 +3,7 @@
 #import "ContextSelectionButton.h"
 #import "CPController.h"
 
-@interface PrefsWindowController : NSWindowController<NSToolbarDelegate>
+@interface PrefsWindowController : NSWindowController
 {
 	IBOutlet NSWindow *prefsWindow;
 	IBOutlet NSView *generalPrefsView, *contextsPrefsView, *evidenceSourcesPrefsView,
@@ -11,7 +11,6 @@
 	NSString *currentPrefsGroup;
 	NSView *currentPrefsView;
 	NSArray *prefsGroups;
-	NSToolbar *prefsToolbar;
 
 	IBOutlet EvidenceSourceSetController *evidenceSources;
 	IBOutlet ContextsDataSource *contextsDataSource;
@@ -45,20 +44,15 @@
 - (IBAction)runWebPage:(id)sender;
 - (IBAction)emailSupport:(id)sender;
 - (IBAction)donateToControlPlane:(id)sender;
+- (IBAction)exportConfiguration:(id)sender;
+- (IBAction)importConfiguration:(id)sender;
 - (IBAction)menuBarDisplayOptionChanged:(id)sender;
 - (IBAction)enableMultipleActiveContexts:(id)sender;
 - (IBAction)closeMultipleActiveContextsAlert:(id)sender;
 
 @property (nonatomic,assign) IBOutlet NSWindow *multipleActiveContextsNotification;
 
-- (void)switchToViewFromToolbar:(NSToolbarItem *)item;
 - (void)switchToView:(NSString *)identifier;
-
-// NSToolbar delegates
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)groupId willBeInsertedIntoToolbar:(BOOL)flag;
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar;
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar;
-- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar;
 
 - (void)addRule:(id)sender;
 - (IBAction)editRule:(id)sender;

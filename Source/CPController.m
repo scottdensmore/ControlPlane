@@ -10,11 +10,12 @@
 #import "DSLogger.h"
 #import "CPController.h"
 #import "CPController+SleepMonitor.h"
+#import "CPDiagnosticsSnapshot.h"
 #import "NetworkLocationAction.h"
 #import "NSTimer+Invalidation.h"
 #import "CPNotifications.h"
 #import "SharedNumberFormatter.h"
-#import <libkern/OSAtomic.h>
+#import "CPMenuBarImage.h"
 //#import <HockeySDK/HockeySDK.h>
 
 
@@ -40,7 +41,7 @@
     for (id obj in self) {
         id objMutableCopy = [obj mutableCopy];
         [arrayMutableCopy addObject:objMutableCopy];
-        [objMutableCopy release];
+        
     }
     return arrayMutableCopy;
 }
@@ -94,9 +95,11 @@
 
 @property (retain,atomic,readwrite) NSArray *rules;
 @property (assign,atomic,readwrite) BOOL forceOneFullUpdate;
+@property (copy,atomic,readwrite) NSDictionary *lastDiagnosticsSnapshot;
 
 - (void)setStatusTitle:(NSString *)title;
 - (void)showInStatusBar:(id)sender;
+- (void)configureStatusMenuAccessibility;
 - (void)hideFromStatusBar:(NSTimer *)theTimer;
 - (void)doHideFromStatusBar:(BOOL)forced;
 - (void)setMenuBarImage:(NSImage *)imageName;
@@ -214,13 +217,10 @@ static NSSet *sharedActiveContexts = nil;
     return;
 }
 
-// Helper: Load a named image, and scale it to be suitable for menu bar use.
+// Helper: Load a named Asset Catalog image and prepare it as a menu-bar template
+// (#89 template path; #32 catalog). SF Symbols / MenuBarExtra remain deferred.
 - (NSImage *)prepareImageForMenubar:(NSString *)name {
-	NSImage *img = [NSImage imageNamed:name];
-    // TODO: provide images for retina displays
-	[img setSize:NSMakeSize(18, 18)];
-
-	return img;
+	return [CPMenuBarImage menuBarImageNamed:name size:NSMakeSize(18, 18)];
 }
 
 - (void) interfaceThemeDidChange {
@@ -231,7 +231,7 @@ static NSSet *sharedActiveContexts = nil;
 - (NSImage *)tintedIconImage:(NSImage *)image withTint:(NSColor *)color {
     if ((image != nil) && [image isTemplate]) {
         if ((color != nil) && ([color alphaComponent] > 0.0) && ![color isEqualTo:[NSColor blackColor]]) {
-            NSImage *tintedImage = [[image copy] autorelease];
+            NSImage *tintedImage = [image copy];
             [tintedImage setTemplate:NO];
             [tintedImage lockFocus];
             [[color colorUsingColorSpace:[NSColorSpace sRGBColorSpace]] set];
@@ -249,8 +249,7 @@ static NSSet *sharedActiveContexts = nil;
 		return nil;
     }
 
-	sbImageTemplate = [[self prepareImageForMenubar:@"cp-icon"] retain];
-    [sbImageTemplate setTemplate:YES];
+	sbImageTemplate = [self prepareImageForMenubar:@"cp-icon"];
 
 	sbItem = nil;
 	sbHideTimer = nil;
@@ -264,12 +263,12 @@ static NSSet *sharedActiveContexts = nil;
     screenLockActionQueue = [[NSMutableArray alloc] init];
 
     if (![self doInitUpdatingQueue]) {
-        [self release];
+        
         return nil;
     }
     
     NSArray *rulesInUserDefaults = [[NSUserDefaults standardUserDefaults] arrayForKey:@"Rules"];
-    _rules = [[rulesInUserDefaults deepMutableCopy] retain];
+    _rules = [rulesInUserDefaults deepMutableCopy];
 
     _forceOneFullUpdate = YES;
     
@@ -280,18 +279,18 @@ static NSSet *sharedActiveContexts = nil;
     [self stopMonitoringSleepAndPowerNotifications];
     [self doReleaseUpdatingQueue];
 
-    [_rules release];
-    [_candidateContextUUID release];
-
-    [screenLockActionQueue release];
-    [screenSaverActionQueue release];
-
-    [sbImageTemplate release];
-
-    [_currentContextPath release];
-    [_currentContext release];
     
-	[super dealloc];
+    
+
+    
+    
+
+    
+
+    
+    
+    
+	
 }
 
 - (ContextsDataSource *)contextsDataSource {
@@ -301,6 +300,55 @@ static NSSet *sharedActiveContexts = nil;
 
 - (NSArray *)activeRules {
     return [self.rules deepMutableCopy];
+}
+
+- (NSDictionary *)refreshDiagnosticsSnapshot {
+    NSArray *rules = self.activeRules ?: @[];
+    NSMutableArray *matchingRules = [NSMutableArray array];
+    for (NSDictionary *rule in rules) {
+        NSNumber *cached = rule[@"cachedStatus"];
+        if (cached && [cached intValue] == RuleDoesMatch) {
+            [matchingRules addObject:rule];
+        }
+    }
+
+    NSMutableDictionary *guesses = [self getGuessesForRules:matchingRules];
+    if (![self useMultipleActiveContexts]) {
+        [self applyDefaultContextTo:guesses];
+    }
+
+    NSMutableArray *evidenceRows = [NSMutableArray array];
+    for (EvidenceSource *src in [evidenceSources sourceEnumerator]) {
+        NSString *summary = [src description] ?: @"";
+        [evidenceRows addObject:@{
+            @"name": [src name] ?: @"",
+            @"friendlyName": [src friendlyName] ?: ([src name] ?: @""),
+            @"running": @([src isRunning]),
+            @"dataCollected": @([src dataCollected]),
+            @"summary": summary,
+        }];
+    }
+
+    Context *current = self.currentContext;
+    NSString *uuid = current.uuid;
+    double minConf = [[NSUserDefaults standardUserDefaults] floatForKey:@"MinimumConfidenceRequired"];
+
+    __weak CPController *weakSelf = self;
+    NSDictionary *snapshot = [CPDiagnosticsSnapshot snapshotWithCurrentContextName:self.currentContextName
+                                                                currentContextPath:self.currentContextPath
+                                                                currentContextUUID:uuid
+                                                                             rules:rules
+                                                                    contextGuesses:guesses
+                                                                 contextNameForUUID:^NSString *(NSString *ctxUUID) {
+        Context *ctx = [[weakSelf contextsDataSource] contextByUUID:ctxUUID];
+        return ctx.name ?: ctxUUID;
+    }
+                                                     minimumConfidenceRequired:minConf
+                                                               evidenceSources:evidenceRows];
+
+    self.lastDiagnosticsSnapshot = snapshot;
+    DSLogRules(@"Diagnostics snapshot: %@", snapshot[@"explanation"]);
+    return snapshot;
 }
 
 - (void)setActiveRules:(NSArray *)newRules {
@@ -317,7 +365,7 @@ static NSSet *sharedActiveContexts = nil;
         }
         
         [rules addObject:rule];
-        [rule release];
+        
     }
     
     [[NSUserDefaults standardUserDefaults] setObject:rules forKey:@"Rules"];
@@ -325,7 +373,7 @@ static NSSet *sharedActiveContexts = nil;
     self.rules = rules; // atomic
     self.forceOneFullUpdate = YES;
     
-    [rules release];
+    
     
     [self shiftRegularUpdatesToStartAt:dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC)];
 }
@@ -365,20 +413,12 @@ static NSSet *sharedActiveContexts = nil;
 	[[NSUserDefaults standardUserDefaults] setValue:[ctxt uuid] forKey:@"DefaultContext"];
 
 	// See if there are old rules and actions to import
-	NSArray *oldRules = (NSArray *) CFPreferencesCopyAppValue(CFSTR("Rules"), oldDomain);
-	NSArray *oldActions = (NSArray *) CFPreferencesCopyAppValue(CFSTR("Actions"), oldDomain);
+	NSArray *oldRules = CFBridgingRelease(CFPreferencesCopyAppValue(CFSTR("Rules"), oldDomain));
+	NSArray *oldActions = CFBridgingRelease(CFPreferencesCopyAppValue(CFSTR("Actions"), oldDomain));
 	if (!oldRules || !oldActions) {
-		if (oldRules)
-			CFRelease(oldRules);
-		else if (oldActions)
-			CFRelease(oldActions);
-		
 		[self importVersion1SettingsFinish:rulesImported withActions:actionsImported andIPActions:ipActionsFound];
 		return;
 	}
-	
-	[oldRules autorelease];
-	[oldActions autorelease];
 
 	// Replicate (some) rules
 	NSMutableArray *newRules = [NSMutableArray array];
@@ -389,7 +429,7 @@ static NSSet *sharedActiveContexts = nil;
 			ipActionsFound = YES;
 #else
 			// Warn!
-			NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+			NSAlert *alert = [[NSAlert alloc] init];
 			[alert setAlertStyle:NSWarningAlertStyle];
 			[alert setMessageText:@"Couldn't import MarcoPolo 1.x IP rule"];
 			[alert setInformativeText:
@@ -436,7 +476,7 @@ static NSSet *sharedActiveContexts = nil;
 	en = [lookup objectEnumerator];
 	cnt = 0;
 	while ((ctxt = [en nextObject])) {
-		Action *act = [[[NetworkLocationAction alloc] initWithOption:[ctxt name]] autorelease];
+		Action *act = [[NetworkLocationAction alloc] initWithOption:[ctxt name]];
 		NSMutableDictionary *act_dict = [act dictionary];
 		[act_dict setValue:[ctxt uuid] forKey:@"context"];
 		[act_dict setValue:NSLocalizedString(@"Set Network Location", @"") forKey:@"description"];
@@ -450,7 +490,7 @@ static NSSet *sharedActiveContexts = nil;
 }
 
 - (void)importVersion1SettingsFinish: (BOOL)rulesImported withActions: (BOOL)actionsImported andIPActions: (BOOL)ipActionsFound {
-	NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+	NSAlert *alert = [[NSAlert alloc] init];
     [alert setAlertStyle:NSAlertStyleInformational];
 	if (!rulesImported && !actionsImported)
 		[alert setMessageText:NSLocalizedString(@"Quick Start", @"")];
@@ -709,7 +749,7 @@ static NSSet *sharedActiveContexts = nil;
 	NSDictionary *attrs = @{ NSFontAttributeName: [NSFont menuBarFontOfSize:0] };
 	NSAttributedString *as = [[NSAttributedString alloc] initWithString:title attributes:attrs];
 	sbItem.button.attributedTitle = as;
-    [as release];
+    
 }
 
 - (void)updateMenuBarImageOnIconColorPreviewNotification:(NSNotification *)notification {
@@ -778,8 +818,14 @@ static NSSet *sharedActiveContexts = nil;
         [self doHideFromStatusBar:YES];
 	}
 
-	sbItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
-    sbItem.button.cell.highlighted = YES;
+	sbItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+	// Prefer button API (NSStatusItem.button) over legacy setters; catalog + template
+	// imagery via prepareImageForMenubar: / CPMenuBarImage (#89 / #32).
+	sbItem.button.imagePosition = NSImageLeft;
+	sbItem.button.appearsDisabled = NO;
+	sbItem.button.accessibilityLabel = NSLocalizedString(@"ControlPlane", @"VoiceOver label for status item");
+	sbItem.button.accessibilityIdentifier = @"status.item.controlplane";
+	[self configureStatusMenuAccessibility];
 
     [self updateMenuBarImage];
 
@@ -788,6 +834,39 @@ static NSSet *sharedActiveContexts = nil;
     }
 
 	[sbItem setMenu:sbMenu];
+}
+
+- (void)configureStatusMenuAccessibility {
+	if (!sbMenu) {
+		return;
+	}
+	[sbMenu setAccessibilityLabel:NSLocalizedString(@"ControlPlane", @"VoiceOver label for status menu")];
+	[sbMenu setAccessibilityIdentifier:@"status.menu.controlplane"];
+
+	for (NSMenuItem *item in sbMenu.itemArray) {
+		if ([item isSeparatorItem]) {
+			continue;
+		}
+		NSString *actionName = item.action ? NSStringFromSelector(item.action) : @"";
+		NSString *identifier = nil;
+		if ([actionName isEqualToString:@"runPreferences:"]) {
+			identifier = @"status.menu.preferences";
+		} else if ([actionName isEqualToString:@"runAbout:"]) {
+			identifier = @"status.menu.about";
+		} else if ([actionName isEqualToString:@"terminate:"]) {
+			identifier = @"status.menu.quit";
+		} else if ([actionName isEqualToString:@"showHelp:"]) {
+			identifier = @"status.menu.help";
+		} else if ([actionName isEqualToString:@"checkForUpdates:"]) {
+			identifier = @"status.menu.updates";
+		}
+		if (identifier) {
+			[item setAccessibilityIdentifier:identifier];
+			if (item.title.length > 0) {
+				[item setAccessibilityLabel:item.title];
+			}
+		}
+	}
 }
 
 - (void)hideFromStatusBar:(NSTimer *)theTimer {
@@ -802,7 +881,7 @@ static NSSet *sharedActiveContexts = nil;
     if (forced || [[NSUserDefaults standardUserDefaults] boolForKey:@"HideStatusBarIcon"]) {
         if (sbItem) {
             [[NSStatusBar systemStatusBar] removeStatusItem:sbItem];
-            [sbItem release];
+            
             sbItem = nil;
         }
     }
@@ -811,11 +890,11 @@ static NSSet *sharedActiveContexts = nil;
 - (void)startOrStopHidingFromStatusBar {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"HideStatusBarIcon"]) {
         if (!sbHideTimer && sbItem) {
-            sbHideTimer = [[NSTimer scheduledTimerWithTimeInterval: (NSTimeInterval)STATUS_BAR_LINGER
+            sbHideTimer = [NSTimer scheduledTimerWithTimeInterval: (NSTimeInterval)STATUS_BAR_LINGER
                                                             target: self
                                                           selector: @selector(hideFromStatusBar:)
                                                           userInfo: nil
-                                                           repeats: NO] retain];
+                                                           repeats: NO];
         }
     } else {
 		if (sbHideTimer) {
@@ -832,7 +911,7 @@ static NSSet *sharedActiveContexts = nil;
     if ([[NSUserDefaults standardUserDefaults] integerForKey:@"menuBarOption"] != CP_DISPLAY_ICON) {
         if ([self useMultipleActiveContexts]) {
             /*int x=0;
-             NSMutableString *_joinedContextPaths = [NSMutableString string]; //..shortcut for:  [[[NSMutableString alloc] initWithString:@""] autorelease];
+             NSMutableString *_joinedContextPaths = [NSMutableString string]; //..shortcut for:  [[NSMutableString alloc] initWithString:@""];
              for (Context *context in self.activeContexts) {
                 if (x++!=0) [_joinedContextPaths appendString: @" + "];
                 [_joinedContextPaths appendString:context.name]; //[contextsDataSource pathFromRootTo:context.uuid]];
@@ -856,9 +935,9 @@ static NSSet *sharedActiveContexts = nil;
 
 - (void)rebuildForceContextMenu {
 	// Fill in 'Force context' submenu
-	NSMenu *submenu = [[[NSMenu alloc] init] autorelease];
+	NSMenu *submenu = [[NSMenu alloc] init];
 	for (Context *ctxt in [contextsDataSource orderedTraversal]) {
-		NSMenuItem *item = [[[NSMenuItem alloc] init] autorelease];
+		NSMenuItem *item = [[NSMenuItem alloc] init];
 		[item setTitle:[ctxt name]];
 		[item setIndentationLevel:[ctxt.depth intValue]];
 		[item setRepresentedObject:ctxt.uuid];
@@ -872,7 +951,7 @@ static NSSet *sharedActiveContexts = nil;
         
 		[submenu addItem:item];
         
-		item = [[item copy] autorelease];
+		item = [item copy];
 		[item setTitle:[NSString stringWithFormat:@"%@ (*)", [item title]]];
         [item setKeyEquivalentModifierMask:NSEventModifierFlagOption];
 		[item setAlternate:YES];
@@ -902,7 +981,7 @@ static NSSet *sharedActiveContexts = nil;
     
     // insert all active contexts
     if ([self.activeContexts count] == 0) {
-        NSMenuItem *currentContextMenuItem = [[[NSMenuItem alloc] initWithTitle:@"?" action:nil keyEquivalent:@""] autorelease];
+        NSMenuItem *currentContextMenuItem = [[NSMenuItem alloc] initWithTitle:@"?" action:nil keyEquivalent:@""];
         [currentContextMenuItem setTag:99];
         [currentContextMenuItem setIndentationLevel:1];
         [currentContextMenuItem setEnabled:NO];
@@ -914,12 +993,12 @@ static NSSet *sharedActiveContexts = nil;
             NSMenuItem *currentContextMenuItem = nil;
 
             if ([self.stickyActiveContexts containsObject:context]) {
-                currentContextMenuItem = [[[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@*", context.name] action:@selector(deactivateContextByMenuClick:) keyEquivalent:@""] autorelease];
+                currentContextMenuItem = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"%@*", context.name] action:@selector(deactivateContextByMenuClick:) keyEquivalent:@""];
                 
                 [currentContextMenuItem setToolTip:NSLocalizedString(@"Context is Sticky, click to deactivate context", @"")];
             }
             else {
-                currentContextMenuItem = [[[NSMenuItem alloc] initWithTitle:context.name action:@selector(deactivateContextByMenuClick:) keyEquivalent:@""] autorelease];
+                currentContextMenuItem = [[NSMenuItem alloc] initWithTitle:context.name action:@selector(deactivateContextByMenuClick:) keyEquivalent:@""];
                 [currentContextMenuItem setToolTip:NSLocalizedString(@"Click to deactivate context", @"")];
             }
             
@@ -1219,7 +1298,7 @@ static NSSet *sharedActiveContexts = nil;
             NSArray *queue = screenSaverActionQueue;
             screenSaverActionQueue = [[NSMutableArray alloc] init];
             [self executeOrQueueActions:queue];
-            [queue release];
+            
         }
     });
 }
@@ -1241,7 +1320,7 @@ static NSSet *sharedActiveContexts = nil;
             NSArray *queue = screenLockActionQueue;
             screenLockActionQueue = [[NSMutableArray alloc] init];
             [self executeOrQueueActions:queue];
-            [queue release];
+            
         }
     });
 }
@@ -1264,7 +1343,7 @@ static NSSet *sharedActiveContexts = nil;
     }
     
     [self.activeContexts addObject:context];
-    DSLog(@"Triggering arrival actions, if any, for '%@'", context.name);
+    DSLogActions(@"Triggering arrival actions, if any, for '%@'", context.name);
     [self triggerArrivalActionsOnWalk:[NSArray arrayWithObject:context]];
     [self updateActiveContextsMenuTitle];
     [self updateActiveContextsMenuList];
@@ -1275,7 +1354,7 @@ static NSSet *sharedActiveContexts = nil;
 - (void) deactivateContext:(Context *) context {
     if (context != nil) {
         [self.activeContexts removeObject:context];
-        DSLog(@"Triggering departure actions, if any, for '%@'", context.name);
+        DSLogActions(@"Triggering departure actions, if any, for '%@'", context.name);
         [self triggerDepartureActionsOnWalk:[NSArray arrayWithObject:context] usingReverseDelays:NO];
     }
     [self updateActiveContextsMenuTitle];
@@ -1342,7 +1421,7 @@ static NSSet *sharedActiveContexts = nil;
 	NSArray *leavingWalk = walks[0], *enteringWalk = walks[1];
     
     if ([leavingWalk count] > 0) {
-        DSLog(@"Triggering departure actions, if any, for '%@'", [self currentContextName]);
+        DSLogActions(@"Triggering departure actions, if any, for '%@'", [self currentContextName]);
         
         // Originally CP was implemented so that deactivating the current (single) active context
         // was done with departure actions being triggered based on their _reverse_ delays.
@@ -1354,7 +1433,7 @@ static NSSet *sharedActiveContexts = nil;
     [self postNotificationsOnContextTransitionWhenForcedByUserIs:isManuallyTriggered];
     
     if ([enteringWalk count] > 0) {
-        DSLog(@"Triggering arrival actions, if any, for '%@'", [self currentContextName]);
+        DSLogActions(@"Triggering arrival actions, if any, for '%@'", [self currentContextName]);
         [self triggerArrivalActionsOnWalk:enteringWalk];
     }
     [CPController setSharedActiveContexts:self.activeContexts];
@@ -1405,7 +1484,7 @@ static NSSet *sharedActiveContexts = nil;
 		ctxt = [contextsDataSource contextByUUID:[sender representedObject]];
     }
 	
-	DSLog(@"Going to '%@'", [ctxt name]);
+	DSLogActions(@"Going to '%@'", [ctxt name]);
 
 	// Selecting any context in the force-context menu deselects the 'stick forced contexts' item,
 	// so we force it to be correct here.
@@ -1466,12 +1545,12 @@ static NSSet *sharedActiveContexts = nil;
     BOOL changed = NO;
     NSArray *matchingRules = [self getRulesThatMatchAndSetChangeFlag:&changed];
 #ifdef DEBUG_MODE
-    DSLog(@"Rules that match: %@", matchingRules);
+    DSLogRules(@"Rules that match: %@", matchingRules);
 #endif
     
     if (!changed && (smoothCounter == 0) && !self.forceOneFullUpdate) {
 #ifdef DEBUG_MODE
-        DSLog(@"Same rule are matching as on previous update. No further actions required.");
+        DSLogRules(@"Same rule are matching as on previous update. No further actions required.");
 #endif
         return;
     }
@@ -1487,9 +1566,10 @@ static NSSet *sharedActiveContexts = nil;
     if (![self useMultipleActiveContexts])
         [self applyDefaultContextTo:guesses];
     
-    DSLog(@"Context guesses: %@", guesses);
+    DSLogRules(@"Context guesses: %@", guesses);
     
     [contextsDataSource updateConfidencesFromGuesses:guesses];
+    [self refreshDiagnosticsSnapshot];
     
     
     
@@ -1724,7 +1804,7 @@ static NSSet *sharedActiveContexts = nil;
     [guessesForConversion enumerateKeysAndObjectsUsingBlock:^(NSString *uuid, NSNumber *conf, BOOL *stop) {
         guesses[uuid] = @(1.0 - [conf doubleValue]);
     }];
-    [guessesForConversion release];
+    
 
     return guesses;
 }
@@ -1761,7 +1841,7 @@ static NSSet *sharedActiveContexts = nil;
     NSString *guessUUID = guessContext.uuid;
     NSNumber *guessConf = guessContext.confidence;
 
-    DSLog(@"Checking '%@' (%@) with confidence %@", guessContext.name, guessUUID, guessConf);
+    DSLogRules(@"Checking '%@' (%@) with confidence %@", guessContext.name, guessUUID, guessConf);
 
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
 
@@ -1852,6 +1932,8 @@ static NSSet *sharedActiveContexts = nil;
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag {
     [self showInStatusBar:self];
     [self startOrStopHidingFromStatusBar];
+    // LSUIElement agent: activate so Preferences is key/front on Tahoe.
+    [NSApp activateIgnoringOtherApps:YES];
     [prefsWindow makeKeyAndOrderFront:self];
 	return YES;
 }
@@ -1869,6 +1951,49 @@ static NSSet *sharedActiveContexts = nil;
 
 - (void) showMainApplicationWindow {
 	[prefsWindow makeFirstResponder:nil];
+}
+
+
+- (void)installStatusMenuItemsForConfigurationTransferWithTarget:(id)target {
+    if (!sbMenu || !target) {
+        return;
+    }
+    if ([sbMenu itemWithTag:35001] != nil) {
+        return;
+    }
+
+    SEL runPreferencesSelector = NSSelectorFromString(@"runPreferences:");
+    SEL exportSelector = NSSelectorFromString(@"exportConfiguration:");
+    SEL importSelector = NSSelectorFromString(@"importConfiguration:");
+
+    NSInteger prefsIndex = -1;
+    for (NSInteger i = 0; i < [sbMenu numberOfItems]; i++) {
+        NSMenuItem *item = [sbMenu itemAtIndex:i];
+        if ([item action] == runPreferencesSelector) {
+            prefsIndex = i;
+            break;
+        }
+    }
+    if (prefsIndex < 0) {
+        return;
+    }
+
+    NSMenuItem *exportItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Export Configuration…",
+                                                                                  @"Status menu item to export configuration")
+                                                         action:exportSelector
+                                                  keyEquivalent:@""];
+    [exportItem setTarget:target];
+    [exportItem setTag:35001];
+
+    NSMenuItem *importItem = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Import Configuration…",
+                                                                                  @"Status menu item to import configuration")
+                                                         action:importSelector
+                                                  keyEquivalent:@""];
+    [importItem setTarget:target];
+    [importItem setTag:35002];
+
+    [sbMenu insertItem:exportItem atIndex:prefsIndex];
+    [sbMenu insertItem:importItem atIndex:(prefsIndex + 1)];
 }
 
 #pragma mark NSUserDefaults notifications
@@ -1970,13 +2095,10 @@ const int64_t UPDATING_TIMER_LEEWAY = (int64_t) (0.5 * NSEC_PER_SEC);
 - (void)doReleaseUpdatingQueue {
     if (updatingTimer) {
         dispatch_source_cancel(updatingTimer);
-        dispatch_release(updatingTimer);
     }
     if (concurrentActionQueue) {
-        dispatch_release(concurrentActionQueue);
     }
     if (updatingQueue) {
-        dispatch_release(updatingQueue);
     }
 }
 

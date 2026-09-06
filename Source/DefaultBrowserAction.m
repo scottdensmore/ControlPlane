@@ -7,6 +7,7 @@
 //
 
 #import "DefaultBrowserAction.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 @interface DefaultBrowserAction (Private)
 
@@ -51,8 +52,8 @@
 }
 
 - (void) dealloc {
-	[app release];
-	[super dealloc];
+	
+	
 }
 
 - (void) setControlPlaneAsURLHandler {
@@ -72,21 +73,21 @@
         NSAlert *alert = [[NSAlert alloc] init];
         [alert setMessageText:NSLocalizedString(@"You are adding or have triggered a Default Browser Action but ControlPlane is not currently set as the system wide default web browser. For the Default Browser Action feature to work properly ControlPlane must be set as the system's default web browser. ControlPlane will take the URL and then pass it to the browser of your choice. You may be asked to confirm this choice if you are using OS X 10.10 (Yosemite) or higher. Please select 'Use ControlPlane' if prompted." , @"")];
         [self performSelectorOnMainThread:@selector(runModal) withObject:alert waitUntilDone:false];
-        [alert release];
         
-        LSSetDefaultHandlerForURLScheme((CFStringRef) @"https", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeHTML, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType(kUTTypeURL, kLSRolesViewer, (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        // Removed kUTTypeFileURL and kUTTypeText registrations to narrow handler claims to browser-specific types only
+        
+        LSSetDefaultHandlerForURLScheme((__bridge CFStringRef) @"https", (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
+        // Narrow browser-document registration (#43): HTML + URL only via UniformTypeIdentifiers.
+        LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef) UTTypeHTML.identifier, kLSRolesViewer, (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
+        LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef) UTTypeURL.identifier, kLSRolesViewer, (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
 
     }
-    LSSetDefaultHandlerForURLScheme((CFStringRef) @"http", (CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
+    LSSetDefaultHandlerForURLScheme((__bridge CFStringRef) @"http", (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
 }
 
 - (NSMutableDictionary *) dictionary {
 	NSMutableDictionary *dict = [super dictionary];
 	
-	[dict setObject: [[app copy] autorelease] forKey: @"parameter"];
+	[dict setObject: [app copy] forKey: @"parameter"];
 	
 	return dict;
 }

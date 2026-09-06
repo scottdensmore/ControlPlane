@@ -40,7 +40,7 @@
 
 - (void)dealloc
 {
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary

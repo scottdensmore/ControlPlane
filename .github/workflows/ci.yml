@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - macOS-15
+      - macOS-16
       - master
   pull_request:
     branches:
       - macOS-15
+      - macOS-16
       - master
 
 concurrency:
@@ -17,7 +19,9 @@ concurrency:
 jobs:
   smoke:
     name: Debug build + ControlPlaneTests
-    runs-on: macos-15
+    # GitHub has no macos-16 label; Tahoe images are macos-26 (Xcode 26.x).
+    # Fallback: macos-15 if macos-26 capacity is unavailable.
+    runs-on: macos-26
     timeout-minutes: 45
 
     steps:

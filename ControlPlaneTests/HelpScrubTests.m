@@ -83,4 +83,15 @@
     }
 }
 
+- (void)testHelpDocumentsWiFiNeedsLocation {
+    NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/evidencesources.html"];
+    NSError *error = nil;
+    NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(html);
+    XCTAssertTrue([html rangeOfString:@"Location Services" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"Evidence Sources Help must explain Wi‑Fi needs Location (#84)");
+    XCTAssertTrue([html rangeOfString:@"SSID" options:NSCaseInsensitiveSearch].location != NSNotFound);
+}
+
 @end

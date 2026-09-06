@@ -26,7 +26,7 @@
                     <imageView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8">
                         <rect key="frame" x="20" y="95" width="128" height="128"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="cp-icon" id="22"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="axesIndependently" image="ControlPlane" id="22"/>
                     </imageView>
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9">
                         <rect key="frame" x="20" y="64" width="128" height="23"/>
@@ -74,6 +74,6 @@
         <userDefaultsController representsSharedInstance="YES" id="26"/>
     </objects>
     <resources>
-        <image name="cp-icon" width="256" height="256"/>
+        <image name="ControlPlane" width="256" height="256"/>
     </resources>
 </document>

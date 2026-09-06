@@ -120,7 +120,7 @@
                         <action selector="checkForUpdates:" target="476" id="478"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Préférences…" id="391">
+                <menuItem title="Préférences…" id="391" keyEquivalent=",">
                     <connections>
                         <action selector="runPreferences:" target="320" id="821"/>
                     </connections>
@@ -145,7 +145,7 @@
                 </menuItem>
             </items>
         </menu>
-        <customObject id="476" userLabel="SUUpdater" customClass="SUUpdater"/>
+        <customObject id="476" userLabel="SPUStandardUpdaterController" customClass="SPUStandardUpdaterController"/>
         <arrayController avoidsEmptySelection="NO" id="513" userLabel="ActionsController" customClass="DNDArrayController">
             <declaredKeys>
                 <string>type</string>
@@ -1507,12 +1507,19 @@ Gw
                         <items>
                             <menuItem title="About ControlPlane" id="1787">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                            </menuItem>
+                            
+                    <connections>
+                        <action selector="runAbout:" target="320" id="1987"/>
+                    </connections></menuItem>
                             <menuItem title="Check for Updates" id="1788"/>
                             <menuItem isSeparatorItem="YES" id="1790">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Preferences..." keyEquivalent="," id="1792"/>
+                            <menuItem title="Preferences..." keyEquivalent="," id="1792">
+<connections>
+                        <action selector="runPreferences:" target="320" id="1983"/>
+                    </connections>
+                </menuItem>
                             <menuItem isSeparatorItem="YES" id="1794">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
@@ -1522,15 +1529,30 @@ Gw
                             <menuItem isSeparatorItem="YES" id="1786">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Hide ControlPlane" keyEquivalent="h" id="1785"/>
+                            <menuItem title="Hide ControlPlane" keyEquivalent="h" id="1785">
+<connections>
+                        <action selector="hide:" target="-1" id="1984"/>
+                    </connections>
+                </menuItem>
                             <menuItem title="Hide Others" keyEquivalent="h" id="1784">
                                 <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            </menuItem>
-                            <menuItem title="Show All" id="1789"/>
+                            
+                    <connections>
+                        <action selector="hideOtherApplications:" target="-1" id="1988"/>
+                    </connections></menuItem>
+                            <menuItem title="Show All" id="1789">
+<connections>
+                        <action selector="unhideAllApplications:" target="-1" id="1985"/>
+                    </connections>
+                </menuItem>
                             <menuItem isSeparatorItem="YES" id="1791">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>
-                            <menuItem title="Quit ControlPlane" keyEquivalent="q" id="1793"/>
+                            <menuItem title="Quit ControlPlane" keyEquivalent="q" id="1793">
+<connections>
+                        <action selector="terminate:" target="-2" id="1986"/>
+                    </connections>
+                </menuItem>
                         </items>
                     </menu>
                 </menuItem>

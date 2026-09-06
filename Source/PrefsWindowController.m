@@ -4,10 +4,14 @@
 //  IMPORTANT: This code is intended to be compiled for the ARC mode
 //
 
-#import "AboutPanel.h"
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "Action.h"
+#import "CPConfigTransfer.h"
 #import "CPLoginItemService.h"
+#import "CPPrefsSettingsShellController.h"
+#import "CPDiagnosticsSnapshot.h"
 #import "DSLogger.h"
+#import "SharedNumberFormatter.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
 
@@ -150,14 +154,28 @@
 
 #pragma mark -
 
-@interface PrefsWindowController ()
+@interface PrefsWindowController () <NSTableViewDataSource, NSTableViewDelegate>
 
 @property (nonatomic,strong) NSDate *logBufferUnchangedSince;
+@property (nonatomic,strong) CPPrefsSettingsShellController *settingsShell;
+@property (nonatomic,strong) NSView *diagnosticsPrefsView;
+@property (nonatomic,strong) NSTextField *diagnosticsCurrentContextField;
+@property (nonatomic,strong) NSTextField *diagnosticsLeadingContextField;
+@property (nonatomic,strong) NSTextField *diagnosticsExplanationField;
+@property (nonatomic,strong) NSTextView *diagnosticsEvidenceView;
+@property (nonatomic,strong) NSTableView *diagnosticsRulesTable;
+@property (nonatomic,copy) NSArray *diagnosticsRuleRows;
+@property (nonatomic,strong) NSTimer *diagnosticsRefreshTimer;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
 - (void)updateLogBuffer:(NSTimer *)timer;
 - (void)onPrefsWindowClose:(NSNotification *)notification;
+- (void)applyPresentationForGroupId:(NSString *)groupId;
+- (NSView *)buildDiagnosticsPrefsView;
+- (void)refreshDiagnosticsPane:(id)sender;
+- (void)startDiagnosticsRefreshTimer;
+- (void)stopDiagnosticsRefreshTimer;
 
 @end
 
@@ -244,6 +262,13 @@
 			@"AdvancedPrefs", @"icon",
             @YES, @"resizeableHeight",
 			advancedPrefsView, @"view", nil],
+		[NSMutableDictionary dictionaryWithObjectsAndKeys:
+			@"Diagnostics", @"name",
+			NSLocalizedString(@"Diagnostics", "Preferences section"), @"display_name",
+			@"AdvancedPrefs", @"icon",
+            @YES, @"resizeableWidth",
+            @YES, @"resizeableHeight",
+			[self buildDiagnosticsPrefsView], @"view", nil],
 		];
 
 	// Store initial sizes of each prefs NSView as their "minimum" size
@@ -253,41 +278,42 @@
 		group[@"min_width"]  = @(frameSize.width);
 		group[@"min_height"] = @(frameSize.height);
 		NSString *groupName = group[@"name"];
+		NSString *displayName = group[@"display_name"];
 		if ([groupName isKindOfClass:[NSString class]]) {
 			[view setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.tab.%@", [groupName lowercaseString]]];
+		}
+		if ([displayName isKindOfClass:[NSString class]]) {
+			[view setAccessibilityLabel:displayName];
+			[view setAccessibilityRoleDescription:NSLocalizedString(@"Preferences tab", @"VoiceOver role for prefs pane")];
 		}
 	}
 
 	[prefsWindow setAccessibilityIdentifier:@"prefs.window"];
+	[prefsWindow setAccessibilityLabel:NSLocalizedString(@"ControlPlane Preferences", @"VoiceOver label for prefs window")];
+	[self configureAgentApplicationMenu];
 
-	// Init. toolbar
-	prefsToolbar = [[NSToolbar alloc] initWithIdentifier:@"prefsToolbar"];
-	[prefsToolbar setDelegate:self];
-	[prefsToolbar setAllowsUserCustomization:NO];
-	[prefsToolbar setAutosavesConfiguration:NO];
-    [prefsToolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
-    [prefsToolbar setVisible:YES];
-    [prefsToolbar setSizeMode:NSToolbarSizeModeRegular];
-    [prefsToolbar setShowsBaselineSeparator:NO];
-
-    // Force traditional toolbar style and maximum space utilization
-    if (@available(macOS 11.0, *)) {
-        [prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
-    }
-
-    // Allow user customization to ensure all items are shown
-    [prefsToolbar setAllowsUserCustomization:YES];
-
-	[prefsWindow setToolbar:prefsToolbar];
-
-	// Debug: Log toolbar setup
-	NSLog(@"PrefsGroups count: %lu", (unsigned long)[prefsGroups count]);
-	for (NSMutableDictionary *group in prefsGroups) {
-		NSLog(@"Group: %@ - View: %@", group[@"name"], group[@"view"] ? @"SET" : @"NIL");
+	// Settings-style shell (#100): preference toolbar hosted by NSTabViewController,
+	// embedding the existing XIB panes instead of a hand-rolled NSToolbar swap.
+	CPPrefsSettingsShellController *shell = [[CPPrefsSettingsShellController alloc] init];
+	[shell configureWithPaneGroups:prefsGroups];
+	__weak PrefsWindowController *weakSelf = self;
+	shell.paneSelectionHandler = ^(NSString *paneName) {
+		PrefsWindowController *strongSelf = weakSelf;
+		if (!strongSelf) {
+			return;
+		}
+		[strongSelf switchToView:paneName];
+	};
+	self.settingsShell = shell;
+	[prefsWindow setContentViewController:shell];
+	if (@available(macOS 11.0, *)) {
+		[prefsWindow setToolbarStyle:NSWindowToolbarStylePreference];
 	}
-	NSLog(@"Toolbar created with %lu items", (unsigned long)[[prefsToolbar items] count]);
-	NSLog(@"Toolbar visible: %@", [prefsToolbar isVisible] ? @"YES" : @"NO");
-	NSLog(@"Window toolbar: %@", [prefsWindow toolbar] ? @"SET" : @"NOT SET");
+	NSToolbar *shellToolbar = [prefsWindow toolbar];
+	[shellToolbar setAllowsUserCustomization:NO];
+	[shellToolbar setAutosavesConfiguration:NO];
+	[shellToolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
+	[shellToolbar setShowsBaselineSeparator:NO];
 
 	currentPrefsGroup = nil;
 	[self switchToView:@"General"];
@@ -352,6 +378,15 @@
         NSWindow *multipleActiveContextsNotification = self.multipleActiveContextsNotification;
         [multipleActiveContextsNotification makeKeyAndOrderFront:self];
     }
+
+    // Status menu entry points for versioned configuration transfer (#35).
+    PrefsWindowController *prefsController = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        CPController *controller = (CPController *)[NSApp delegate];
+        if ([controller respondsToSelector:@selector(installStatusMenuItemsForConfigurationTransferWithTarget:)]) {
+            [controller installStatusMenuItemsForConfigurationTransferWithTarget:prefsController];
+        }
+    });
 }
 
 static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
@@ -404,6 +439,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 - (void)onPrefsWindowClose:(NSNotification *)notification {
     [self stopLogBufferTimer];
+    [self stopDiagnosticsRefreshTimer];
     [self persistCurrentViewSize];
 }
 
@@ -418,12 +454,84 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 - (IBAction)runAbout:(id)sender
 {
 	[NSApp activateIgnoringOtherApps:YES];
-#if 0
-	[NSApp orderFrontStandardAboutPanelWithOptions:@{ @"Version": @"" }];
-#else
-	AboutPanel *ctl = [[AboutPanel alloc] init];
-	[ctl runPanel];
-#endif
+	// Standard About reads CFBundleShortVersionString / CFBundleVersion / Credits.html
+	[NSApp orderFrontStandardAboutPanel:sender];
+}
+
+/// LSUIElement agents still own a main menu for ⌘, / ⌘H / ⌘Q. Locale XIBs often
+/// leave the Apple menu unwired (and some still say MarcoPolo); fix that at runtime.
+- (void)configureAgentApplicationMenu
+{
+	NSMenu *mainMenu = [NSApp mainMenu];
+	if (mainMenu.numberOfItems < 1) {
+		return;
+	}
+	NSMenu *appleMenu = [[mainMenu itemAtIndex:0] submenu];
+	if (!appleMenu) {
+		return;
+	}
+
+	NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+	if (appName.length == 0) {
+		appName = @"ControlPlane";
+	}
+
+	for (NSMenuItem *item in appleMenu.itemArray) {
+		if ([item isSeparatorItem]) {
+			continue;
+		}
+
+		NSString *title = item.title ?: @"";
+		NSString *fixedTitle = [title stringByReplacingOccurrencesOfString:@"MarcoPolo" withString:appName];
+		if (![fixedTitle isEqualToString:title]) {
+			item.title = fixedTitle;
+			title = fixedTitle;
+		}
+
+		NSString *ke = item.keyEquivalent.lowercaseString;
+		NSEventModifierFlags mods = item.keyEquivalentModifierMask;
+		BOOL optionDown = (mods & NSEventModifierFlagOption) != 0;
+
+		if ([ke isEqualToString:@","]) {
+			item.target = self;
+			item.action = @selector(runPreferences:);
+			continue;
+		}
+		if ([ke isEqualToString:@"q"] && !optionDown) {
+			item.target = NSApp;
+			item.action = @selector(terminate:);
+			continue;
+		}
+		if ([ke isEqualToString:@"h"]) {
+			if (optionDown) {
+				item.target = NSApp;
+				item.action = @selector(hideOtherApplications:);
+			} else {
+				item.target = NSApp;
+				item.action = @selector(hide:);
+			}
+			continue;
+		}
+
+		NSRange aboutRange = [title rangeOfString:@"About" options:NSCaseInsensitiveSearch];
+		if (aboutRange.location == NSNotFound) {
+			aboutRange = [title rangeOfString:@"Acerca" options:NSCaseInsensitiveSearch];
+		}
+		if (aboutRange.location != NSNotFound) {
+			item.target = self;
+			item.action = @selector(runAbout:);
+			continue;
+		}
+
+		NSRange showAllRange = [title rangeOfString:@"Show All" options:NSCaseInsensitiveSearch];
+		if (showAllRange.location == NSNotFound) {
+			showAllRange = [title rangeOfString:@"Mostrar tudo" options:NSCaseInsensitiveSearch];
+		}
+		if (showAllRange.location != NSNotFound) {
+			item.target = NSApp;
+			item.action = @selector(unhideAllApplications:);
+		}
+	}
 }
 
 - (IBAction)runWebPage:(id)sender
@@ -442,6 +550,119 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     NSURL *url = [NSURL URLWithString:[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CPDonationURL"]];
     [[NSWorkspace sharedWorkspace] openURL:url];
 }
+
+- (IBAction)exportConfiguration:(id)sender {
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    panel.allowedContentTypes = @[
+        [UTType typeWithFilenameExtension:@"json"],
+        [UTType typeWithFilenameExtension:@"plist"]
+    ];
+    panel.canCreateDirectories = YES;
+    panel.nameFieldStringValue = @"ControlPlane-Config.json";
+    panel.message = NSLocalizedString(@"Export contexts, rules, actions, and related settings.",
+                                      @"Save panel message for configuration export");
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result != NSModalResponseOK || panel.URL == nil) {
+            return;
+        }
+
+        NSURL *url = panel.URL;
+        NSError *error = nil;
+        NSData *data = nil;
+        NSString *ext = url.pathExtension.lowercaseString;
+        if ([ext isEqualToString:@"plist"]) {
+            data = [CPConfigTransfer exportPropertyListDataFromDefaults:[NSUserDefaults standardUserDefaults]
+                                                                  error:&error];
+        } else {
+            data = [CPConfigTransfer exportJSONDataFromDefaults:[NSUserDefaults standardUserDefaults]
+                                                         error:&error];
+        }
+
+        if (data == nil || ![data writeToURL:url options:NSDataWritingAtomic error:&error]) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Export Failed", @"Alert title when config export fails");
+            alert.informativeText = error.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+    }];
+}
+
+- (IBAction)importConfiguration:(id)sender {
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    panel.allowedContentTypes = @[
+        [UTType typeWithFilenameExtension:@"json"],
+        [UTType typeWithFilenameExtension:@"plist"]
+    ];
+    panel.allowsMultipleSelection = NO;
+    panel.canChooseDirectories = NO;
+    panel.message = NSLocalizedString(@"Import a previously exported ControlPlane configuration. This replaces current contexts, rules, actions, and related settings.",
+                                      @"Open panel message for configuration import");
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result != NSModalResponseOK || panel.URL == nil) {
+            return;
+        }
+
+        NSError *readError = nil;
+        NSData *data = [NSData dataWithContentsOfURL:panel.URL options:0 error:&readError];
+        if (data == nil) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Import Failed", @"Alert title when config import fails");
+            alert.informativeText = readError.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+
+        NSAlert *confirm = [[NSAlert alloc] init];
+        confirm.alertStyle = NSAlertStyleInformational;
+        confirm.messageText = NSLocalizedString(@"Replace Current Configuration?",
+                                                @"Confirm title before importing configuration");
+        confirm.informativeText = NSLocalizedString(@"Importing will replace your current contexts, rules, actions, and related settings.",
+                                                    @"Confirm detail before importing configuration");
+        [confirm addButtonWithTitle:NSLocalizedString(@"Import", @"Confirm import button")];
+        [confirm addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+        if ([confirm runModal] != NSAlertFirstButtonReturn) {
+            return;
+        }
+
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSError *importError = nil;
+        NSString *ext = panel.URL.pathExtension.lowercaseString;
+        BOOL ok = NO;
+        if ([ext isEqualToString:@"plist"]) {
+            ok = [CPConfigTransfer importPropertyListData:data intoDefaults:defaults error:&importError];
+        } else {
+            ok = [CPConfigTransfer importJSONData:data intoDefaults:defaults error:&importError];
+        }
+
+        if (!ok) {
+            NSAlert *alert = [[NSAlert alloc] init];
+            alert.alertStyle = NSAlertStyleWarning;
+            alert.messageText = NSLocalizedString(@"Import Failed", @"Alert title when config import fails");
+            alert.informativeText = importError.localizedDescription ?: @"";
+            [alert runModal];
+            return;
+        }
+
+        [contextsDataSource loadContexts];
+        CPController *controller = (CPController *)[NSApp delegate];
+        NSArray *rules = [defaults arrayForKey:@"Rules"] ?: @[];
+        [controller setActiveRules:rules];
+        [defaultContextButton setValue:[defaults valueForKey:@"DefaultContext"] forKey:@"selectedObject"];
+        [controller forceUpdate];
+
+        NSAlert *done = [[NSAlert alloc] init];
+        done.messageText = NSLocalizedString(@"Configuration Imported", @"Alert title after successful import");
+        done.informativeText = NSLocalizedString(@"Contexts, rules, actions, and settings were restored from the selected file.",
+                                                 @"Alert detail after successful import");
+        [done runModal];
+    }];
+}
+
 
 - (IBAction)menuBarDisplayOptionChanged:(id)sender {
 }
@@ -488,11 +709,6 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	return [prefsWindow frame].size.height - [[prefsWindow contentView] frame].size.height - [self toolbarHeight];
 }
 
-- (void)switchToViewFromToolbar:(NSToolbarItem *)item
-{
-	[self switchToView:[item itemIdentifier]];
-}
-
 - (void)switchToView:(NSString *)groupId
 {
 	NSDictionary *group = [self groupById:groupId];
@@ -501,51 +717,60 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 		return;
 	}
 
-	if (currentPrefsView == group[@"view"]) {
+	if ([currentPrefsGroup isEqualToString:groupId] && currentPrefsView == group[@"view"]) {
 		return;
-    }
+	}
 
-    [self persistCurrentViewSize];
+	[self persistCurrentViewSize];
 
 	if ([groupId isEqualToString:@"Advanced"]) {
-        [self startLogBufferTimer];
+		[self startLogBufferTimer];
 	} else {
-        [self stopLogBufferTimer];
+		[self stopLogBufferTimer];
+	}
+
+    if ([groupId isEqualToString:@"Diagnostics"]) {
+        [self refreshDiagnosticsPane:nil];
+        [self startDiagnosticsRefreshTimer];
+    } else {
+        [self stopDiagnosticsRefreshTimer];
     }
 
 	currentPrefsView = group[@"view"];
+	[self.settingsShell selectPaneNamed:groupId];
+	[self applyPresentationForGroupId:groupId];
+	[self setValue:groupId forKey:@"currentPrefsGroup"];
+}
+
+- (void)applyPresentationForGroupId:(NSString *)groupId
+{
+	NSDictionary *group = [self groupById:groupId];
+	if (!group) {
+		return;
+	}
 
 	NSSize minSize = NSMakeSize([group[@"min_width"] floatValue], [group[@"min_height"] floatValue]);
-    NSSize size = minSize;
+	NSSize size = minSize;
 
-    NSValue *persistedSize = [self getPersistedSizeOfViewNamed:groupId];
-    if (persistedSize) {
-        size = [persistedSize sizeValue];
-        if (size.width < minSize.width) {
-            size.width = minSize.width;
-        }
-        if (size.height < minSize.height) {
-            size.height = minSize.height;
-        }
-    }
-    
-	NSView *blankPrefsView = [[NSView alloc] init];
-	[prefsWindow setContentView:blankPrefsView];
+	NSValue *persistedSize = [self getPersistedSizeOfViewNamed:groupId];
+	if (persistedSize) {
+		size = [persistedSize sizeValue];
+		if (size.width < minSize.width) {
+			size.width = minSize.width;
+		}
+		if (size.height < minSize.height) {
+			size.height = minSize.height;
+		}
+	}
+
 	[prefsWindow setTitle:[@"ControlPlane - " stringByAppendingString:group[@"display_name"]]];
-    
+
 	BOOL resizeableWidth  = [group[@"resizeableWidth"]  boolValue];
-    BOOL resizeableHeight = [group[@"resizeableHeight"] boolValue];
-    [self resizeWindowToSize:size withMinSize:minSize
-               limitMaxWidth:!resizeableWidth
-              limitMaxHeight:!resizeableHeight];
+	BOOL resizeableHeight = [group[@"resizeableHeight"] boolValue];
+	[self resizeWindowToSize:size withMinSize:minSize
+		       limitMaxWidth:!resizeableWidth
+		      limitMaxHeight:!resizeableHeight];
 	[prefsWindow setShowsResizeIndicator:(resizeableWidth || resizeableHeight)];
-
-	if ([prefsToolbar respondsToSelector:@selector(setSelectedItemIdentifier:)]) {
-		[prefsToolbar setSelectedItemIdentifier:groupId];
-    }
-
-	[prefsWindow setContentView:currentPrefsView];
-	[self setValue:groupId forKey:@"currentPrefsGroup"];
 }
 
 - (void)resizeWindowToSize:(NSSize)size
@@ -576,80 +801,6 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 
 	[prefsWindow setMinSize:minSize];
 	[prefsWindow setMaxSize:maxSize];
-}
-
-#pragma mark Toolbar delegates
-
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar
-     itemForItemIdentifier:(NSString *)groupId
- willBeInsertedIntoToolbar:(BOOL)flag
-{
-	NSLog(@"=== TOOLBAR ITEM CREATION ===");
-	NSLog(@"Requesting item for ID: %@", groupId);
-	NSLog(@"Will be inserted: %@", flag ? @"YES" : @"NO");
-
-	NSDictionary *group = [self groupById:groupId];
-	if (group == nil) {
-		NSLog(@"ERROR: No group found for ID '%@'", groupId);
-		return nil;
-	}
-
-	NSString *displayName = [group objectForKey:@"display_name"];
-	NSString *iconName = [group objectForKey:@"icon"];
-	NSImage *image = [NSImage imageNamed:iconName];
-
-	NSLog(@"Group data - ID: %@, Display: %@, Icon: %@", groupId, displayName, iconName);
-	NSLog(@"Image loaded: %@", image ? @"YES" : @"NO");
-	if (image) {
-		NSLog(@"Image size: %.1f x %.1f", image.size.width, image.size.height);
-	}
-
-	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:groupId];
-	[item setLabel:displayName];
-	[item setPaletteLabel:displayName];
-	[item setImage:image];
-	[item setTarget:self];
-	[item setAction:@selector(switchToViewFromToolbar:)];
-
-	// Log final item properties
-	NSLog(@"Final item - Label: '%@', Image: %@", item.label, item.image ? @"SET" : @"MISSING");
-	NSLog(@"Item view: %@", item.view ? @"HAS CUSTOM VIEW" : @"STANDARD");
-	NSLog(@"================================");
-
-	return item;
-}
-
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSMutableArray *array = [NSMutableArray arrayWithCapacity:[prefsGroups count]];
-
-	NSLog(@"=== TOOLBAR ALLOWED ITEMS ===");
-	for (NSDictionary *group in prefsGroups) {
-		NSString *groupId = group[@"name"];  // This is the key used for identifiers
-		[array addObject:groupId];
-		NSLog(@"Allowed: %@ (display: %@)", groupId, group[@"display_name"]);
-    }
-	NSLog(@"Total allowed: %lu", (unsigned long)[array count]);
-	NSLog(@"===============================");
-
-	return array;
-}
-
-- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar
-{
-	NSArray *defaultItems = [self toolbarAllowedItemIdentifiers:toolbar];
-	NSLog(@"=== TOOLBAR DEFAULT ITEMS ===");
-	for (NSString *itemId in defaultItems) {
-		NSLog(@"Default: %@", itemId);
-	}
-	NSLog(@"Total default: %lu", (unsigned long)[defaultItems count]);
-	NSLog(@"==============================");
-	return defaultItems;
-}
-
-- (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
-{
-	return [self toolbarAllowedItemIdentifiers:toolbar];
 }
 
 #pragma mark Rule creation/editing
@@ -941,6 +1092,276 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
             [logBufferView scrollRangeToVisible:NSMakeRange([buf length] - 2, 1)];
         }
 	}
+}
+
+#pragma mark Diagnostics pane (#35)
+
+- (NSTextField *)diagnosticsLabelWithString:(NSString *)string bold:(BOOL)bold
+{
+    NSTextField *field = [[NSTextField alloc] initWithFrame:NSZeroRect];
+    field.translatesAutoresizingMaskIntoConstraints = NO;
+    field.editable = NO;
+    field.bordered = NO;
+    field.drawsBackground = NO;
+    field.selectable = YES;
+    field.stringValue = string ?: @"";
+    field.font = bold ? [NSFont boldSystemFontOfSize:12.0] : [NSFont systemFontOfSize:12.0];
+    field.maximumNumberOfLines = 0;
+    field.lineBreakMode = NSLineBreakByWordWrapping;
+    return field;
+}
+
+- (NSView *)buildDiagnosticsPrefsView
+{
+    if (self.diagnosticsPrefsView) {
+        return self.diagnosticsPrefsView;
+    }
+
+    NSView *root = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 560, 480)];
+    root.translatesAutoresizingMaskIntoConstraints = NO;
+
+    NSTextField *title = [self diagnosticsLabelWithString:NSLocalizedString(@"Rule Diagnostics", @"Diagnostics pane title")
+                                                     bold:YES];
+    title.font = [NSFont boldSystemFontOfSize:14.0];
+
+    NSButton *refreshButton = [[NSButton alloc] initWithFrame:NSZeroRect];
+    refreshButton.translatesAutoresizingMaskIntoConstraints = NO;
+    refreshButton.bezelStyle = NSBezelStyleRounded;
+    refreshButton.title = NSLocalizedString(@"Refresh", @"Diagnostics refresh button");
+    refreshButton.target = self;
+    refreshButton.action = @selector(refreshDiagnosticsPane:);
+    refreshButton.accessibilityIdentifier = @"prefs.diagnostics.refresh";
+
+    self.diagnosticsCurrentContextField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsLeadingContextField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsExplanationField = [self diagnosticsLabelWithString:@"" bold:NO];
+    self.diagnosticsExplanationField.accessibilityIdentifier = @"prefs.diagnostics.explanation";
+
+    NSScrollView *tableScroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+    tableScroll.translatesAutoresizingMaskIntoConstraints = NO;
+    tableScroll.hasVerticalScroller = YES;
+    tableScroll.borderType = NSBezelBorder;
+    tableScroll.autohidesScrollers = YES;
+
+    NSTableView *table = [[NSTableView alloc] initWithFrame:NSZeroRect];
+    table.delegate = self;
+    table.dataSource = self;
+    table.allowsEmptySelection = YES;
+    table.allowsMultipleSelection = NO;
+    table.usesAlternatingRowBackgroundColors = YES;
+    table.accessibilityIdentifier = @"prefs.diagnostics.rulesTable";
+
+    NSArray *columns = @[
+        @[@"match", NSLocalizedString(@"Match", @"Diagnostics column"), @56],
+        @[@"type", NSLocalizedString(@"Type", @"Diagnostics column"), @90],
+        @[@"description", NSLocalizedString(@"Description", @"Diagnostics column"), @160],
+        @[@"context", NSLocalizedString(@"Context", @"Diagnostics column"), @100],
+        @[@"ruleConf", NSLocalizedString(@"Rule %", @"Diagnostics column"), @70],
+        @[@"ctxConf", NSLocalizedString(@"Context %", @"Diagnostics column"), @80],
+    ];
+    for (NSArray *col in columns) {
+        NSTableColumn *column = [[NSTableColumn alloc] initWithIdentifier:col[0]];
+        column.title = col[1];
+        column.width = [col[2] doubleValue];
+        column.minWidth = 40;
+        [table addTableColumn:column];
+    }
+    tableScroll.documentView = table;
+    self.diagnosticsRulesTable = table;
+
+    NSTextField *evidenceLabel = [self diagnosticsLabelWithString:NSLocalizedString(@"Evidence snapshot", @"Diagnostics evidence heading")
+                                                             bold:YES];
+
+    NSScrollView *evidenceScroll = [[NSScrollView alloc] initWithFrame:NSZeroRect];
+    evidenceScroll.translatesAutoresizingMaskIntoConstraints = NO;
+    evidenceScroll.hasVerticalScroller = YES;
+    evidenceScroll.borderType = NSBezelBorder;
+    evidenceScroll.autohidesScrollers = YES;
+
+    NSTextView *evidenceView = [[NSTextView alloc] initWithFrame:NSZeroRect];
+    evidenceView.editable = NO;
+    evidenceView.richText = NO;
+    evidenceView.font = [NSFont monospacedSystemFontOfSize:11.0 weight:NSFontWeightRegular];
+    evidenceView.accessibilityIdentifier = @"prefs.diagnostics.evidence";
+    evidenceScroll.documentView = evidenceView;
+    self.diagnosticsEvidenceView = evidenceView;
+
+    NSTextField *logHint = [self diagnosticsLabelWithString:
+                            [NSString stringWithFormat:
+                             NSLocalizedString(@"Unified logging subsystem: %@. Categories: Evidence, Rules, Actions, Helper, General. Example: log stream --predicate 'subsystem == \"%@\"'",
+                                               @"Diagnostics logging hint"),
+                             [DSLogger unifiedLoggingSubsystem],
+                             [DSLogger unifiedLoggingSubsystem]]
+                                                       bold:NO];
+    logHint.textColor = [NSColor secondaryLabelColor];
+    logHint.font = [NSFont systemFontOfSize:11.0];
+
+    NSArray *views = @[title, refreshButton, self.diagnosticsCurrentContextField,
+                       self.diagnosticsLeadingContextField, self.diagnosticsExplanationField,
+                       tableScroll, evidenceLabel, evidenceScroll, logHint];
+    for (NSView *view in views) {
+        [root addSubview:view];
+    }
+
+    NSDictionary *viewsDict = @{
+        @"title": title,
+        @"refresh": refreshButton,
+        @"current": self.diagnosticsCurrentContextField,
+        @"leading": self.diagnosticsLeadingContextField,
+        @"explanation": self.diagnosticsExplanationField,
+        @"table": tableScroll,
+        @"evidenceLabel": evidenceLabel,
+        @"evidence": evidenceScroll,
+        @"logHint": logHint,
+    };
+
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[title]-8-[refresh]-16-|"
+                                                                 options:NSLayoutFormatAlignAllCenterY
+                                                                 metrics:nil
+                                                                   views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[current]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[leading]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[explanation]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[table]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[evidenceLabel]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[evidence]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-16-[logHint]-16-|" options:0 metrics:nil views:viewsDict]];
+    [root addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-12-[title]-8-[current]-2-[leading]-6-[explanation]-8-[table(>=160)]-8-[evidenceLabel]-4-[evidence(>=90)]-8-[logHint]-12-|"
+                                                                 options:0
+                                                                 metrics:nil
+                                                                   views:viewsDict]];
+
+    // Give the view a concrete size for prefs min size measurement.
+    [root setFrameSize:NSMakeSize(560, 480)];
+    self.diagnosticsPrefsView = root;
+    self.diagnosticsRuleRows = @[];
+    return root;
+}
+
+- (void)refreshDiagnosticsPane:(id)sender
+{
+    (void)sender;
+    CPController *controller = (CPController *)[NSApp delegate];
+    if (![controller isKindOfClass:[CPController class]]) {
+        return;
+    }
+
+    NSDictionary *snap = [controller refreshDiagnosticsSnapshot];
+    if (![snap isKindOfClass:[NSDictionary class]]) {
+        snap = controller.lastDiagnosticsSnapshot;
+    }
+    if (![snap isKindOfClass:[NSDictionary class]]) {
+        self.diagnosticsCurrentContextField.stringValue = NSLocalizedString(@"Current context: (unavailable)", @"Diagnostics");
+        self.diagnosticsLeadingContextField.stringValue = @"";
+        self.diagnosticsExplanationField.stringValue = NSLocalizedString(@"No diagnostics snapshot yet. Wait for a rule evaluation cycle or click Refresh.", @"Diagnostics empty state");
+        self.diagnosticsRuleRows = @[];
+        [self.diagnosticsRulesTable reloadData];
+        self.diagnosticsEvidenceView.string = @"";
+        return;
+    }
+
+    NSNumberFormatter *pct = [SharedNumberFormatter percentStyleFormatter];
+    NSString *currentPct = [pct stringFromNumber:snap[@"currentContextConfidence"]] ?: @"—";
+    NSString *leadingPct = [pct stringFromNumber:snap[@"leadingContextConfidence"]] ?: @"—";
+    NSString *minPct = [pct stringFromNumber:snap[@"minimumConfidenceRequired"]] ?: @"—";
+
+    self.diagnosticsCurrentContextField.stringValue =
+        [NSString stringWithFormat:NSLocalizedString(@"Current context: %@ (%@) — path %@", @"Diagnostics current context line"),
+         snap[@"currentContextName"] ?: @"",
+         currentPct,
+         snap[@"currentContextPath"] ?: @""];
+    self.diagnosticsLeadingContextField.stringValue =
+        [NSString stringWithFormat:NSLocalizedString(@"Leading guess: %@ (%@); minimum to switch %@", @"Diagnostics leading context line"),
+         snap[@"leadingContextName"] ?: @"",
+         leadingPct,
+         minPct];
+    self.diagnosticsExplanationField.stringValue = snap[@"explanation"] ?: @"";
+
+    self.diagnosticsRuleRows = snap[@"ruleRows"] ?: @[];
+    [self.diagnosticsRulesTable reloadData];
+
+    NSMutableString *evidenceText = [NSMutableString string];
+    for (NSDictionary *row in snap[@"evidenceSources"] ?: @[]) {
+        [evidenceText appendFormat:@"%@ (%@): running=%@ data=%@ — %@\n",
+         row[@"friendlyName"] ?: row[@"name"] ?: @"?",
+         row[@"name"] ?: @"",
+         [row[@"running"] boolValue] ? @"yes" : @"no",
+         [row[@"dataCollected"] boolValue] ? @"yes" : @"no",
+         row[@"summary"] ?: @""];
+    }
+    if (evidenceText.length == 0) {
+        [evidenceText appendString:NSLocalizedString(@"(no evidence sources)", @"Diagnostics empty evidence")];
+    }
+    self.diagnosticsEvidenceView.string = evidenceText;
+}
+
+- (void)startDiagnosticsRefreshTimer
+{
+    if (self.diagnosticsRefreshTimer == nil) {
+        self.diagnosticsRefreshTimer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                                                        target:self
+                                                                      selector:@selector(refreshDiagnosticsPane:)
+                                                                      userInfo:nil
+                                                                       repeats:YES];
+        if ([self.diagnosticsRefreshTimer respondsToSelector:@selector(setTolerance:)]) {
+            [self.diagnosticsRefreshTimer setTolerance:1.0];
+        }
+    }
+}
+
+- (void)stopDiagnosticsRefreshTimer
+{
+    if (self.diagnosticsRefreshTimer != nil) {
+        if (self.diagnosticsRefreshTimer.isValid) {
+            [self.diagnosticsRefreshTimer invalidate];
+        }
+        self.diagnosticsRefreshTimer = nil;
+    }
+}
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+{
+    if (tableView != self.diagnosticsRulesTable) {
+        return 0;
+    }
+    return (NSInteger)self.diagnosticsRuleRows.count;
+}
+
+- (nullable id)tableView:(NSTableView *)tableView objectValueForTableColumn:(nullable NSTableColumn *)tableColumn row:(NSInteger)row
+{
+    if (tableView != self.diagnosticsRulesTable || row < 0 || row >= (NSInteger)self.diagnosticsRuleRows.count) {
+        return nil;
+    }
+    NSDictionary *ruleRow = self.diagnosticsRuleRows[(NSUInteger)row];
+    NSString *identifier = tableColumn.identifier;
+    NSNumberFormatter *pct = [SharedNumberFormatter percentStyleFormatter];
+
+    if ([identifier isEqualToString:@"match"]) {
+        NSString *status = ruleRow[@"matchStatus"];
+        if ([status isEqualToString:@"match"]) {
+            return @"✓";
+        }
+        if ([status isEqualToString:@"no-match"]) {
+            return @"";
+        }
+        return @"?";
+    }
+    if ([identifier isEqualToString:@"type"]) {
+        return ruleRow[@"type"];
+    }
+    if ([identifier isEqualToString:@"description"]) {
+        return ruleRow[@"description"];
+    }
+    if ([identifier isEqualToString:@"context"]) {
+        return ruleRow[@"contextName"];
+    }
+    if ([identifier isEqualToString:@"ruleConf"]) {
+        return [pct stringFromNumber:ruleRow[@"ruleConfidence"]];
+    }
+    if ([identifier isEqualToString:@"ctxConf"]) {
+        return [pct stringFromNumber:ruleRow[@"contextConfidence"]];
+    }
+    return nil;
 }
 
 @end

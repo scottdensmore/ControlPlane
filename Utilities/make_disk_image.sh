@@ -76,14 +76,13 @@ hdiutil convert "$IMG.sparseimage" -format UDBZ -o "$IMG"
 rm "$IMG.sparseimage"
 
 
-# sign the file for Sparkle
-# run a helper script exposing location of private key for Sparkle updates
+# Sparkle 2 EdDSA signing (Keychain or SPARKLE_ED_KEY_FILE). See docs/releasing.md.
 if [ "$1" == "release" ]; then
-        . cp_pm_env.sh
         ls -l "$IMG.dmg"
-        echo $PRIVATE_KEY
-        ruby "$SIGNING_SCRIPT" "$IMG.dmg" "$PRIVATE_KEY" 
-        mv "$IMG.dmg" "$IMGDEST"
+        "$(dirname "$0")/sparkle_sign_archive.sh" "$IMG.dmg"
+        if [ -n "${IMGDEST:-}" ]; then
+                mv "$IMG.dmg" "$IMGDEST"
+        fi
 fi
 
 if [ "$1" == "open" ]; then

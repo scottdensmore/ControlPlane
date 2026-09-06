@@ -103,23 +103,10 @@ static PreventDisplaySleepActionStorage *sharedStorage;
 }
 
 + (id) allocWithZone:(NSZone *)zone {
-    return [[self sharedStorage] retain];
+    return [self sharedStorage];
 }
 
 - (id) copyWithZone:(NSZone *)zone {
-    return self;
-}
-- (id) retain {
-    return self;
-}
-- (NSUInteger)retainCount {
-    return UINT_MAX; //denotes an object that cannot be released
-}
-- (oneway void)release {
-    // never release
-}
-
-- (id)autorelease {
     return self;
 }
 

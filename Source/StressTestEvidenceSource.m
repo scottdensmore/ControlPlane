@@ -21,8 +21,8 @@
 
 - (void)dealloc
 {
-    [_loopTimer release];
-	[super dealloc];
+    
+	
 }
 
 

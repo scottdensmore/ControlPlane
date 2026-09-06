@@ -57,10 +57,10 @@ static void ipChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info
 
 - (void)dealloc
 {
-	[lock release];
-	[addresses release];
+	
+	
 
-	[super dealloc];
+	
 }
 
 
@@ -103,7 +103,7 @@ static void ipChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info
 
 - (void)doFullUpdate
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	[self setThreadNameFromClassName];
 
 	NSArray *addrs = [[self class] enumerate];
@@ -116,8 +116,7 @@ static void ipChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info
 	[self setDataCollected:[addresses count] > 0];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"evidenceSourceDataDidChange" object:nil];
 	[lock unlock];
-
-	[pool release];
+	}
 }
 
 - (void)start {
@@ -125,7 +124,7 @@ static void ipChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info
 		return;
 
 	// Register for asynchronous notifications
-	SCDynamicStoreContext ctxt = {0, self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
+	SCDynamicStoreContext ctxt = {0, (__bridge void *)self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
 
 	store = SCDynamicStoreCreate(NULL, CFSTR("ControlPlane"), ipChange, &ctxt);
 	runLoop = SCDynamicStoreCreateRunLoopSource(NULL, store, 0);
@@ -134,7 +133,7 @@ static void ipChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *info
 					  @"State:/Network/Global/IPv4",
 					//@"State:/Network/Interface/en0/Link",
 		nil];
-	SCDynamicStoreSetNotificationKeys(store, (CFArrayRef) keys, NULL);
+	SCDynamicStoreSetNotificationKeys(store, (__bridge CFArrayRef) keys, NULL);
 	// TODO: catch errors
 
 	// (see comment in ipChange function to see why we don't call it directly)

@@ -33,16 +33,16 @@
 
 - (void)dealloc
 {
-	[application release];
+	
 
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	NSMutableDictionary *dict = [super dictionary];
 
-	[dict setObject:[[application copy] autorelease] forKey:@"parameter"];
+	[dict setObject:[application copy] forKey:@"parameter"];
 
 	return dict;
 }

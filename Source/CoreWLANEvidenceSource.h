@@ -8,6 +8,7 @@
 //  Bug fixes and improvements by Vladimir Beloborodov (VladimirTechMan) in Jul 2013.
 //
 
+#import <CoreLocation/CoreLocation.h>
 #import "GenericEvidenceSource.h"
 
 @interface WiFiEvidenceSourceCoreWLAN : GenericEvidenceSource
@@ -28,5 +29,9 @@
 - (NSArray *)getSuggestions;
 - (void) getInterfaceStateInfo;
 
+/// Pure helpers for Tahoe Location TCC ↔ SSID evidence (testable without Wi‑Fi hardware).
++ (BOOL)isLocationAuthorizationDeniedOrRestricted:(CLAuthorizationStatus)status;
++ (BOOL)isLocationAuthorizationGranted:(CLAuthorizationStatus)status;
++ (NSString *)ssidUnavailableDueToLocationAuthorizationMessage;
 
 @end

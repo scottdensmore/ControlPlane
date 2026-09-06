@@ -64,16 +64,16 @@ static NSLock *sharedLock = nil;
 
 - (void)dealloc
 {
-	[ruleName release];
+	
 
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	NSMutableDictionary *dict = [super dictionary];
 
-	[dict setObject:[[ruleName copy] autorelease] forKey:@"parameter"];
+	[dict setObject:[ruleName copy] forKey:@"parameter"];
 
 	return dict;
 }
@@ -115,8 +115,9 @@ static NSLock *sharedLock = nil;
 + (NSArray *)limitedOptions
 {
 	// Locate the firewall preferences dictionary
-	NSDictionary *dict = (NSDictionary *) CFPreferencesCopyAppValue(CFSTR("firewall"), CFSTR("com.apple.sharing.firewall"));
-	[dict autorelease];
+	NSDictionary *dict = CFBridgingRelease(CFPreferencesCopyAppValue(CFSTR("firewall"), CFSTR("com.apple.sharing.firewall")));
+	if (!dict)
+		return [NSMutableArray array];
 
 	NSMutableArray *opts = [NSMutableArray arrayWithCapacity:[dict count]];
 
@@ -140,7 +141,7 @@ static NSLock *sharedLock = nil;
 - (id)initWithOption:(NSString *)option
 {
 	self = [super init];
-	[ruleName autorelease];
+	ruleName;
 	ruleName = [option copy];
 	return self;
 }
