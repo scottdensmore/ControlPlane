@@ -148,13 +148,16 @@
 	be passed to the script by using a pipe character ("|") as a
 	separator in the parameter. (e.g. <tt>/path/to/script.sh|argument1|argument2</tt>)
 	</p>
-	<p>To engage <em>Focus</em> (the modern replacement for Do Not Disturb)
-	from a context, create a Shortcut in the Shortcuts app that sets your
-	desired Focus, save a small shell script that runs
-	<tt>shortcuts run "Your Focus Shortcut"</tt>, and point a
-	<em>ShellScript</em> action at that script. See
-	<a href="tips.html">Tips and tricks</a> for a step-by-step example.
-	</p>
+
+        <h2><em>Run Shortcut</em> action</h2>
+        <p>Runs a Shortcut from the Shortcuts app by <strong>name or identifier</strong>.
+        Enter the exact name (or UUID from <tt>shortcuts list --show-identifiers</tt>).
+        ControlPlane invokes the public <tt>/usr/bin/shortcuts run</tt> tool with a
+        typed argument list (no shell). The action is only offered when that tool
+        is present (macOS 12+). Use this to set Focus, toggle Bluetooth, or run any
+        other Shortcut when a context becomes active. See
+        <a href="tips.html">Tips and tricks</a> for Focus examples.
+        </p>
 
         
         <h2><em>Speak</em> action</h2>
@@ -209,7 +212,7 @@
         <p><strong>Unsupported on macOS 15.</strong> This legacy Do Not Disturb
         action is not supported on modern macOS (Focus replaced classic Notification
         Center DND). Existing actions fail with a clear error and no longer write
-        Notification Center preferences. Use a <em>ShellScript</em> action that runs
+        Notification Center preferences. Use a <em>Run Shortcut</em> action that runs
         a Focus Shortcut instead (see Help tips).
         </p>
         

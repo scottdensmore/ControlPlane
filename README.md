@@ -1,6 +1,6 @@
 # ControlPlane
 
-ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, and more) and runs **Actions**.
+ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, and more) and runs **Actions** (including **Run Shortcut** to invoke Shortcuts by name/ID).
 
 This repository is the **[scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)** fork of the classic Objective‑C / XIB app. Active development for Tahoe (macOS 16 / 26) lives on the `macOS-16` branch; the Sequoia line remains on `macOS-15`. Upstream [`dustinrue/ControlPlane`](https://github.com/dustinrue/ControlPlane) may contain a separate Swift rewrite—do not assume shared code with this ObjC line.
 
