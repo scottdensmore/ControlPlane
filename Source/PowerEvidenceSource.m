@@ -39,14 +39,14 @@
 }
 
 - (void)setPowerStatusForTesting:(NSString *)statusString {
-    [status release];
+    
     status = [statusString copy];
     [self setDataCollected:YES];
 }
 
 - (void)dealloc {
-    [status release];
-    [super dealloc];
+    
+    
 }
 
 - (NSString *)description {
@@ -59,8 +59,8 @@
 	CFArrayRef list = IOPSCopyPowerSourcesList(blob);
 
 	__block BOOL onBattery = YES;
-    [(NSArray *) list enumerateObjectsUsingBlock:^(id source, NSUInteger idx, BOOL *stop) {
-		NSDictionary *dict = (NSDictionary *) IOPSGetPowerSourceDescription(blob, (CFTypeRef) source);
+    [(__bridge NSArray *) list enumerateObjectsUsingBlock:^(id source, NSUInteger idx, BOOL *stop) {
+		NSDictionary *dict = (__bridge NSDictionary *) IOPSGetPowerSourceDescription(blob, (__bridge CFTypeRef) source);
 
 		if ([dict[@kIOPSPowerSourceStateKey] isEqualToString:@kIOPSACPowerValue]) {
 			onBattery = NO;

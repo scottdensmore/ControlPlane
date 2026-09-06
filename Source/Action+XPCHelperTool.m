@@ -156,7 +156,7 @@
     __block BOOL needToInstall = YES;
     __block BOOL success = YES;
     
-    NSDictionary* installedHelperJobData = (NSDictionary*)SMJobCopyDictionary(kSMDomainSystemLaunchd, (CFStringRef)kHelperToolMachServiceName);
+    NSDictionary* installedHelperJobData = CFBridgingRelease(SMJobCopyDictionary(kSMDomainSystemLaunchd, (CFStringRef)kHelperToolMachServiceName));
     
     if (installedHelperJobData != nil) {
         [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
@@ -176,7 +176,6 @@
         }];
         
         needToInstall = NO;
-        CFRelease((__bridge CFDictionaryRef)installedHelperJobData);
     }
     
     if (needToInstall == YES) {
@@ -202,7 +201,7 @@
             [alert setInformativeText:[NSString stringWithFormat:@"Failed to install privileged helper: %@", [error description]]];
             [alert addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
             [alert runModal];
-            [alert release];
+            
         });
     }
     
@@ -222,7 +221,6 @@
     [self authorize];
     
     if (![self installHelperTool]) {
-        dispatch_release(semaphore);
         return result;
     }
     
@@ -275,7 +273,6 @@
     } else {
         NSLog(@"Unsupported action: %@", action);
         
-        dispatch_release(semaphore);
         
         return result;
     }
@@ -283,7 +280,6 @@
     // Wait for the action to complete
     dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC));
     
-    dispatch_release(semaphore);
     
     return result;
 }

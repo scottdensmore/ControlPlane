@@ -21,13 +21,13 @@
 
 static void devAdded(void *ref, io_iterator_t iterator)
 {
-	USBEvidenceSource *mon = (USBEvidenceSource *) ref;
+	USBEvidenceSource *mon = (__bridge USBEvidenceSource *) ref;
 	[mon devAdded:iterator];
 }
 
 static void devRemoved(void *ref, io_iterator_t iterator)
 {
-	USBEvidenceSource *mon = (USBEvidenceSource *) ref;
+	USBEvidenceSource *mon = (__bridge USBEvidenceSource *) ref;
 	[mon devRemoved:iterator];
 }
 
@@ -59,10 +59,10 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 
 - (void)dealloc
 {
-	[lock release];
-	[devices release];
+	
+	
 
-	[super dealloc];
+	
 }
 
 
@@ -89,15 +89,16 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 + (BOOL)usbDetailsForDevice:(io_service_t *)device outVendor:(UInt16 *)vendor_id outProduct:(UInt16 *)product_id
 {
 	IOReturn rc;
-	NSMutableDictionary *props;
+	CFMutableDictionaryRef cfProps = NULL;
 
-	rc = IORegistryEntryCreateCFProperties(*device, (CFMutableDictionaryRef *) &props,
+	rc = IORegistryEntryCreateCFProperties(*device, &cfProps,
 					       kCFAllocatorDefault, kNilOptions);
-	if ((rc != kIOReturnSuccess) || !props)
+	if ((rc != kIOReturnSuccess) || !cfProps)
 		return NO;
+	NSDictionary *props = CFBridgingRelease(cfProps);
 	*vendor_id = [[props valueForKey:@"idVendor"] intValue];
 	*product_id = [[props valueForKey:@"idProduct"] intValue];
-	[props release];
+	
 
 #ifdef DEBUG_MODE
 	//NSLog(@"Found info: vendor=%04X, product=%04X", *vendor_id, *product_id);
@@ -314,10 +315,10 @@ static void devRemoved(void *ref, io_iterator_t iterator)
 	CFRetain(matchDict);	// we use it twice
 	
 	IOServiceAddMatchingNotification(notificationPort, kIOMatchedNotification,
-					 matchDict, devAdded, (void *) self,
+					 matchDict, devAdded, (__bridge void *) self,
 					 &addedIterator);
 	IOServiceAddMatchingNotification(notificationPort, kIOTerminatedNotification,
-					 matchDict, devRemoved, (void *) self,
+					 matchDict, devRemoved, (__bridge void *) self,
 					 &removedIterator);
 
 	// Prime notifications

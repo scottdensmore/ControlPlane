@@ -39,7 +39,7 @@
 		return nil;
 	}
 	Action *obj = [[[Action classForType:type] alloc] initWithDictionary:dict];
-	return [obj autorelease];
+	return obj;
 }
 
 - (id)init
@@ -53,9 +53,9 @@
 		return nil;
 	
 	// Some sensible defaults
-	type = [[Action typeForClass:[self class]] retain];
-	context = [@"" retain];
-	when = [@"Arrival" retain];
+	type = [Action typeForClass:[self class]];
+	context = @"";
+	when = @"Arrival";
 	delay = [[NSNumber alloc] initWithDouble:0];
 	enabled = [[NSNumber alloc] initWithBool:YES];
 	
@@ -72,7 +72,7 @@
 	if (!(self = [super init]))
 		return nil;
 
-	type = [[Action typeForClass:[self class]] retain];
+	type = [Action typeForClass:[self class]];
 	context = [[dict valueForKey:@"context"] copy];
 	when = [[dict valueForKey:@"when"] copy];
 	delay = [[dict valueForKey:@"delay"] copy];
@@ -83,23 +83,23 @@
 
 - (void)dealloc
 {
-	[type release];
-	[context release];
-	[when release];
-	[delay release];
-	[enabled release];
+	
+	
+	
+	
+	
 
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:
-		[[type copy] autorelease], @"type",
-		[[context copy] autorelease], @"context",
-		[[when copy] autorelease], @"when",
-		[[delay copy] autorelease], @"delay",
-		[[enabled copy] autorelease], @"enabled",
+		[type copy], @"type",
+		[context copy], @"context",
+		[when copy], @"when",
+		[delay copy], @"delay",
+		[enabled copy], @"enabled",
 		nil];
 }
 
@@ -167,7 +167,7 @@
 {
 	appleScriptResult_ = nil;
     
-	NSAppleScript *as = [[[NSAppleScript alloc] initWithSource:script] autorelease];
+	NSAppleScript *as = [[NSAppleScript alloc] initWithSource:script];
 	if (!as) {
 		NSLog(@"AppleScript failed to construct! Script was:\n%@", script);
 		return;
@@ -439,7 +439,7 @@
             
             [menuCategoryBuilder setObject:tmp forKey:[currentClass menuCategory]];
             
-            [tmp release];
+            
         }
     }
     
@@ -451,9 +451,9 @@
 
 - (void)dealloc
 {
-	[classes release];
-    [menuCategories release];
-	[super dealloc];
+	
+    
+	
 }
 
 - (NSArray *)types
@@ -519,7 +519,7 @@
     NSString *categoryName = [menuCategoryList objectAtIndex:index];
     //NSString *localisedType = NSLocalizedString(type, @"Action type");
     
-    NSMenu *newSubMenu = [[[NSMenu alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ Actions", @""), friendlyName]] retain];
+    NSMenu *newSubMenu = [[NSMenu alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ Actions", @""), friendlyName]];
     
     [newSubMenu setDelegate:[menuCategories objectForKey:categoryName]];
     

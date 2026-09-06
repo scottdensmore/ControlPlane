@@ -35,7 +35,7 @@
 
 - (void)dealloc {
   self.setting = nil;
-  [super dealloc];
+  
 }
 
 - (NSMutableDictionary *)dictionary {

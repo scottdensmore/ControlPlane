@@ -45,9 +45,9 @@
         return nil;
     }
 
-    panel = [[[self class] getPanelFromNibNamed:name instantiatedWithOwner:self] retain];
+    panel = [[self class] getPanelFromNibNamed:name instantiatedWithOwner:self];
     if (!panel) {
-        [self release];
+        
         return nil;
     }
 
@@ -56,9 +56,9 @@
 
 - (void)dealloc
 {
-    [panel release];
-    [oldDescription release];
-    [super dealloc];
+    
+    
+    
 }
 
 - (BOOL)matchesRulesOfType:(NSString *)type

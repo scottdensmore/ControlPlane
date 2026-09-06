@@ -22,7 +22,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 #ifdef DEBUG_MODE
             NSLog(@"linkChange called with changedKeys:\n%@", changedKeys);
 #endif
-            [(NetworkLinkEvidenceSource *) info doFullUpdate:nil];
+            [(__bridge NetworkLinkEvidenceSource *) info doFullUpdate:nil];
         }
     }
 }
@@ -58,9 +58,9 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 - (void)dealloc {
     [self doStop];
     
-	[_interfaces release];
+	
 
-	[super dealloc];
+	
 }
 
 - (NSString *)description {
@@ -68,7 +68,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 }
 
 - (NSSet *)enumerate {
-    NSArray *services = [(NSArray *) SCNetworkServiceCopyAll(prefs) autorelease];
+    NSArray *services = CFBridgingRelease(SCNetworkServiceCopyAll(prefs));
 
     // For some connections, we get several Services with different ID
     // but same name (e.g. 'Ethernet'), presumably because they have
@@ -78,12 +78,12 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 
     NSMutableDictionary *serviceState = [NSMutableDictionary dictionary];
     for (id service in services) {
-		NSString *serviceName = (NSString *) SCNetworkServiceGetName((SCNetworkServiceRef) service);
+		NSString *serviceName = (__bridge NSString *) SCNetworkServiceGetName((__bridge SCNetworkServiceRef) service);
         if ([serviceState[serviceName] boolValue]) {
             continue;
         }
         
-		NSString *serviceID = (NSString *) SCNetworkServiceGetServiceID((SCNetworkServiceRef) service);
+		NSString *serviceID = (__bridge NSString *) SCNetworkServiceGetServiceID((__bridge SCNetworkServiceRef) service);
         BOOL isActive = [self isProtocol:@"IPv4" activeForService:serviceID];
         if (!isActive) {
             isActive = [self isProtocol:@"IPv6" activeForService:serviceID];
@@ -122,7 +122,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
     }
 
 	// Register for asynchronous notifications
-	SCDynamicStoreContext ctxt = {0, self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
+	SCDynamicStoreContext ctxt = {0, (__bridge void *)self, NULL, NULL, NULL}; // {version, info, retain, release, copyDescription}
 	store = SCDynamicStoreCreate(NULL, CFSTR("ControlPlane"), linkChange, &ctxt);
     if (!store) {
         [self doStop];
@@ -136,7 +136,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
     
     // Notify on IPv4/IPv6 updates on all services
     NSArray *patterns = @[ @"State:/Network/Service/[^/]+/IPv." ];
-	if (!SCDynamicStoreSetNotificationKeys(store, NULL, (CFArrayRef) patterns)) {
+	if (!SCDynamicStoreSetNotificationKeys(store, NULL, (__bridge CFArrayRef) patterns)) {
         [self doStop];
         return;
     }
@@ -180,7 +180,6 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
             dispatch_queue_set_specific(serialQueue, queueIsStopped, queueIsStopped, NULL);
             dispatch_resume(serialQueue);
         }
-        dispatch_release(serialQueue);
         serialQueue = NULL;
     }
 
@@ -214,12 +213,12 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 
 - (NSArray *)getSuggestions {
 	NSMutableArray *arr = [NSMutableArray array];
-	NSArray *all = [(NSArray *) SCNetworkServiceCopyAll(prefs) autorelease];
+	NSArray *all = CFBridgingRelease(SCNetworkServiceCopyAll(prefs));
 
     // See comments in -enumerate:
     NSMutableSet *alreadySeen = [NSMutableSet set];
     for (id service in all) {
-		NSString *name = (NSString *) SCNetworkServiceGetName((SCNetworkServiceRef) service);
+		NSString *name = (__bridge NSString *) SCNetworkServiceGetName((__bridge SCNetworkServiceRef) service);
         if ([alreadySeen containsObject:name]) {
             continue;
         }
@@ -249,7 +248,7 @@ static void linkChange(SCDynamicStoreRef store, CFArrayRef changedKeys, void *in
 - (BOOL)isProtocol:(NSString *)protocol activeForService:(NSString *)serviceID {
     BOOL isActive = NO;
     NSString *key = [NSString stringWithFormat:@"State:/Network/Service/%@/%@", serviceID, protocol];
-    CFDictionaryRef protoDict = SCDynamicStoreCopyValue(store, (CFStringRef)key);
+    CFDictionaryRef protoDict = SCDynamicStoreCopyValue(store, (__bridge CFStringRef)key);
     if (protoDict) {
         isActive = CFDictionaryContainsKey(protoDict, CFSTR("InterfaceName"));
         CFRelease(protoDict);

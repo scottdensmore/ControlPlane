@@ -33,16 +33,16 @@
 
 - (void)dealloc
 {
-	[path release];
+	
 
-	[super dealloc];
+	
 }
 
 - (NSMutableDictionary *)dictionary
 {
 	NSMutableDictionary *dict = [super dictionary];
 
-	[dict setObject:[[path copy] autorelease] forKey:@"parameter"];
+	[dict setObject:[path copy] forKey:@"parameter"];
 
 	return dict;
 }
@@ -65,7 +65,7 @@
                                                                     &kCFTypeDictionaryValueCallBacks);
     
     OSStatus error = NetFSMountURLSync(
-                                       (CFURLRef)url,   // The URL to mount
+                                       (__bridge CFURLRef)url,   // The URL to mount
                                        NULL,            // Mount path (NULL means use default)
                                        NULL,            // User (NULL means current user)
                                        NULL,            // Password (NULL means no password)
@@ -76,6 +76,9 @@
     // Don't forget to release the CFArray if it was created
     if (openMountRefs) {
         CFRelease(openMountRefs);
+    }
+    if (mountOptions) {
+        CFRelease(mountOptions);
     }
 	
 	if (error) {
