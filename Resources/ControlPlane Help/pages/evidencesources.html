@@ -20,25 +20,32 @@
                 create rules that define when to transition to a configured context.
                 
 		</p>
-                <p>ControlPlane current supports the following evidence sources:</p>
+                <p>ControlPlane currently supports the following evidence sources
+		(matching the in-app registry on modern macOS / Tahoe):</p>
 
                 <ul>
                   <li><b>Active Application</b>: Monitors which application has focus</li>
-                  <li><b>Attached Power Adapter</b>: Detects which power adapter is attached to your Mac based on its serial number.  Useful on portable Macs only</li>
-                  <li><b>AudioOutput</b>: Monitors which audio output device is in use. Could be 
+                  <li><b>Active Context</b>: Matches when a named ControlPlane context is already active (useful for stacking rules)</li>
+                  <li><b>Attached Power Adapter</b>: Detects which power adapter is attached to your Mac based on its serial number. Useful on portable Macs only</li>
+                  <li><b>AudioOutput</b>: Monitors which audio output device is in use. Could be
                     headphones, internal speakers or whatever else is available on the system</li>
                   <li><b>Bluetooth</b>: Connected and/or nearby bluetooth devices</li>
                   <li><b>Bonjour</b>: Services and devices located on your local network</li>
                   <li><b>CoreLocation</b>: Your current location. Enabling this (or Wi‑Fi) will prompt for Location Services.</li>
+                  <li><b>DNS</b> (<em>DNS Parameters</em>): Search domains and DNS server addresses from the current network configuration</li>
                   <li><b>Focus</b>: Whether a Focus mode (Do Not Disturb, Sleep, Work, …) is currently active, via the public Intents Focus Status API. macOS may prompt for Focus Status access.</li>
                   <li><b>Host Availability</b>: Whether a hostname or IP is reachable on the network, using Network.framework (TCP probe to port 443). Useful for “on the office LAN / VPN” style contexts.</li>
-                  <li><b>FireWire</b>: Connected FireWire devices — only registered when IOKit reports a FireWire controller. Unavailable on Apple Silicon and most modern Thunderbolt-only Macs; do not expect this evidence source on macOS 15 hardware without FireWire.</li>
-                  <li><b>IP</b>: Current assigned IP addresses (IPV4 only)</li>
-                  <li><b>Light</b>: How bright is your location, provided by the ambient light sensor</li>
+                  <li><b>FireWire</b>: Connected FireWire devices — only registered when IOKit reports a FireWire controller. Unavailable on Apple Silicon and most modern Thunderbolt-only Macs; do not expect this evidence source on modern Mac hardware without FireWire.</li>
+                  <li><b>IP</b> (<em>Assigned IP Address</em>): Current IPv4 and <b>IPv6</b> addresses assigned to your Mac (prefix-aware rules for both families)</li>
+                  <li><b>Laptop Lid</b>: Whether a portable Mac’s lid is open or closed</li>
+                  <li><b>Light</b>: How bright is your location, provided by the ambient light sensor (often unavailable when <tt>AppleLMUController</tt> is absent)</li>
                   <li><b>Monitor</b>: Attached monitors</li>
+                  <li><b>Mounted Volume</b>: Whether a named volume is currently mounted</li>
                   <li><b>NetworkLink</b>: Status of a network link, either up or down</li>
-                  <li><b>Power</b>: Monitors the source of power (battery or adapter), battery charge percent thresholds, and Low Power Mode on or off</li>
+                  <li><b>Power</b>: Monitors the source of power (battery or adapter), battery charge percent thresholds, and <b>Low Power Mode</b> on or off</li>
+                  <li><b>Remote Desktop</b>: Whether a Screen Sharing / Remote Desktop session is active (relies on system notifications; may be fragile across OS updates)</li>
                   <li><b>RunningApplication</b>: Monitor running applications</li>
+                  <li><b>Screen Lock</b>: Whether the screen is locked or unlocked (distributed notification–based; document fragility on OS updates)</li>
                   <li><b>ShellScript</b>: Allows you to write your own evidence source based on
                     any script</li>
                   <li><b>Sleep/Wake</b>: Allows ControlPlane to react to sleep and wake events</li>

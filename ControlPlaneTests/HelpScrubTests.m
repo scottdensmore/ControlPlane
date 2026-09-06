@@ -132,4 +132,89 @@
     XCTAssertTrue([html rangeOfString:@"SSID" options:NSCaseInsensitiveSearch].location != NSNotFound);
 }
 
+// #137: Evidence inventory must match EvidenceSourceSetController registry.
+
+- (void)testHelpDocumentsEvidenceRegistryInventory {
+    NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/evidencesources.html"];
+    NSError *error = nil;
+    NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(html);
+
+    NSArray<NSString *> *required = @[
+        @"Active Application",
+        @"Active Context",
+        @"Attached Power Adapter",
+        @"AudioOutput",
+        @"Bluetooth",
+        @"Bonjour",
+        @"CoreLocation",
+        @"DNS",
+        @"Focus",
+        @"FireWire",
+        @"Host Availability",
+        @"IP",
+        @"IPv6",
+        @"Laptop Lid",
+        @"Light",
+        @"Monitor",
+        @"Mounted Volume",
+        @"NetworkLink",
+        @"Power",
+        @"Remote Desktop",
+        @"RunningApplication",
+        @"Screen Lock",
+        @"ShellScript",
+        @"Sleep/Wake",
+        @"TimeOfDay",
+        @"USB",
+        @"WiFi",
+        @"Low Power Mode",
+    ];
+    for (NSString *needle in required) {
+        XCTAssertTrue([html rangeOfString:needle options:NSCaseInsensitiveSearch].location != NSNotFound,
+                      @"Evidence Sources Help must document registry entry (%@) (#137)", needle);
+    }
+    XCTAssertFalse([html containsString:@"IPV4 only"],
+                   @"IP evidence Help must not claim IPv4-only; IPAddrEvidenceSource supports IPv6 (#137)");
+}
+
+// #137: Unavailable actions list must match isActionApplicableToSystem gates.
+
+- (void)testHelpDocumentsUnavailableActionsMatchingGates {
+    NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSError *error = nil;
+    NSString *html = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(html);
+
+    NSRange heading = [html rangeOfString:@"Unavailable on modern macOS" options:NSCaseInsensitiveSearch];
+    XCTAssertTrue(heading.location != NSNotFound, @"actions.html must have an unavailable section (#137)");
+    NSString *section = [html substringFromIndex:heading.location];
+
+    NSArray<NSString *> *gated = @[
+        @"Toggle FTP",
+        @"Toggle TFTP",
+        @"Toggle Web Sharing",
+        @"Toggle Internet Sharing",
+        @"Toggle Bluetooth",
+        @"Lock Keychain",
+        @"Toggle Natural Scrolling",
+        @"Screen Saver Password",
+        @"Toggle Notification Center Alerts",
+        @"Network Location",
+        @"VPN",
+        @"Toggle Firewall",
+        @"Firewall Rule",
+        @"Toggle Printer Sharing",
+        @"Time Machine Destination",
+        @"Display Brightness",
+        @"Screen Saver Time",
+    ];
+    for (NSString *needle in gated) {
+        XCTAssertTrue([section rangeOfString:needle options:NSCaseInsensitiveSearch].location != NSNotFound,
+                      @"Unavailable list must include gated action (%@) (#137)", needle);
+    }
+}
+
 @end
