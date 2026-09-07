@@ -9,6 +9,7 @@
 #import "Action.h"
 #import "DSLogger.h"
 #import "CPController.h"
+#import "CPContextAppIntentTokens.h"
 #import "CPController+SleepMonitor.h"
 #import "CPDiagnosticsSnapshot.h"
 #import "CPEvidenceSwitchJourney.h"
@@ -1538,6 +1539,33 @@ static NSSet *sharedActiveContexts = nil;
 - (void)forceSwitchAndToggleSticky:(id)sender {
 	[self toggleSticky:sender];
 	[self forceSwitch:sender];
+}
+
+- (NSArray<NSString *> *)contextNamesForForcedSwitchMenu {
+    NSArray *ordered = [contextsDataSource orderedTraversal] ?: @[];
+    return [CPContextAppIntentTokens tokensForContextsInMenuOrder:ordered];
+}
+
+- (BOOL)forceSwitchToContextNamed:(NSString *)name error:(NSError **)error {
+    NSString *token = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSArray *ordered = [contextsDataSource orderedTraversal] ?: @[];
+    Context *context = [CPContextAppIntentTokens contextMatchingToken:token inMenuOrder:ordered];
+    if (context == nil) {
+        if (error != NULL) {
+            *error = [CPContextAppIntentTokens errorWithCode:CPContextAppIntentErrorContextNotFound
+                                                 contextName:token];
+        }
+        return NO;
+    }
+
+    // Same branch as rebuildForceContextMenu: sticky multi-context clicks activate,
+    // otherwise the Force Context item calls forceSwitch:.
+    if ([self useMultipleActiveContexts]) {
+        [self activateContext:context];
+    } else {
+        [self forceSwitch:context];
+    }
+    return YES;
 }
 
 

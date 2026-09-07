@@ -53,6 +53,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |
+| `CPContextAppIntentTests` | Switch Context menu-name tokens, Help tip, LSUIElement/no sandbox (#126) |
 | `WiFiRuleMatchTests` | SSID matching with injected CoreWLAN state; Location-denied empty collection; Location TCC helper messages (#84) |
 | `LightEvidenceSourceTests` | Light gates on `AppleLMUController`; unavailable path does not collect / crash (#122) |
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |

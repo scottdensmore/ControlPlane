@@ -38,6 +38,13 @@
 - (NSDictionary *)refreshDiagnosticsSnapshot;
 
 - (void)forceSwitch: (id) sender;
+
+/// Force Context menu names (unique name, or Parent/Child path when names collide).
+- (NSArray<NSString *> *)contextNamesForForcedSwitchMenu;
+
+/// Select a context by that menu name, using the same path as the status menu.
+- (BOOL)forceSwitchToContextNamed:(NSString *)name error:(NSError **)error;
+
 - (IBAction)toggleSticky: (id) sender;
 
 - (void)restartSwitchSmoothing;

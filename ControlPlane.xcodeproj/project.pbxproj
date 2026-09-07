@@ -248,6 +248,12 @@
 		F0CUSA01TSTWIRE000004 /* SetFocusAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F0CUSA01FILWIRE000013 /* SetFocusAction.m */; };
 		F0CUSA01TSTWIRE000005 /* FocusAndPowerEvidenceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F0CUSA01FILWIRE000014 /* FocusAndPowerEvidenceTests.m */; };
 		F0CUSA01FWKWIRE000006 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0CUSA01FILWIRE000015 /* Intents.framework */; };
+		A126FRM01WIRE126000001 /* AppIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A126FRM01FILE126000001 /* AppIntents.framework */; };
+		A126TOK01WIRE126000001 /* CPContextAppIntentTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A126TOK01FILE126000002 /* CPContextAppIntentTokens.m */; };
+		A126TOK01WIRE126000002 /* CPContextAppIntentTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A126TOK01FILE126000002 /* CPContextAppIntentTokens.m */; };
+		A126BRG01WIRE126000001 /* CPContextAppIntentBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A126BRG01FILE126000002 /* CPContextAppIntentBridge.m */; };
+		A126INT01WIRE126000001 /* SwitchContextIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A126INT01FILE126000001 /* SwitchContextIntent.swift */; };
+		A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A126TST01FILE126000001 /* CPContextAppIntentTests.m */; };
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
 		B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */; };
 		B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */; };
@@ -789,6 +795,14 @@
 		F0CUSA01FILWIRE000013 /* SetFocusAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetFocusAction.m; path = Source/SetFocusAction.m; sourceTree = "<group>"; };
 		F0CUSA01FILWIRE000014 /* FocusAndPowerEvidenceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = FocusAndPowerEvidenceTests.m; sourceTree = "<group>"; };
 		F0CUSA01FILWIRE000015 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		A126FRM01FILE126000001 /* AppIntents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppIntents.framework; path = System/Library/Frameworks/AppIntents.framework; sourceTree = SDKROOT; };
+		A126TOK01FILE126000001 /* CPContextAppIntentTokens.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPContextAppIntentTokens.h; path = Source/CPContextAppIntentTokens.h; sourceTree = "<group>"; };
+		A126TOK01FILE126000002 /* CPContextAppIntentTokens.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CPContextAppIntentTokens.m; path = Source/CPContextAppIntentTokens.m; sourceTree = "<group>"; };
+		A126BRG01FILE126000001 /* CPContextAppIntentBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPContextAppIntentBridge.h; path = Source/CPContextAppIntentBridge.h; sourceTree = "<group>"; };
+		A126BRG01FILE126000002 /* CPContextAppIntentBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CPContextAppIntentBridge.m; path = Source/CPContextAppIntentBridge.m; sourceTree = "<group>"; };
+		A126INT01FILE126000001 /* SwitchContextIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwitchContextIntent.swift; path = Source/SwitchContextIntent.swift; sourceTree = "<group>"; };
+		A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlPlane-Bridging-Header.h; path = Source/ControlPlane-Bridging-Header.h; sourceTree = "<group>"; };
+		A126TST01FILE126000001 /* CPContextAppIntentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPContextAppIntentTests.m; sourceTree = "<group>"; };
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
 		B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPPrefsSettingsShellController.h; path = Source/CPPrefsSettingsShellController.h; sourceTree = "<group>"; };
 		B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPPrefsSettingsShellController.m; path = Source/CPPrefsSettingsShellController.m; sourceTree = "<group>"; };
@@ -921,6 +935,7 @@
 				DDAC3C55140D866200FBF29E /* ScriptingBridge.framework in Frameworks */,
 				DEE7A5CF2DC6947F00C05EF4 /* UserNotifications.framework in Frameworks */,
 				F0CUSA01FWKWIRE000006 /* Intents.framework in Frameworks */,
+				A126FRM01WIRE126000001 /* AppIntents.framework in Frameworks */,
 				DE87A87F01A87F0000000001 /* UniformTypeIdentifiers.framework in Frameworks */,
 				DD8274FB141177750098FA6E /* Security.framework in Frameworks */,
 				8D82F06D0AA811CE009ADA44 /* SystemConfiguration.framework in Frameworks */,
@@ -967,6 +982,12 @@
 				8D0164850C02AB08004AD8DB /* UI Utilities */,
 				DA812E81140681D2006869F7 /* AppleScript.h */,
 				DA812E82140681D2006869F7 /* AppleScript.m */,
+				A126TOK01FILE126000001 /* CPContextAppIntentTokens.h */,
+				A126TOK01FILE126000002 /* CPContextAppIntentTokens.m */,
+				A126BRG01FILE126000001 /* CPContextAppIntentBridge.h */,
+				A126BRG01FILE126000002 /* CPContextAppIntentBridge.m */,
+				A126INT01FILE126000001 /* SwitchContextIntent.swift */,
+				A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */,
 				8D8155CD0C3A304E00228463 /* ContextsDataSource.h */,
 				8D8155CE0C3A304E00228463 /* ContextsDataSource.m */,
 				DDAE0015141474DC00FDADE8 /* CPController+SleepMonitor.h */,
@@ -1142,6 +1163,7 @@
 				DE06572E2DC6EFFC00156ADD /* AVFoundation.framework */,
 				DEE7A5CE2DC6947F00C05EF4 /* UserNotifications.framework */,
 				F0CUSA01FILWIRE000015 /* Intents.framework */,
+				A126FRM01FILE126000001 /* AppIntents.framework */,
 				DE87A87F01A87F0000000002 /* UniformTypeIdentifiers.framework */,
 				DE02C5D72DC68DA80041FA17 /* CoreWLAN.framework */,
 				F0NETFW01FILE00000001 /* Network.framework */,
@@ -1184,6 +1206,7 @@
 				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
 				086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */,
 				5AB01456A891A29FF1EE3792 /* ContextModelTests.m */,
+				A126TST01FILE126000001 /* CPContextAppIntentTests.m */,
 				C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */,
 				429E8B6B4153B81493E8C483 /* InfoPlistSmokeTests.m */,
 				042739F2DDC950F687D3730B /* DefaultBrowserUTITests.m */,
@@ -1889,6 +1912,9 @@
 				B35DIAG01WIRE350000001 /* CPDiagnosticsSnapshot.m in Sources */,
 				B135EJ01WIRE135000001 /* CPEvidenceSwitchJourney.m in Sources */,
 				8D90E51F0B71C4C9007D39FD /* CPController.m in Sources */,
+				A126TOK01WIRE126000001 /* CPContextAppIntentTokens.m in Sources */,
+				A126BRG01WIRE126000001 /* CPContextAppIntentBridge.m in Sources */,
+				A126INT01WIRE126000001 /* SwitchContextIntent.swift in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
 				8D8C9CE70BBB7BE00074D5B3 /* BluetoothEvidenceSource.m in Sources */,
@@ -2010,6 +2036,8 @@
 				B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */,
 				B25ARC01WIRE2500000001 /* ArcMigrationTests.m in Sources */,
 				B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */,
+				A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */,
+				A126TOK01WIRE126000002 /* CPContextAppIntentTokens.m in Sources */,
 				B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
 				C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */,
@@ -2495,6 +2523,7 @@
 		C01FCF4B08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
@@ -2521,12 +2550,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/ControlPlane-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		C01FCF4C08A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
@@ -2554,6 +2586,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = "Source/ControlPlane-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
