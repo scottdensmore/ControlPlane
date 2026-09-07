@@ -115,6 +115,9 @@
 		B123AUD01WIRE12300001 /* AudioOutputRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B123AUD01FILE12300001 /* AudioOutputRuleMatchTests.m */; };
 		B130SL01WIRE130000001 /* ScreenLockRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B130SL01FILE130000001 /* ScreenLockRuleMatchTests.m */; };
 		B130RD01WIRE130000001 /* RemoteDesktopRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B130RD01FILE130000001 /* RemoteDesktopRuleMatchTests.m */; };
+		B132DSP01WIRE13200001 /* DisplayCountRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B132DSP01FILE13200001 /* DisplayCountRuleMatchTests.m */; };
+		B132MONSRC01WIRE132001 /* MonitorEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D5684B30C38711D00881E32 /* MonitorEvidenceSource.m */; };
+		B132LOOP01WIRE1320001 /* GenericLoopingEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643C660C4EF197006D8ECC /* GenericLoopingEvidenceSource.m */; };
 		B130SLSRC01WIRE1300001 /* ScreenLockEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 640E7DBF1C1C983400045672 /* ScreenLockEvidenceSource.m */; };
 		B130RDSRC01WIRE1300001 /* RemoteDesktopEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA7A0C161AE3F5A90063CDDC /* RemoteDesktopEvidenceSource.m */; };
 		B122LMU01WIRE12200002 /* LightEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D91F1F80C4772FF00D9FC0F /* LightEvidenceSource.m */; };
@@ -448,6 +451,7 @@
 		B123AUD01FILE12300001 /* AudioOutputRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = AudioOutputRuleMatchTests.m; sourceTree = "<group>"; };
 		B130SL01FILE130000001 /* ScreenLockRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ScreenLockRuleMatchTests.m; sourceTree = "<group>"; };
 		B130RD01FILE130000001 /* RemoteDesktopRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RemoteDesktopRuleMatchTests.m; sourceTree = "<group>"; };
+		B132DSP01FILE13200001 /* DisplayCountRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DisplayCountRuleMatchTests.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1173,7 +1177,8 @@
 				B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */,
 				B123AUD01FILE12300001 /* AudioOutputRuleMatchTests.m */,
 				B130SL01FILE130000001 /* ScreenLockRuleMatchTests.m */,
-				B130RD01FILE130000001 /* RemoteDesktopRuleMatchTests.m */,
+		B130RD01FILE130000001 /* RemoteDesktopRuleMatchTests.m */,
+				B132DSP01FILE13200001 /* DisplayCountRuleMatchTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
 				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
@@ -2032,6 +2037,9 @@
 				B123AUD01WIRE12300001 /* AudioOutputRuleMatchTests.m in Sources */,
 				B130SL01WIRE130000001 /* ScreenLockRuleMatchTests.m in Sources */,
 				B130RD01WIRE130000001 /* RemoteDesktopRuleMatchTests.m in Sources */,
+				B132DSP01WIRE13200001 /* DisplayCountRuleMatchTests.m in Sources */,
+				B132MONSRC01WIRE132001 /* MonitorEvidenceSource.m in Sources */,
+				B132LOOP01WIRE1320001 /* GenericLoopingEvidenceSource.m in Sources */,
 				B130SLSRC01WIRE1300001 /* ScreenLockEvidenceSource.m in Sources */,
 				B130RDSRC01WIRE1300001 /* RemoteDesktopEvidenceSource.m in Sources */,
 				B123AUDSRC01WIRE1230001 /* AudioOutputEvidenceSource.m in Sources */,
