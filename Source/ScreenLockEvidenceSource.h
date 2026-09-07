@@ -11,6 +11,8 @@
 @interface ScreenLockEvidenceSource : GenericEvidenceSource
 
 - (id) init;
+- (id)initForMatchingTests;
+- (void)setScreenLockedForTesting:(BOOL)locked;
 
 - (void) doRealUpdate;
 
@@ -21,5 +23,8 @@
 - (BOOL) doesRuleMatch: (NSDictionary*) rule;
 - (NSString*) getSuggestionLeadText: (NSString*) type;
 - (NSArray*) getSuggestions;
+
+/// YES after a real (or injected) screen lock/unlock notification updates state.
+@property (nonatomic, assign, readonly) BOOL receivedLockStateNotify;
 
 @end

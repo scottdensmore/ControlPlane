@@ -10,6 +10,8 @@
 
 @implementation EvidenceSource
 
+@synthesize screenIsLocked;
+
 + (NSPanel *)getPanelFromNibNamed:(NSString *)name instantiatedWithOwner:(id)owner
 {
     (void)name;
@@ -130,13 +132,13 @@
 - (void)screenDidUnlock:(NSNotification *)notification
 {
     (void)notification;
-    screenIsLocked = NO;
+    [self setScreenIsLocked:NO];
 }
 
 - (void)screenDidLock:(NSNotification *)notification
 {
     (void)notification;
-    screenIsLocked = YES;
+    [self setScreenIsLocked:YES];
 }
 
 - (void)setContextMenu:(NSMenu *)menu
