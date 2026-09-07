@@ -182,6 +182,12 @@
     XCTAssertTrue([html rangeOfString:@"Apple silicon" options:NSCaseInsensitiveSearch].location != NSNotFound ||
                   [html rangeOfString:@"modern Mac" options:NSCaseInsensitiveSearch].location != NSNotFound,
                   @"Light Help must note unavailability on modern Macs / Apple silicon (#122)");
+    XCTAssertTrue([html rangeOfString:@"distributed notification" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"Evidence Sources Help must warn that Screen Lock / Remote Desktop use distributed notifications (#130)");
+    XCTAssertTrue([html rangeOfString:@"com.apple.screenIsLocked" options:0].location != NSNotFound,
+                  @"Help should name Screen Lock notification (#130)");
+    XCTAssertTrue([html rangeOfString:@"com.apple.remotedesktop.viewerNames" options:0].location != NSNotFound,
+                  @"Help should name Remote Desktop notification (#130)");
 }
 
 // #137: Unavailable actions list must match isActionApplicableToSystem gates.

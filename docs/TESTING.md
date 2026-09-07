@@ -58,6 +58,8 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
+| `ScreenLockRuleMatchTests` | Lock/unlock matching via `setScreenLockedForTesting:` / direct `screenDidLock:` (no live distributed notifies) (#130) |
+| `RemoteDesktopRuleMatchTests` | Yes/No matching via `setUserConnectedForTesting:` / injected `ViewerNames` userInfo (no live distributed notifies) (#130) |
 | `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
 | `CPHelperCommandRunnerTests` | Helper argv-array runner: no `system()`/`sprintf` in `CPHelperTool.m`; display-sleep validation; fixed firewall/`tmutil`/SMB/remote-login args (#86) |
 | `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
@@ -123,6 +125,21 @@ Steps: enable Wi‑Fi evidence; toggle Location for ControlPlane in System Setti
 ## Light / AppleLMUController (#122)
 
 Ambient light evidence depends on undocumented `AppleLMUController`. On machines without that IOKit service (common on Apple silicon), `LightEvidenceSource` is not registered (`isEvidenceSourceApplicableToSystem` → NO). Unit tests cover the IOKit probe and the unavailable `doUpdate` path (`initForUnavailableLMUTesting`). Manual: Preferences → Evidence Sources should omit Light when LMU is absent; Help → Evidence Sources documents the limitation.
+
+## Screen Lock + Remote Desktop fragility (#130)
+
+Both sources listen for **undocumented** distributed notifications. CI and `ControlPlaneTests` **must not** post or wait on live notifies; match logic is covered by injectable stubs (`ScreenLockRuleMatchTests`, `RemoteDesktopRuleMatchTests`).
+
+| Source | Notification(s) | Default until first notify | Fallback |
+| :--- | :--- | :--- | :--- |
+| Screen Lock | `com.apple.screenIsLocked` / `com.apple.screenIsUnlocked` | Unlocked | `DSLog` on start; warning if none arrive ~90s after start |
+| Remote Desktop | `com.apple.remotedesktop.viewerNames` (`ViewerNames`) | No viewer connected | Same pattern |
+
+### Manual probe (Tahoe)
+
+1. Enable **Screen Lock** evidence; lock and unlock the Mac; confirm lock/unlock rules flip and Console shows lock-related ControlPlane lines.
+2. Enable **Remote Desktop**; start/stop Screen Sharing from another Mac (or stop sharing); confirm Yes/No rules flip when `ViewerNames` updates.
+3. If an OS update stops posting these names, expect the ~90s “has not received …” warning and switch rules to other evidence.
 
 ## Gaps / follow-ups
 

@@ -10,8 +10,13 @@
 
 @interface RemoteDesktopEvidenceSource : GenericEvidenceSource
 @property BOOL userConnected;
+/// YES after a real (or injected) com.apple.remotedesktop.viewerNames update.
+@property (nonatomic, assign, readonly) BOOL receivedRemoteDesktopNotify;
 
 - (id)init;
+- (id)initForMatchingTests;
+- (void)setUserConnectedForTesting:(BOOL)connected;
+- (void)applyViewerNamesNotificationUserInfoForTesting:(NSDictionary *)userInfo;
 
 - (void)start;
 - (void)stop;

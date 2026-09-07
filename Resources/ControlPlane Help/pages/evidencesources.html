@@ -43,9 +43,9 @@
                   <li><b>Mounted Volume</b>: Whether a named volume is currently mounted</li>
                   <li><b>NetworkLink</b>: Status of a network link, either up or down</li>
                   <li><b>Power</b>: Monitors the source of power (battery or adapter), battery charge percent thresholds, and <b>Low Power Mode</b> on or off</li>
-                  <li><b>Remote Desktop</b>: Whether a Screen Sharing / Remote Desktop session is active (relies on system notifications; may be fragile across OS updates)</li>
+                  <li><b>Remote Desktop</b>: Whether a Screen Sharing / Remote Desktop session is active</li>
                   <li><b>RunningApplication</b>: Monitor running applications</li>
-                  <li><b>Screen Lock</b>: Whether the screen is locked or unlocked (distributed notification–based; document fragility on OS updates)</li>
+                  <li><b>Screen Lock</b>: Whether the screen is locked or unlocked</li>
                   <li><b>ShellScript</b>: Allows you to write your own evidence source based on
                     any script</li>
                   <li><b>Sleep/Wake</b>: Allows ControlPlane to react to sleep and wake events</li>
@@ -53,6 +53,27 @@
                   <li><b>USB</b>: Monitor attached USB devices</li>
                   <li><b>WiFi</b>: Connected or nearby WiFi access points. On modern macOS (Sonoma and later, including Tahoe), reading Wi‑Fi network names (SSID) and BSSID requires Location Services for ControlPlane. If Wi‑Fi rules stop matching, open System Settings &gt; Privacy &amp; Security &gt; Location Services and allow ControlPlane.</li>
                 </ul>
+
+		<h2>Fragile notification-based sources</h2>
+		<p><b>Screen Lock</b> and <b>Remote Desktop</b> do not use public
+		AppKit APIs for live state. They observe undocumented macOS
+		<b>distributed notifications</b>:</p>
+		<ul>
+		  <li><b>Screen Lock</b>: <tt>com.apple.screenIsLocked</tt> /
+		  <tt>com.apple.screenIsUnlocked</tt></li>
+		  <li><b>Remote Desktop</b>: <tt>com.apple.remotedesktop.viewerNames</tt>
+		  (payload key <tt>ViewerNames</tt>)</li>
+		</ul>
+		<p>Apple can rename or stop posting these notifications in any OS
+		update. If rules based on these sources stop changing after an upgrade,
+		check Console for ControlPlane messages about missing notifications,
+		then prefer another evidence source (Power, Wi‑Fi, Active Application,
+		Host Availability, etc.). Automated tests inject lock / viewer state
+		and never rely on live distributed notifications in CI.</p>
+		<p>Until the first notification arrives after enabling the source,
+		Screen Lock assumes unlocked and Remote Desktop assumes no viewer is
+		connected. ControlPlane logs a warning if no notification arrives
+		within about 90 seconds of start.</p>
 <!--
 		<p style="text-align: center;">
 			<img src="../gfx/RELATEDSCREENSHOT.png" alt="SOMETHING demo" />
