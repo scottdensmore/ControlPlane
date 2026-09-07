@@ -44,6 +44,15 @@
 	XCTAssertEqual(applicable, cliPresent);
 }
 
+- (void)testSetFocusHelpTextNamesGalleryPreset {
+	NSString *help = [SetFocusAction helpText];
+	XCTAssertTrue([help rangeOfString:@"Shortcuts recipe gallery" options:0].location != NSNotFound,
+		      @"Prefs help for Set Focus must point at the gallery (#127)");
+	XCTAssertTrue([help containsString:@"Enable Work Focus"],
+		      @"Set Focus prefs help must suggest the gallery preset (#127)");
+	XCTAssertTrue([help rangeOfString:@"Set Focus" options:0].location != NSNotFound);
+}
+
 - (void)testEmptySetFocusFailsWithoutInvokingCLI {
 	SetFocusAction *action = [[SetFocusAction alloc] initWithDictionary:@{
 		@"type": @"SetFocus",

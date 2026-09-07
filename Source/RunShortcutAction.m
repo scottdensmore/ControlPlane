@@ -112,7 +112,13 @@ static NSString * const kShortcutsCLIPath = @"/usr/bin/shortcuts";
 	return NSLocalizedString(
 		@"The parameter for Run Shortcut is the Shortcut name or identifier "
 		@"as shown in the Shortcuts app (or `shortcuts list`). ControlPlane "
-		@"invokes `/usr/bin/shortcuts run` with a typed argument list (no shell).",
+		@"invokes `/usr/bin/shortcuts run` with a typed argument list (no shell). "
+		@"For Focus, VPN, Bluetooth power, or Stage Manager, create a Shortcut "
+		@"that uses the system Set Focus, Set VPN, Set Bluetooth, or Set Stage Manager "
+		@"action, then enter that Shortcut’s name — for example Enable Work Focus, "
+		@"Connect Work VPN, Turn Bluetooth On, or Turn Stage Manager On. "
+		@"See Help → Tips and tricks (Shortcuts recipe gallery). "
+		@"ControlPlane does not automate Control Center.",
 		@"");
 }
 

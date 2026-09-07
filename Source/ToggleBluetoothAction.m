@@ -16,7 +16,7 @@
     // IOBluetooth.framework symbols. There is no public API to toggle Bluetooth
     // radio power (CoreBluetooth is app-scoped only). Gate on Tahoe rather than
     // silently calling private APIs in Release. Prefer Control Center / System
-    // Settings, or a Shortcuts + ShellScript action (shortcuts run "...").
+    // Settings, or a Run Shortcut that uses the system Set Bluetooth action.
     return NO;
 }
 
@@ -34,8 +34,9 @@
 		*errorString = NSLocalizedString(
 			@"Bluetooth cannot be toggled on this version of macOS. "
 			@"Use Control Center or System Settings → Bluetooth, or create a "
-			@"Shortcut that sets Bluetooth power and run it with a ShellScript "
-			@"action (for example: shortcuts run \"Toggle Bluetooth\").",
+			@"Shortcut that uses Set Bluetooth (suggested name: Turn Bluetooth On) "
+			@"and run it with Run Shortcut. See Help → Tips and tricks "
+			@"(Shortcuts recipe gallery).",
 			@"Error when ToggleBluetoothAction runs on modern macOS");
 	}
 	return NO;
@@ -46,8 +47,9 @@
 	return NSLocalizedString(@"The parameter for ToggleBluetooth actions is either \"1\" "
 				 "or \"0\", depending on whether you want your Bluetooth controller's power "
 				 "turned on or off. This action is not available on modern macOS; "
-				 "use Control Center, System Settings, or a Shortcuts toggle via a "
-				 "ShellScript action instead.", @"");
+				 "use Control Center, System Settings, or Run Shortcut with a "
+				 "Set Bluetooth Shortcut (suggested name: Turn Bluetooth On). "
+				 "See Help → Tips and tricks (Shortcuts recipe gallery).", @"");
 }
 
 + (NSString *)creationHelpText

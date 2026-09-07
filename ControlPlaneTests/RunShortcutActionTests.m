@@ -82,4 +82,19 @@
     XCTAssertGreaterThan([RunShortcutAction menuCategory].length, 0u);
 }
 
+- (void)testHelpTextNamesGalleryPresets {
+    NSString *help = [RunShortcutAction helpText];
+    XCTAssertTrue([help rangeOfString:@"Shortcuts recipe gallery" options:0].location != NSNotFound,
+                  @"Prefs help for Run Shortcut must point at the gallery (#127)");
+    for (NSString *name in @[
+        @"Enable Work Focus",
+        @"Connect Work VPN",
+        @"Turn Bluetooth On",
+        @"Turn Stage Manager On",
+    ]) {
+        XCTAssertTrue([help containsString:name],
+                      @"Run Shortcut prefs help must suggest gallery name %@ (#127)", name);
+    }
+}
+
 @end
