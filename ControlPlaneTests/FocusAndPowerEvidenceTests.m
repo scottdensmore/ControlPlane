@@ -68,6 +68,11 @@
 	XCTAssertEqualObjects(src.name, @"Focus");
 }
 
+- (void)testFocusPollIntervalIsFallbackNotAggressive {
+	// #128: INFocusStatusCenter has no public change notification; poll is a fallback only.
+	XCTAssertGreaterThanOrEqual([FocusEvidenceSource pollIntervalSecondsForTesting], 30.0);
+}
+
 - (void)testPowerExposesBatteryAndLowPowerRuleTypes {
 	PowerEvidenceSource *source = [[PowerEvidenceSource alloc] initForMatchingTests];
 	NSArray *types = [source typesOfRulesMatched];

@@ -141,6 +141,10 @@ Both sources listen for **undocumented** distributed notifications. CI and `Cont
 2. Enable **Remote Desktop**; start/stop Screen Sharing from another Mac (or stop sharing); confirm Yes/No rules flip when `ViewerNames` updates.
 3. If an OS update stops posting these names, expect the ~90s “has not received …” warning and switch rules to other evidence.
 
+## Focus Status (#128)
+
+Public `INFocusStatusCenter` exposes only whether Focus is **on or off** (`isFocused`). Named modes (Work, Sleep, …) are not readable — use Set Focus / Run Shortcut. There is no public Focus-change notification; ControlPlane refreshes on wake and polls every 30s as a fallback. If Focus Status is denied in System Settings → Privacy & Security → Focus, rules treat Focus as off. Unit: `testFocusPollIntervalIsFallbackNotAggressive`.
+
 ## Gaps / follow-ups
 
 - Context + rule + mute action end-to-end journey (needs mock evidence seam)

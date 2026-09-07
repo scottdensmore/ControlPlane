@@ -22,4 +22,7 @@
 - (NSString *)getSuggestionLeadText:(NSString *)type;
 - (NSArray *)getSuggestions;
 
+/// Fallback poll interval when no public Focus-change notification exists (#128).
++ (NSTimeInterval)pollIntervalSecondsForTesting;
+
 @end

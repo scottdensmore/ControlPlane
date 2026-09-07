@@ -33,7 +33,7 @@
                   <li><b>Bonjour</b>: Services and devices located on your local network</li>
                   <li><b>CoreLocation</b>: Your current location. Enabling this (or Wi‑Fi) will prompt for Location Services.</li>
                   <li><b>DNS</b> (<em>DNS Parameters</em>): Search domains and DNS server addresses from the current network configuration</li>
-                  <li><b>Focus</b>: Whether a Focus mode (Do Not Disturb, Sleep, Work, …) is currently active, via the public Intents Focus Status API. macOS may prompt for Focus Status access.</li>
+                  <li><b>Focus</b>: Whether Focus is currently <em>on or off</em> via the public Intents Focus Status API (<tt>INFocusStatusCenter</tt>). The public API does <strong>not</strong> expose which named mode (Work, Sleep, …) is active — use <em>Set Focus</em> / <em>Run Shortcut</em> for named modes. macOS may prompt for Focus Status access (System Settings → Privacy &amp; Security → Focus). ControlPlane refreshes on wake and polls as a fallback because Apple does not publish a Focus-change notification.</li>
                   <li><b>Host Availability</b>: Whether a hostname or IP is reachable on the network, using Network.framework (TCP probe to port 443). Useful for “on the office LAN / VPN” style contexts.</li>
                   <li><b>FireWire</b>: Connected FireWire devices — only registered when IOKit reports a FireWire controller. Unavailable on Apple Silicon and most modern Thunderbolt-only Macs; do not expect this evidence source on modern Mac hardware without FireWire.</li>
                   <li><b>IP</b> (<em>Assigned IP Address</em>): Current IPv4 and <b>IPv6</b> addresses assigned to your Mac (prefix-aware rules for both families)</li>

@@ -122,7 +122,7 @@
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>ControlPlane needs access to Bluetooth to create rules based on attached and nearby, discoverable bluetooth devices.</string>
 	<key>NSFocusStatusUsageDescription</key>
-	<string>ControlPlane reads Focus status to create rules based on whether a Focus mode is currently on.</string>
+	<string>ControlPlane reads whether Focus is on or off (not which named mode) so rules can react to Focus Status. Grant access in System Settings → Privacy &amp; Security → Focus.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_services._dns-sd._udp</string>
