@@ -3,8 +3,9 @@
 <head>
 	<title>Tips and Tricks</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="keywords" content="tips, tricks, examples, samples">
-	<meta name="description" content="Get the most out of ControlPlane.">
+	<meta name="keywords" content="tips, tricks, shortcuts, recipe gallery, focus, vpn, bluetooth, stage manager">
+	<meta name="description" content="Shortcuts recipe gallery for Focus, VPN, Bluetooth, and Stage Manager on macOS 26.">
+	<meta name="robots" content="anchors" />
 	<link media="all" rel="stylesheet" href="../css/topicPage.css" />
 </head>
 <body>
@@ -18,25 +19,115 @@
 	<p>This page gives examples of useful ways that
 	ControlPlane can be used, especially via actions.
 	</p>
-<div summary="How to set Focus with a Shortcut" class="taskbox">
+
+	<a name="shortcuts-gallery"></a>
+	<h2>Shortcuts recipe gallery</h2>
+	<p>On macOS 26 (Tahoe) there is no public Control Center API for third-party apps.
+	ControlPlane does <strong>not</strong> turn Focus, VPN, Bluetooth power, or Stage Manager
+	on or off itself, and it does not use private automation.
+	Create a Shortcut that uses the public Shortcuts action named below, then attach
+	<em>Run Shortcut</em> (or <em>Set Focus</em> for Focus) and enter that Shortcut’s
+	exact name.
+	</p>
+	<p>Suggested names are only labels you choose in the Shortcuts app. They are not
+	built into ControlPlane. Use the same spelling in the action parameter, or paste
+	the identifier from <tt>shortcuts list --show-identifiers</tt>.
+	The first run may ask you to allow the Shortcut.
+	</p>
+
+	<div summary="How to set Focus with a Shortcut" class="taskbox">
+		<h2>Focus — Set Focus</h2>
 		<p>
-		<strong>To set Focus when entering a context:</strong>
-		<ol>
-		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets the Focus you want
-		(for example Do Not Disturb or Work). Name it something memorable, such as
-		<em>Enable Work Focus</em>.</li>
-		<li>In ControlPlane, add a <em>Set Focus</em> or <em>Run Shortcut</em> arrival action on the context and
-		enter that exact Shortcut name (or its identifier from
-		<tt>shortcuts list --show-identifiers</tt>) as the parameter.</li>
-		</ol>
+		Replaces the unsupported <em>Toggle Notification Center Alerts</em> action.
+		In Shortcuts, search for the system action <strong>Set Focus</strong>
+		(not a private Notification Center preference).
+		Choose a Focus you already have (Do Not Disturb, Work, Sleep, …) and turn it on or off.
 		</p>
 		<p>
-		The legacy <em>Toggle Notification Center Alerts</em> action is unsupported on
-		modern macOS; do not rely on private Notification Center preferences.
+		<strong>Suggested Shortcut name:</strong> <em>Enable Work Focus</em>
+		</p>
+		<ol>
+		<li>In the Shortcuts app, add <strong>Set Focus</strong>, pick the Focus, and turn it on
+		(or off, for a departure Shortcut such as <em>Turn Do Not Disturb Off</em>).</li>
+		<li>In ControlPlane Preferences, add a <em>Set Focus</em> or <em>Run Shortcut</em>
+		arrival action and enter <em>Enable Work Focus</em>.</li>
+		</ol>
+		<p>
+		Focus evidence only reports whether Focus is on or off. It cannot see the mode name.
+		Use this recipe when a context should turn a named Focus on or off.
 		</p>
 	</div>
 
+	<div summary="How to connect VPN with a Shortcut" class="taskbox">
+		<h2>VPN — Set VPN</h2>
+		<p>
+		Replaces the unsupported <em>VPN</em> action.
+		In Shortcuts, search for the system action <strong>Set VPN</strong>.
+		It connects, disconnects, or toggles a VPN configuration already on this Mac.
+		It can also change On Demand; changing On Demand asks for an administrator password.
+		ControlPlane does not change On Demand and does not create VPN configurations.
+		</p>
+		<p>
+		<strong>Suggested Shortcut names:</strong> <em>Connect Work VPN</em> on arrival,
+		<em>Disconnect Work VPN</em> on departure.
+		</p>
+		<ol>
+		<li>Confirm the VPN appears in System Settings → VPN. Third-party VPN apps
+		may not show up in <strong>Set VPN</strong>.</li>
+		<li>Add <strong>Set VPN</strong>, choose that configuration, and set the operation
+		to Connect (or Disconnect).</li>
+		<li>In ControlPlane, add a <em>Run Shortcut</em> action and enter
+		<em>Connect Work VPN</em>.</li>
+		</ol>
+	</div>
+
+	<div summary="How to set Bluetooth power with a Shortcut" class="taskbox">
+		<h2>Bluetooth — Set Bluetooth</h2>
+		<p>
+		Replaces the unsupported <em>Toggle Bluetooth</em> action, which used private
+		Bluetooth power APIs. In Shortcuts, search for the system action
+		<strong>Set Bluetooth</strong>. It turns the Bluetooth radio on or off.
+		It does not pair or connect a device.
+		</p>
+		<p>
+		<strong>Suggested Shortcut names:</strong> <em>Turn Bluetooth On</em> and
+		<em>Turn Bluetooth Off</em>.
+		</p>
+		<ol>
+		<li>Add <strong>Set Bluetooth</strong> and choose Turn On or Turn Off.
+		Do not use a shell script.</li>
+		<li>In ControlPlane, add a <em>Run Shortcut</em> action and enter
+		<em>Turn Bluetooth On</em>.</li>
+		</ol>
+		<p>
+		If an administrator blocks Bluetooth power changes, the Shortcut fails and
+		ControlPlane cannot override that.
+		To connect a paired device after the radio is on, use
+		<em>Connect Bluetooth Device</em> (that action does not turn Bluetooth power on).
+		</p>
+	</div>
+
+	<div summary="How to set Stage Manager with a Shortcut" class="taskbox">
+		<h2>Stage Manager — Set Stage Manager</h2>
+		<p>
+		ControlPlane has no Stage Manager action. On macOS 26, Shortcuts includes the
+		system action <strong>Set Stage Manager</strong>, which turns Stage Manager on or off.
+		It does not arrange windows. If that action is missing, Stage Manager is not
+		available on this Mac — do not look for a private WindowServer toggle.
+		</p>
+		<p>
+		<strong>Suggested Shortcut names:</strong> <em>Turn Stage Manager On</em> and
+		<em>Turn Stage Manager Off</em>.
+		</p>
+		<ol>
+		<li>Add <strong>Set Stage Manager</strong> and turn it on or off.</li>
+		<li>In ControlPlane, add a <em>Run Shortcut</em> action and enter
+		<em>Turn Stage Manager On</em>.</li>
+		</ol>
+	</div>
+
 	<div summary="How to switch context from Shortcuts or Spotlight" class="taskbox">
+		<h2>Switch Context from Shortcuts</h2>
 		<p>
 		<strong>To force a context from Shortcuts or Spotlight:</strong>
 		</p>
@@ -51,23 +142,9 @@
 		<p>
 		This uses the same path as choosing a context from the status menu. It does
 		not require App Sandbox, and ControlPlane stays a menu-bar agent.
-		</p>
-	</div>
-
-	<div summary="How to toggle Bluetooth with a Shortcut" class="taskbox">
-		<p>
-		<strong>To toggle Bluetooth when entering a context:</strong>
-		<ol>
-		<li>Open the <em>Shortcuts</em> app and create a shortcut that sets Bluetooth
-		on or off. Name it something memorable, such as
-		<em>Toggle Bluetooth</em>.</li>
-		<li>In ControlPlane, add a <em>Run Shortcut</em> arrival action on the context and
-		enter <em>Toggle Bluetooth</em> (or the identifier) as the parameter.</li>
-		</ol>
-		</p>
-		<p>
-		The legacy <em>Toggle Bluetooth</em> action is unsupported on modern macOS;
-		do not rely on private IOBluetooth Preference APIs.
+		This is separate from the system <strong>Set Focus</strong>, <strong>Set VPN</strong>,
+		<strong>Set Bluetooth</strong>, and <strong>Set Stage Manager</strong> recipes above:
+		those run your Shortcuts; this lets Shortcuts force a ControlPlane context.
 		</p>
 	</div>
 

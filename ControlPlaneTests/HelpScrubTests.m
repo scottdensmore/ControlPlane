@@ -190,6 +190,55 @@
                   @"Help should name Remote Desktop notification (#130)");
 }
 
+// #127: curated Shortcuts recipes so users can replace gated Focus/VPN/BT/Stage Manager actions.
+
+- (void)testHelpDocumentsShortcutsRecipeGallery {
+    NSString *path = [self.helpRoot stringByAppendingPathComponent:@"pages/tips.html"];
+    NSError *error = nil;
+    NSString *tips = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(tips);
+
+    NSArray<NSString *> *required = @[
+        @"Shortcuts recipe gallery",
+        @"Set Focus",
+        @"Set VPN",
+        @"Set Bluetooth",
+        @"Set Stage Manager",
+        @"Enable Work Focus",
+        @"Connect Work VPN",
+        @"Turn Bluetooth On",
+        @"Turn Stage Manager On",
+        @"Run Shortcut",
+        @"macOS 26",
+        @"Switch Context",
+    ];
+    for (NSString *needle in required) {
+        XCTAssertTrue([tips rangeOfString:needle options:0].location != NSNotFound,
+                      @"Tips Help must document Shortcuts recipe (%@) (#127)", needle);
+    }
+
+    NSArray<NSString *> *banned = @[
+        @"IOBluetoothPreference",
+        @"NEVPNManager",
+        @"shortcuts run",
+    ];
+    for (NSString *needle in banned) {
+        XCTAssertFalse([tips containsString:needle],
+                       @"Tips must not recommend private or shell automation (%@) (#127)", needle);
+    }
+
+    NSString *actionsPath = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSString *actions = [NSString stringWithContentsOfFile:actionsPath encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertTrue([actions containsString:@"tips.html"],
+                  @"Actions Help must link to the Shortcuts recipe gallery (#127)");
+    XCTAssertTrue([actions rangeOfString:@"Shortcuts recipe gallery" options:0].location != NSNotFound,
+                  @"Actions Help must name the Shortcuts recipe gallery (#127)");
+    XCTAssertFalse([actions containsString:@"shortcuts run \""],
+                   @"Actions Help must not tell users to shell out to shortcuts (#127)");
+}
+
 // #137: Unavailable actions list must match isActionApplicableToSystem gates.
 
 - (void)testHelpDocumentsUnavailableActionsMatchingGates {

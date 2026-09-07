@@ -42,8 +42,8 @@ Limitations: shortcut names are user-managed; there is no stable public API to e
 | :--- | :--- |
 | Revive ScriptingBridge VPNAction | **No** |
 | Ship NEVPNManager connect/disconnect for existing VPNs | **No** |
-| Document Shortcuts as the replacement | **Yes** |
-| Follow-up implement issue | **Not filed** — no NEVPN slice to build. Optional later: a Help gallery of Shortcut recipes (#127). |
+| Document Shortcuts as the replacement | **Yes** — Help → Tips and tricks, **Shortcuts recipe gallery** (Set VPN; suggested name *Connect Work VPN*) |
+| Follow-up implement issue | **Not filed** — no NEVPN slice to build. Gallery is #127. |
 
 ## Manual check (Tahoe)
 

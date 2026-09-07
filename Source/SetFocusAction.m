@@ -111,9 +111,11 @@ static NSString * const kShortcutsCLIPath = @"/usr/bin/shortcuts";
 + (NSString *)helpText {
 	return NSLocalizedString(
 		@"The parameter for Set Focus is the name or identifier of a Shortcut that "
-		@"sets the desired Focus mode (create it in the Shortcuts app with the system "
-		@"Set Focus action). ControlPlane invokes `/usr/bin/shortcuts run` with a typed "
-		@"argument list (no shell) and does not write private Notification Center preferences.",
+		@"uses the system Set Focus action (Do Not Disturb, Sleep, Work, …). "
+		@"Suggested name: Enable Work Focus. "
+		@"See Help → Tips and tricks (Shortcuts recipe gallery). "
+		@"ControlPlane invokes `/usr/bin/shortcuts run` with a typed argument list "
+		@"(no shell) and does not write private Notification Center preferences.",
 		@"");
 }
 

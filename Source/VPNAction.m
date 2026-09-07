@@ -76,7 +76,10 @@
 	if (errorString != NULL) {
 		*errorString = NSLocalizedString(
 			@"VPN actions are not supported on this version of macOS. "
-			@"Connect or disconnect VPN from System Settings → VPN, or use Shortcuts.",
+			@"Connect or disconnect VPN from System Settings → VPN, or create a "
+			@"Shortcut that uses Set VPN (suggested name: Connect Work VPN) and "
+			@"run it with Run Shortcut. See Help → Tips and tricks "
+			@"(Shortcuts recipe gallery).",
 			@"Error when VPNAction runs on modern macOS");
 	}
 	return NO;
@@ -87,7 +90,9 @@
 	return NSLocalizedString(@"The parameter for VPN action is the name of the "
 				 "VPN connection you wish to establish or disconnect. "
 				 "This action is not available on modern macOS; use System Settings "
-				 "or Shortcuts instead.", @"");
+				 "or Run Shortcut with a Set VPN Shortcut (suggested name: "
+				 "Connect Work VPN). See Help → Tips and tricks "
+				 "(Shortcuts recipe gallery).", @"");
 }
 
 + (NSString *)creationHelpText

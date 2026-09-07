@@ -137,15 +137,21 @@
         Enter the exact name (or UUID from <tt>shortcuts list --show-identifiers</tt>).
         ControlPlane invokes the public <tt>/usr/bin/shortcuts run</tt> tool with a
         typed argument list (no shell). The action is only offered when that tool
-        is present (macOS 12+). Use this to set Focus, toggle Bluetooth, or run any
-        other Shortcut when a context becomes active. See
-        <a href="tips.html">Tips and tricks</a> for Focus examples.
+        is present (macOS 12+). Use this for Shortcuts that call the system
+        <strong>Set Focus</strong>, <strong>Set VPN</strong>, <strong>Set Bluetooth</strong>,
+        or <strong>Set Stage Manager</strong> actions. See the
+        <a href="tips.html">Shortcuts recipe gallery</a> for suggested names
+        (for example <em>Enable Work Focus</em>, <em>Connect Work VPN</em>,
+        <em>Turn Bluetooth On</em>, <em>Turn Stage Manager On</em>).
+        ControlPlane does not automate Control Center.
         </p>
 
         <h2><em>Set Focus</em> action</h2>
         <p>Convenience wrapper around <em>Run Shortcut</em> for Focus modes.
-        Create a Shortcut that uses the system “Set Focus” action for the desired
-        Focus (Do Not Disturb, Sleep, Work, …), then enter that Shortcut’s name.
+        Create a Shortcut that uses the system <strong>Set Focus</strong> action for the desired
+        Focus (Do Not Disturb, Sleep, Work, …), then enter that Shortcut’s name
+        (suggested: <em>Enable Work Focus</em>). See the
+        <a href="tips.html">Shortcuts recipe gallery</a>.
         ControlPlane does not write private Notification Center preferences.
         </p>
 
@@ -177,9 +183,10 @@
 	<em>ToggleBluetooth</em> previously used private Bluetooth power APIs
 	and are not available on Tahoe. Existing actions fail with a clear error
 	and no longer call undocumented IOBluetooth Preference symbols. Use
-	Control Center or System Settings → Bluetooth, or a <em>ShellScript</em>
-	action that runs a Bluetooth Shortcut (for example
-	<tt>shortcuts run "Toggle Bluetooth"</tt>).
+	Control Center or System Settings → Bluetooth, or a <em>Run Shortcut</em>
+	action that runs a Shortcut using the system <strong>Set Bluetooth</strong>
+	action (suggested name: <em>Turn Bluetooth On</em>). See the
+	<a href="tips.html">Shortcuts recipe gallery</a>.
 	</p>
 
 	<h2><em>Toggle WiFi</em> action</h2>
@@ -209,7 +216,7 @@
         action is not supported on modern macOS (Focus replaced classic Notification
         Center DND). Existing actions fail with a clear error and no longer write
         Notification Center preferences. Use a <em>Run Shortcut</em> action that runs
-        a Focus Shortcut instead (see Help tips).
+        a Focus Shortcut instead (see the <a href="tips.html">Shortcuts recipe gallery</a>).
         </p>
         
         <h2><em>Toggle Printer Sharing</em> action</h2>
@@ -235,7 +242,9 @@
 	<p><strong>Unsupported on modern macOS (15/16).</strong> Actions of type
 	<em>VPN</em> are not available on modern macOS. ControlPlane does not
 	connect or disconnect VPN sessions in this release. Use System Settings
-	→ VPN, or Shortcuts, instead.
+	→ VPN, or a <em>Run Shortcut</em> action that runs a Shortcut using the
+	system <strong>Set VPN</strong> action (suggested name: <em>Connect Work VPN</em>).
+	See the <a href="tips.html">Shortcuts recipe gallery</a>.
 	</p>
 
 		<hr />
