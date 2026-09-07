@@ -10,7 +10,7 @@ Action → Action+XPCHelperTool
       → app talks to CPHelperTool over that endpoint
 ```
 
-`SMJobBless` is deprecated but still the supported path on this branch. A future OS line may migrate to `SMAppService` daemon registration; that is **not** done here (spike decision: stay on SMJobBless for macOS-15).
+`SMJobBless` is deprecated but still the supported install path in production. The Tahoe-line design spike for migrating to an `SMAppService` LaunchDaemon is in [smappservice-spike.md](smappservice-spike.md) (**GO** — implement in a follow-up; **not** migrated in this tree yet).
 
 ## Identities and Team ID
 
@@ -120,7 +120,7 @@ CI cannot bless (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Release build:
 
 ## Explicit non-goals (follow-ups)
 
-- Migrating blessing to `SMAppService` (later OS line)
+- Migrating blessing to `SMAppService` (spike **GO**; see [smappservice-spike.md](smappservice-spike.md) — implement issue, not this doc)
 - Broadening helper command surface
 - Narrowing Sparkle so the app can drop `disable-library-validation`
 - Rewriting the helper in Swift / typed non-CLI system APIs for every toggle

@@ -114,7 +114,7 @@ Legacy `Utilities/make_*_image.sh` scripts no longer call the old Ruby DSA signe
 ## What release does *not* include
 
 - Helper bless in CI (`CODE_SIGNING_ALLOWED=NO` cannot bless).
-- Migrating SMJobBless → `SMAppService` (later OS line).
+- Migrating SMJobBless → `SMAppService` (spike **GO**; see [smappservice-spike.md](smappservice-spike.md)).
 - `MACOSX_DEPLOYMENT_TARGET` is **16.0** on current `master` (#82).
 - Publishing a production appcast or rotating the public marketing feed host (maintainer ops).
 
