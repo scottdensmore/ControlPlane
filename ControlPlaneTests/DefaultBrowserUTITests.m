@@ -92,6 +92,19 @@
                    @"Must not broaden to file URL claims");
 }
 
+- (void)testDefaultBrowserDoesNotRegisterHandlerFromInit {
+    NSString *source = [self defaultBrowserActionSource];
+    XCTAssertFalse([source containsString:@"setControlPlaneAsURLHandler"],
+                   @"Do not register the system handler while constructing the action (#134)");
+    XCTAssertTrue([source containsString:@"registerControlPlaneAsURLHandler"],
+                  @"Handler registration belongs on execute");
+    NSRange execute = [source rangeOfString:@"- (BOOL) execute"];
+    XCTAssertTrue(execute.location != NSNotFound);
+    NSString *beforeExecute = [source substringToIndex:execute.location];
+    XCTAssertFalse([beforeExecute containsString:@"LSSetDefaultHandlerForURLScheme"],
+                   @"init paths must not call LSSetDefaultHandler (#134)");
+}
+
 - (void)testInfoPlistDoesNotClaimTextUTI {
     // Verify Info.plist document types do not claim public.text
     NSArray *docTypes = self.infoDictionary[@"CFBundleDocumentTypes"];
