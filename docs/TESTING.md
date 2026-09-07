@@ -57,6 +57,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `LightEvidenceSourceTests` | Light gates on `AppleLMUController`; unavailable path does not collect / crash (#122) |
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
+| `DisplayCountRuleMatchTests` | Display count (≥2 / external) and arrangement fingerprint via injected `NSScreen`/`CGDisplay` descriptors (#132) |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
 | `ScreenLockRuleMatchTests` | Lock/unlock matching via `setScreenLockedForTesting:` / direct `screenDidLock:` (no live distributed notifies) (#130) |
 | `RemoteDesktopRuleMatchTests` | Yes/No matching via `setUserConnectedForTesting:` / injected `ViewerNames` userInfo (no live distributed notifies) (#130) |

@@ -39,7 +39,7 @@
                   <li><b>IP</b> (<em>Assigned IP Address</em>): Current IPv4 and <b>IPv6</b> addresses assigned to your Mac (prefix-aware rules for both families)</li>
                   <li><b>Laptop Lid</b>: Whether a portable Mac’s lid is open or closed</li>
                   <li><b>Light</b>: Ambient light level from the hardware sensor via <tt>AppleLMUController</tt>. Often unavailable on modern Macs (especially Apple silicon), where that IOKit service is absent — ControlPlane hides this evidence source when the sensor is not present.</li>
-                  <li><b>Monitor</b>: Attached monitors</li>
+                  <li><b>Monitor</b>: Attached monitors by product name, plus <b>display count</b> rules (for example 2 or more displays, or 1 or more external displays) and an optional <b>arrangement fingerprint</b> of the current layout. Count and fingerprint use public <tt>NSScreen</tt> / <tt>CGDisplay</tt> APIs only — not private WindowServer interfaces. Useful for “at desk” contexts when a laptop is docked to external displays.</li>
                   <li><b>Mounted Volume</b>: Whether a named volume is currently mounted</li>
                   <li><b>NetworkLink</b>: Status of a network link, either up or down</li>
                   <li><b>Power</b>: Monitors the source of power (battery or adapter), battery charge percent thresholds, and <b>Low Power Mode</b> on or off</li>
