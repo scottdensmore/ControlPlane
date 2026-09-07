@@ -177,6 +177,11 @@
     }
     XCTAssertFalse([html containsString:@"IPV4 only"],
                    @"IP evidence Help must not claim IPv4-only; IPAddrEvidenceSource supports IPv6 (#137)");
+    XCTAssertTrue([html rangeOfString:@"AppleLMUController"].location != NSNotFound,
+                  @"Light Help must name AppleLMUController (#122)");
+    XCTAssertTrue([html rangeOfString:@"Apple silicon" options:NSCaseInsensitiveSearch].location != NSNotFound ||
+                  [html rangeOfString:@"modern Mac" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"Light Help must note unavailability on modern Macs / Apple silicon (#122)");
 }
 
 // #137: Unavailable actions list must match isActionApplicableToSystem gates.

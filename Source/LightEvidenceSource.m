@@ -38,46 +38,83 @@ enum {
 
 @implementation LightEvidenceSource
 
++ (NSString *)unavailableLevelDisplayString {
+	return NSLocalizedString(@"Unavailable",
+	                         @"Light rule sheet: ambient light sensor / AppleLMUController absent");
+}
+
++ (BOOL)isAppleLMUControllerAvailable {
+	// Probe for the IOKit service only — do not open a connection or load the rule XIB.
+	io_service_t serviceObject = IOServiceGetMatchingService(kIOMainPortDefault,
+	                                                         IOServiceMatching("AppleLMUController"));
+	if (!serviceObject) {
+		return NO;
+	}
+	IOObjectRelease(serviceObject);
+	return YES;
+}
+
 - (id)init {
 	if (!(self = [super initWithNibNamed:@"LightRule"])) {
 		return nil;
-    }
+	}
 
-    [self openAppleLMUController];
+	BOOL opened = [self openAppleLMUController];
 
 	// We want this to update more regularly than every 10 seconds!
 	loopInterval = (NSTimeInterval) 1.5;
 
-    currentLevel = @"N/A"; // Signal error if not getting updated
-    
-    return self;
+	if (opened) {
+		currentLevel = @"N/A"; // Signal error if not getting updated
+	} else {
+		currentLevel = [[self class] unavailableLevelDisplayString];
+	}
+
+	return self;
+}
+
+- (id)initForUnavailableLMUTesting {
+	// Bypass LightRule.xib; leave ioPort at 0 (AppleLMUController absent).
+	if (!(self = [super initWithPanel:nil])) {
+		return nil;
+	}
+
+	loopInterval = (NSTimeInterval) 1.5;
+	ioPort = 0;
+	currentLevel = [[self class] unavailableLevelDisplayString];
+	return self;
 }
 
 - (void)dealloc {
-	
+	if (ioPort) {
+		IOServiceClose(ioPort);
+		ioPort = 0;
+	}
 }
 
 - (BOOL)openAppleLMUController {
-    // Find the IO service
-    kern_return_t kr = KERN_FAILURE;
-    io_service_t serviceObject = IOServiceGetMatchingService(kIOMainPortDefault,
-                                                             IOServiceMatching("AppleLMUController"));
-    if (serviceObject) {
-        // Open the IO service
-        kr = IOServiceOpen(serviceObject, mach_task_self(), 0, &ioPort);
-        IOObjectRelease(serviceObject);
-    }
+	// Find the IO service
+	kern_return_t kr = KERN_FAILURE;
+	io_service_t serviceObject = IOServiceGetMatchingService(kIOMainPortDefault,
+	                                                         IOServiceMatching("AppleLMUController"));
+	if (serviceObject) {
+		// Open the IO service
+		kr = IOServiceOpen(serviceObject, mach_task_self(), 0, &ioPort);
+		IOObjectRelease(serviceObject);
+	}
 
-    if (!serviceObject || (kr != KERN_SUCCESS)) {
-        ioPort = 0;
-    }
-    
-    return (kr == KERN_SUCCESS);
+	if (!serviceObject || (kr != KERN_SUCCESS)) {
+		ioPort = 0;
+	}
+
+	return (kr == KERN_SUCCESS);
 }
 
 - (NSString *)description {
-    return NSLocalizedString(@"Create rules based on the amount of ambient light "
-                             "if your Mac is equipped with ambient light sensors.", @"");
+	return NSLocalizedString(@"Create rules based on the amount of ambient light "
+	                         "if your Mac is equipped with ambient light sensors. "
+	                         "Often unavailable on modern Macs (especially Apple silicon) "
+	                         "when AppleLMUController is absent.", @"");
 }
 
 // Returns value in [0.0, 1.0]
@@ -86,19 +123,29 @@ enum {
 	// COMMENTS(jbeker) below is the observed max value on a 15" Late 2013 Macbook Pro
 	// This value is ridiculous and results in a much smaller
 	// useful value range.
-    const double kClosedLightValue = 4294967295.0;
-    const double kMaxLightValue = 67092480.0;;
+	const double kClosedLightValue = 4294967295.0;
+	const double kMaxLightValue = 67092480.0;;
 
-    const double avg = (left + right) / 2; // determine average value from the two sensors
-    
-    if (avg == kClosedLightValue) {
-        return 0; // COMMENTS(jbeker) on a 15" Late 2013 Macbook Pro it returns max value when the laptop is shut
-    } else {
-        return (avg / kMaxLightValue); // normalize
-    }
+	const double avg = (left + right) / 2; // determine average value from the two sensors
+
+	if (avg == kClosedLightValue) {
+		return 0; // COMMENTS(jbeker) on a 15" Late 2013 Macbook Pro it returns max value when the laptop is shut
+	} else {
+		return (avg / kMaxLightValue); // normalize
+	}
 }
 
 - (void)doUpdate {
+	if (ioPort == 0) {
+		// No AppleLMUController (or open failed): stay quiet — no mach_error spam, no bogus %.
+		[self setDataCollected:NO];
+		NSString *unavailable = [[self class] unavailableLevelDisplayString];
+		if (![currentLevel isEqualToString:unavailable]) {
+			[self setValue:unavailable forKey:@"currentLevel"];
+		}
+		return;
+	}
+
 	uint64_t scalarI_64[] = { 0, 0 };
 	uint32_t outputCnt = 2;
 
@@ -107,25 +154,26 @@ enum {
 	double level = [self levelFromRawLeft:scalarI_64[0] andRight:scalarI_64[1]];
 
 #ifdef DEBUG_MODE
-    if (kr == KERN_SUCCESS) {
-        NSLog(@"%@ >> Current light level: L:%llu R:%llu. (%@)", [self class], scalarI_64[0], scalarI_64[1], currentLevel);
-	} else
-#endif
-    {
-#ifdef DEBUG_MODE
+	if (kr == KERN_SUCCESS) {
+		NSLog(@"%@ >> Current light level: L:%llu R:%llu. (%@)", [self class], scalarI_64[0], scalarI_64[1], currentLevel);
+	} else {
 		NSLog(@"%@ >> unsuccessfully polled light sensor using 10.5+ method", [self class]);
+		mach_error("I/O Kit error reading light sensor:", kr);
+	}
+#else
+	if (kr != KERN_SUCCESS) {
+		[self setDataCollected:NO];
+		return;
+	}
 #endif
-		mach_error("I/O Kit error, this computer doesn't have light sensors "
-                   "and you should disable the light evidence source:", kr);
-	}    
 
-    if (self.level != level) {
-        self.level  = level;
-        [self setDataCollected:(kr == KERN_SUCCESS)];
+	if (self.level != level) {
+		self.level  = level;
+		[self setDataCollected:(kr == KERN_SUCCESS)];
 
-        NSString *perc = [[SharedNumberFormatter percentStyleFormatter] stringFromNumber:@(level)];
-        [self setValue:perc forKey:@"currentLevel"];
-    }
+		NSString *perc = [[SharedNumberFormatter percentStyleFormatter] stringFromNumber:@(level)];
+		[self setValue:perc forKey:@"currentLevel"];
+	}
 }
 
 - (void)clearCollectedData {
@@ -139,16 +187,16 @@ enum {
 	dict[@"parameter"] = ([aboveThreshold boolValue]) ? @(level) : @(-level);
 
 	if (![dict objectForKey:@"description"]) {
-        NSString *fmt;
-        if ([aboveThreshold boolValue]) {
-            fmt = NSLocalizedString(@"Above %@", @"Parameter is a percentage threshold");
-        } else {
-            fmt = NSLocalizedString(@"Below %@", @"Parameter is a percentage threshold");
-        }
-        NSString *perc = [[SharedNumberFormatter percentStyleFormatter] stringFromNumber:@(level)];
-        NSString *desc = [NSString stringWithFormat:fmt, perc];
+		NSString *fmt;
+		if ([aboveThreshold boolValue]) {
+			fmt = NSLocalizedString(@"Above %@", @"Parameter is a percentage threshold");
+		} else {
+			fmt = NSLocalizedString(@"Below %@", @"Parameter is a percentage threshold");
+		}
+		NSString *perc = [[SharedNumberFormatter percentStyleFormatter] stringFromNumber:@(level)];
+		NSString *desc = [NSString stringWithFormat:fmt, perc];
 		dict[@"description"] = desc;
-    }
+	}
 
 	return dict;
 }
@@ -173,21 +221,24 @@ enum {
 }
 
 - (BOOL)doesRuleMatch:(NSDictionary *)rule {
+	// Without a live LMU reading, never match (level defaults to 0 and would
+	// spuriously satisfy "below threshold" rules).
+	if (ioPort == 0 || ![self dataCollected]) {
+		return NO;
+	}
+
 	double rulelevel = [rule[@"parameter"] doubleValue];
-    double nowLevel = self.level;
+	double nowLevel = self.level;
 	return ((rulelevel > 0 && nowLevel > rulelevel) || (rulelevel < 0 && nowLevel < -rulelevel));
 }
 
 - (NSString *) friendlyName {
-    return NSLocalizedString(@"Light Sensor", @"");
+	return NSLocalizedString(@"Light Sensor", @"");
 }
 
-+ (BOOL) isEvidenceSourceApplicableToSystem {
-    LightEvidenceSource *les = [[LightEvidenceSource alloc] init];
-    BOOL test = [les openAppleLMUController];
-    
-    
-    return test;
++ (BOOL)isEvidenceSourceApplicableToSystem {
+	// Hide Light evidence when AppleLMUController is absent (typical on Apple silicon).
+	return [self isAppleLMUControllerAvailable];
 }
 
 @end

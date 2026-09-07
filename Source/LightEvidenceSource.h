@@ -11,6 +11,7 @@
 @interface LightEvidenceSource : LoopingEvidenceSource
 
 - (id)init;
+- (id)initForUnavailableLMUTesting;
 - (void)dealloc;
 
 - (void)doUpdate;
@@ -21,5 +22,12 @@
 
 - (NSString *)name;
 - (BOOL)doesRuleMatch:(NSDictionary *)rule;
+
+/// YES when IOKit reports an AppleLMUController (ambient light / keyboard backlight).
+/// Commonly absent on Apple silicon and many modern Macs.
++ (BOOL)isAppleLMUControllerAvailable;
+
+/// Localized label shown in the rule sheet when the LMU is absent.
++ (NSString *)unavailableLevelDisplayString;
 
 @end
