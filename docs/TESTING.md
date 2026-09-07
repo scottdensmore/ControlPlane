@@ -65,6 +65,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
 | `CPConfigTransferTests` | Versioned config export/import round-trip (#35) |
 | `CPDiagnosticsSnapshotTests` | Diagnostics snapshot explains mis-switched context / per-rule contribution (#35) |
+| `CPMockEvidenceJourneyTests` | Injected evidence → confidence threshold → stubbed Mute / RunShortcut arrival (#135) |
 | `DSLoggerTests` | Unified logging subsystem string + categories; ring buffer still captures (#35) |
 
 Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/ControlPlane` and Growl recommendation phrases.
@@ -145,10 +146,42 @@ Both sources listen for **undocumented** distributed notifications. CI and `Cont
 
 Public `INFocusStatusCenter` exposes only whether Focus is **on or off** (`isFocused`). Named modes (Work, Sleep, …) are not readable — use Set Focus / Run Shortcut. There is no public Focus-change notification; ControlPlane refreshes on wake and polls every 30s as a fallback. If Focus Status is denied in System Settings → Privacy & Security → Focus, rules treat Focus as off. Unit: `testFocusPollIntervalIsFallbackNotAggressive`.
 
+## Mock-evidence E2E (#135)
+
+CI covers the single-context path without live hardware, CoreAudio, or the Shortcuts CLI. `CPEvidenceSwitchJourney` is the seam; `CPController` uses the same guess / leading-context helpers when it updates for real.
+
+Injection (either form):
+
+1. **Evidence-source testing setter** — create a source with `initForMatchingTests`, call the existing setter (for example `-[PowerEvidenceSource setPowerStatusForTesting:]`), then set `evidenceMatcher` to `doesRuleMatch:`.
+2. **Direct observation** — `injectEvidenceWithType:parameter:` (for example type `Power`, parameter `Battery`). A rule of that type matches only when its parameter equals the injected value. Unknown types stay unmatched (negate does not flip unknown).
+
+`evaluate` then:
+
+- collects matching rules (same negate rule as `CPController`)
+- computes confidence with the production unconfidence formula (`1 - Π(1 - rule.confidence)`, slight depth decay)
+- switches only if the leading context is at least `minimumConfidenceRequired` (default 0.75) and is not already active
+- runs enabled **Arrival** / **Both** actions through `actionExecutor`
+
+Stub Mute or RunShortcut in the executor (record type / parameter and return YES). Do not call `-[Action execute:]` — that would mute the Mac or launch `/usr/bin/shortcuts`.
+
+```objc
+PowerEvidenceSource *power = [[PowerEvidenceSource alloc] initForMatchingTests];
+[power setPowerStatusForTesting:@"Battery"];
+journey.evidenceMatcher = ^BOOL(NSDictionary *rule) {
+    return [power doesRuleMatch:rule];
+};
+journey.actionExecutor = ^BOOL(NSDictionary *action, NSString **error) {
+    // action[@"type"] is @"Mute" or @"RunShortcut"
+    return YES;
+};
+[journey evaluate];
+```
+
+Unit: `CPMockEvidenceJourneyTests` (part of `ControlPlaneTests`, so it runs in CI).
+
 ## Gaps / follow-ups
 
-- Context + rule + mute action end-to-end journey (needs mock evidence seam)
-- Confidence threshold behavior under UI test
+- Confidence threshold behavior under UI test (logic is covered by `CPMockEvidenceJourneyTests`; prefs slider is not)
 - Promote `ControlPlaneUITests` from quarantine to blocking CI when stable on `macOS-16` runners
 
 Do not expand host-based app tests until LaunchAction malloc/`libgmalloc` inheritance is kept off the TestAction (`shouldUseLaunchSchemeArgsEnv=NO`).
