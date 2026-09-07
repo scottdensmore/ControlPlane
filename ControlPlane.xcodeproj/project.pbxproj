@@ -83,7 +83,6 @@
 		8DBAFAFC0BDC3B7B00BE0747 /* ShellScriptAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBAFAFA0BDC3B7B00BE0747 /* ShellScriptAction.m */; };
 		8DBB44980C530F7600064010 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; };
 		8DC4E7FD0C178917007E7E41 /* MuteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DC4E7F90C178917007E7E41 /* MuteAction.m */; };
-		8DCB43580C4DBABD00E71D28 /* FirewallRuleAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB43560C4DBABD00E71D28 /* FirewallRuleAction.m */; };
 		8DCBE96C0C1A7ECE008260EF /* MountAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBE96A0C1A7ECE008260EF /* MountAction.m */; };
 		8DD790AD0BC28A9F00705346 /* OpenAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DD790AB0BC28A9F00705346 /* OpenAction.m */; };
 		8DE13F0E0C460E1700AEC949 /* FireWireEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCBF4900BE5622600A01414 /* FireWireEvidenceSource.m */; };
@@ -105,6 +104,7 @@
 		9E863206F2BB3BCAC654DD2C /* CPNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */; };
 		A1B2C3D4E5F60718293A4B5C /* SparkleVendoredArchitectureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */; };
 		A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */; };
+		A51ORPH01B51WIRE00000133 /* OrphanHygieneTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1330RPH0DFFE19DDBFA87DFD /* OrphanHygieneTests.m */; };
 		B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */; };
 		B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */; };
 		B122LMU01WIRE12200001 /* LightEvidenceSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */; };
@@ -430,6 +430,7 @@
 		042739F2DDC950F687D3730B /* DefaultBrowserUTITests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DefaultBrowserUTITests.m; sourceTree = "<group>"; };
 		086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPSystemInfoTests.m; sourceTree = "<group>"; };
 		0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ApplicabilityCharacterizationTests.m; sourceTree = "<group>"; };
+		B1330RPH0DFFE19DDBFA87DFD /* OrphanHygieneTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = OrphanHygieneTests.m; sourceTree = "<group>"; };
 		B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HostAvailabilityRuleMatchTests.m; sourceTree = "<group>"; };
 		B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LightEvidenceSourceTests.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -571,8 +572,6 @@
 		8D8C9CE50BBB7BE00074D5B3 /* BluetoothEvidenceSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BluetoothEvidenceSource.m; path = Source/BluetoothEvidenceSource.m; sourceTree = "<group>"; };
 		8D8C9E320BBB89320074D5B3 /* DB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DB.h; path = Source/DB.h; sourceTree = "<group>"; };
 		8D8C9E330BBB89320074D5B3 /* DB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DB.m; path = Source/DB.m; sourceTree = "<group>"; };
-		8D8C9EBA0BBB8DAC0074D5B3 /* IPEvidenceSource.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = IPEvidenceSource.h; path = Source/IPEvidenceSource.h; sourceTree = "<group>"; };
-		8D8C9EBB0BBB8DAC0074D5B3 /* IPEvidenceSource.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = IPEvidenceSource.m; path = Source/IPEvidenceSource.m; sourceTree = "<group>"; };
 		8D90E51D0B71C4C9007D39FD /* CPController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPController.h; path = Source/CPController.h; sourceTree = "<group>"; };
 		8D90E51E0B71C4C9007D39FD /* CPController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPController.m; path = Source/CPController.m; sourceTree = "<group>"; };
 		8D91F1F70C4772FF00D9FC0F /* LightEvidenceSource.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = LightEvidenceSource.h; path = Source/LightEvidenceSource.h; sourceTree = "<group>"; };
@@ -1151,6 +1150,7 @@
 				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
 				B35DIAG01FILE350000004 /* DSLoggerTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
+				B1330RPH0DFFE19DDBFA87DFD /* OrphanHygieneTests.m */,
 				B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */,
 				B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
@@ -1283,8 +1283,6 @@
 				DA69D7E017BD04C30062FBBC /* HostAvailabilityEvidenceSource.h */,
 				DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */,
 				7C6D94551747A15300D5B9C7 /* IPAddrEvidenceSource */,
-				8D8C9EBA0BBB8DAC0074D5B3 /* IPEvidenceSource.h */,
-				8D8C9EBB0BBB8DAC0074D5B3 /* IPEvidenceSource.m */,
 				7CA6847A17947E2C00563601 /* LaptopLidEvidenceSource.h */,
 				7CA6847617947E2200563601 /* LaptopLidEvidenceSource.m */,
 				8D91F1F70C4772FF00D9FC0F /* LightEvidenceSource.h */,
@@ -1894,7 +1892,6 @@
 				8D91F17D0C47148200D9FC0F /* USBEvidenceSource.m in Sources */,
 				8D38B66C0C49D50200290F47 /* SliderWithValue.m in Sources */,
 				8DE4EE470C4B2A6F00A5B559 /* ScreenSaverTimeAction.m in Sources */,
-				8DCB43580C4DBABD00E71D28 /* FirewallRuleAction.m in Sources */,
 				8DE4C0110C4EE60700511590 /* GenericEvidenceSource.m in Sources */,
 				8D643C680C4EF197006D8ECC /* GenericLoopingEvidenceSource.m in Sources */,
 				8D643CDD0C4EF6FD006D8ECC /* LoopingEvidenceSource.m in Sources */,
@@ -2004,6 +2001,7 @@
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
+				A51ORPH01B51WIRE00000133 /* OrphanHygieneTests.m in Sources */,
 				B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */,
 				B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */,
 				B122LMU01WIRE12200001 /* LightEvidenceSourceTests.m in Sources */,

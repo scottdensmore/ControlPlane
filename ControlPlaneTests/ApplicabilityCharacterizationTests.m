@@ -125,7 +125,8 @@
     XCTAssertEqual([TimeMachineDestinationAction limitedOptions].count, 0u);
 }
 
-// #33: Network Location / VPN / Firewall Rule — gate on Sequoia rather than offer half-broken paths.
+// #33/#133: Network Location stays gated in-app; VPN / Firewall Rule are archived
+// tests-only stubs (not in shipping registry, not linked into the app target).
 
 - (void)testNetworkLocationActionIsNotApplicableOnSequoia {
     XCTAssertFalse([NetworkLocationAction isActionApplicableToSystem]);
