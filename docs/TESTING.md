@@ -53,6 +53,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |
 | `WiFiRuleMatchTests` | SSID matching with injected CoreWLAN state; Location-denied empty collection; Location TCC helper messages (#84) |
+| `LightEvidenceSourceTests` | Light gates on `AppleLMUController`; unavailable path does not collect / crash (#122) |
 | `USBRuleMatchTests` | Vendor/product matching with injected device list |
 | `PowerRuleMatchTests` | Battery vs A/C matching via `setPowerStatusForTesting:` |
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
@@ -117,6 +118,10 @@ On macOS 26 with the default translucent menu bar:
 | Not Determined | Yes | Wi‑Fi evidence start requests Location; empty until user responds |
 
 Steps: enable Wi‑Fi evidence; toggle Location for ControlPlane in System Settings → Privacy & Security → Location Services; confirm Console/`DSLog` and optional notification when denied.
+
+## Light / AppleLMUController (#122)
+
+Ambient light evidence depends on undocumented `AppleLMUController`. On machines without that IOKit service (common on Apple silicon), `LightEvidenceSource` is not registered (`isEvidenceSourceApplicableToSystem` → NO). Unit tests cover the IOKit probe and the unavailable `doUpdate` path (`initForUnavailableLMUTesting`). Manual: Preferences → Evidence Sources should omit Light when LMU is absent; Help → Evidence Sources documents the limitation.
 
 ## Gaps / follow-ups
 

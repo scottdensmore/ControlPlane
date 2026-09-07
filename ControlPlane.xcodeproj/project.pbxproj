@@ -107,6 +107,9 @@
 		A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */; };
 		B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = DA69D7E117BD04C30062FBBC /* HostAvailabilityEvidenceSource.m */; };
 		B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */; };
+		B122LMU01WIRE12200001 /* LightEvidenceSourceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */; };
+		B122LMU01WIRE12200002 /* LightEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D91F1F80C4772FF00D9FC0F /* LightEvidenceSource.m */; };
+		B122LMU01WIRE12200003 /* LoopingEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643CDB0C4EF6FD006D8ECC /* LoopingEvidenceSource.m */; };
 		A51ATRT01B51WIRE00000001 /* ActionTypeRegistryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */; };
 		A51DSLG01B51WIRE00000006 /* DSLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DBB44960C530F7600064010 /* DSLogger.m */; };
 		A51FWRU01B51WIRE00000033 /* FirewallRuleAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DCB43560C4DBABD00E71D28 /* FirewallRuleAction.m */; };
@@ -428,6 +431,7 @@
 		086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPSystemInfoTests.m; sourceTree = "<group>"; };
 		0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ApplicabilityCharacterizationTests.m; sourceTree = "<group>"; };
 		B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HostAvailabilityRuleMatchTests.m; sourceTree = "<group>"; };
+		B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LightEvidenceSourceTests.m; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		17872C0D39B87DAF623B8369 /* ControlPlaneTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ControlPlaneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1148,6 +1152,7 @@
 				B35DIAG01FILE350000004 /* DSLoggerTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B52HOSTFILE5252000021 /* HostAvailabilityRuleMatchTests.m */,
+				B122LMU01FILE12200001 /* LightEvidenceSourceTests.m */,
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
 				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
@@ -2001,6 +2006,9 @@
 				A51ACCT01B51WIRE00000003 /* ApplicabilityCharacterizationTests.m in Sources */,
 				B52HOST01WIRE5252000021 /* HostAvailabilityRuleMatchTests.m in Sources */,
 				B52HOSTSRC01WIRE525200021 /* HostAvailabilityEvidenceSource.m in Sources */,
+				B122LMU01WIRE12200001 /* LightEvidenceSourceTests.m in Sources */,
+				B122LMU01WIRE12200002 /* LightEvidenceSource.m in Sources */,
+				B122LMU01WIRE12200003 /* LoopingEvidenceSource.m in Sources */,
 				A51MUTE01B51WIRE00000004 /* MuteAction.m in Sources */,
 				A51SSPA01B51WIRE00000005 /* ScreenSaverPasswordAction.m in Sources */,
 				A51SSTA01B51WIRE00000120 /* ScreenSaverTimeAction.m in Sources */,

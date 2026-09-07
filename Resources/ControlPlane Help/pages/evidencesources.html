@@ -38,7 +38,7 @@
                   <li><b>FireWire</b>: Connected FireWire devices — only registered when IOKit reports a FireWire controller. Unavailable on Apple Silicon and most modern Thunderbolt-only Macs; do not expect this evidence source on modern Mac hardware without FireWire.</li>
                   <li><b>IP</b> (<em>Assigned IP Address</em>): Current IPv4 and <b>IPv6</b> addresses assigned to your Mac (prefix-aware rules for both families)</li>
                   <li><b>Laptop Lid</b>: Whether a portable Mac’s lid is open or closed</li>
-                  <li><b>Light</b>: How bright is your location, provided by the ambient light sensor (often unavailable when <tt>AppleLMUController</tt> is absent)</li>
+                  <li><b>Light</b>: Ambient light level from the hardware sensor via <tt>AppleLMUController</tt>. Often unavailable on modern Macs (especially Apple silicon), where that IOKit service is absent — ControlPlane hides this evidence source when the sensor is not present.</li>
                   <li><b>Monitor</b>: Attached monitors</li>
                   <li><b>Mounted Volume</b>: Whether a named volume is currently mounted</li>
                   <li><b>NetworkLink</b>: Status of a network link, either up or down</li>
