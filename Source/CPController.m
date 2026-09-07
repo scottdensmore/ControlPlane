@@ -11,6 +11,7 @@
 #import "CPController.h"
 #import "CPController+SleepMonitor.h"
 #import "CPDiagnosticsSnapshot.h"
+#import "CPEvidenceSwitchJourney.h"
 #import "NetworkLocationAction.h"
 #import "NSTimer+Invalidation.h"
 #import "CPNotifications.h"
@@ -1758,61 +1759,22 @@ static NSSet *sharedActiveContexts = nil;
  * @return NSMutableDictionary list of contexts with matching rules and their confidence values
  */
 - (NSMutableDictionary *)getGuessesForRules:(NSArray *)rules {
-	NSMutableDictionary *guesses = [NSMutableDictionary dictionary];
-
-	// Maps a guessed context to an "unconfidence" value, which is
-	// equal to (1 - confidence). We step through all the rules that are "hits",
-	// and multiply this running unconfidence value by (1 - rule.confidence).
-    for (NSDictionary *currentRule in rules) {
-		// Rules apply to the stated context, as well as any subcontexts. We very slightly decay the amount
-		// credited (proportional to the depth below the stated context), so that we don't guess a more
-		// detailed context than is warranted.
-        
-        // get currentContextTree based on the current rule
-        // Might look like
-        // Sub context of Top Level 2
-        //   Sub context of sub context of Top Level 2
-		NSArray *currentContextTree = [contextsDataSource orderedTraversalRootedAt:currentRule[@"context"]];
-        
-		if ([currentContextTree count] == 0)
-			continue;	// Oops, something got busted along the way
-
-		const int base_depth = [((Context *) currentContextTree[0]).depth intValue];
-        const double currentRuleConfidence = [currentRule[@"confidence"] doubleValue];
-
-		for (Context *currentContext in currentContextTree) {
-			NSString *uuidOfCurrentContext = [currentContext uuid];
-
-            // seed unconfidenceValue with what we've calcuated so far
-			NSNumber *unconfidenceValue = guesses[uuidOfCurrentContext];
-
-            // if the unconfidenceValue isn't set initilialize it to a sane default
-            if (!unconfidenceValue) {
-				unconfidenceValue = @1.0;
-            }
-
-            // account for the amount of confidence this matching rule affects the guess
-			const int depth = [currentContext.depth intValue];
-			double mult = 1.0 - (0.03 * (depth - base_depth)); // decay
-			mult *= currentRuleConfidence;
-			unconfidenceValue = @([unconfidenceValue doubleValue] * (1.0 - mult));
-
-#ifdef DEBUG_MODE
-			DSLog(@"Crediting '%@' (d=%d|%d) with %.5f\t-> %@", [currentContext name], depth, base_depth, mult, unconfidenceValue);
-#endif
-
-			guesses[uuidOfCurrentContext] = unconfidenceValue;
+	// Shared with CPEvidenceSwitchJourney so mock-evidence tests and live updates
+	// use the same unconfidence formula (#135).
+	ContextsDataSource *contexts = contextsDataSource;
+	NSDictionary *guesses = [CPEvidenceSwitchJourney guessesForMatchingRules:rules
+	                                                         contextTreeForUUID:^NSArray<NSDictionary *> *(NSString *contextUUID) {
+		NSArray *tree = [contexts orderedTraversalRootedAt:contextUUID];
+		NSMutableArray *rows = [NSMutableArray arrayWithCapacity:[tree count]];
+		for (Context *currentContext in tree) {
+			[rows addObject:@{
+				@"uuid": [currentContext uuid] ?: @"",
+				@"depth": [currentContext depth] ?: @0,
+			}];
 		}
-	}
-    
-    // convert unconfidence values to confidence values
-    NSDictionary *guessesForConversion = [guesses copy];
-    [guessesForConversion enumerateKeysAndObjectsUsingBlock:^(NSString *uuid, NSNumber *conf, BOOL *stop) {
-        guesses[uuid] = @(1.0 - [conf doubleValue]);
-    }];
-    
-
-    return guesses;
+		return rows;
+	}];
+	return [guesses mutableCopy];
 }
 
 
@@ -1823,20 +1785,7 @@ static NSSet *sharedActiveContexts = nil;
  * @return Context for the most confident guess
  */
 - (Context *)getMostConfidentContext:(NSDictionary *)guesses {
-	__block NSString *guessUUID = nil;
-	__block double guessConf = -1.0; // guaranteed to be less than any actual confidence value
-
-    // Finds the context with the highest confidence rating but not necessarily
-    // one that satisfies the minimum confidence
-    [guesses enumerateKeysAndObjectsUsingBlock:^(NSString *uuid, NSNumber *conf, BOOL *stop) {
-	 	const double confindence = [conf doubleValue];
-		if (confindence > guessConf) {
-            *stop = (confindence >= 1.0);
-			guessConf = confindence;
-			guessUUID = uuid;
-		}
-    }];
-
+	NSString *guessUUID = [CPEvidenceSwitchJourney leadingContextUUIDFromGuesses:guesses];
     return (guessUUID) ? ([contextsDataSource contextByUUID:guessUUID]) : (nil);
 }
 

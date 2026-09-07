@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		B35DIAG01WIRE350000001 /* CPDiagnosticsSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */; };
+		B135EJ01WIRE135000001 /* CPEvidenceSwitchJourney.m in Sources */ = {isa = PBXBuildFile; fileRef = B135EJ01FILE135000002 /* CPEvidenceSwitchJourney.m */; };
+		B135EJ01WIRE135000002 /* CPEvidenceSwitchJourney.m in Sources */ = {isa = PBXBuildFile; fileRef = B135EJ01FILE135000002 /* CPEvidenceSwitchJourney.m */; };
+		B135EJ01WIRE135000003 /* CPMockEvidenceJourneyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B135EJ01FILE135000003 /* CPMockEvidenceJourneyTests.m */; };
 		B35DIAG01WIRE350000003 /* CPDiagnosticsSnapshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */; };
 		B35DIAG01WIRE350000004 /* DSLoggerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000004 /* DSLoggerTests.m */; };
 		B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */ = {isa = PBXBuildFile; fileRef = B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */; };
@@ -430,6 +433,9 @@
 
 /* Begin PBXFileReference section */
 		B35DIAG01FILE350000001 /* CPDiagnosticsSnapshot.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CPDiagnosticsSnapshot.h; path = Source/CPDiagnosticsSnapshot.h; sourceTree = "<group>"; };
+		B135EJ01FILE135000001 /* CPEvidenceSwitchJourney.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CPEvidenceSwitchJourney.h; path = Source/CPEvidenceSwitchJourney.h; sourceTree = "<group>"; };
+		B135EJ01FILE135000002 /* CPEvidenceSwitchJourney.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CPEvidenceSwitchJourney.m; path = Source/CPEvidenceSwitchJourney.m; sourceTree = "<group>"; };
+		B135EJ01FILE135000003 /* CPMockEvidenceJourneyTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPMockEvidenceJourneyTests.m; sourceTree = "<group>"; };
 		B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CPDiagnosticsSnapshot.m; path = Source/CPDiagnosticsSnapshot.m; sourceTree = "<group>"; };
 		B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CPDiagnosticsSnapshotTests.m; path = CPDiagnosticsSnapshotTests.m; sourceTree = "<group>"; };
 		B35DIAG01FILE350000004 /* DSLoggerTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = DSLoggerTests.m; path = DSLoggerTests.m; sourceTree = "<group>"; };
@@ -984,6 +990,8 @@
 				B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */,
 				B35DIAG01FILE350000001 /* CPDiagnosticsSnapshot.h */,
 				B35DIAG01FILE350000002 /* CPDiagnosticsSnapshot.m */,
+				B135EJ01FILE135000001 /* CPEvidenceSwitchJourney.h */,
+				B135EJ01FILE135000002 /* CPEvidenceSwitchJourney.m */,
 				B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */,
 				7C73BDE017D09A4100EBFB80 /* SharedNumberFormatter.h */,
 				7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */,
@@ -1157,6 +1165,7 @@
 				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
 				B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */,
 				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
+				B135EJ01FILE135000003 /* CPMockEvidenceJourneyTests.m */,
 				B35DIAG01FILE350000004 /* DSLoggerTests.m */,
 				0DA09AE2E8D74F84365E0606 /* ApplicabilityCharacterizationTests.m */,
 				B1330RPH0DFFE19DDBFA87DFD /* OrphanHygieneTests.m */,
@@ -1873,6 +1882,7 @@
 				8D82F0A30AA81411009ADA44 /* PrefsWindowController.m in Sources */,
 				B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */,
 				B35DIAG01WIRE350000001 /* CPDiagnosticsSnapshot.m in Sources */,
+				B135EJ01WIRE135000001 /* CPEvidenceSwitchJourney.m in Sources */,
 				8D90E51F0B71C4C9007D39FD /* CPController.m in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
@@ -2008,7 +2018,9 @@
 				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
 				B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */,
 				B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */,
+				B135EJ01WIRE135000002 /* CPEvidenceSwitchJourney.m in Sources */,
 				B35DIAG01WIRE350000003 /* CPDiagnosticsSnapshotTests.m in Sources */,
+				B135EJ01WIRE135000003 /* CPMockEvidenceJourneyTests.m in Sources */,
 				B35DIAG01WIRE350000004 /* DSLoggerTests.m in Sources */,
 				A34RSCA01TSTWIRE000002 /* RunShortcutAction.m in Sources */,
 				A51TATT01B51WIRE00000002 /* ToggleableActionTests.m in Sources */,
