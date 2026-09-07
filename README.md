@@ -1,6 +1,6 @@
 # ControlPlane
 
-ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, Focus, power, and more) and runs **Actions** (including **Run Shortcut** / **Set Focus** via Shortcuts).
+ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Context** from evidence sources (Wi‑Fi, Bluetooth, USB, location, Focus, power, and more) and runs **Actions** (including **Run Shortcut** / **Set Focus** via Shortcuts). Shortcuts and Spotlight can force a named context with the **Switch Context** App Intent.
 
 This repository is the **[scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)** fork of the classic Objective‑C / XIB app. Development integrates on **`master`** (short-lived feature branches). Upstream [`dustinrue/ControlPlane`](https://github.com/dustinrue/ControlPlane) may contain a separate Swift rewrite—do not assume shared code with this ObjC line.
 
