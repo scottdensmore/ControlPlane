@@ -23,8 +23,6 @@
 		return nil;
 	
 	app = [[NSString alloc] init];
-    [self setControlPlaneAsURLHandler];
-	
 	return self;
 }
 
@@ -34,9 +32,6 @@
 		return nil;
 	
 	app = [[dict valueForKey: @"parameter"] copy];
-    [self setControlPlaneAsURLHandler];
-
-	
 	return self;
 }
 
@@ -46,42 +41,11 @@
 		return nil;
 	
 	app = [option copy];
-    [self setControlPlaneAsURLHandler];
-	
 	return self;
 }
 
 - (void) dealloc {
 	
-	
-}
-
-- (void) setControlPlaneAsURLHandler {
-    // Get current default browser using modern API
-    NSURL *httpURL = [NSURL URLWithString:@"http://example.com"];
-    NSURL *currentBrowserURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL:httpURL];
-    NSString *currentBrowserID = nil;
-    
-    if (currentBrowserURL) {
-        NSBundle *currentBrowserBundle = [NSBundle bundleWithURL:currentBrowserURL];
-        currentBrowserID = [currentBrowserBundle bundleIdentifier];
-    }
-    
-    NSString *ourBundleID = [[NSBundle mainBundle] bundleIdentifier];
-    
-    if (!currentBrowserID || ![[currentBrowserID lowercaseString] isEqualToString:[ourBundleID lowercaseString]]) {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert setMessageText:NSLocalizedString(@"You are adding or have triggered a Default Browser Action but ControlPlane is not currently set as the system wide default web browser. For the Default Browser Action feature to work properly ControlPlane must be set as the system's default web browser. ControlPlane will take the URL and then pass it to the browser of your choice. You may be asked to confirm this choice if you are using OS X 10.10 (Yosemite) or higher. Please select 'Use ControlPlane' if prompted." , @"")];
-        [self performSelectorOnMainThread:@selector(runModal) withObject:alert waitUntilDone:false];
-        
-        
-        LSSetDefaultHandlerForURLScheme((__bridge CFStringRef) @"https", (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        // Narrow browser-document registration (#43): HTML + URL only via UniformTypeIdentifiers.
-        LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef) UTTypeHTML.identifier, kLSRolesViewer, (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-        LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef) UTTypeURL.identifier, kLSRolesViewer, (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
-
-    }
-    LSSetDefaultHandlerForURLScheme((__bridge CFStringRef) @"http", (__bridge CFStringRef) [[NSBundle mainBundle] bundleIdentifier]);
 }
 
 - (NSMutableDictionary *) dictionary {
@@ -97,16 +61,61 @@
 }
 
 - (BOOL) execute: (NSString **) errorString {
-    [[NSUserDefaults standardUserDefaults] setValue:app forKey:@"currentDefaultBrowser"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+	if ([app length] == 0) {
+		if (errorString) {
+			*errorString = NSLocalizedString(
+				@"Default Browser action needs a browser bundle ID. ControlPlane does not change the system handler until you choose one.",
+				@"Error when DefaultBrowserAction has no target browser");
+		}
+		return NO;
+	}
 
-    return YES;
-    
+	NSString *error = nil;
+	if (![self registerControlPlaneAsURLHandler:&error]) {
+		if (errorString) {
+			*errorString = error ?: NSLocalizedString(
+				@"Could not set ControlPlane as the default browser. If macOS asked you to confirm, choose ControlPlane, or pick another evidence path.",
+				@"Error when DefaultBrowserAction handler registration is denied");
+		}
+		return NO;
+	}
+
+	[[NSUserDefaults standardUserDefaults] setValue:app forKey:@"currentDefaultBrowser"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	return YES;
+}
+
+- (BOOL)registerControlPlaneAsURLHandler:(NSString **)errorString {
+	NSString *ourBundleID = [[NSBundle mainBundle] bundleIdentifier];
+	if ([ourBundleID length] == 0) {
+		if (errorString) {
+			*errorString = NSLocalizedString(@"ControlPlane has no bundle identifier; cannot register as a browser handler.", @"");
+		}
+		return NO;
+	}
+
+	OSStatus httpStatus = LSSetDefaultHandlerForURLScheme((__bridge CFStringRef)@"http", (__bridge CFStringRef)ourBundleID);
+	OSStatus httpsStatus = LSSetDefaultHandlerForURLScheme((__bridge CFStringRef)@"https", (__bridge CFStringRef)ourBundleID);
+	OSStatus htmlStatus = LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef)UTTypeHTML.identifier, kLSRolesViewer, (__bridge CFStringRef)ourBundleID);
+	OSStatus urlStatus = LSSetDefaultRoleHandlerForContentType((__bridge CFStringRef)UTTypeURL.identifier, kLSRolesViewer, (__bridge CFStringRef)ourBundleID);
+
+	if (httpStatus != noErr || httpsStatus != noErr || htmlStatus != noErr || urlStatus != noErr) {
+		if (errorString) {
+			*errorString = [NSString stringWithFormat:NSLocalizedString(
+				@"macOS refused to make ControlPlane the default browser (http %d, https %d). Confirm the prompt if one appeared, or leave the system handler unchanged.",
+				@"Error when LSSetDefaultHandler fails"), (int)httpStatus, (int)httpsStatus];
+		}
+		return NO;
+	}
+	return YES;
 }
 
 + (NSString *) helpText {
-	return NSLocalizedString(@"The parameter for DefaultBrowser actions is the ID (bundle) "
-							 "of the new default browser.", @"");
+	return NSLocalizedString(@"The parameter for DefaultBrowser actions is the bundle ID "
+							 "of the browser ControlPlane should open. ControlPlane registers itself "
+							 "as the system http/https handler only when the action runs, and only for "
+							 "HTML and URL types. If macOS denies that prompt, the action fails and does "
+							 "not silently take over.", @"");
 }
 
 + (NSString *) creationHelpText {
