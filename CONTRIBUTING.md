@@ -48,6 +48,18 @@ Signed helper bless and notarization are **not** part of CI—see [docs/signing.
 - Helper/XPC changes are high risk—minimize surface; avoid new `system()` / `sprintf` shelling.
 - Prefs key renames must update **Base and all** `*.lproj` XIBs. Legacy HTML notes: `LOCALISATION.html`, `HACKING.html`.
 
+## Localization
+
+Shipping locales: `en`, `da-DK`, `de`, `fr`, `it`, `pt-BR`, `pt-PT`. User-visible `NSLocalizedString` keys live in `Resources/<locale>.lproj/Localizable.strings` (UTF-16).
+
+After adding or changing strings:
+
+```bash
+genstrings -o Resources/en.lproj -s NSLocalizedString Source/*.m
+```
+
+Copy any new keys into every shipping `Localizable.strings` and translate them. Keep `%@` / `%d` placeholders. Do not leave new Focus, Power, Settings, Run Shortcut, or gated-action sentences as English copies in non-English locales. `ControlPlaneTests/LocalizationCatalogTests` checks that catalog.
+
 ## Pull requests
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).

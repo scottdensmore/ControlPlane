@@ -149,6 +149,7 @@
 		B25ARC01WIRE2500000001 /* ArcMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B25ARCFILE2500000001 /* ArcMigrationTests.m */; };
 		B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B40DEPLFILE400000001 /* DeploymentTargetTests.m */; };
 		B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B45HELPFILE450000001 /* HelpScrubTests.m */; };
+		B131L10NWIRE131000001 /* LocalizationCatalogTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B131L10NFILE131000001 /* LocalizationCatalogTests.m */; };
 		B52CTX01WIRE5252000003 /* ContextModelTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB01456A891A29FF1EE3792 /* ContextModelTests.m */; };
 		B52GEN01WIRE525200016 /* GenericEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DE4C00F0C4EE60700511590 /* GenericEvidenceSource.m */; };
 		B52IPADDR01WIRE525200011 /* IPAddrEvidenceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C6D94581747A1BE00D5B9C7 /* IPAddrEvidenceSource.m */; };
@@ -658,6 +659,7 @@
 		B25ARCFILE2500000001 /* ArcMigrationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ArcMigrationTests.m; sourceTree = "<group>"; };
 		B40DEPLFILE400000001 /* DeploymentTargetTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = DeploymentTargetTests.m; sourceTree = "<group>"; };
 		B45HELPFILE450000001 /* HelpScrubTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelpScrubTests.m; sourceTree = "<group>"; };
+		B131L10NFILE131000001 /* LocalizationCatalogTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = LocalizationCatalogTests.m; sourceTree = "<group>"; };
 		B52PWRFILE5252000006 /* PowerRuleMatchTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PowerRuleMatchTests.m; sourceTree = "<group>"; };
 		B52STUBFILE5252000008 /* CPEvidenceMatchingTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPEvidenceMatchingTestStubs.m; sourceTree = "<group>"; };
 		B52STUBFILE5252000009 /* CPContextTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPContextTestStubs.m; sourceTree = "<group>"; };
@@ -1228,6 +1230,7 @@
 				B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */,
 				B25ARCFILE2500000001 /* ArcMigrationTests.m */,
 				B45HELPFILE450000001 /* HelpScrubTests.m */,
+				B131L10NFILE131000001 /* LocalizationCatalogTests.m */,
 				B40DEPLFILE400000001 /* DeploymentTargetTests.m */,
 				3A469C54740862F2CA73424A /* ToggleableActionTests.m */,
 				60BF96E049833D9C4FA6CF27 /* CPConfigTransferTests.m */,
@@ -2036,6 +2039,7 @@
 				B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */,
 				B25ARC01WIRE2500000001 /* ArcMigrationTests.m in Sources */,
 				B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */,
+				B131L10NWIRE131000001 /* LocalizationCatalogTests.m in Sources */,
 				A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */,
 				A126TOK01WIRE126000002 /* CPContextAppIntentTokens.m in Sources */,
 				B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
