@@ -5,6 +5,9 @@
 //  Created by Mark Wallis on 17/07/07.
 //  Tweaks by David Symonds on 18/07/07.
 //
+//  #33/#133: Gated orphan — compiled only for ControlPlaneTests. Shipping
+//  registry must not list FirewallRuleAction; isActionApplicableToSystem stays NO.
+//
 
 #import "FirewallRuleAction.h"
 

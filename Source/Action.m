@@ -231,7 +231,7 @@
 #import "DesktopBackgroundAction.h"
 #import "DisplayBrightnessAction.h"
 #import "DisplaySleepTimeAction.h"
-#import "FirewallRuleAction.h"
+// #133: FirewallRuleAction is archived (tests-only); never re-add to the shipping registry.
 #import "LockKeychainAction.h"
 #import "MountAction.h"
 #import "MuteAction.h"
@@ -268,7 +268,8 @@
 #import "ToggleWebSharingAction.h"
 #import "ToggleWiFiAction.h"
 #import "UnmountAction.h"
-// #33: VPN stays out of the shipping registry (ScriptingBridge path retired; NEVPNManager deferred).
+// #33/#133: VPNAction is archived (tests-only). ScriptingBridge retired; NEVPNManager deferred.
+// Do not re-enable in the shipping registry without a Sequoia/Tahoe-ready public path.
 //#import "VPNAction.h"
 
 @interface ActionSetController (Private)
@@ -327,8 +328,10 @@
                [ToggleWebSharingAction class],
 			   [ToggleWiFiAction class],
 			   [UnmountAction class],
-			   // #33: Keep VPN disabled — do not re-add without a Sequoia-ready implementation.
+			   // #33/#133: VPN stays out of the shipping registry (archived gated stub).
 			   //[VPNAction class],
+			   // #133: FirewallRuleAction likewise stays out (never re-add while gated).
+			   //[FirewallRuleAction class],
 			nil];
 	
     

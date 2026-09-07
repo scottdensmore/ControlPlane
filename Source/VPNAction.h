@@ -4,6 +4,12 @@
 //
 //  Created by Mark Wallis on 18/07/07.
 //
+//  #133 ARCHIVE (tests / characterization only):
+//  ScriptingBridge System Events VPN path is unreliable on modern macOS.
+//  Not in the shipping ActionSetController registry and not linked into the
+//  ControlPlane app target. Keep gated (isActionApplicableToSystem == NO).
+//  NEVPNManager / Shortcuts VPN is deferred — do not re-enable here.
+//
 
 #import "Action.h"
 

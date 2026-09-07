@@ -49,6 +49,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `RunShortcutActionTests` | Run Shortcut (#34) type map, applicability gate, empty-name failure |
 | `ToggleableActionTests` | Toggleable parameter parsing (`NSNumber` / `"on"` / `"0"`) via MuteAction |
 | `ApplicabilityCharacterizationTests` | Retired sharing + Screen Saver Password + Natural Scrolling + Toggle Bluetooth + Display Brightness + TM Destination + Network Location/VPN/Firewall Rule + Notification Center Alerts/DND gated; clear execute failures |
+| `OrphanHygieneTests` | #133: IPEvidenceSource removed; FirewallRule/VPN archived tests-only and omitted from shipping registry |
 | `PackedIPAddressTests` | IPv4/IPv6 pack validation |
 | `IPv4RuleMatchTests` | Subnet rule matching via injected addresses |
 | `ContextModelTests` | Context UUID, root flag, dictionary round-trip |

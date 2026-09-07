@@ -5,8 +5,9 @@
 //  Created by Mark Wallis on 18/07/07.
 //  Updated by Dustin Rue on 8/3/2011.
 //
-//  #33: ScriptingBridge System Events VPN path is unreliable on modern macOS.
-//  NEVPNManager rewrite is out of scope; keep this action gated with clear messaging.
+//  #33/#133: Gated orphan — compiled only for ControlPlaneTests. ScriptingBridge
+//  System Events VPN path is unreliable; NEVPNManager deferred. Shipping registry
+//  must not list VPNAction; isActionApplicableToSystem stays NO.
 //
 
 #import "VPNAction.h"
