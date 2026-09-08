@@ -1,0 +1,18 @@
+Implement GitHub issue #123 for ControlPlane in an isolated worktree.
+
+Repo: /Users/scottdensmore/Developer/scottdensmore/controlplane
+Base: origin/master. Branch: `issue-123-audio-output-harden`.
+
+## Goal
+Harden AudioOutputEvidenceSource: prefer device UID / transport type (public CoreAudio); less fragile matching; less Debug NSLog spam; injectable unit tests.
+
+## Tasks
+1. Inspect current AudioOutputEvidenceSource matching.
+2. RED tests with injected identity for headphones vs speakers where public APIs allow.
+3. GREEN minimal harden; downgrade noisy logs.
+4. Verify ControlPlaneTests; commit; push; PR to master closing #123; comment #116.
+
+Constraints: AGENTS.md; public APIs only; smallest change.
+
+## Return
+PR URL, approach summary, test results.
