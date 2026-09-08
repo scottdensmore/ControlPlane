@@ -1,1 +1,1 @@
-Go through and clean up and update the agents.md. Use /Users/scottdensmore/Downloads/workflow.md to update the workflow and rewre the skills and subagents to match the workflow.
+Yep lets meake a pr and get it going
