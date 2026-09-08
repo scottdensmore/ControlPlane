@@ -1,5 +1,5 @@
-Make sure that the workflow allows running work in parallel and also you can squash merge without stopping. You can just work until you are finished when I give you a goal
+It should be AGENTS.md not agent.md I messed that up. That should be the one file to use for all coding agents
 
 ---
 
-It should be AGENTS.md not agent.md I messed that up. That should be the one file to use for all coding agents
+All coding agent files should point to that
