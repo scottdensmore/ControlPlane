@@ -1,0 +1,23 @@
+Implement ControlPlane issue #100 on an isolated worktree.
+
+Repo: /Users/scottdensmore/Developer/scottdensmore/controlplane
+Base: origin/macOS-16 @ 8f13991f
+Worktree parent: /Users/scottdensmore/Developer/scottdensmore/controlplane-worktrees
+Branch: issue-100-settings-style-prefs
+
+## Issue #100 — Settings-style Preferences
+Acceptance:
+- Written spike notes with chosen approach + tradeoffs (short section in PR body and/or docs/)
+- At least one pane hosted in new Settings-style shell OR thin vertical slice landing the shell with existing views embedded
+- VoiceOver + ⌘, still work (from #31)
+- Preserve panes: General, Contexts, Evidence Sources, Rules, Actions, Advanced
+
+Prefer: NSTabViewController preference-style toolbar hosting existing NSViews from PrefsWindowController (incremental, ObjC-first). SwiftUI Settings bridge only if clearly lower risk—spike notes must justify choice.
+
+Out of scope: deployment target bump, helper/XPC.
+TDD where feasible (a11y identifiers / prefs shell presence tests like PrefsHIGShortTermTests).
+Commit: `feat(ui): Settings-style preferences shell`
+PR base macOS-16, Closes #100.
+Smoke Debug + ControlPlaneTests.
+
+Return: PR URL, SHA, chosen approach, residual risks.
