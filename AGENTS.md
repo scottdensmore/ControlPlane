@@ -1,6 +1,8 @@
 # ControlPlane — Agent Instructions (SSOT)
 
-This file is the **single source of truth** for every coding agent (Cursor, Claude Code, and others). Pointer files such as `CLAUDE.md` must only import this document—do not duplicate policy elsewhere.
+The only agent instruction file is **`AGENTS.md`** (this file). Do not create or follow `agent.md`, `AGENT.md`, or `agents.md`.
+
+Every coding agent (Cursor, Claude Code, and others) reads this file. Pointer files such as `CLAUDE.md` must only import it—do not duplicate policy elsewhere.
 
 Live work tracking lives in **GitHub Issues** on `scottdensmore/ControlPlane`. Do not invent parallel roadmap docs.
 

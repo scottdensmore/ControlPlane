@@ -5,7 +5,7 @@ alwaysApply: true
 
 # ControlPlane agents
 
-- Obey root `AGENTS.md` for the 11-step workflow, TDD, and merge rules.
+- Obey root `AGENTS.md` only (not `agent.md`) for the 11-step workflow, TDD, and merge rules.
 - Cut short-lived feature branches from `master`; squash-merge back to `master` as soon as the slice is locally verified (no durable `macOS-*` branches, no wait for Actions).
 - Run independent slices in parallel. When the user gives a goal, keep going until it is done.
 - Use `.cursor/agents/` and `.cursor/skills/` for planner, implementer, UI review, verify, code review, and ship. Do not collapse those roles on a non-trivial change.

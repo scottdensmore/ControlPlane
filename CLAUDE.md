@@ -1,3 +1,3 @@
 @AGENTS.md
 
-<!-- Claude Code reads CLAUDE.md. AGENTS.md is the single source of truth — do not duplicate policy here. -->
+<!-- Claude Code reads CLAUDE.md. The only instruction file is AGENTS.md — not agent.md. Do not duplicate policy here. -->
