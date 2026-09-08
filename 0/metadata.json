@@ -1,0 +1,16 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M21751DXFXDV7R4A61MCTFKF",
+  "session_id": "83031b58-30fa-4ded-8f1a-3532ec17988f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T19:15:45.718374Z",
+  "branch": "issue-170-help-helper-approval",
+  "checkpoints_count": 1,
+  "files_touched": [],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "527bcffeedca",
+  "checkpoint_transcript_start": 153,
+  "transcript_lines_at_start": 153,
+  "compact_transcript_start": 37
+}
