@@ -1,0 +1,1 @@
+Take a look through this projecf and the issues open. Do a deep analysis and decide if there should be anymore issues created. Also look through the app and decide if there would be anymore features that we should add to round it out
