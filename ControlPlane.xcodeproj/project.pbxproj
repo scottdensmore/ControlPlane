@@ -145,6 +145,9 @@
 		B86HELP01WIRE860000001 /* CPHelperCommandRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000002 /* CPHelperCommandRunner.m */; };
 		B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000002 /* CPHelperCommandRunner.m */; };
 		B86HELP01WIRE860000003 /* CPHelperCommandRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */; };
+		B166GATE01WIRE166000001 /* CPHelperClientGate.m in Sources */ = {isa = PBXBuildFile; fileRef = B166GATE01FILE166000002 /* CPHelperClientGate.m */; };
+		B166GATE01WIRE166000002 /* CPHelperClientGate.m in Sources */ = {isa = PBXBuildFile; fileRef = B166GATE01FILE166000002 /* CPHelperClientGate.m */; };
+		B166GATE01WIRE166000003 /* CPHelperClientGateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B166GATE01FILE166000003 /* CPHelperClientGateTests.m */; };
 		B293A4C5D6E7F8091122334 /* ToggleInternetSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA922E9C144FC95200920B40 /* ToggleInternetSharingAction.m */; };
 		B25ARC01WIRE2500000001 /* ArcMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B25ARCFILE2500000001 /* ArcMigrationTests.m */; };
 		B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B40DEPLFILE400000001 /* DeploymentTargetTests.m */; };
@@ -654,6 +657,9 @@
 		B86HELP01FILE860000001 /* CPHelperCommandRunner.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperCommandRunner.h; sourceTree = "<group>"; };
 		B86HELP01FILE860000002 /* CPHelperCommandRunner.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperCommandRunner.m; sourceTree = "<group>"; };
 		B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPHelperCommandRunnerTests.m; sourceTree = "<group>"; };
+		B166GATE01FILE166000001 /* CPHelperClientGate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CPHelperClientGate.h; sourceTree = "<group>"; };
+		B166GATE01FILE166000002 /* CPHelperClientGate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPHelperClientGate.m; sourceTree = "<group>"; };
+		B166GATE01FILE166000003 /* CPHelperClientGateTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPHelperClientGateTests.m; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5C6D /* SparkleVendoredArchitectureTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SparkleVendoredArchitectureTests.m; sourceTree = "<group>"; };
 		B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPNotificationsGateTests.m; sourceTree = "<group>"; };
 		B25ARCFILE2500000001 /* ArcMigrationTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ArcMigrationTests.m; sourceTree = "<group>"; };
@@ -1228,6 +1234,7 @@
 				F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */,
 				B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */,
 				B86HELP01FILE860000003 /* CPHelperCommandRunnerTests.m */,
+				B166GATE01FILE166000003 /* CPHelperClientGateTests.m */,
 				B25ARCFILE2500000001 /* ArcMigrationTests.m */,
 				B45HELPFILE450000001 /* HelpScrubTests.m */,
 				B131L10NFILE131000001 /* LocalizationCatalogTests.m */,
@@ -1596,6 +1603,8 @@
 				DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */,
 				B86HELP01FILE860000001 /* CPHelperCommandRunner.h */,
 				B86HELP01FILE860000002 /* CPHelperCommandRunner.m */,
+				B166GATE01FILE166000001 /* CPHelperClientGate.h */,
+				B166GATE01FILE166000002 /* CPHelperClientGate.m */,
 				6FFCAA2E073E45928234D18A26644421 /* CPHelperTool.entitlements */,
 			);
 			path = CPHelperTool;
@@ -2037,6 +2046,8 @@
 				B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */,
 				B86HELP01WIRE860000003 /* CPHelperCommandRunnerTests.m in Sources */,
 				B86HELP01WIRE860000002 /* CPHelperCommandRunner.m in Sources */,
+				B166GATE01WIRE166000003 /* CPHelperClientGateTests.m in Sources */,
+				B166GATE01WIRE166000002 /* CPHelperClientGate.m in Sources */,
 				B25ARC01WIRE2500000001 /* ArcMigrationTests.m in Sources */,
 				B45HELP01WIRE450000001 /* HelpScrubTests.m in Sources */,
 				B131L10NWIRE131000001 /* LocalizationCatalogTests.m in Sources */,
@@ -2145,6 +2156,7 @@
 			files = (
 				DE184AEB2D98C6D30072F8ED /* CPHelperTool.m in Sources */,
 				B86HELP01WIRE860000001 /* CPHelperCommandRunner.m in Sources */,
+				B166GATE01WIRE166000001 /* CPHelperClientGate.m in Sources */,
 				DE184AF72D98D73A0072F8ED /* CPAuthorization.m in Sources */,
 				DE762B9F2D98C1BE0095F733 /* main.m in Sources */,
 				DE184AFC2D98DA270072F8ED /* CPHelperCommon.m in Sources */,
@@ -2444,6 +2456,8 @@
 					IOBluetooth,
 					"-framework",
 					Network,
+					"-framework",
+					Security,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2501,6 +2515,8 @@
 					IOBluetooth,
 					"-framework",
 					Network,
+					"-framework",
+					Security,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
