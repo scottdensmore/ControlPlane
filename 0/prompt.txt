@@ -1,0 +1,26 @@
+You are implementing ONE ControlPlane GitHub issue on fork scottdensmore/ControlPlane.
+
+## Repo / base
+- Reference: /Users/scottdensmore/Developer/scottdensmore/controlplane
+- Base: latest `origin/macOS-16`
+- Branch: `fix/menubar-liquid-glass-89`
+- Ignore noise; never commit master
+
+## Issue #89 — Tahoe menu bar Liquid Glass / visibility smoke for LSUIElement agent
+`gh issue view 89 --repo scottdensmore/ControlPlane`
+
+Keep scope **minimal smoke + small fixes** (full Asset Catalog is #32).
+
+Tasks:
+1. Inspect `Source/CPController.m` status item / `prepareImageForMenubar:` — ensure template image rendering (`template` YES / appropriate drawing) so icon stays visible on transparent Tahoe menu bar
+2. Ensure opening Preferences (and About if trivial) activates the app (`[NSApp activateIgnoringOtherApps:YES]` or modern equivalent) before showing windows
+3. Add the thinnest automated check you can (unit test for image template flag helper, or UI test note). If UI test too flaky, add a small characterization/helper test + document manual Tahoe smoke in PR
+4. Comment on #32 with any follow-ups discovered
+5. Do NOT rewrite to SwiftUI MenuBarExtra
+
+## Workflow
+Minimal fix under TDD if possible → smoke → commit `fix(ui): improve status item template visibility and window activation (#89)` → PR to **macOS-16** → do NOT merge → comment on #89.
+
+Avoid Bluetooth (#83) and CoreWLAN (#84) files unless unavoidable.
+
+Return PR URL, what changed, residual #32 notes.
