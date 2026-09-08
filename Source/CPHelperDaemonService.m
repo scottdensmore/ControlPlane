@@ -54,6 +54,34 @@ static NSString * const CPHelperDaemonPlistName = @"com.scottdensmore.CPHelperTo
     return ([self status] == SMAppServiceStatusEnabled);
 }
 
++ (BOOL)privilegedCommandMayConnectForStatus:(SMAppServiceStatus)status
+{
+    return status == SMAppServiceStatusEnabled;
+}
+
+- (BOOL)preparePrivilegedCommand
+{
+    if ([[self class] privilegedCommandMayConnectForStatus:[self status]]) {
+        return YES;
+    }
+    // Existing Login Items approval. Do not register or call SMJobBless here.
+    [[self class] openLoginItemsSettings];
+    return NO;
+}
+
++ (NSArray<NSString *> *)legacyBlessedInstallPaths
+{
+    return @[
+        @"/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool",
+        @"/Library/LaunchDaemons/com.scottdensmore.CPHelperTool.plist",
+    ];
+}
+
++ (NSString *)legacyBlessedLaunchdBootoutTarget
+{
+    return @"system/com.scottdensmore.CPHelperTool";
+}
+
 - (BOOL)checkboxOn
 {
     return [[self class] checkboxStateForStatus:[self status]];
@@ -103,7 +131,15 @@ static NSString * const CPHelperDaemonPlistName = @"com.scottdensmore.CPHelperTo
 + (void)openLoginItemsSettings
 {
     if (@available(macOS 13.0, *)) {
-        [SMAppService openSystemSettingsLoginItems];
+        void (^openSettings)(void) = ^{
+            [SMAppService openSystemSettingsLoginItems];
+        };
+        // Privileged actions run on detached threads. Hop without sync so we cannot deadlock.
+        if ([NSThread isMainThread]) {
+            openSettings();
+        } else {
+            dispatch_async(dispatch_get_main_queue(), openSettings);
+        }
     }
 }
 

@@ -25,7 +25,7 @@ spctl --assess --type execute -v /path/to/ControlPlane.app
 codesign -dv --verbose=4 /path/to/ControlPlane.app
 ```
 
-4. Run a **signed** install smoke: launch, trigger a privileged action that still uses the helper, complete bless UI, confirm `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` and `launchctl print system/com.scottdensmore.CPHelperTool` (details in [signing.md](signing.md)).
+4. Run a **signed** install smoke: allow the privileged helper in prefs / Login Items, trigger a privileged action, confirm the in-bundle daemon (not a blessed `/Library/PrivilegedHelperTools` copy) via `launchctl print system/com.scottdensmore.CPHelperTool` (details in [signing.md](signing.md)).
 
 ## Sparkle / appcast
 

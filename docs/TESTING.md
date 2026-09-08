@@ -8,7 +8,7 @@
 - **Smoke script:** `scripts/smoke-build.sh`
 - **CI:** `.github/workflows/ci.yml` is kept but **does not run** on push/PR (`workflow_dispatch` only) to save Actions minutes. Verify locally with `./scripts/smoke-build.sh`.
 - **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` is likewise manual-only.
-- **Signing / helper bless:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot bless)
+- **Signing / helper daemon:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot register the daemon)
 
 ## Commands
 
@@ -44,7 +44,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is Sparkle 2.x + universal (`x86_64` + `arm64`); `Info.plist` has no `SUPublicDSAKeyFile` |
 | `InfoPlistPrivacyTests` | TCC usage strings present (Location mentions Wi‑Fi SSID); ATS no longer allows arbitrary loads |
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
-| `CPHelperDaemonServiceTests` | SMAppService daemon status → helper checkbox; LaunchDaemon plist layout (no live register) |
+| `CPHelperDaemonServiceTests` | SMAppService daemon status → helper checkbox; command path connects only when Enabled (no SMJobBless); legacy bless path list; LaunchDaemon plist layout (no live register) |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
 | `RunShortcutActionTests` | Run Shortcut (#34) type map, applicability gate, empty-name failure |

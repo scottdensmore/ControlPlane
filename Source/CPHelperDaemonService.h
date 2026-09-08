@@ -11,7 +11,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /// Wraps SMAppService daemon registration for the in-bundle privileged helper.
-/// Does not replace SMJobBless; privileged commands still use the legacy path.
+/// Privileged commands use daemon status and never call SMJobBless. Registration
+/// stays on the prefs checkbox; preparePrivilegedCommand: does not auto-register.
 @interface CPHelperDaemonService : NSObject
 
 + (instancetype)sharedService;
@@ -21,6 +22,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// YES when the LaunchDaemon is enabled (not merely awaiting approval).
 - (BOOL)isEnabled;
+
+/// Privileged commands may connect to the helper Mach service only when status is Enabled.
++ (BOOL)privilegedCommandMayConnectForStatus:(SMAppServiceStatus)status;
+
+/// Opens Login Items approval when the daemon is not Enabled. Never calls SMJobBless
+/// and does not auto-register. Returns YES only when status is already Enabled.
+- (BOOL)preparePrivilegedCommand;
+
+/// Blessed SMJobBless copies that must be removed so they cannot share the Mach name.
++ (NSArray<NSString *> *)legacyBlessedInstallPaths;
+
+/// `launchctl bootout` target for the legacy system job (`system/<label>`).
++ (NSString *)legacyBlessedLaunchdBootoutTarget;
 
 /// YES when the prefs checkbox should appear checked (Enabled or RequiresApproval).
 - (BOOL)checkboxOn;
