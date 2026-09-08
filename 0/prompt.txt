@@ -1,0 +1,1 @@
+Actually lets drop keeping all the branchs. Lets just create a branch and then merge to master. We can drop all the other branches as well
