@@ -1,0 +1,37 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M2151VF3DPC6J6B3BZDSTH04",
+  "session_id": "83031b58-30fa-4ded-8f1a-3532ec17988f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T18:38:57.962746Z",
+  "branch": "issue-171-actions-reenable-note",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "AGENTS.md"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "527bcffeedca",
+  "compact_transcript_start": 0,
+  "initial_attribution": {
+    "calculated_at": "2026-09-08T18:38:57.92991Z",
+    "agent_lines": 3,
+    "agent_removed": 3,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 3,
+    "total_lines_changed": 6,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
