@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1ZBMATAZWW211F5MX0Z3Y8D",
+  "strategy": "manual-commit",
+  "branch": "docs-agents-workflow",
+  "checkpoints_count": 9,
+  "files_touched": [
+    ".cursor/agents/code-reviewer.md",
+    ".cursor/agents/implementer.md",
+    ".cursor/agents/planner.md",
+    ".cursor/agents/ui-reviewer.md",
+    ".cursor/agents/verifier.md",
+    ".cursor/rules/agents-mdc.mdc",
+    ".cursor/skills/os-upgrade-branch/SKILL.md",
+    ".cursor/skills/tdd-slice/SKILL.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 166800,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1301760,
+    "output_tokens": 11258,
+    "api_call_count": 1
+  }
+}

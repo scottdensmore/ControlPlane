@@ -1,0 +1,108 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1ZBMATAZWW211F5MX0Z3Y8D",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T01:55:26.804298Z",
+  "branch": "docs-agents-workflow",
+  "checkpoints_count": 9,
+  "save_step_count": 2,
+  "files_touched": [
+    ".cursor/agents/code-reviewer.md",
+    ".cursor/agents/implementer.md",
+    ".cursor/agents/planner.md",
+    ".cursor/agents/ui-reviewer.md",
+    ".cursor/agents/verifier.md",
+    ".cursor/rules/agents-mdc.mdc",
+    ".cursor/skills/os-upgrade-branch/SKILL.md",
+    ".cursor/skills/tdd-slice/SKILL.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "a043ed12f3b5",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 166800,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1301760,
+    "output_tokens": 11258,
+    "api_call_count": 1
+  },
+  "session_metrics": {
+    "turn_count": 28,
+    "context_tokens": 231146,
+    "context_window_size": 256000
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 189,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 685,
+      "user_lines_removed": 216,
+      "agent_lines_added": 112,
+      "agent_lines_removed": 72,
+      "user_added_per_file": {
+        ".claude/agents/code-reviewer.md": 8,
+        ".claude/agents/implementer.md": 11,
+        ".claude/agents/planner.md": 13,
+        ".claude/agents/ui-reviewer.md": 8,
+        ".claude/agents/verifier.md": 10,
+        ".claude/skills/code-review/SKILL.md": 33,
+        ".claude/skills/os-upgrade-branch/SKILL.md": 11,
+        ".claude/skills/plan-spike/SKILL.md": 29,
+        ".claude/skills/ship-slice/SKILL.md": 41,
+        ".claude/skills/tdd-slice/SKILL.md": 25,
+        ".claude/skills/ui-review/SKILL.md": 30,
+        ".claude/skills/verify-macos-build/SKILL.md": 28,
+        ".codex/hooks.json": 88,
+        ".cursor/agents/code-reviewer.md": 8,
+        ".cursor/agents/implementer.md": 11,
+        ".cursor/agents/planner.md": 13,
+        ".cursor/agents/ui-reviewer.md": 8,
+        ".cursor/agents/verifier.md": 10,
+        ".cursor/hooks.json": 40,
+        ".cursor/rules/agents-mdc.mdc": 2,
+        ".cursor/skills/code-review/SKILL.md": 33,
+        ".cursor/skills/os-upgrade-branch/SKILL.md": 11,
+        ".cursor/skills/plan-spike/SKILL.md": 29,
+        ".cursor/skills/ship-slice/SKILL.md": 41,
+        ".cursor/skills/tdd-slice/SKILL.md": 25,
+        ".cursor/skills/ui-review/SKILL.md": 30,
+        ".cursor/skills/verify-macos-build/SKILL.md": 28,
+        ".github/hooks/entire.json": 61
+      },
+      "user_removed_per_file": {
+        ".claude/agents/code-reviewer.md": 8,
+        ".claude/agents/implementer.md": 9,
+        ".claude/agents/planner.md": 14,
+        ".claude/agents/ui-reviewer.md": 14,
+        ".claude/agents/verifier.md": 9,
+        ".claude/skills/os-upgrade-branch/SKILL.md": 14,
+        ".claude/skills/tdd-slice/SKILL.md": 18,
+        ".claude/skills/verify-macos-build/SKILL.md": 21,
+        ".cursor/agents/code-reviewer.md": 8,
+        ".cursor/agents/implementer.md": 9,
+        ".cursor/agents/planner.md": 14,
+        ".cursor/agents/ui-reviewer.md": 14,
+        ".cursor/agents/verifier.md": 9,
+        ".cursor/rules/agents-mdc.mdc": 2,
+        ".cursor/skills/os-upgrade-branch/SKILL.md": 14,
+        ".cursor/skills/tdd-slice/SKILL.md": 18,
+        ".cursor/skills/verify-macos-build/SKILL.md": 21
+      }
+    }
+  ]
+}
