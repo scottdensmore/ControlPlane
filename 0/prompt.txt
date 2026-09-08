@@ -1,0 +1,5 @@
+It should be AGENTS.md not agent.md I messed that up. That should be the one file to use for all coding agents
+
+---
+
+All coding agent files should point to that
