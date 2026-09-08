@@ -46,7 +46,7 @@ The generic workflow says “base (`main` / `trunk`)”. On this repo that base 
 1 Plan/Spike → 2 Inspect & Branch → 3 Thin Slice → 4 TDD
   → 5 Diff Inspect → 6 UI Review (if user-visible) → 7 Verify
   → 8 Code Review → (loop to 4 on findings) → 9 Commit → 10 PR
-  → 11 Gated squash merge → master
+  → 11 Squash-merge immediately → next slice until the goal is done
 ```
 
 Do not collapse planner, implementer, UI reviewer, verifier, and code reviewer into one undifferentiated pass when the change is non-trivial. Each role owns the steps named below and hands off; it does not silently absorb the next gate.
