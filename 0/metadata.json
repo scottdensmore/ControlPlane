@@ -1,0 +1,55 @@
+{
+  "cli_version": "0.10.5",
+  "checkpoint_id": "01M1ZDB9GWVQKPZVQWP4PF1WN5",
+  "session_id": "11bc50c9-9814-43c6-801e-6282a4595b80",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-08T02:25:26.907162Z",
+  "branch": "chore-disable-actions",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/ui-tests-quarantine.yml",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "docs/TESTING.md",
+    "docs/releasing.md"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "8d60b2f1e8f0",
+  "checkpoint_transcript_start": 1350,
+  "transcript_lines_at_start": 1350,
+  "compact_transcript_start": 314,
+  "session_metrics": {
+    "turn_count": 29,
+    "context_tokens": 231146,
+    "context_window_size": 256000
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-08T02:25:26.425081Z",
+    "agent_lines": 26,
+    "agent_removed": 22,
+    "human_added": 14,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 40,
+    "total_lines_changed": 73,
+    "agent_percentage": 65.75342465753424,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 189,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        ".cursor/hooks.json": 40,
+        ".github/hooks/entire.json": 61
+      }
+    }
+  ]
+}
