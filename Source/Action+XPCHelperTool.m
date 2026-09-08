@@ -10,10 +10,9 @@
 #import "CPHelperToolProtocol.h"
 #import "CPXPCServiceProtocol.h"
 #import "CPAuthorization.h"
+#import "CPHelperDaemonService.h"
 #import "../CPHelperTool/CPHelperCommon.h"
 #import "../Common/CPCommonConstants.h"
-
-#include <ServiceManagement/ServiceManagement.h>
 
 @interface Action (XPCHelperTool_Private)
 
@@ -23,7 +22,6 @@
 - (NSXPCConnection *)xpcServiceConnection;
 
 - (void)authorize;
-- (BOOL)installHelperTool;
 
 - (BOOL)enableTimeMachine;
 - (BOOL)disableTimeMachine;
@@ -152,62 +150,6 @@
     return xpcConnection;
 }
 
-- (BOOL) installHelperTool {
-    __block NSError* error = nil;
-    __block BOOL needToInstall = YES;
-    __block BOOL success = YES;
-    
-    NSDictionary* installedHelperJobData = CFBridgingRelease(SMJobCopyDictionary(kSMDomainSystemLaunchd, (CFStringRef)kHelperToolMachServiceName));
-    
-    if (installedHelperJobData != nil) {
-        [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-            DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
-            error = xpcProxyError;
-            success = NO;
-        }] connectWithEndpointAndAuthorizationReply:^(NSXPCListenerEndpoint * connectReplyEndpoint, NSData * connectReplyAuthorization) {
-            [[[self helperToolConnection:connectReplyEndpoint] remoteObjectProxyWithErrorHandler:^(NSError * helperProxyError) {
-                NSLog(@"Failed to conect to helper tool : %@", [helperProxyError description]);
-                error = helperProxyError;
-                success = NO;
-            }] getVersionWithReply:^(NSString *version) {
-                if (![version isEqualToString:@"2.0.0.1"]) {
-                    needToInstall = YES;
-                }
-            }];
-        }];
-        
-        needToInstall = NO;
-    }
-    
-    if (needToInstall == YES) {
-        [[self.xpcServiceConnection remoteObjectProxyWithErrorHandler:^(NSError * xpcProxyError) {
-            DSLogHelper(@"Failed to connect to xpc service : %@", [xpcProxyError description]);
-            error = xpcProxyError;
-            success = NO;
-        }] installHelperToolWithReply:^(NSError * replyError) {
-            if (replyError == nil) {
-                DSLogHelper(@"installed helper tool successfully");
-            } else {
-                DSLogHelper(@"Failed to install privileged helper: %@", [replyError description]);
-                error = replyError;
-                success = NO;
-            }
-        }];
-    }
-    
-    if (success == NO) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSAlert *alert = [[NSAlert alloc] init];
-            [alert setMessageText:NSLocalizedString(@"Error", @"Error")];
-            [alert setInformativeText:[NSString stringWithFormat:@"Failed to install privileged helper: %@", [error description]]];
-            [alert addButtonWithTitle:NSLocalizedString(@"Ok", @"Ok")];
-            [alert runModal];
-            
-        });
-    }
-    
-    return success;
-}
 
 #pragma mark Perform Actions
 
@@ -219,11 +161,12 @@
     __block BOOL result = NO;
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    [self authorize];
-    
-    if (![self installHelperTool]) {
+    if (![[CPHelperDaemonService sharedService] preparePrivilegedCommand]) {
+        DSLogHelper(@"Privileged helper is not enabled; opened Login Items approval");
         return result;
     }
+
+    [self authorize];
     
     if ([action isEqualToString:kCPHelperEnableTMCommand]) {
         result = [self enableTimeMachine];

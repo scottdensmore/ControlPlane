@@ -63,6 +63,7 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
 
     XCTAssertEqualObjects(plist[@"Label"], machName);
     XCTAssertEqualObjects(plist[@"BundleProgram"], CPHelperDaemonBundleProgram);
+    XCTAssertEqualObjects(plist[@"AssociatedBundleIdentifiers"], @"com.scottdensmore.ControlPlane");
 
     NSDictionary *machServices = plist[@"MachServices"];
     XCTAssertTrue([machServices isKindOfClass:[NSDictionary class]]);
@@ -122,6 +123,84 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
         XCTAssertFalse([[value lowercaseString] containsString:@"helper"],
                        @"Italian copy must not leave English helper: %@", value);
     }
+}
+
+- (void)testPrivilegedCommandMayConnectOnlyWhenDaemonEnabled {
+    XCTAssertTrue([CPHelperDaemonService privilegedCommandMayConnectForStatus:SMAppServiceStatusEnabled]);
+    XCTAssertFalse([CPHelperDaemonService privilegedCommandMayConnectForStatus:SMAppServiceStatusRequiresApproval]);
+    XCTAssertFalse([CPHelperDaemonService privilegedCommandMayConnectForStatus:SMAppServiceStatusNotRegistered]);
+    XCTAssertFalse([CPHelperDaemonService privilegedCommandMayConnectForStatus:SMAppServiceStatusNotFound]);
+}
+
+- (void)testLegacyBlessedInstallPathsNameSystemHelperCopies {
+    NSArray<NSString *> *paths = [CPHelperDaemonService legacyBlessedInstallPaths];
+    XCTAssertEqualObjects(paths, (@[
+        @"/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool",
+        @"/Library/LaunchDaemons/com.scottdensmore.CPHelperTool.plist",
+    ]));
+    XCTAssertEqualObjects([CPHelperDaemonService legacyBlessedLaunchdBootoutTarget],
+                          @"system/com.scottdensmore.CPHelperTool");
+}
+
+- (void)testPrivilegedCommandPathUsesDaemonStatusNotSMJobBless {
+    NSString *source = [self sourceTextAtRelativePath:@"Source/Action+XPCHelperTool.m"];
+    XCTAssertFalse([source containsString:@"SMJobBless"],
+                   @"Privileged command path must not call SMJobBless");
+    XCTAssertFalse([source containsString:@"installHelperToolWithReply"],
+                   @"Privileged command path must not bless via CPXPCService");
+    XCTAssertFalse([source containsString:@"SMJobCopyDictionary"],
+                   @"A blessed launchd job must not be treated as the helper being ready");
+    XCTAssertTrue([source containsString:@"privilegedCommandMayConnectForStatus"]
+                  || [source containsString:@"preparePrivilegedCommand"],
+                  @"Command path must gate on SMAppService daemon status");
+    XCTAssertTrue([source containsString:@"openLoginItemsSettings"]
+                  || [source containsString:@"preparePrivilegedCommand"],
+                  @"Not-enabled status must open the existing Login Items approval path");
+
+    NSRange perform = [source rangeOfString:@"- (BOOL)helperToolPerformXPCAction:(NSString *)action withParameter:(id)parameter"];
+    XCTAssertNotEqual(perform.location, NSNotFound);
+    NSString *body = [source substringFromIndex:perform.location];
+    NSRange connect = [body rangeOfString:@"isEqualToString:kCPHelperEnableTMCommand"];
+    XCTAssertNotEqual(connect.location, NSNotFound);
+    NSString *beforeCommands = [body substringToIndex:connect.location];
+    XCTAssertTrue([beforeCommands containsString:@"preparePrivilegedCommand"],
+                  @"Mach-service command dispatch must wait until the daemon is Enabled");
+}
+
+- (void)testUninstallRemovesLegacyBlessedCopiesAndUnregistersDaemon {
+    NSString *script = [self sourceTextAtRelativePath:@"Utilities/Uninstall.sh"];
+    XCTAssertTrue([script containsString:@"legacy_blessed_install_paths"],
+                  @"Uninstall must use a named legacy path list");
+    XCTAssertTrue([script containsString:@"unregister_helper_daemon"],
+                  @"Uninstall must unregister the SMAppService daemon, not only delete files");
+    for (NSString *path in [CPHelperDaemonService legacyBlessedInstallPaths]) {
+        XCTAssertTrue([script containsString:path], @"Uninstall missing %@", path);
+    }
+    XCTAssertTrue([script containsString:[CPHelperDaemonService legacyBlessedLaunchdBootoutTarget]],
+                  @"Uninstall must boot out the legacy system job");
+    XCTAssertTrue([script containsString:@"launchctl bootout"],
+                  @"Uninstall must boot out the shared Mach-name job");
+    XCTAssertFalse([script containsString:@"launchctl disable"],
+                   @"Do not launchctl disable the SMAppService label; disable persists across register");
+}
+
+- (void)testOpenLoginItemsSettingsHopsToMainQueueWithoutSync {
+    NSString *source = [self sourceTextAtRelativePath:@"Source/CPHelperDaemonService.m"];
+    NSRange method = [source rangeOfString:@"+ (void)openLoginItemsSettings"];
+    XCTAssertNotEqual(method.location, NSNotFound);
+    NSString *body = [source substringFromIndex:method.location];
+    NSRange nextMethod = [body rangeOfString:@"\n+ ("];
+    if (nextMethod.location != NSNotFound) {
+        body = [body substringToIndex:nextMethod.location];
+    }
+    XCTAssertTrue([body containsString:@"openSystemSettingsLoginItems"],
+                  @"Approval UX must still open Login Items");
+    XCTAssertTrue([body containsString:@"NSThread isMainThread"] || [body containsString:@"[NSThread isMainThread]"],
+                  @"Open Login Items must run on the main thread");
+    XCTAssertTrue([body containsString:@"dispatch_async"],
+                  @"Off-main callers must hop with dispatch_async, not block the action thread");
+    XCTAssertFalse([body containsString:@"dispatch_sync"],
+                   @"dispatch_sync onto main can deadlock the action thread");
 }
 
 - (void)testAppTargetCopiesHelperBinaryAndLaunchDaemonPlist {

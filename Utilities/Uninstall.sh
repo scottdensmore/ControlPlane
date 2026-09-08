@@ -1,20 +1,39 @@
 #!/bin/sh
-# Remove ControlPlane's privileged helper (SMJobBless install).
-# Run from a Terminal with admin rights; useful when testing bless from scratch.
+# Remove ControlPlane's privileged helper.
+# Boots out the system job and deletes leftover SMJobBless copies so two listeners
+# never share Mach name com.scottdensmore.CPHelperTool. Does not disable the
+# launchd job — that flag persists and is not cleared by a later register.
+# Run from a Terminal with admin rights. Do not invoke this from unit tests.
 
 set -e
 
 HELPER_LABEL="com.scottdensmore.CPHelperTool"
+
+# Blessed SMJobBless copies. Must match +[CPHelperDaemonService legacyBlessedInstallPaths].
+legacy_blessed_install_paths() {
+  printf '%s\n' \
+    "/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool" \
+    "/Library/LaunchDaemons/com.scottdensmore.CPHelperTool.plist"
+}
+
+# Boot out the system job that shares the Mach name. Do not disable the job:
+# that flag persists and is not cleared by a later SMAppService register.
+# Target matches +[CPHelperDaemonService legacyBlessedLaunchdBootoutTarget].
+unregister_helper_daemon() {
+  launchctl bootout "system/com.scottdensmore.CPHelperTool" 2>/dev/null || true
+}
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "Re-running with sudo…"
   exec sudo "$0" "$@"
 fi
 
-# Prefer bootout (launchctl unload is legacy on modern macOS).
-launchctl bootout "system/${HELPER_LABEL}" 2>/dev/null || true
-rm -f "/Library/LaunchDaemons/${HELPER_LABEL}.plist"
-rm -f "/Library/PrivilegedHelperTools/${HELPER_LABEL}"
+unregister_helper_daemon
+
+legacy_blessed_install_paths | while IFS= read -r path; do
+  [ -n "$path" ] || continue
+  rm -f "$path"
+done
 
 # Optional: clear user prefs/caches used while debugging install.
 # rm -f "${HOME}/Library/Preferences/com.scottdensmore.ControlPlane.plist"
@@ -37,4 +56,4 @@ do
   security -q authorizationdb remove "com.scottdensmore.CPHelperTool.${right}" 2>/dev/null || true
 done
 
-echo "Removed ${HELPER_LABEL} (if it was installed)."
+echo "Booted out ${HELPER_LABEL} and removed legacy blessed copies (if present)."

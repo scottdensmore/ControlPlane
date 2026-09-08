@@ -2,9 +2,9 @@
 //  Action+HelperTool.m
 //  ControlPlane
 //
-//  Thin façade: privileged work goes through Action+XPCHelperTool → CPXPCService
-//  (SMJobBless) → CPHelperTool. Legacy BetterAuthorizationSample / in-app SMJobBless
-//  code was removed in #28; do not resurrect it here.
+//  Thin façade: privileged work goes through Action+XPCHelperTool.
+//  The helper must already be an Enabled SMAppService daemon; this path does not
+//  call SMJobBless. CPXPCService still brokers the existing XPC protocol.
 //
 
 #import "Action+HelperTool.h"

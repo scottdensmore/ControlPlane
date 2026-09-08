@@ -3,14 +3,16 @@
 ControlPlane’s privileged path:
 
 ```text
-Action → Action+XPCHelperTool
-      → CPXPCService (embedded XPC)
-         → SMJobBless → /Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool
-         → returns Mach endpoint + AuthorizationExternalForm
+Action → CPHelperDaemonService status
+      → if not Enabled: open System Settings → Login Items (no SMJobBless, no auto-register)
+      → if Enabled: Action+XPCHelperTool
+         → CPXPCService (embedded XPC; existing protocol + authorization)
+            → Mach service com.scottdensmore.CPHelperTool
+               (in-bundle Contents/Library/LaunchServices/com.scottdensmore.CPHelperTool)
       → app talks to CPHelperTool over that endpoint
 ```
 
-`SMJobBless` is deprecated but still the supported install path in production. The Tahoe-line design spike for migrating to an `SMAppService` LaunchDaemon is in [smappservice-spike.md](smappservice-spike.md) (**GO**). App-side register/unregister lives in `CPHelperDaemonService`; privileged commands still use bless.
+The helper is an `SMAppService` LaunchDaemon (`CPHelperDaemonService`, plist `com.scottdensmore.CPHelperTool.plist` with `BundleProgram` and `AssociatedBundleIdentifiers`). The prefs checkbox registers and unregisters it; approval is Login Items (`RequiresApproval`). Privileged commands connect only when status is `Enabled`. `CPXPCService` remains the XPC broker and still contains unused `SMJobBless` code — do not collapse it, and do not call it from the command path. The Tahoe-line design spike is [smappservice-spike.md](smappservice-spike.md) (**GO**).
 
 ## Identities and Team ID
 
@@ -18,7 +20,7 @@ Action → Action+XPCHelperTool
 | :--- | :--- |
 | Team ID | `27ZDER873F` |
 | App / XPC / helper | Same team; Development **or** Developer ID Application |
-| CI / smoke | `CODE_SIGNING_ALLOWED=NO` — **cannot** bless unsigned builds |
+| CI / smoke | `CODE_SIGNING_ALLOWED=NO` — **cannot** register or enable the daemon |
 
 Designated requirements use **team OU** (`certificate leaf[subject.OU] = "27ZDER873F"`) plus Apple Development **or** Developer ID intermediate OIDs — not a single person’s certificate CN.
 
@@ -27,7 +29,7 @@ Designated requirements use **team OU** (`certificate leaf[subject.OU] = "27ZDER
 | `CPHelperTool/HelperTool-Info.plist` | `SMAuthorizedClients` | Must be `com.scottdensmore.CPXPCService` |
 | `CPXPCService/Info.plist` | `SMPrivilegedExecutables` | Must be `com.scottdensmore.CPHelperTool` |
 
-Blessing is performed by the **XPC service**, not the main app Info.plist.
+`SMAuthorizedClients` / `SMPrivilegedExecutables` are the leftover SMJobBless contract on `CPXPCService`. The shipping install path is the in-bundle daemon; the listener gate (`CPHelperClientGate`) is what admits `com.scottdensmore.CPXPCService` or `com.scottdensmore.ControlPlane`.
 
 ## Hardened Runtime and Entitlements
 
@@ -43,23 +45,24 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 **No App Sandbox.** ControlPlane requires non-sandboxed access for Wi-Fi (CoreWLAN), Bluetooth, USB (IOKit), and other evidence sources.
 
-## Local signed build + bless smoke
+## Local signed build + helper smoke
 
 1. Open `ControlPlane.xcodeproj` in Xcode with access to team `27ZDER873F`.
 2. Build **Debug** or **Release** with signing enabled (do not pass `CODE_SIGNING_ALLOWED=NO`).
-3. Optional clean slate: `./Utilities/Uninstall.sh`
-4. Run the app; trigger a privileged action that still uses the helper (e.g. Display Sleep Time, Time Machine — not gated Firewall / Printer Sharing / sharing actions).
-5. Complete the authorization / bless UI.
+3. On upgrade from a blessed build, run `./Utilities/Uninstall.sh` first. It boots out `system/com.scottdensmore.CPHelperTool` and removes `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` plus `/Library/LaunchDaemons/com.scottdensmore.CPHelperTool.plist` so two listeners never share the Mach name. It does not `launchctl disable` that label (disable persists across a later register). Use the prefs checkbox to unregister the SMAppService daemon.
+4. Run the app. In Preferences, turn on **Allow privileged helper**. Approve it in System Settings → General → Login Items & Extensions. Do not expect a privileged action to register the daemon by itself.
+5. Trigger a privileged action that still uses the helper (e.g. Display Sleep Time, Time Machine — not gated Firewall / Printer Sharing / sharing actions).
 6. Confirm:
-   - `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` exists
-   - `launchctl print system/com.scottdensmore.CPHelperTool` shows the job
+   - status is Enabled before the action connects
+   - `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` is **absent**
+   - `launchctl print system/com.scottdensmore.CPHelperTool` shows the in-bundle daemon, not a blessed copy
 7. Re-run unsigned CI-shaped smoke: `SKIP_RELEASE=1 ./scripts/smoke-build.sh`
 
 ## Notarization (release-shaped)
 
 1. Archive with **Developer ID Application** for team `27ZDER873F`.
 2. Notarize and staple the app (standard `notarytool` / Xcode Organizer flow).
-3. On a fresh Mac: install, run, bless as above. Requirements must accept Developer ID (OID `1.2.840.113635.100.6.2.6`), not only Apple Development.
+3. On a fresh Mac: install, run, allow the helper in Login Items as above. Requirements must accept Developer ID (OID `1.2.840.113635.100.6.2.6`), not only Apple Development.
 
 **Notarization notes:**
 
@@ -70,21 +73,21 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 ## Uninstall / legacy helpers
 
-- `Utilities/Uninstall.sh` — current `com.scottdensmore.CPHelperTool`
-- `Utilities/remove_helper_tool.sh` — also removes legacy `com.dustinrue.*` labels
+- `Utilities/Uninstall.sh` — boots out `com.scottdensmore.CPHelperTool` and removes the blessed copies that share that Mach name. Does not `launchctl disable` (use the prefs checkbox to unregister).
+- `Utilities/remove_helper_tool.sh` — same current-label cleanup, plus legacy `com.dustinrue.*` labels
+
+On upgrade from an SMJobBless build, run `Uninstall.sh` before enabling the in-bundle daemon. The path list is `+[CPHelperDaemonService legacyBlessedInstallPaths]` (`/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` and `/Library/LaunchDaemons/com.scottdensmore.CPHelperTool.plist`). Tests assert that list; they do not run a live root uninstall.
 
 ### SMJobBlessUtil (Python 3)
 
-`Utilities/SMJobBlessUtil.py` is Apple’s classic SMJobBless checker, ported to **Python 3** (`#!/usr/bin/env python3`). It validates the textbook layout: helpers under `Contents/Library/LaunchServices` and app-level `SMPrivilegedExecutables`.
+`Utilities/SMJobBlessUtil.py` is Apple’s classic SMJobBless checker, ported to **Python 3** (`#!/usr/bin/env python3`). It validates the textbook layout: helpers under `Contents/Library/LaunchServices` and **app-level** `SMPrivilegedExecutables`.
 
-ControlPlane blesses via **CPXPCService**, so this util is **not** the SSOT for our topology. Prefer `HelperSigningRequirementTests` and the checklist above for day-to-day verification. Use the util when debugging a classic SMJobBless app layout or comparing against Apple’s sample:
+That util is **not** the SSOT for this product. The helper binary is copied into `Contents/Library/LaunchServices` for the `SMAppService` `BundleProgram` (shipped in #165). A missing `Contents/Library/LaunchServices` directory is **not** the expected `check` result anymore. `check` against `ControlPlane.app` can still fail because the app Info.plist does not carry `SMPrivilegedExecutables` — registration is `SMAppService`, and the listener gate is `CPHelperClientGate`. Prefer `CPHelperDaemonServiceTests` and the checklist above. Use the util only when comparing against Apple’s classic SMJobBless sample:
 
 ```bash
 python3 Utilities/SMJobBlessUtil.py --help
 python3 Utilities/SMJobBlessUtil.py check /path/to/SomeApp.app
 ```
-
-On this product, `check` against `ControlPlane.app` is expected to report a missing `Contents/Library/LaunchServices` tool directory (XPC-bless, not app-bless).
 
 ## CPHelperTool command inventory (#86)
 
@@ -101,15 +104,15 @@ Privileged commands no longer use `system()` / `sprintf` shelling. Survivors run
 
 **User-controlled input:** only display-sleep minutes (integer). It is range-checked and passed as its own argv element — never concatenated into a shell string.
 
-### Helper bless + privileged toggle smoke (manual)
+### Helper daemon + privileged toggle smoke (manual)
 
-CI cannot bless (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Release build:
+CI cannot register the daemon (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Release build:
 
-1. Optional clean slate: `./Utilities/Uninstall.sh`
-2. Launch ControlPlane; trigger **Display Sleep Time** or another **active** privileged toggle (not a gated Firewall / Printer Sharing / sharing action).
-3. Complete authorization / bless UI.
-4. Confirm `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` and `launchctl print system/com.scottdensmore.CPHelperTool`.
-5. Confirm the toggle took effect (System Settings → Lock Screen, or `pmset -g`).
+1. Upgrade from a blessed build: `./Utilities/Uninstall.sh` (bootout + remove the two legacy paths; no `launchctl disable`). Confirm `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` is gone.
+2. Launch ControlPlane; turn on **Allow privileged helper** and approve it in Login Items. A privileged action must not register or bless on its own.
+3. Trigger **Display Sleep Time** or another **active** privileged toggle (not a gated Firewall / Printer Sharing / sharing action).
+4. If the daemon is not Enabled, the action opens Login Items and does not connect.
+5. When Enabled, confirm `launchctl print system/com.scottdensmore.CPHelperTool` and that the toggle took effect (System Settings → Lock Screen, or `pmset -g`).
 
 ### Residual risks
 
@@ -120,14 +123,16 @@ CI cannot bless (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Release build:
 
 ## Explicit non-goals (follow-ups)
 
-- Migrating blessing to `SMAppService` (spike **GO**; see [smappservice-spike.md](smappservice-spike.md) — implement issue, not this doc)
+- Collapsing `CPXPCService` or deleting its unused `SMJobBless` method (command path already uses the daemon)
 - Broadening helper command surface
 - Narrowing Sparkle so the app can drop `disable-library-validation`
 - Rewriting the helper in Swift / typed non-CLI system APIs for every toggle
 
 ## Automated checks
 
-`HelperSigningRequirementTests` asserts source plists use team OU requirements and do not pin a personal Development CN. They do **not** perform SMJobBless.
+`HelperSigningRequirementTests` asserts source plists use team OU requirements and do not pin a personal Development CN. They do **not** register the daemon.
+
+`CPHelperDaemonServiceTests` asserts privileged commands connect only when status is Enabled, the command path does not call `SMJobBless`, and legacy cleanup names the blessed helper and launchd job. They do **not** register or uninstall live.
 
 `CPHelperCommandRunnerTests` asserts helper sources no longer call `system()`/`sprintf`, validates display-sleep bounds, characterizes fixed argv arrays for active commands, and asserts Firewall/Printer Sharing stay gated with `ENOTSUP` (#124).
 
