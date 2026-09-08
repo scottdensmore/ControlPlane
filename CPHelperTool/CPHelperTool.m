@@ -9,6 +9,7 @@
 #import "CPHelperToolProtocol.h"
 #import "CPHelperCommon.h"
 #import "CPHelperCommandRunner.h"
+#import "CPHelperClientGate.h"
 #import "CPAuthorization.h"
 #import "CPCommonConstants.h"
 
@@ -42,9 +43,20 @@
 
 - (void)run
 {
+    // Reject mismatched peers before the delegate. Same anchor, leaf OU, and
+    // intermediates as SMAuthorizedClients, plus the ControlPlane app identifier
+    // so the connectWithEndpointReply: hop is not refused. Do not accept on PID
+    // guest lookup. Bless / SMAuthorizedClients stay unchanged.
+    NSString *requirement = [CPHelperClientGate listenerCodeSigningRequirement];
+    if (![CPHelperClientGate isValidCodeSigningRequirement:requirement]) {
+        NSLog(@"CPHelperTool: refusing to resume listener; invalid code signing requirement");
+        return;
+    }
+    [self.listener setConnectionCodeSigningRequirement:requirement];
+
     // Tell the XPC listener to start processing requests.
     [self.listener resume];
-    
+
     // Run the run loop forever.
     [[NSRunLoop currentRunLoop] run];
 }
@@ -131,10 +143,13 @@
     assert(listener == self.listener);
     assert(newConnection != nil);
 
+    // Strangers never reach this method: setConnectionCodeSigningRequirement:
+    // rejects them before the delegate. The accepted peer is the XPC service or
+    // the ControlPlane app (endpoint hop). getVersionWithReply: stays unauthorized.
     newConnection.exportedInterface = [NSXPCInterface interfaceWithProtocol:@protocol(CPHelperToolProtocol)];
     newConnection.exportedObject = self;
     [newConnection resume];
-    
+
     return YES;
 }
 
@@ -150,8 +165,8 @@
 // Returns the version number of the tool.  Note that never requires authorization.
 - (void)getVersionWithReply:(void(^)(NSString * version))reply
 {
-    // We specifically don't check for authorization here.  Everyone is always allowed to get
-    // the version of the helper tool.
+    // No per-command AuthorizationRef. The listener gate still rejects strangers
+    // before this object is exported (#166).
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     reply(bundleVersion);
 }
