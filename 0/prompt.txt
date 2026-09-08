@@ -1,0 +1,17 @@
+It should be AGENTS.md not agent.md I messed that up. That should be the one file to use for all coding agents
+
+---
+
+All coding agent files should point to that
+
+---
+
+Ok lets commit create a pr and sqaush merge
+
+---
+
+What changes are open right now?
+
+---
+
+Lets add that work since it is entire which I enabled
