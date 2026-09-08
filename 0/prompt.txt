@@ -1,9 +1,1 @@
-I am almost out of action minutes so we should disable action builds. We can keep the ci files just not have builds go through actions.
-
----
-
-Make sure that the workflow allows running work in parallel and also you can squash merge without stopping. You can just work until you are finished when I give you a goal
-
----
-
 Make sure that the workflow allows running work in parallel and also you can squash merge without stopping. You can just work until you are finished when I give you a goal
