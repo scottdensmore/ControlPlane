@@ -44,6 +44,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `SparkleVendoredArchitectureTests` | Vendored `Sparkle.framework` is Sparkle 2.x + universal (`x86_64` + `arm64`); `Info.plist` has no `SUPublicDSAKeyFile` |
 | `InfoPlistPrivacyTests` | TCC usage strings present (Location mentions Wi‑Fi SSID); ATS no longer allows arbitrary loads |
 | `CPLoginItemServiceTests` | SMAppService status → Start at Login checkbox mapping |
+| `CPHelperDaemonServiceTests` | SMAppService daemon status → helper checkbox; LaunchDaemon plist layout (no live register) |
 | `RetiredSharingActionTests` | FTP/TFTP/Web/Internet Sharing gated; SMB-only file sharing; legacy AFP fails clearly |
 | `ActionTypeRegistryTests` | Action type ↔ class map + `actionFromDictionary` |
 | `RunShortcutActionTests` | Run Shortcut (#34) type map, applicability gate, empty-name failure |

@@ -10,7 +10,7 @@ Action → Action+XPCHelperTool
       → app talks to CPHelperTool over that endpoint
 ```
 
-`SMJobBless` is deprecated but still the supported install path in production. The Tahoe-line design spike for migrating to an `SMAppService` LaunchDaemon is in [smappservice-spike.md](smappservice-spike.md) (**GO** — implement in a follow-up; **not** migrated in this tree yet).
+`SMJobBless` is deprecated but still the supported install path in production. The Tahoe-line design spike for migrating to an `SMAppService` LaunchDaemon is in [smappservice-spike.md](smappservice-spike.md) (**GO**). App-side register/unregister lives in `CPHelperDaemonService`; privileged commands still use bless.
 
 ## Identities and Team ID
 

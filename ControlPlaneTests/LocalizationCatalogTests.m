@@ -40,6 +40,7 @@
 		@"Source/ToggleBluetoothAction.m",
 		@"Source/VPNAction.m",
 		@"Source/DefaultBrowserAction.m",
+		@"Source/CPHelperDaemonService.m",
 	];
 }
 

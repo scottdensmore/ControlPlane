@@ -139,6 +139,7 @@
 		A51TMDA01B51WIRE00000007 /* TimeMachineDestinationAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC45F1F14CDEC170007F5EF /* TimeMachineDestinationAction.m */; };
 		A51VPNA01B51WIRE00000033 /* VPNAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D643DDB0C4F1F0D006D8ECC /* VPNAction.m */; };
 		A7B8C9D0E1F2031425364758 /* CPLoginItemService.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* CPLoginItemService.m */; };
+		C165HD01WIRE165000001 /* CPHelperDaemonService.m in Sources */ = {isa = PBXBuildFile; fileRef = C165HD01FILE165000002 /* CPHelperDaemonService.m */; };
 		A8192A3B4C5D6E7F8091122 /* ToggleTFTPAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA2B4380152161C800E94A1D /* ToggleTFTPAction.m */; };
 		B192A3B4C5D6E7F80911223 /* ToggleWebSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DAC672FD152235E800F1C7A1 /* ToggleWebSharingAction.m */; };
 		B28HSIGN01WIRE280000001 /* HelperSigningRequirementTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */; };
@@ -180,7 +181,10 @@
 		C394B5D6E7F809112233445 /* ToggleFileSharingAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA571B70151587B80074CE22 /* ToggleFileSharingAction.m */; };
 		C3D4E5F60718293A4B5C6D7E /* CPNotificationsMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */; };
 		C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */ = {isa = PBXBuildFile; fileRef = B8C9D0E1F203142536475869 /* CPLoginItemService.m */; };
+		C165HD01WIRE165000002 /* CPHelperDaemonService.m in Sources */ = {isa = PBXBuildFile; fileRef = C165HD01FILE165000002 /* CPHelperDaemonService.m */; };
+		C165HD01WIRE165000004 /* com.scottdensmore.CPHelperTool.plist in Copy Launch Daemons */ = {isa = PBXBuildFile; fileRef = C165HD01FILE165000004 /* com.scottdensmore.CPHelperTool.plist */; };
 		D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */; };
+		C165HD01WIRE165000003 /* CPHelperDaemonServiceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C165HD01FILE165000003 /* CPHelperDaemonServiceTests.m */; };
 		D229D65F82451D3735966B12 /* SharedNumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C73BDE117D09A4100EBFB80 /* SharedNumberFormatter.m */; };
 		D4E5F6A7B8C9D0E112233446 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
 		DA04D57215DC119E004B9E1C /* ToggleContextStickinessAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DA04D57115DC119E004B9E1C /* ToggleContextStickinessAction.m */; };
@@ -289,6 +293,7 @@
 		DE184B0B2D9918720072F8ED /* ServiceManagement.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC817B0159BF95A0012ED43 /* ServiceManagement.framework */; };
 		DE184B0C2D99188A0072F8ED /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD8274FA141177750098FA6E /* Security.framework */; };
 		DE184B102D9918EA0072F8ED /* com.scottdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C165HD01WIRE165000005 /* com.scottdensmore.CPHelperTool in Copy Launch Services */ = {isa = PBXBuildFile; fileRef = DE762B9C2D98C1BE0095F733 /* com.scottdensmore.CPHelperTool */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		DE184B152D999D7D0072F8ED /* Action+XPCHelperTool.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184B142D999D7D0072F8ED /* Action+XPCHelperTool.m */; };
 		DE4DE3342DB4196100DC1AC7 /* CPHelperCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = DE184AFB2D98DA270072F8ED /* CPHelperCommon.m */; };
 		DE762B7C2D98BA310095F733 /* CPXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = DE762B7B2D98BA310095F733 /* CPXPCService.m */; };
@@ -416,8 +421,20 @@
 			dstPath = Contents/Library/LaunchServices;
 			dstSubfolderSpec = 1;
 			files = (
+				C165HD01WIRE165000005 /* com.scottdensmore.CPHelperTool in Copy Launch Services */,
 			);
 			name = "Copy Launch Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C165HD01PHASE16500001 /* Copy Launch Daemons */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchDaemons;
+			dstSubfolderSpec = 1;
+			files = (
+				C165HD01WIRE165000004 /* com.scottdensmore.CPHelperTool.plist in Copy Launch Daemons */,
+			);
+			name = "Copy Launch Daemons";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		DE184B0F2D9918BD0072F8ED /* Copy Launch Services */ = {
@@ -651,6 +668,9 @@
 		96454D3E18C3E6BE004F64E7 /* RulesPrefs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "RulesPrefs@2x.png"; path = "Resources/RulesPrefs@2x.png"; sourceTree = "<group>"; };
 		9BC676746FE3892D2F3B0989 /* ControlPlaneUITests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ControlPlaneUITests.m; sourceTree = "<group>"; };
 		A8B9C0D1E2F3041526374869 /* CPLoginItemService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPLoginItemService.h; path = Source/CPLoginItemService.h; sourceTree = "<group>"; };
+		C165HD01FILE165000001 /* CPHelperDaemonService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPHelperDaemonService.h; path = Source/CPHelperDaemonService.h; sourceTree = "<group>"; };
+		C165HD01FILE165000002 /* CPHelperDaemonService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPHelperDaemonService.m; path = Source/CPHelperDaemonService.m; sourceTree = "<group>"; };
+		C165HD01FILE165000004 /* com.scottdensmore.CPHelperTool.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "com.scottdensmore.CPHelperTool.plist"; path = "Resources/LaunchDaemons/com.scottdensmore.CPHelperTool.plist"; sourceTree = SOURCE_ROOT; };
 		ACD9A6C480EEC4EDA58D4550 /* CPConfigTransfer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CPConfigTransfer.h; path = Source/CPConfigTransfer.h; sourceTree = "<group>"; };
 		B1620022DFFE19DDBFA87DFD /* ActionTypeRegistryTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = ActionTypeRegistryTests.m; sourceTree = "<group>"; };
 		B28HSIGNFILE280000001 /* HelperSigningRequirementTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = HelperSigningRequirementTests.m; sourceTree = "<group>"; };
@@ -907,6 +927,7 @@
 		DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DNDArrayController.h; path = Source/DNDArrayController.h; sourceTree = "<group>"; };
 		DEF6F4B22DBF07D5004C88A1 /* DNDArrayController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DNDArrayController.m; path = Source/DNDArrayController.m; sourceTree = "<group>"; };
 		E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPLoginItemServiceTests.m; sourceTree = "<group>"; };
+		C165HD01FILE165000003 /* CPHelperDaemonServiceTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPHelperDaemonServiceTests.m; sourceTree = "<group>"; };
 		F5A6B7C8D9E0F1122334455 /* CPRetiredSharingTestStubs.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPRetiredSharingTestStubs.m; sourceTree = "<group>"; };
 		F60718293A4B5C6D7E8F90 /* RetiredSharingActionTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RetiredSharingActionTests.m; sourceTree = "<group>"; };
 		F7A8293A4B5C6D7E8F90A1B2 /* InfoPlistPrivacyTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = InfoPlistPrivacyTests.m; sourceTree = "<group>"; };
@@ -1008,6 +1029,8 @@
 				DAB1A7E115C3776D00CF65E8 /* CPNotifications.m */,
 				A8B9C0D1E2F3041526374869 /* CPLoginItemService.h */,
 				B8C9D0E1F203142536475869 /* CPLoginItemService.m */,
+				C165HD01FILE165000001 /* CPHelperDaemonService.h */,
+				C165HD01FILE165000002 /* CPHelperDaemonService.m */,
 				8D8C9E320BBB89320074D5B3 /* DB.h */,
 				8D8C9E330BBB89320074D5B3 /* DB.m */,
 				DEF6F4B12DBF07D5004C88A1 /* DNDArrayController.h */,
@@ -1132,6 +1155,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				C165HD01FILE165000004 /* com.scottdensmore.CPHelperTool.plist */,
 				DA78A07C1C721FB100D4D0B2 /* enable_screensaver.sh */,
 				DAA9ABFE1595FDE700B84B05 /* README.md */,
 				8D232FB30BD9D507006A3963 /* ActionsPrefs.png */,
@@ -1212,6 +1236,7 @@
 				B3E3C5724C0B605FAF1018A3 /* CPNotificationsGateTests.m */,
 				D4E5F60718293A4B5C6D7E8F /* CPNotificationsMigrationTests.m */,
 				E1F203142536475869A0B1C2 /* CPLoginItemServiceTests.m */,
+				C165HD01FILE165000003 /* CPHelperDaemonServiceTests.m */,
 				086853C3D5AAAB501CB6C781 /* CPSystemInfoTests.m */,
 				5AB01456A891A29FF1EE3792 /* ContextModelTests.m */,
 				A126TST01FILE126000001 /* CPContextAppIntentTests.m */,
@@ -1642,6 +1667,7 @@
 				8D2073870B86AB5100D61A9E /* Copy Frameworks */,
 				DA5B01E51412B85600E19C50 /* CopyFiles */,
 				DACE6D4D159C053000FEE37E /* Copy Launch Services */,
+				C165HD01PHASE16500001 /* Copy Launch Daemons */,
 				DA0E9C1715C84D0100C53789 /* Copy Evidence Source Plugins */,
 				DA0E9C1815C84D3500C53789 /* Copy Action Plugins */,
 				DE762B862D98BA310095F733 /* Embed XPC Services */,
@@ -2006,6 +2032,7 @@
 				DA8E283F156BCAD50040FC35 /* ToggleRemoteLoginAction.m in Sources */,
 				DAB1A7E215C3776D00CF65E8 /* CPNotifications.m in Sources */,
 				A7B8C9D0E1F2031425364758 /* CPLoginItemService.m in Sources */,
+				C165HD01WIRE165000001 /* CPHelperDaemonService.m in Sources */,
 				DADFF79715D96CBC00DEF412 /* ToggleNotificationCenterAlertsAction.m in Sources */,
 				DA7EAF4715D9F7F2008DF67C /* ActiveApplicationEvidenceSource.m in Sources */,
 				DA04D57215DC119E004B9E1C /* ToggleContextStickinessAction.m in Sources */,
@@ -2055,7 +2082,9 @@
 				A126TOK01WIRE126000002 /* CPContextAppIntentTokens.m in Sources */,
 				B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
+				C165HD01WIRE165000003 /* CPHelperDaemonServiceTests.m in Sources */,
 				C9D0E1F203142536475869A0 /* CPLoginItemService.m in Sources */,
+				C165HD01WIRE165000002 /* CPHelperDaemonService.m in Sources */,
 				E5F60718293A4B5C6D7E8F /* RetiredSharingActionTests.m in Sources */,
 				A51ATRT01B51WIRE00000001 /* ActionTypeRegistryTests.m in Sources */,
 				A34RSCA01TSTWIRE000003 /* RunShortcutActionTests.m in Sources */,
