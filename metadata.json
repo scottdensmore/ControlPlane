@@ -1,0 +1,29 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M21KJPF2E19EDA1WKMXS0RSG",
+  "strategy": "manual-commit",
+  "branch": "issue-169-smappservice-cutover",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "ControlPlaneTests/CPHelperDaemonServiceTests.m",
+    "Resources/LaunchDaemons/com.scottdensmore.CPHelperTool.plist",
+    "Source/Action+HelperTool.m",
+    "Source/Action+XPCHelperTool.m",
+    "Source/CPHelperDaemonService.h",
+    "Source/CPHelperDaemonService.m",
+    "Utilities/Uninstall.sh",
+    "Utilities/remove_helper_tool.sh",
+    "docs/TESTING.md",
+    "docs/releasing.md",
+    "docs/signing.md"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": ""
+    }
+  ]
+}
