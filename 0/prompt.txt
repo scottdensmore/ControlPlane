@@ -1,0 +1,1 @@
+Right now I do believe this branch is trying to get things working on macOS 15. I am trying to do as small as possible so just making one os upgrade at a time. That way the entire program would work on that os. Then each branch is a version that works on an os (it stays) and then gets merged back into main, then another branch is cut for the next os
