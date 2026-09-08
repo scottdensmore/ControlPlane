@@ -1,0 +1,1 @@
+Lets go through the app and do some deep research so it will be modernize to be a great macOS 26 app. It will support the features that it has done for years. I want to add anything new you might come up with now for macOS. Lets file everything as issues. Once you are done, lets start picking up work in batches and work on as much in parallel as possible
