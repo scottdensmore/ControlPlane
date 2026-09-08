@@ -1,22 +1,19 @@
 ---
 name: os-upgrade-branch
 description: >-
-  DEPRECATED. ControlPlane no longer keeps durable macOS-N branches. Prefer
-  feature branches from master. Kept so older prompts that mention macOS-15 /
-  macOS-16 branching still resolve to current policy.
+  Retired redirect. ControlPlane does not use durable macOS-N branches. Use
+  when an older prompt mentions macOS-15 or macOS-16 branching; follow AGENTS.md
+  and ship from a short-lived feature branch on master.
 ---
 
-# OS upgrade branch skill (retired)
+# OS upgrade branch (retired)
 
-## Current policy
+ControlPlane integrates on **`master` only**. Do not cut or continue `macOS-<N>` branches.
 
-ControlPlane integrates on **`master` only**. Do not cut or continue `macOS-<N>` durable branches.
+1. Read `AGENTS.md`.
+2. Plan with `plan-spike` if the change is non-trivial.
+3. Implement with `tdd-slice` on `issue-<n>-short-slug` from latest `master`.
+4. UI review if needed, then `verify-macos-build`, then `code-review`.
+5. Ship with `ship-slice`: ready PR, green required CI, squash-merge, delete the branch.
 
-1. `git fetch origin && git checkout master && git pull`
-2. `git checkout -b issue-<n>-short-slug`
-3. Implement via `tdd-slice` → `verify-macos-build` → code review
-4. PR → squash-merge into `master`; delete the feature branch
-
-Optional GitHub labels like `macos-16` are metadata for filtering issues—not branch names.
-
-See root `AGENTS.md` § Branching.
+Optional GitHub labels like `macos-16` are metadata. They are not branch names.

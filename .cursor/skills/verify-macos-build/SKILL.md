@@ -1,42 +1,49 @@
 ---
 name: verify-macos-build
 description: >-
-  Run ControlPlane verification gates: Debug/Release builds, tests, and smoke
-  checks for the target macOS branch. Use after implementation and after any
-  fix from review; re-run fully when code changes.
+  Run the ControlPlane verification gate: Debug and Release builds,
+  ControlPlaneTests, and slice smoke. Use at workflow step 7 after
+  implementation and after any later fix. Restart the whole gate when code
+  changes.
 ---
 
-# Verify macOS build skill
+# Verify macOS build
 
-## Rule
+Workflow **step 7**. Read `AGENTS.md` and `docs/TESTING.md`.
 
-If verification finds a defect and code changes, **restart this entire skill** after the fix. Do not trust a partial re-run.
+If this gate finds a defect and code changes, **restart this entire skill**. A partial re-run is not a pass.
+
+## Validate the instrument
+
+A quiet log is not success. Confirm the command ran, the test bundle launched, and products came from this tree (fresh `-derivedDataPath` or a clean build). If a probe should fail and does not, treat that as a finding.
 
 ## Steps
 
-1. Confirm scheme/config: `ControlPlane` in `ControlPlane.xcodeproj`.
-2. Build Debug:
-
-   ```bash
-   xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane -configuration Debug build
-   ```
-
-3. Build Release (same scheme, `Release`).
-4. Treat **new** compiler warnings on touched files as failures unless pre-existing and noted.
-5. Run unit tests:
+1. Scheme `ControlPlane` in `ControlPlane.xcodeproj`.
+2. Debug build:
 
    ```bash
    xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
-     -destination 'platform=macOS' test -only-testing:ControlPlaneTests
+     -configuration Debug -destination 'platform=macOS' \
+     CODE_SIGNING_ALLOWED=NO build
    ```
 
-   Or `./scripts/smoke-build.sh`. See `docs/TESTING.md`. Prefer logic `ControlPlaneTests` over host-based tests (LSUIElement dual-NSApplication). Run UI tests only when the slice touches prefs/UI.
-6. Smoke the slice on the target OS (or note manual steps for the human):
-   - Launch agent; open Preferences.
-   - Exercise affected evidence source / action / notification / login item / helper path.
-7. Confirm the probe actually ran (fresh build products; no silent no-op).
-8. Report: pass/fail table for build Debug, build Release, tests, smoke.
+3. Release build, same scheme.
+4. New compiler warnings on touched files are findings unless they are pre-existing and noted.
+5. Unit tests:
 
-## Helper / signing
+   ```bash
+   xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
+     -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO \
+     test -only-testing:ControlPlaneTests
+   ```
 
-Do not require a full SMJobBless on CI. For local privileged slices, document whether helper was already installed and whether bless was retested.
+   Or `./scripts/smoke-build.sh` (Debug + Release + unit tests). `SKIP_RELEASE=1` is CI-shaped only; this gate still wants Release unless the host cannot run it, in which case say so.
+
+6. UI journeys: `ControlPlaneUITests` are quarantined and **non-blocking** on CI. When the slice touches prefs, menus, or Help, run them or write the manual smoke. Do not fail this gate on a known quarantine failure unless this slice introduced it.
+7. Smoke the affected evidence, action, prefs, or helper path, or list the exact manual steps.
+8. Helper bless and notarization are not part of this gate. For a privileged slice, note whether a signed helper was already installed and whether bless was retested. See `docs/signing.md`.
+
+## Report
+
+Pass/fail for Debug, Release, `ControlPlaneTests`, smoke, and the instrument check.

@@ -17,7 +17,7 @@ Integrate on **`master`**. Do not keep durable per-OS branches.
 ```text
 git checkout master && git pull
 git checkout -b issue-<n>-short-slug
-# … TDD → verify → review …
+# … TDD → UI review if needed → verify → code review …
 # PR → squash-merge into master → delete feature branch
 ```
 
