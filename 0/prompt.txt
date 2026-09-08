@@ -1,0 +1,1 @@
+Ok lets do one more look through and see if there is anything else we need to add to the back log to get this working on macOS 15.. then we can to macOS 16. Every time we move to a new mac os version, we can rescan. I also think there is another repo that this project uses for something that we might have to fork and upgrade.
