@@ -1,0 +1,1 @@
+lets just skip to supporting the latest OS Tahoe. Lets do. a deep analysis and figure out hwat else we need to do to modernize this app. Also look through it and figure out what we should get rid of or add to make this work. Lets modernize it to work with Tahoe, new icon to support light and dark. support light and dark mode and follow the HIG
