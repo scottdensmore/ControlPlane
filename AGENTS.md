@@ -28,7 +28,7 @@ Do **not** keep durable per-OS branches (`macOS-15`, `macOS-16`, …). Integrate
 
 1. Cut a short-lived feature branch from latest `master`.
 2. Ship one thin vertical slice through the lifecycle below.
-3. Open a ready-for-review PR into `master`; squash-merge after local verification. GitHub Actions workflows are kept but do not run (manual `workflow_dispatch` only) until Actions minutes are available.
+3. Open a ready-for-review PR into `master`; squash-merge after local verification. GitHub Actions workflows are kept but do not run (manual `workflow_dispatch` only). Do not restore push/PR triggers before **2026-10-08** ([#171](https://github.com/scottdensmore/ControlPlane/issues/171)).
 4. Delete the feature branch after merge.
 
 **Rules**
@@ -101,7 +101,7 @@ Check macOS HIG, accessibility, standard shortcuts (⌘,), and layout on the cur
 
 - Debug and Release builds. Treat **new** warnings on touched files as findings.
 - Run `ControlPlaneTests` (`xcodebuild test -only-testing:ControlPlaneTests`) or `./scripts/smoke-build.sh`.
-- GitHub Actions is **off** (workflow files remain; `workflow_dispatch` only). The local bar is Debug + Release and `ControlPlaneTests`. `ControlPlaneUITests` stay optional. Still run or document the affected prefs/menu/Help journey when the slice is user-visible.
+- GitHub Actions is **off** until 2026-10-08 (workflow files remain; `workflow_dispatch` only; [#171](https://github.com/scottdensmore/ControlPlane/issues/171)). The local bar is Debug + Release and `ControlPlaneTests`. `ControlPlaneUITests` stay optional. Still run or document the affected prefs/menu/Help journey when the slice is user-visible.
 - Smoke the affected evidence, action, prefs, or helper path. See `docs/TESTING.md`.
 - **Validate the instrument:** a silent check is not a pass. Confirm it ran against a fresh binary (no stale products, cached success, or a runner that never launched).
 - If a fix is required, **re-run this gate from the start** after the fix.
@@ -132,7 +132,7 @@ Open a ready-for-review PR from the verified tip (no draft unless asked). Link t
 
 After local verification (and code review on a non-trivial slice), **squash-merge immediately**. Do not pause for the user, for GitHub Actions, or for an assigned reviewer unless the user explicitly said to wait.
 
-GitHub Actions workflows are kept but do not run (`workflow_dispatch` only) until Actions minutes are available. Delete the feature branch after merge. A local “cannot delete branch; used by worktree” error is not a failed merge—confirm `state: MERGED` and update local `master`.
+GitHub Actions workflows are kept but do not run (`workflow_dispatch` only) until 2026-10-08 ([#171](https://github.com/scottdensmore/ControlPlane/issues/171)). When that issue is done, update this file so it no longer says Actions are off. Delete the feature branch after merge. A local “cannot delete branch; used by worktree” error is not a failed merge—confirm `state: MERGED` and update local `master`.
 
 Then pick up the next independent slice. Do not end the turn while the stated goal still has shippable work.
 
