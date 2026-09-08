@@ -1,11 +1,9 @@
 ---
-description: Follow AGENTS.md as the single source of truth for workflow and quality gates
+description: Follow AGENTS.md as the single source of truth for every coding agent
 alwaysApply: true
 ---
 
 # ControlPlane agents
 
-- Obey root `AGENTS.md` only (not `agent.md`) for the 11-step workflow, TDD, and merge rules.
-- Cut short-lived feature branches from `master`; squash-merge back to `master` as soon as the slice is locally verified (no durable `macOS-*` branches, no wait for Actions).
-- Run independent slices in parallel. When the user gives a goal, keep going until it is done.
-- Use `.cursor/agents/` and `.cursor/skills/` for planner, implementer, UI review, verify, code review, and ship. Do not collapse those roles on a non-trivial change.
+- The only instruction file is root `AGENTS.md`. Do not create or follow `agent.md`.
+- This rule is a pointer. Do not copy workflow policy here.
