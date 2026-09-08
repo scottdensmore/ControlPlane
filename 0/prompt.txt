@@ -1,0 +1,16 @@
+Implement GitHub issue #130 for ControlPlane in an isolated worktree.
+
+Repo: /Users/scottdensmore/Developer/scottdensmore/controlplane
+Base: origin/master. Branch: `issue-130-screenlock-rd-tests`.
+
+## Goal
+ScreenLock and RemoteDesktop evidence: injectable match tests + fragility docs (Help and/or TESTING.md). Do not rely on live distributed notifications in CI.
+
+## Tasks
+1. Inspect ScreenLockEvidenceSource / RemoteDesktopEvidenceSource.
+2. Add injectable/stub match tests (pattern like other *RuleMatchTests).
+3. Document fragility in Help and docs/TESTING.md.
+4. Verify ControlPlaneTests; commit; push; PR closing #130; comment #116.
+
+## Return
+PR URL, files changed, test results.
