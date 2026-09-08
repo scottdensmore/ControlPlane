@@ -1,0 +1,38 @@
+You are implementing ONE ControlPlane GitHub issue on fork scottdensmore/ControlPlane.
+
+## Repo / base
+- Main repo path for reference: /Users/scottdensmore/Developer/scottdensmore/controlplane
+- Base branch: `macOS-15` at tip (fetch origin/macOS-15 first)
+- You run in an ISOLATED git worktree. Create branch: `fix/focus-dnd-27`
+- NEVER commit to master. Never touch unrelated untracked noise (.codex, .entire, workflow.md, hooks).
+
+## Issue #27 — Replace broken Do Not Disturb hack with Focus-compatible approach
+Read full issue via: `gh issue view 27 --repo scottdensmore/ControlPlane`
+
+Acceptance (must meet):
+- No silent writes to `com.apple.notificationcenterui` doNotDisturb keys
+- Legacy DND actions get clear unsupported/migrated path
+- At least one supported way to engage Focus from a context (Shortcut or equivalent) documented and testable
+- Help no longer describes the launchctl hack
+
+Recommended thin slice (prefer gate + interim Shortcut path):
+1. Gate `ToggleNotificationCenterAlertsAction` with `isActionApplicableToSystem = NO`; remove CFPreferences/launchctl DND writes from execute path (or make execute fail clearly without writing prefs).
+2. Prefer adding/using a thin "Run Shortcut" action (or document using existing Shell/AppleScript if already present) so users can toggle Focus via Shortcuts — keep it minimal and macOS-15 safe. Check existing actions first (`OpenURL`, shell, AppleScript, etc.) before inventing large new surfaces.
+3. Add XCTest characterization tests (ApplicabilityCharacterizationTests pattern used for Natural Scrolling / ScreenSaverPassword).
+4. Update Help pages that describe the DND/launchctl hack ONLY for this issue's scope (minimal Help edits). Parallel agents may edit Help for other topics — keep DND/Focus edits narrow.
+
+## Workflow (AGENTS.md)
+1. TDD: Red → Green → Refactor (`tdd-slice` skill mindset)
+2. Verify: `SKIP_RELEASE=1 ./scripts/smoke-build.sh` with full permissions if needed; ensure ControlPlaneTests pass
+3. Conventional commit: `fix(action): gate legacy DND and add Focus Shortcut path (#27)` (adjust if scope differs)
+4. Push branch and create PR to base `macOS-15` with `gh pr create`. Link #27. Ready-for-review (not draft).
+5. DO NOT squash-merge the PR yourself — parent will merge on green CI.
+6. Comment on issue #27 with PR URL.
+
+## Constraints
+- Prefer gating obsolete private prefs over clever hacks
+- Do not enable App Sandbox; minimize helper changes; no new system()/shelling in helper
+- Follow MRC/ARC file comments
+- Return: PR URL, files changed, test results, residual risks
+
+If Shortcut action already exists, wire Focus docs to it and still gate the broken DND action.
