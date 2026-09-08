@@ -1,0 +1,39 @@
+You are implementing ControlPlane GitHub issue #25 on an isolated worktree with TDD.
+
+## Repo / base
+- Main tree (already ff to tip): /Users/scottdensmore/Developer/scottdensmore/controlplane @ origin/macOS-16 (`7935804e`)
+- Worktree parent: /Users/scottdensmore/Developer/scottdensmore/controlplane-worktrees
+- Branch name: `issue-25-arc-jsonkit`
+- Create worktree from origin/macOS-16 if needed
+
+## Issue #25 — Finish main-app ARC migration and remove JSONKit/MRC leftovers
+Acceptance:
+- [ ] App target builds with ARC enabled (no MRC compiler mode for app)
+- [ ] No remaining project-level dependence on MRC for app sources
+- [ ] JSONKit directory removed (`Source/JSONKit/`)
+- [ ] Analyzer clean for common memory issues on touched files (reasonable effort)
+- [ ] Manual smoke note: launch → switch context → run action → open prefs (document in PR if you cannot run GUI)
+
+Tasks:
+1. Characterization tests FIRST (red):
+   - Assert ControlPlane app target Debug+Release have `CLANG_ENABLE_OBJC_ARC = YES` in project.pbxproj (grep-style XCTest like DeploymentTargetTests / HelpScrubTests patterns)
+   - Assert `Source/JSONKit` does not exist / is not referenced in pbxproj
+   - Assert no `OSAtomic*` in Source/ (or allow only after migration replaces them)
+2. Enable `CLANG_ENABLE_OBJC_ARC = YES` for ControlPlane app target (Debug + Release). Helper/XPC already ARC.
+3. Remove redundant per-file `-fobjc-arc` flags that become redundant; convert `-fno-objc-arc` MRC leftovers in app + tests to ARC-compatible code (remove retain/release/autorelease, fix CF bridging with `__bridge` / `CFBridgingRelease` as needed). Prefer fixing source over leaving `-fno-objc-arc` exceptions — goal is no MRC dependence for app sources. Test target files that compile app sources may need the same treatment.
+4. Delete `Source/JSONKit/` and any leftover references.
+5. Replace deprecated `OSAtomic*` with `stdatomic` / `os_unfair_lock` / GCD as appropriate.
+6. Fix compile errors file-by-file until Debug + Release + ControlPlaneTests green.
+7. Do NOT enable App Sandbox. Do NOT raise MACOSX_DEPLOYMENT_TARGET (#82 is last).
+8. Commit with conventional message: `refactor(app): finish main-app ARC and remove JSONKit`
+9. Push -u and open PR to base `macOS-16` with `Closes #25`
+10. Run `SKIP_RELEASE=0` or at least Debug+Release + tests; use `./scripts/smoke-build.sh` if available.
+
+## Constraints
+- Follow AGENTS.md / tdd-slice
+- Large diff is expected but keep focused on ARC/JSONKit/OSAtomic — no drive-by refactors
+- Mixed MRC/ARC exists today; many files already have `-fobjc-arc` per-file; some test wires use `-fno-objc-arc`
+- AboutPanel may already be retired from #31 — don't resurrect
+- Prefer smallest change that compiles under ARC (compiler can often ignore retain/release with warnings-as-errors off, but under ARC retain/release are errors — strip them)
+
+Return: PR URL, SHA, how red was proven, remaining risks, smoke results.
