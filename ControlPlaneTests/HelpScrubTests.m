@@ -277,4 +277,77 @@
     }
 }
 
+// #170: General Help documents Allow privileged helper; Time Machine no longer says click Install.
+
+- (void)testHelpDocumentsAllowPrivilegedHelperApproval {
+    NSError *error = nil;
+    NSString *configPath = [self.helpRoot stringByAppendingPathComponent:@"pages/config.html"];
+    NSString *config = [NSString stringWithContentsOfFile:configPath encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(config);
+
+    NSRange startAtLogin = [config rangeOfString:@"Start ControlPlane at Login"];
+    XCTAssertTrue(startAtLogin.location != NSNotFound, @"General Help must still document Start at Login");
+    NSString *afterLogin = [config substringFromIndex:startAtLogin.location];
+    NSRange helperHeading = [afterLogin rangeOfString:@"Allow privileged helper"];
+    XCTAssertTrue(helperHeading.location != NSNotFound,
+                  @"General Help must document Allow privileged helper next to Start at Login (#170)");
+
+    NSRange nextH2 = [afterLogin rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, afterLogin.length - 1)];
+    NSString *followingSection = nextH2.location != NSNotFound ? [afterLogin substringFromIndex:nextH2.location] : afterLogin;
+    NSString *followingHeading = [followingSection substringToIndex:MIN((NSUInteger)80, followingSection.length)];
+    XCTAssertTrue([followingHeading rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                  @"The section after Start at Login must be Allow privileged helper (#170)");
+
+    XCTAssertTrue([config rangeOfString:@"Login Item"].location != NSNotFound,
+                  @"General Help must say the helper is registered as a Login Item (#170)");
+    XCTAssertTrue([config rangeOfString:@"Login Items & Extensions"].location != NSNotFound
+                  || [config rangeOfString:@"Login Items &amp; Extensions"].location != NSNotFound,
+                  @"General Help must point at System Settings → General → Login Items & Extensions (#170)");
+    XCTAssertTrue([config rangeOfString:@"does not turn itself on at launch" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                  @"General Help must say the helper does not turn itself on at launch (#170)");
+    NSRange helperNextH2 = [followingSection rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, followingSection.length - 1)];
+    NSString *helperSection = helperNextH2.location != NSNotFound
+        ? [followingSection substringToIndex:helperNextH2.location]
+        : followingSection;
+    XCTAssertTrue([helperSection rangeOfString:@"General settings"].location != NSNotFound,
+                  @"Allow privileged helper Help must say General settings (#170)");
+    XCTAssertFalse([helperSection rangeOfString:@"General preferences"].location != NSNotFound,
+                   @"Allow privileged helper Help must not say General preferences (#170)");
+
+    NSString *actionsPath = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSString *actions = [NSString stringWithContentsOfFile:actionsPath encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    NSRange tmHeading = [actions rangeOfString:@"Toggle Time Machine"];
+    XCTAssertTrue(tmHeading.location != NSNotFound);
+    NSString *afterTM = [actions substringFromIndex:tmHeading.location];
+    NSRange tmNextH2 = [afterTM rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, afterTM.length - 1)];
+    NSString *tmSection = tmNextH2.location != NSNotFound ? [afterTM substringToIndex:tmNextH2.location] : afterTM;
+    XCTAssertFalse([tmSection rangeOfString:@"click install" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                   @"Toggle Time Machine Help must not tell the user to click Install (#170)");
+    XCTAssertFalse([tmSection containsString:@"install the helper application"],
+                   @"Toggle Time Machine Help must not describe a helper install dialog (#170)");
+    XCTAssertTrue([tmSection rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                  @"Toggle Time Machine Help must point at the General checkbox (#170)");
+    XCTAssertTrue([tmSection rangeOfString:@"Login Items"].location != NSNotFound,
+                  @"Toggle Time Machine Help must point at Login Items approval (#170)");
+    XCTAssertTrue([tmSection rangeOfString:@"General settings"].location != NSNotFound,
+                  @"Toggle Time Machine Help must say General settings (#170)");
+    XCTAssertFalse([tmSection rangeOfString:@"General preferences"].location != NSNotFound,
+                   @"Toggle Time Machine Help must not say General preferences (#170)");
+
+    NSString *html = [self concatenatedHelpHTML];
+    NSArray<NSString *> *cutoverClaims = @[
+        @"left SMJobBless",
+        @"no longer uses SMJobBless",
+        @"no longer use SMJobBless",
+        @"cut over off",
+        @"have already left SMJobBless",
+    ];
+    for (NSString *needle in cutoverClaims) {
+        XCTAssertFalse([html rangeOfString:needle options:NSCaseInsensitiveSearch].location != NSNotFound,
+                       @"Help must not claim privileged commands have left SMJobBless (%@) (#170)", needle);
+    }
+}
+
 @end
