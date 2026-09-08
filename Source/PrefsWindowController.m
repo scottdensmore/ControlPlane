@@ -7,6 +7,7 @@
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 #import "Action.h"
 #import "CPConfigTransfer.h"
+#import "CPHelperDaemonService.h"
 #import "CPLoginItemService.h"
 #import "CPPrefsSettingsShellController.h"
 #import "CPDiagnosticsSnapshot.h"
@@ -166,6 +167,7 @@
 @property (nonatomic,strong) NSTableView *diagnosticsRulesTable;
 @property (nonatomic,copy) NSArray *diagnosticsRuleRows;
 @property (nonatomic,strong) NSTimer *diagnosticsRefreshTimer;
+@property (nonatomic,strong) NSButton *allowPrivilegedHelperCheckbox;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
@@ -220,6 +222,9 @@
 
 - (void)awakeFromNib
 {
+	// Insert the helper checkbox before min size is captured so General grows with it.
+	[self installAllowPrivilegedHelperCheckbox];
+
 	// Evil!
 	[NSValueTransformer setValueTransformer:[[ContextNameTransformer alloc] init:contextsDataSource]
 					forName:@"ContextNameTransformer"];
@@ -322,6 +327,7 @@
 
 
     [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
+    [self refreshAllowPrivilegedHelperCheckbox];
     [menuBarDisplayOptionsController addObject:
         [NSMutableDictionary dictionaryWithObjectsAndKeys:
             @"Icon",@"option", 
@@ -446,6 +452,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 - (IBAction)runPreferences:(id)sender {
 	[NSApp activateIgnoringOtherApps:YES];
 	[prefsWindow makeKeyAndOrderFront:self];
+	[self refreshAllowPrivilegedHelperCheckbox];
 	if ([currentPrefsGroup isEqualToString:@"Advanced"]) {
         [self startLogBufferTimer];
 	}
@@ -1052,6 +1059,98 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
         [self startAtLogin];
     }
     [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
+}
+
+#pragma mark Privileged helper daemon
+
+- (void)installAllowPrivilegedHelperCheckbox
+{
+    if (self.allowPrivilegedHelperCheckbox != nil || startAtLoginStatus == nil || generalPrefsView == nil) {
+        return;
+    }
+
+    static const CGFloat kRowGap = 22.0;
+    NSRect loginFrame = startAtLoginStatus.frame;
+    CGFloat loginMinY = NSMinY(loginFrame);
+
+    // Base and pt-PT leave autoresizesSubviews on. Growing the frame would also
+    // apply flexibleMinY, shifting rows 22pt before the explicit insert.
+    BOOL autoresizesSubviews = generalPrefsView.autoresizesSubviews;
+    generalPrefsView.autoresizesSubviews = NO;
+
+    NSRect viewFrame = generalPrefsView.frame;
+    viewFrame.size.height += kRowGap;
+    generalPrefsView.frame = viewFrame;
+
+    for (NSView *subview in generalPrefsView.subviews) {
+        NSRect frame = subview.frame;
+        if (NSMinY(frame) + 0.5 >= loginMinY) {
+            frame.origin.y += kRowGap;
+            subview.frame = frame;
+        }
+    }
+
+    NSButton *checkbox = [NSButton checkboxWithTitle:[CPHelperDaemonService allowHelperCheckboxTitle]
+                                              target:self
+                                              action:@selector(toggleAllowPrivilegedHelper:)];
+    CGFloat width = MAX(NSWidth(loginFrame), 360.0);
+    CGFloat maxWidth = NSWidth(generalPrefsView.frame) - NSMinX(loginFrame) - 16.0;
+    if (width > maxWidth) {
+        width = maxWidth;
+    }
+    checkbox.frame = NSMakeRect(NSMinX(loginFrame), loginMinY, width, NSHeight(loginFrame));
+    checkbox.autoresizingMask = startAtLoginStatus.autoresizingMask;
+    checkbox.toolTip = [CPHelperDaemonService allowHelperCheckboxToolTip];
+    checkbox.accessibilityIdentifier = @"prefs.general.allowPrivilegedHelper";
+    checkbox.accessibilityLabel = [CPHelperDaemonService allowHelperCheckboxTitle];
+    [generalPrefsView addSubview:checkbox];
+    self.allowPrivilegedHelperCheckbox = checkbox;
+    generalPrefsView.autoresizesSubviews = autoresizesSubviews;
+}
+
+- (void)refreshAllowPrivilegedHelperCheckbox
+{
+    if (self.allowPrivilegedHelperCheckbox == nil) {
+        return;
+    }
+    BOOL on = [[CPHelperDaemonService sharedService] checkboxOn];
+    [self.allowPrivilegedHelperCheckbox setState:on ? NSControlStateValueOn : NSControlStateValueOff];
+}
+
+- (void)allowPrivilegedHelper
+{
+    NSError *error = nil;
+    if (![[CPHelperDaemonService sharedService] setEnabled:YES error:&error]) {
+        DSLog(@"Unable to allow privileged helper: %@", error);
+        NSAlert *alert = [[NSAlert alloc] init];
+        alert.messageText = [CPHelperDaemonService registrationFailedAlertTitle];
+        alert.informativeText = error.localizedDescription ?: [CPHelperDaemonService registrationFailedAlertMessage];
+        [alert addButtonWithTitle:NSLocalizedString(@"Open Login Items Settings", @"Button to open Login Items")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel", @"Cancel button")];
+        if ([alert runModal] == NSAlertFirstButtonReturn) {
+            [CPHelperDaemonService openLoginItemsSettings];
+        }
+    }
+}
+
+- (void)disablePrivilegedHelper
+{
+    NSError *error = nil;
+    if (![[CPHelperDaemonService sharedService] setEnabled:NO error:&error]) {
+        DSLog(@"Unable to unregister privileged helper: %@", error);
+    }
+}
+
+- (IBAction)toggleAllowPrivilegedHelper:(id)sender
+{
+    (void)sender;
+    BOOL currentlyOn = [[CPHelperDaemonService sharedService] checkboxOn];
+    if (currentlyOn) {
+        [self disablePrivilegedHelper];
+    } else {
+        [self allowPrivilegedHelper];
+    }
+    [self refreshAllowPrivilegedHelperCheckbox];
 }
 
 
