@@ -1,0 +1,13 @@
+Implement GitHub issue #127 for ControlPlane in a new worktree from origin/master.
+
+Worktree: /Users/scottdensmore/Developer/scottdensmore/controlplane-worktrees/issue-127
+Branch: issue-127-shortcuts-gallery
+
+## Goal
+Shortcuts recipe gallery for Focus, VPN, Bluetooth, Stage Manager. Help tips (and optional prefs link) so users can discover Shortcuts replacements for gated actions. No private automation. Accurate on macOS 26.
+
+## Tasks
+Update Help (tips.html and/or actions). Characterization/HelpScrub if useful. Commit, push, PR closing #127, comment #116.
+
+## Return
+PR URL.
