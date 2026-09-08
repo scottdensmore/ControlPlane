@@ -5,6 +5,6 @@ alwaysApply: true
 
 # ControlPlane agents
 
-- Obey root `AGENTS.md` for workflow, TDD, and merge rules.
+- Obey root `AGENTS.md` for the 11-step workflow, TDD, and merge rules.
 - Cut short-lived feature branches from `master`; squash-merge back to `master` (no durable `macOS-*` branches).
-- Use project subagents/skills under `.cursor/agents/` and `.cursor/skills/` for planner, implementer, UI review, verify, and code review.
+- Use `.cursor/agents/` and `.cursor/skills/` for planner, implementer, UI review, verify, code review, and ship. Do not collapse those roles on a non-trivial change.
