@@ -1,0 +1,3 @@
+# ControlPlane
+
+Follow root [`AGENTS.md`](AGENTS.md). That file is the only agent instruction file. Do not create or follow `agent.md`. Do not duplicate policy here.
