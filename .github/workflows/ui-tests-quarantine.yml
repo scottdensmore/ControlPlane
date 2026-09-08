@@ -1,9 +1,8 @@
 name: UI tests (quarantine)
 
+# Disabled to save GitHub Actions minutes. Kept for a later re-enable.
+# Manual only; do not add pull_request/push until minutes are available.
 on:
-  pull_request:
-    branches:
-      - master
   workflow_dispatch:
 
 concurrency:
