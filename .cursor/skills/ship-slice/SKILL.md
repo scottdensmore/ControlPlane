@@ -31,11 +31,12 @@ Types: `fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`. Explain *why
 
 Push the branch and open a **ready** PR into `master` (draft only if the user asked). Link the issue. Checklist the acceptance criteria and how verification was run.
 
-## 11. Gated merge
+## 11. Squash-merge without stopping
 
-- Wait for assigned reviews. Do not bypass them.
-- Required CI is Debug build + `ControlPlaneTests`. Quarantined UI tests do not block unless this slice caused a new failure there.
-- Squash-merge onto `master`. Delete the feature branch after merge.
+- Squash-merge onto `master` as soon as the preconditions above are met. Do not wait for the user, assigned reviews, or GitHub Actions.
+- GitHub Actions workflows are `workflow_dispatch` only until minutes are available. Local `verify-macos-build` is the gate.
+- Delete the feature branch after merge.
 - A local “cannot delete branch; used by worktree” error is not a failed merge. Confirm `state: MERGED` and update local `master`.
+- If the user’s goal has more independent slices, start them. Do not stop to ask.
 
 Do not force-push `master`.

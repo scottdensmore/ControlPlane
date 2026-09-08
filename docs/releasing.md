@@ -2,7 +2,7 @@
 
 This is a practical release checklist for the ObjC fork targeting Tahoe / macOS 26 (`MACOSX_DEPLOYMENT_TARGET` **16.0**). Signing identities, entitlements, SMJobBless topology, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here.
 
-CI (`.github/workflows/ci.yml`) only proves unsigned Debug compile + `ControlPlaneTests` on `macos-26` runners. A shippable build is always a **local signed archive**.
+GitHub Actions (`.github/workflows/ci.yml`) is kept but not triggered on push/PR. Prove unsigned Debug compile + `ControlPlaneTests` locally. A shippable build is always a **local signed archive**.
 
 ## Preconditions
 

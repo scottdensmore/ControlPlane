@@ -64,4 +64,4 @@ Copy any new keys into every shipping `Localizable.strings` and translate them. 
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- Wait for green CI (Debug build + `ControlPlaneTests`); squash short-lived feature branches when merging onto `master`.
+- GitHub Actions is dispatch-only for now. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally, then squash-merge onto `master` without waiting on Actions.

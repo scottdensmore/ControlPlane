@@ -1,12 +1,9 @@
 name: CI
 
+# Disabled to save GitHub Actions minutes. Kept so the job can be
+# re-enabled later with push/pull_request triggers. Manual only for now.
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}

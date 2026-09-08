@@ -50,7 +50,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 
 ## Continuous integration
 
-GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and PRs targeting **`master`**:
+GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) is **not running** on pushes or PRs (manual `workflow_dispatch` only) to save Actions minutes. Verify locally. When re-enabled it covers:
 
 - Debug `xcodebuild` of the app (`CODE_SIGNING_ALLOWED=NO`)
 - `ControlPlaneTests` only (no helper bless)

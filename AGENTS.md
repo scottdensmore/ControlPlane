@@ -26,7 +26,7 @@ Do **not** keep durable per-OS branches (`macOS-15`, `macOS-16`, …). Integrate
 
 1. Cut a short-lived feature branch from latest `master`.
 2. Ship one thin vertical slice through the lifecycle below.
-3. Open a ready-for-review PR into `master`; squash-merge when required CI is green.
+3. Open a ready-for-review PR into `master`; squash-merge after local verification. GitHub Actions workflows are kept but do not run (manual `workflow_dispatch` only) until Actions minutes are available.
 4. Delete the feature branch after merge.
 
 **Rules**
@@ -50,6 +50,8 @@ The generic workflow says “base (`main` / `trunk`)”. On this repo that base 
 ```
 
 Do not collapse planner, implementer, UI reviewer, verifier, and code reviewer into one undifferentiated pass when the change is non-trivial. Each role owns the steps named below and hands off; it does not silently absorb the next gate.
+
+When the user gives a goal, keep going until that goal is done. Do not stop between slices to ask whether to continue. Independent slices run in parallel (separate branches and worktrees). Squash-merge a verified slice as soon as it is ready—do not wait for the user, for assigned reviews, or for GitHub Actions.
 
 ### 1. Plan, prototype, and spike
 
@@ -97,7 +99,7 @@ Check macOS HIG, accessibility, standard shortcuts (⌘,), and layout on the cur
 
 - Debug and Release builds. Treat **new** warnings on touched files as findings.
 - Run `ControlPlaneTests` (`xcodebuild test -only-testing:ControlPlaneTests`) or `./scripts/smoke-build.sh`.
-- Required CI is **Debug build + ControlPlaneTests**. `ControlPlaneUITests` are quarantined and non-blocking. Still run or document the affected prefs/menu/Help journey when the slice is user-visible; do not treat a known quarantine failure as a ship blocker unless this slice introduced it.
+- GitHub Actions is **off** (workflow files remain; `workflow_dispatch` only). The local bar is Debug + Release and `ControlPlaneTests`. `ControlPlaneUITests` stay optional. Still run or document the affected prefs/menu/Help journey when the slice is user-visible.
 - Smoke the affected evidence, action, prefs, or helper path. See `docs/TESTING.md`.
 - **Validate the instrument:** a silent check is not a pass. Confirm it ran against a fresh binary (no stale products, cached success, or a runner that never launched).
 - If a fix is required, **re-run this gate from the start** after the fix.
@@ -124,9 +126,13 @@ Explain *why* in the body when non-obvious. Types: `fix`, `feat`, `refactor`, `c
 
 Open a ready-for-review PR from the verified tip (no draft unless asked). Link the GitHub issue and checklist the acceptance criteria.
 
-### 11. Gated merge
+### 11. Squash-merge without stopping
 
-Wait for assigned reviews. Require green required CI. **Squash** the short-lived feature branch onto `master` for a linear history. Delete the feature branch after merge.
+After local verification (and code review on a non-trivial slice), **squash-merge immediately**. Do not pause for the user, for GitHub Actions, or for an assigned reviewer unless the user explicitly said to wait.
+
+GitHub Actions workflows are kept but do not run (`workflow_dispatch` only) until Actions minutes are available. Delete the feature branch after merge. A local “cannot delete branch; used by worktree” error is not a failed merge—confirm `state: MERGED` and update local `master`.
+
+Then pick up the next independent slice. Do not end the turn while the stated goal still has shippable work.
 
 **Role:** parent agent after the gates, or whoever the user asked to ship · skill `ship-slice`
 
@@ -160,12 +166,14 @@ The retired `os-upgrade-branch` skill only redirects old “macOS-N branch” pr
 
 ---
 
-## Concurrency and worktrees
+## Parallel work
 
-When parallel agents or worktrees share a machine:
+Independent slices run at the same time. Do not serialize work that does not share files.
 
+- One short-lived branch and worktree per slice, each cut from latest `master`.
 - Isolate ports, login items, blessed helpers, and other machine singletons.
-- Do not mutate sources in a worktree while a verifier or reviewer is running against it.
+- Do not mutate sources in a worktree while a verifier or reviewer is running against that same tree.
+- After a squash-merge, rebase or recreate the other in-flight branches onto the new `master` before they ship. Do not block the next slice on that rebase.
 
 ---
 
@@ -181,7 +189,7 @@ When parallel agents or worktrees share a machine:
 | 6. UI review | Skipped, or HIG/a11y OK on current macOS |
 | 7. Verify | Debug + Release clean enough; `ControlPlaneTests` green; instrument confirmed; smoke noted |
 | 8. Code review | Findings resolved; re-verified; fresh approval |
-| 9–11. Ship | Conventional commit; ready PR + issue link; required CI green; squash to `master` |
+| 9–11. Ship | Conventional commit; ready PR + issue link; local verify passed; squash-merge immediately; start the next slice |
 
 ---
 
