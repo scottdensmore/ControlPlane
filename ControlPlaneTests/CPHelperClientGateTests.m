@@ -85,7 +85,7 @@
     return plist;
 }
 
-- (void)testAuthorizedClientConstantsMatchSMAuthorizedClients
+- (void)testAuthorizedClientConstantsAndAbsentBlessPlistKeys
 {
     XCTAssertEqualObjects(kCPHelperAuthorizedClientIdentifier, @"com.scottdensmore.CPXPCService");
     XCTAssertEqualObjects(kCPHelperAuthorizedAppIdentifier, @"com.scottdensmore.ControlPlane");
@@ -99,15 +99,12 @@
                           @"App allowlist identifier must match Info.plist CFBundleURLName");
 
     NSDictionary *helperPlist = [self plistAtRelativePath:@"CPHelperTool/HelperTool-Info.plist"];
-    NSArray *clients = helperPlist[@"SMAuthorizedClients"];
-    XCTAssertTrue([clients isKindOfClass:[NSArray class]]);
-    XCTAssertEqual(clients.count, 1u);
-    NSString *blessRequirement = clients.firstObject;
-    XCTAssertEqualObjects(blessRequirement,
-                          [CPHelperClientGate smAuthorizedClientsRequirementForIdentifier:kCPHelperAuthorizedClientIdentifier],
-                          @"Bless SMAuthorizedClients must stay the XPC-service requirement");
-    XCTAssertFalse([blessRequirement containsString:kCPHelperAuthorizedAppIdentifier],
-                   @"Do not change SMAuthorizedClients; app identifier is runtime-only");
+    XCTAssertNil(helperPlist[@"SMAuthorizedClients"],
+                 @"SMAuthorizedClients must be absent; CPHelperClientGate is the client gate");
+
+    NSDictionary *xpcPlist = [self plistAtRelativePath:@"CPXPCService/Info.plist"];
+    XCTAssertNil(xpcPlist[@"SMPrivilegedExecutables"],
+                 @"SMPrivilegedExecutables must be absent; CPHelperClientGate is the client gate");
 }
 
 - (void)testListenerRequirementMatchesSMAuthorizedClientsClauses

@@ -43,10 +43,10 @@
 
 - (void)run
 {
-    // Reject mismatched peers before the delegate. Same anchor, leaf OU, and
-    // intermediates as SMAuthorizedClients, plus the ControlPlane app identifier
-    // so the connectWithEndpointReply: hop is not refused. Do not accept on PID
-    // guest lookup. Bless / SMAuthorizedClients stay unchanged.
+    // Reject mismatched peers before the delegate. CPHelperClientGate is the
+    // client gate: same anchor, leaf OU, and intermediates, plus both allowed
+    // identifiers so the connectWithEndpointReply: hop is not refused. Do not
+    // accept on PID guest lookup.
     NSString *requirement = [CPHelperClientGate listenerCodeSigningRequirement];
     if (![CPHelperClientGate isValidCodeSigningRequirement:requirement]) {
         NSLog(@"CPHelperTool: refusing to resume listener; invalid code signing requirement");
