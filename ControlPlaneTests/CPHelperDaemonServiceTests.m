@@ -142,6 +142,47 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
                           @"system/com.scottdensmore.CPHelperTool");
 }
 
+- (void)testAgentDocsDescribeSMAppServiceDaemonNotSMJobBlessInstall {
+    NSArray<NSString *> *paths = @[
+        @"README.md",
+        @"AGENTS.md",
+        @"docs/releasing.md",
+    ];
+    for (NSString *path in paths) {
+        NSString *text = [self sourceTextAtRelativePath:path];
+        XCTAssertFalse([text containsString:@"blessed via SMJobBless"],
+                       @"%@ must not describe the helper as blessed via SMJobBless", path);
+        XCTAssertFalse([text containsString:@"SMJobBless / XPC"],
+                       @"%@ must not describe the helper as SMJobBless / XPC", path);
+        XCTAssertFalse([text containsString:@"SMJobBless topology"],
+                       @"%@ must point signing facts at the SMAppService daemon", path);
+        XCTAssertFalse([text containsString:@"Migrating SMJobBless"],
+                       @"%@ must not treat SMJobBless → SMAppService as future work", path);
+        XCTAssertTrue([text containsString:@"SMAppService"],
+                      @"%@ must describe the SMAppService daemon path", path);
+    }
+
+    NSString *readme = [self sourceTextAtRelativePath:@"README.md"];
+    XCTAssertTrue([readme containsString:@"cannot register the daemon"],
+                  @"README must say unsigned builds cannot register the daemon");
+    XCTAssertFalse([readme containsString:@"helper bless"],
+                   @"README must not describe helper install as bless");
+
+    NSString *agents = [self sourceTextAtRelativePath:@"AGENTS.md"];
+    XCTAssertTrue([agents containsString:@"CPXPCService"],
+                  @"AGENTS.md must not claim CPXPCService has been collapsed");
+    XCTAssertTrue([agents containsString:@"installHelperToolWithReply:"],
+                  @"AGENTS.md must note unused SMJobBless remains in CPXPCService");
+    XCTAssertTrue([agents containsString:@"not on the command path"],
+                  @"AGENTS.md must keep unused SMJobBless off the command path");
+
+    NSString *releasing = [self sourceTextAtRelativePath:@"docs/releasing.md"];
+    XCTAssertTrue([releasing containsString:@"cannot register"],
+                  @"releasing.md must say unsigned builds cannot register the daemon");
+    XCTAssertFalse([releasing containsString:@"bless smoke"],
+                   @"releasing.md must point signing facts at the daemon path");
+}
+
 - (void)testPrivilegedCommandPathUsesDaemonStatusNotSMJobBless {
     NSString *source = [self sourceTextAtRelativePath:@"Source/Action+XPCHelperTool.m"];
     XCTAssertFalse([source containsString:@"SMJobBless"],

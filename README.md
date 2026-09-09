@@ -14,7 +14,7 @@ This repository is the **[scottdensmore/ControlPlane](https://github.com/scottde
 | Project | `ControlPlane.xcodeproj` |
 | Scheme | `ControlPlane` |
 
-Targets of note: the main app, embedded `CPXPCService`, and privileged helper `CPHelperTool` (blessed via SMJobBless). Unsigned CI/local smoke builds **cannot** install the helper—see [docs/signing.md](docs/signing.md).
+Targets of note: the main app, embedded `CPXPCService` (XPC broker), and privileged helper `CPHelperTool` (an `SMAppService` LaunchDaemon registered from General settings). Unsigned CI/local smoke builds **cannot register the daemon**—see [docs/signing.md](docs/signing.md).
 
 ## Clone and Debug build
 
@@ -53,7 +53,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) is **not running** on pushes or PRs (manual `workflow_dispatch` only) to save Actions minutes. Verify locally. When re-enabled it covers:
 
 - Debug `xcodebuild` of the app (`CODE_SIGNING_ALLOWED=NO`)
-- `ControlPlaneTests` only (no helper bless)
+- `ControlPlaneTests` only (unsigned builds cannot register the daemon)
 - Basic Info.plist / architecture smoke
 
 ### Runner matrix
@@ -72,7 +72,7 @@ There is no `macos-16` label; GitHub names Tahoe images `macos-26` (marketing ve
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, branching, localization, ARC |
 | [AGENTS.md](AGENTS.md) | Full agent workflow (SSOT for coding agents) |
 | [docs/TESTING.md](docs/TESTING.md) | Unit vs UI tests, smoke commands |
-| [docs/signing.md](docs/signing.md) | Identities, entitlements, helper bless, notarization notes |
+| [docs/signing.md](docs/signing.md) | Identities, entitlements, SMAppService daemon registration, notarization notes |
 | [docs/releasing.md](docs/releasing.md) | Release checklist (archive, notarize, Sparkle, verify) |
 
 ## License / history
