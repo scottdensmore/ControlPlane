@@ -10,8 +10,6 @@
 #import "CPHelperToolProtocol.h"
 #import "../Common/CPCommonConstants.h"
 
-#include <ServiceManagement/ServiceManagement.h>
-
 @interface CPXPCService () <NSXPCListenerDelegate, CPXPCServiceProtocol>
 
 @property (atomic, strong, readonly ) NSXPCListener *    listener;
@@ -80,29 +78,6 @@
 }
 
 #pragma mark - CPXPCServiceProtocol
-
-- (void)installHelperToolWithReply:(void(^)(NSError * error))reply
-{
-    Boolean             success;
-    CFErrorRef          error;
-    
-    success = SMJobBless(
-        kSMDomainSystemLaunchd,
-        (CFStringRef)kHelperToolMachServiceName,
-        self->_authRef,
-        &error
-    );
-
-    if (success) {
-        reply(nil);
-    } else {
-        assert(error != NULL);
-        NSError *foo = (__bridge NSError *) error;
-        NSLog(@"Failed to install helper tool : %@", [foo description]);
-        reply((__bridge NSError *) error);
-        CFRelease(error);
-    }
-}
 
 - (void)setupAuthorizationRights
 {

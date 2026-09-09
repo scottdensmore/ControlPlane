@@ -171,16 +171,32 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
     NSString *agents = [self sourceTextAtRelativePath:@"AGENTS.md"];
     XCTAssertTrue([agents containsString:@"CPXPCService"],
                   @"AGENTS.md must not claim CPXPCService has been collapsed");
-    XCTAssertTrue([agents containsString:@"installHelperToolWithReply:"],
-                  @"AGENTS.md must note unused SMJobBless remains in CPXPCService");
-    XCTAssertTrue([agents containsString:@"not on the command path"],
-                  @"AGENTS.md must keep unused SMJobBless off the command path");
+    XCTAssertTrue([agents containsString:@"does not call `SMJobBless`"],
+                  @"AGENTS.md must say CPXPCService does not call SMJobBless");
+    XCTAssertFalse([agents containsString:@"installHelperToolWithReply:"],
+                   @"AGENTS.md must not claim unused SMJobBless remains");
+
+    NSString *signing = [self sourceTextAtRelativePath:@"docs/signing.md"];
+    XCTAssertTrue([signing containsString:@"do not collapse"],
+                  @"signing.md must keep CPXPCService as the XPC broker");
+    XCTAssertFalse([signing containsString:@"unused `SMJobBless`"],
+                   @"signing.md must not claim unused SMJobBless remains or that deleting it is deferred");
 
     NSString *releasing = [self sourceTextAtRelativePath:@"docs/releasing.md"];
     XCTAssertTrue([releasing containsString:@"cannot register"],
                   @"releasing.md must say unsigned builds cannot register the daemon");
     XCTAssertFalse([releasing containsString:@"bless smoke"],
                    @"releasing.md must point signing facts at the daemon path");
+    XCTAssertFalse([releasing containsString:@"installHelperToolWithReply:"],
+                   @"releasing.md must not claim unused SMJobBless remains");
+    XCTAssertFalse([releasing containsString:@"unused `SMJobBless`"],
+                   @"releasing.md must not claim deleting unused SMJobBless is still deferred");
+
+    NSString *xpc = [self sourceTextAtRelativePath:@"CPXPCService/CPXPCService.m"];
+    XCTAssertFalse([xpc containsString:@"SMJobBless"],
+                   @"CPXPCService must not call SMJobBless");
+    XCTAssertFalse([xpc containsString:@"installHelperToolWithReply:"],
+                   @"CPXPCService must not keep unused installHelperToolWithReply:");
 }
 
 - (void)testPrivilegedCommandPathUsesDaemonStatusNotSMJobBless {
@@ -269,7 +285,7 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
                     phaseIDs:xpcPhaseIDs
           containsCopyOfName:@"com.scottdensmore.CPHelperTool"
                      dstPath:@"Contents/Library/LaunchServices"],
-                  @"XPC service LaunchServices copy must stay for SMJobBless");
+                  @"XPC service must still copy the helper so packaging does not churn");
 }
 
 - (NSString *)sourceTextAtRelativePath:(NSString *)relativePath {

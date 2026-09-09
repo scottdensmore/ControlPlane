@@ -12,7 +12,7 @@ Action → CPHelperDaemonService status
       → app talks to CPHelperTool over that endpoint
 ```
 
-The helper is an `SMAppService` LaunchDaemon (`CPHelperDaemonService`, plist `com.scottdensmore.CPHelperTool.plist` with `BundleProgram` and `AssociatedBundleIdentifiers`). The prefs checkbox registers and unregisters it; approval is Login Items (`RequiresApproval`). Privileged commands connect only when status is `Enabled`. `CPXPCService` remains the XPC broker and still contains unused `SMJobBless` code — do not collapse it, and do not call it from the command path. The Tahoe-line design spike is [smappservice-spike.md](smappservice-spike.md) (**GO**).
+The helper is an `SMAppService` LaunchDaemon (`CPHelperDaemonService`, plist `com.scottdensmore.CPHelperTool.plist` with `BundleProgram` and `AssociatedBundleIdentifiers`). The prefs checkbox registers and unregisters it; approval is Login Items (`RequiresApproval`). Privileged commands connect only when status is `Enabled`. `CPXPCService` remains the XPC broker and does not call `SMJobBless` — do not collapse it. The Tahoe-line design spike is [smappservice-spike.md](smappservice-spike.md) (**GO**).
 
 ## Identities and Team ID
 
@@ -123,7 +123,7 @@ CI cannot register the daemon (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Rel
 
 ## Explicit non-goals (follow-ups)
 
-- Collapsing `CPXPCService` or deleting its unused `SMJobBless` method (command path already uses the daemon)
+- Collapsing `CPXPCService` (it still brokers XPC and does not call `SMJobBless`)
 - Broadening helper command surface
 - Narrowing Sparkle so the app can drop `disable-library-validation`
 - Rewriting the helper in Swift / typed non-CLI system APIs for every toggle

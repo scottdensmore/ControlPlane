@@ -114,7 +114,7 @@ Legacy `Utilities/make_*_image.sh` scripts no longer call the old Ruby DSA signe
 ## What release does *not* include
 
 - Helper registration in CI (`CODE_SIGNING_ALLOWED=NO` cannot register the daemon).
-- Collapsing `CPXPCService` or deleting unused `SMJobBless` in `installHelperToolWithReply:` (not on the command path; see [smappservice-spike.md](smappservice-spike.md)).
+- Collapsing `CPXPCService` (it still brokers XPC and does not call `SMJobBless`; see [smappservice-spike.md](smappservice-spike.md)).
 - `MACOSX_DEPLOYMENT_TARGET` is **16.0** on current `master` (#82).
 - Publishing a production appcast or rotating the public marketing feed host (maintainer ops).
 
