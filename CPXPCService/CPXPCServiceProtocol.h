@@ -11,9 +11,6 @@
 
 @required
 
-// Called by the app to install the helper tool.
-- (void)installHelperToolWithReply:(void(^)(NSError * error))reply;
-    
 // Called by the app at startup time to set up our authorization rights in the
 // authorization database.
 - (void)setupAuthorizationRights;

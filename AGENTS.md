@@ -14,7 +14,7 @@ ControlPlane is a macOS **menu-bar agent** (`LSUIElement`) that picks a **Contex
 
 - Objective-C + XIBs (no SwiftUI app yet). A thin Swift file in the existing app target is allowed only when a slice needs a public API that has no ObjC surface (for example App Intents).
 - Xcode project: `ControlPlane.xcodeproj`
-- Privileged helper: `CPHelperTool` is an `SMAppService` LaunchDaemon; `CPXPCService` still brokers XPC. Unused `SMJobBless` remains in `installHelperToolWithReply:` and is not on the command path.
+- Privileged helper: `CPHelperTool` is an `SMAppService` LaunchDaemon; `CPXPCService` still brokers XPC and does not call `SMJobBless`.
 - Default (and only durable) branch: `master`
 - Target platform: current macOS shipping line (Tahoe / deploy 16.0 today)
 
