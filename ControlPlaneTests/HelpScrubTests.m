@@ -441,14 +441,16 @@
     if (fileSharingSection != nil) {
         XCTAssertTrue([fileSharingSection rangeOfString:@"SMB"].location != NSNotFound,
                       @"Toggle File Sharing Help must say SMB file sharing needs the helper (#180)");
-        XCTAssertTrue([fileSharingSection rangeOfString:@"AFP"].location != NSNotFound,
+        NSRange afp = [fileSharingSection rangeOfString:@"AFP"];
+        XCTAssertTrue(afp.location != NSNotFound,
                       @"Toggle File Sharing Help must say AFP is not supported (#180)");
         XCTAssertTrue([fileSharingSection rangeOfString:@"not supported" options:NSCaseInsensitiveSearch].location != NSNotFound,
                       @"Toggle File Sharing Help must say AFP is not supported (#180)");
-        NSRange afp = [fileSharingSection rangeOfString:@"AFP"];
-        NSString *afterAFP = [fileSharingSection substringFromIndex:afp.location];
-        XCTAssertFalse([afterAFP rangeOfString:@"Allow privileged helper"].location != NSNotFound,
-                       @"Toggle File Sharing Help must not tell users to enable the helper for AFP (#180)");
+        if (afp.location != NSNotFound) {
+            NSString *afterAFP = [fileSharingSection substringFromIndex:afp.location];
+            XCTAssertFalse([afterAFP rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                           @"Toggle File Sharing Help must not tell users to enable the helper for AFP (#180)");
+        }
     }
 
     NSString *printerSection = [self actionSectionInHTML:actions heading:@"Toggle Printer Sharing"];
@@ -463,6 +465,8 @@
                    @"Toggle Printer Sharing Help must not claim toggles require the privileged helper (#180)");
     XCTAssertFalse([printerSection rangeOfString:@"needs the privileged helper"].location != NSNotFound,
                    @"Toggle Printer Sharing Help must not say it needs the privileged helper (#180)");
+    XCTAssertFalse([printerSection rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                   @"Toggle Printer Sharing Help must not point at Allow privileged helper (#183)");
 }
 
 @end
