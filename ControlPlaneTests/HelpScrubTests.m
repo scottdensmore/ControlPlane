@@ -350,4 +350,31 @@
     }
 }
 
+// #176: Toggle Remote Login Help points at Allow privileged helper, not “when first needed.”
+
+- (void)testHelpRemoteLoginPointsAtPrivilegedHelperApproval {
+    NSError *error = nil;
+    NSString *actionsPath = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSString *actions = [NSString stringWithContentsOfFile:actionsPath encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(actions);
+
+    NSRange rlHeading = [actions rangeOfString:@"Toggle Remote Login"];
+    XCTAssertTrue(rlHeading.location != NSNotFound, @"Actions Help must document Toggle Remote Login");
+    NSString *afterRL = [actions substringFromIndex:rlHeading.location];
+    NSRange rlNextH2 = [afterRL rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, afterRL.length - 1)];
+    NSString *rlSection = rlNextH2.location != NSNotFound ? [afterRL substringToIndex:rlNextH2.location] : afterRL;
+
+    XCTAssertTrue([rlSection rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                  @"Toggle Remote Login Help must point at Allow privileged helper (#176)");
+    XCTAssertTrue([rlSection rangeOfString:@"Login Items"].location != NSNotFound,
+                  @"Toggle Remote Login Help must point at Login Items (#176)");
+    XCTAssertTrue([rlSection rangeOfString:@"General settings"].location != NSNotFound,
+                  @"Toggle Remote Login Help must say General settings (#176)");
+    XCTAssertFalse([rlSection rangeOfString:@"General preferences"].location != NSNotFound,
+                   @"Toggle Remote Login Help must not say General preferences (#176)");
+    XCTAssertFalse([rlSection rangeOfString:@"when first needed" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                   @"Toggle Remote Login Help must not say the helper is used when first needed (#176)");
+}
+
 @end
