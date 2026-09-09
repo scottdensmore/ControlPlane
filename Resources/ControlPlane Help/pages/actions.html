@@ -58,7 +58,11 @@
 
 
         <h2><em>Display Sleep Time</em> action</h2>
-        <p>Change the timeout for when the display will go to sleep</p>
+        <p>Change the timeout for when the display will go to sleep. This action
+        needs the privileged helper. Enable <strong>Allow privileged helper</strong>
+        in General settings, then allow the helper in System Settings → General →
+        Login Items &amp; Extensions. See <a href="config.html">Configuring ControlPlane</a>.
+        </p>
 
         <h2><em>Lock Keychain</em> action</h2>
         <p><strong>Unsupported on modern macOS.</strong> Legacy SecKeychain lock/unlock
@@ -161,7 +165,11 @@
         
         
         <h2><em>Start Time Machine</em> action</h2>
-        <p>Allows you to start a new Time Machine backup or stop an already running backup</p>
+        <p>Allows you to start a new Time Machine backup or stop an already running backup.
+        This action needs the privileged helper. Enable <strong>Allow privileged helper</strong>
+        in General settings, then allow the helper in System Settings → General →
+        Login Items &amp; Extensions. See <a href="config.html">Configuring ControlPlane</a>.
+        </p>
         
       
         <h2><em>Time Machine Destination</em> action</h2>
@@ -220,11 +228,19 @@
         </p>
         
         <h2><em>Toggle Printer Sharing</em> action</h2>
-        <p><strong>Unsupported on modern macOS (15/16).</strong> Printer Sharing
-        toggles require the privileged helper and are not reliable on current
-        macOS releases. Prefer System Settings → General → Sharing, or a
+        <p><strong>Unsupported on modern macOS (15/16).</strong> This action is
+        unsupported and does not run through the privileged helper. Prefer
+        System Settings → General → Sharing, or a
         <em>ShellScript</em> action, instead of treating this as a supported
         ControlPlane action.
+        </p>
+
+        <h2><em>Toggle File Sharing</em> action</h2>
+        <p>Toggles SMB file sharing on or off. SMB file sharing
+        needs the privileged helper. Enable <strong>Allow privileged helper</strong>
+        in General settings, then allow the helper in System Settings → General →
+        Login Items &amp; Extensions. See <a href="config.html">Configuring ControlPlane</a>.
+        AFP is not supported.
         </p>
 
         <h2><em>Toggle Remote Login</em> action</h2>

@@ -377,4 +377,92 @@
                    @"Toggle Remote Login Help must not say the helper is used when first needed (#176)");
 }
 
+// #180: remaining privileged actions point at Allow privileged helper.
+
+- (NSString *)actionSectionInHTML:(NSString *)actions heading:(NSString *)heading {
+    NSRange headingRange = [actions rangeOfString:heading];
+    if (headingRange.location == NSNotFound) {
+        return nil;
+    }
+    NSString *after = [actions substringFromIndex:headingRange.location];
+    NSRange nextH2 = [after rangeOfString:@"<h2>" options:0 range:NSMakeRange(1, after.length - 1)];
+    return nextH2.location != NSNotFound ? [after substringToIndex:nextH2.location] : after;
+}
+
+- (void)assertPrivilegedHelperApprovalInSection:(NSString *)section label:(NSString *)label {
+    XCTAssertNotNil(section, @"Actions Help must document %@ (#180)", label);
+    if (section == nil) {
+        return;
+    }
+    XCTAssertTrue([section rangeOfString:@"needs the privileged helper"].location != NSNotFound,
+                  @"%@ Help must say it needs the privileged helper (#180)", label);
+    XCTAssertTrue([section rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                  @"%@ Help must point at Allow privileged helper (#180)", label);
+    XCTAssertTrue([section rangeOfString:@"Login Items"].location != NSNotFound,
+                  @"%@ Help must point at Login Items (#180)", label);
+    XCTAssertTrue([section rangeOfString:@"General settings"].location != NSNotFound,
+                  @"%@ Help must say General settings (#180)", label);
+    XCTAssertTrue([section rangeOfString:@"config.html"].location != NSNotFound,
+                  @"%@ Help must link to config.html (#180)", label);
+    XCTAssertTrue([section rangeOfString:@"Configuring ControlPlane"].location != NSNotFound,
+                  @"%@ Help must link to Configuring ControlPlane (#180)", label);
+    XCTAssertFalse([section rangeOfString:@"General preferences"].location != NSNotFound,
+                   @"%@ Help must not say General preferences (#180)", label);
+    XCTAssertFalse([section rangeOfString:@"when first needed" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                   @"%@ Help must not say the helper is used when first needed (#180)", label);
+    XCTAssertFalse([section rangeOfString:@"left SMJobBless" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                   @"%@ Help must not claim commands have left SMJobBless (#180)", label);
+}
+
+- (void)testHelpPrivilegedActionsPointAtPrivilegedHelperApproval {
+    NSError *error = nil;
+    NSString *actionsPath = [self.helpRoot stringByAppendingPathComponent:@"pages/actions.html"];
+    NSString *actions = [NSString stringWithContentsOfFile:actionsPath encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNil(error);
+    XCTAssertNotNil(actions);
+
+    NSString *sleepSection = [self actionSectionInHTML:actions heading:@"Display Sleep Time"];
+    [self assertPrivilegedHelperApprovalInSection:sleepSection label:@"Display Sleep Time"];
+    XCTAssertTrue([sleepSection rangeOfString:@"Change the timeout for when the display will go to sleep"].location != NSNotFound,
+                  @"Display Sleep Time Help must keep the display-sleep timeout meaning (#180)");
+
+    NSString *startTMSection = [self actionSectionInHTML:actions heading:@"Start Time Machine"];
+    [self assertPrivilegedHelperApprovalInSection:startTMSection label:@"Start Time Machine"];
+    XCTAssertTrue([startTMSection rangeOfString:@"start a new Time Machine backup or stop an already running backup"].location != NSNotFound,
+                  @"Start Time Machine Help must keep the start-or-stop backup meaning (#180)");
+
+    NSRange printerHeading = [actions rangeOfString:@"Toggle Printer Sharing"];
+    XCTAssertTrue(printerHeading.location != NSNotFound, @"Actions Help must document Toggle Printer Sharing");
+    NSString *afterPrinter = [actions substringFromIndex:printerHeading.location];
+    XCTAssertTrue([afterPrinter rangeOfString:@"Toggle File Sharing"].location != NSNotFound,
+                  @"Toggle File Sharing Help must sit near the other Toggle sharing actions (#180)");
+    NSString *fileSharingSection = [self actionSectionInHTML:actions heading:@"Toggle File Sharing"];
+    [self assertPrivilegedHelperApprovalInSection:fileSharingSection label:@"Toggle File Sharing"];
+    if (fileSharingSection != nil) {
+        XCTAssertTrue([fileSharingSection rangeOfString:@"SMB"].location != NSNotFound,
+                      @"Toggle File Sharing Help must say SMB file sharing needs the helper (#180)");
+        XCTAssertTrue([fileSharingSection rangeOfString:@"AFP"].location != NSNotFound,
+                      @"Toggle File Sharing Help must say AFP is not supported (#180)");
+        XCTAssertTrue([fileSharingSection rangeOfString:@"not supported" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                      @"Toggle File Sharing Help must say AFP is not supported (#180)");
+        NSRange afp = [fileSharingSection rangeOfString:@"AFP"];
+        NSString *afterAFP = [fileSharingSection substringFromIndex:afp.location];
+        XCTAssertFalse([afterAFP rangeOfString:@"Allow privileged helper"].location != NSNotFound,
+                       @"Toggle File Sharing Help must not tell users to enable the helper for AFP (#180)");
+    }
+
+    NSString *printerSection = [self actionSectionInHTML:actions heading:@"Toggle Printer Sharing"];
+    XCTAssertNotNil(printerSection);
+    XCTAssertTrue([printerSection rangeOfString:@"Unsupported"].location != NSNotFound,
+                  @"Toggle Printer Sharing Help must say it is unsupported (#180)");
+    XCTAssertTrue([printerSection rangeOfString:@"does not run through the privileged helper"].location != NSNotFound,
+                  @"Toggle Printer Sharing Help must say it does not run through the privileged helper (#180)");
+    XCTAssertTrue([printerSection rangeOfString:@"System Settings → General → Sharing"].location != NSNotFound,
+                  @"Toggle Printer Sharing Help must keep System Settings → General → Sharing (#180)");
+    XCTAssertFalse([printerSection rangeOfString:@"require the privileged helper" options:NSCaseInsensitiveSearch].location != NSNotFound,
+                   @"Toggle Printer Sharing Help must not claim toggles require the privileged helper (#180)");
+    XCTAssertFalse([printerSection rangeOfString:@"needs the privileged helper"].location != NSNotFound,
+                   @"Toggle Printer Sharing Help must not say it needs the privileged helper (#180)");
+}
+
 @end
