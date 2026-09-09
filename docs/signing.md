@@ -24,12 +24,7 @@ The helper is an `SMAppService` LaunchDaemon (`CPHelperDaemonService`, plist `co
 
 Designated requirements use **team OU** (`certificate leaf[subject.OU] = "27ZDER873F"`) plus Apple Development **or** Developer ID intermediate OIDs — not a single person’s certificate CN.
 
-| Plist | Key | Client / tool |
-| :--- | :--- | :--- |
-| `CPHelperTool/HelperTool-Info.plist` | `SMAuthorizedClients` | Must be `com.scottdensmore.CPXPCService` |
-| `CPXPCService/Info.plist` | `SMPrivilegedExecutables` | Must be `com.scottdensmore.CPHelperTool` |
-
-`SMAuthorizedClients` / `SMPrivilegedExecutables` are the leftover SMJobBless contract on `CPXPCService`. The shipping install path is the in-bundle daemon; the listener gate (`CPHelperClientGate`) is what admits `com.scottdensmore.CPXPCService` or `com.scottdensmore.ControlPlane`.
+`CPHelperClientGate` is the client gate. The listener requirement admits `com.scottdensmore.CPXPCService` or `com.scottdensmore.ControlPlane`, team OU `27ZDER873F`, and either Apple Development or Developer ID intermediate. `SMAuthorizedClients` and `SMPrivilegedExecutables` are not present; they were the leftover SMJobBless plist contract.
 
 ## Hardened Runtime and Entitlements
 
@@ -130,7 +125,7 @@ CI cannot register the daemon (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Rel
 
 ## Automated checks
 
-`HelperSigningRequirementTests` asserts source plists use team OU requirements and do not pin a personal Development CN. They do **not** register the daemon.
+`HelperSigningRequirementTests` asserts helper and XPC Info.plists omit leftover `SMAuthorizedClients` / `SMPrivilegedExecutables`. `CPHelperClientGateTests` asserts the listener requirement (both identifiers, team OU, both intermediates, set before resume). They do **not** register the daemon.
 
 `CPHelperDaemonServiceTests` asserts privileged commands connect only when status is Enabled, the command path does not call `SMJobBless`, and legacy cleanup names the blessed helper and launchd job. They do **not** register or uninstall live.
 

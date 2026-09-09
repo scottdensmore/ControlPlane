@@ -10,15 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-/// XPC service that blesses the helper and opens the first connection.
-/// Matches SMAuthorizedClients in HelperTool-Info.plist. Bless is unchanged.
+/// XPC service that brokers the first connection to the helper.
 FOUNDATION_EXPORT NSString * const kCPHelperAuthorizedClientIdentifier;
 
 /// App that sends privileged commands on the helper endpoint after
 /// connectWithEndpointReply:. Same listener as the XPC service hop.
 /// Identifier matches Info.plist CFBundleURLName and PRODUCT_NAME ControlPlane
-/// (`com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}`). Not listed in
-/// SMAuthorizedClients; recorded here so a later cutover can see it.
+/// (`com.scottdensmore.${PRODUCT_NAME:rfc1034identifier}`).
 FOUNDATION_EXPORT NSString * const kCPHelperAuthorizedAppIdentifier;
 
 /// Team ID (certificate leaf subject.OU) required of either client.
@@ -33,13 +31,13 @@ FOUNDATION_EXPORT NSString * const kCPHelperAuthorizedClientTeamIdentifier;
                           teamIdentifier:(nullable NSString *)teamIdentifier
                                 isSigned:(BOOL)isSigned;
 
-/// Single-identifier designated requirement matching HelperTool-Info.plist
-/// SMAuthorizedClients (identifier, anchor apple generic, leaf OU, both intermediates).
+/// Single-identifier requirement (identifier, anchor apple generic, leaf OU,
+/// both intermediates). Kept so listener tests can compare clause tails.
 + (NSString *)smAuthorizedClientsRequirementForIdentifier:(NSString *)identifier;
 
-/// Listener requirement: same anchor, leaf OU, and intermediates as
-/// SMAuthorizedClients, but either allowed identifier so the app endpoint hop
-/// is not refused. Apply with -[NSXPCListener setConnectionCodeSigningRequirement:]
+/// Listener requirement: same anchor, leaf OU, and intermediates, but either
+/// allowed identifier so the app endpoint hop is not refused. This is the
+/// client gate. Apply with -[NSXPCListener setConnectionCodeSigningRequirement:]
 /// before the listener resumes.
 + (NSString *)listenerCodeSigningRequirement;
 

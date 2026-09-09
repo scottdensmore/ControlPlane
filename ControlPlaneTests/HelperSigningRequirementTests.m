@@ -2,8 +2,8 @@
 //  HelperSigningRequirementTests.m
 //  ControlPlaneTests
 //
-//  Source-level checks for SMJobBless designated requirements (#28).
-//  Does not attempt to bless or codesign.
+//  Source-level checks that leftover SMJobBless plist keys are absent (#185).
+//  Does not attempt to bless or codesign. The listener allowlist is CPHelperClientGate.
 //
 
 #import <XCTest/XCTest.h>
@@ -26,39 +26,16 @@
     return plist;
 }
 
-- (void)assertTeamRequirement:(NSString *)requirement expectedIdentifier:(NSString *)identifier {
-    XCTAssertNotNil(requirement);
-    NSString *needle = [NSString stringWithFormat:@"identifier \"%@\"", identifier];
-    XCTAssertTrue([requirement containsString:needle],
-                  @"Requirement should pin identifier %@", identifier);
-    XCTAssertTrue([requirement containsString:@"subject.OU"],
-                  @"Requirement should reference certificate leaf subject.OU");
-    XCTAssertTrue([requirement containsString:@"27ZDER873F"],
-                  @"Requirement should use team OU 27ZDER873F");
-    XCTAssertFalse([requirement containsString:@"Scott Densmore"],
-                   @"Requirement must not pin a personal certificate CN");
-    XCTAssertTrue([requirement containsString:@"1.2.840.113635.100.6.2.1"],
-                  @"Requirement should allow Apple Development intermediate");
-    XCTAssertTrue([requirement containsString:@"1.2.840.113635.100.6.2.6"],
-                  @"Requirement should allow Developer ID intermediate");
-}
-
-- (void)testHelperAuthorizedClientsUseTeamRequirement {
+- (void)testHelperInfoPlistOmitsSMAuthorizedClients {
     NSDictionary *plist = [self plistAtRelativePath:@"CPHelperTool/HelperTool-Info.plist"];
-    NSArray *clients = plist[@"SMAuthorizedClients"];
-    XCTAssertTrue([clients isKindOfClass:[NSArray class]]);
-    XCTAssertEqual(clients.count, 1u);
-    [self assertTeamRequirement:clients.firstObject
-            expectedIdentifier:@"com.scottdensmore.CPXPCService"];
+    XCTAssertNil(plist[@"SMAuthorizedClients"],
+                 @"SMAuthorizedClients is leftover SMJobBless; the client gate is CPHelperClientGate");
 }
 
-- (void)testXPCPrivilegedExecutableUsesTeamRequirement {
+- (void)testXPCInfoPlistOmitsSMPrivilegedExecutables {
     NSDictionary *plist = [self plistAtRelativePath:@"CPXPCService/Info.plist"];
-    NSDictionary *executables = plist[@"SMPrivilegedExecutables"];
-    XCTAssertTrue([executables isKindOfClass:[NSDictionary class]]);
-    NSString *requirement = executables[@"com.scottdensmore.CPHelperTool"];
-    [self assertTeamRequirement:requirement
-            expectedIdentifier:@"com.scottdensmore.CPHelperTool"];
+    XCTAssertNil(plist[@"SMPrivilegedExecutables"],
+                 @"SMPrivilegedExecutables is leftover SMJobBless; the client gate is CPHelperClientGate");
 }
 
 @end

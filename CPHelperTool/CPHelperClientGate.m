@@ -38,7 +38,7 @@ NSString * const kCPHelperAuthorizedClientTeamIdentifier = @"27ZDER873F";
 
 + (NSString *)codeSigningRequirementTail
 {
-    // Same clauses as SMAuthorizedClients: apple generic anchor, leaf subject.OU,
+    // Client-gate clauses: apple generic anchor, leaf subject.OU,
     // Apple Development (1.2.840.113635.100.6.2.1) or Developer ID (…100.6.2.6).
     return [NSString stringWithFormat:
             @"anchor apple generic and certificate leaf[subject.OU] = \"%@\" and (certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */)",
