@@ -1,3 +1,5 @@
+> **Historical decision record.** The `SMAppService` daemon path has shipped. This spike is not the current install path — do not bless via `SMJobBless` today. Current topology: [docs/signing.md](signing.md).
+
 # Spike: SMJobBless → SMAppService daemon (#125)
 
 Design-only. **No production helper migration in this change.** Parent epic: [#116](https://github.com/scottdensmore/ControlPlane/issues/116).
