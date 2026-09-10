@@ -63,7 +63,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `TimeOfDayRuleMatchTests` | Weekday time-window matching with injected clock |
 | `ScreenLockRuleMatchTests` | Lock/unlock matching via `setScreenLockedForTesting:` / direct `screenDidLock:` (no live distributed notifies) (#130) |
 | `RemoteDesktopRuleMatchTests` | Yes/No matching via `setUserConnectedForTesting:` / injected `ViewerNames` userInfo (no live distributed notifies) (#130) |
-| `HelperSigningRequirementTests` | Helper/XPC SMJobBless requirements use team OU (not a personal CN) |
+| `HelperSigningRequirementTests` | Helper/XPC Info.plists omit leftover SMAuthorizedClients / SMPrivilegedExecutables (listener gate: `CPHelperClientGateTests`) |
 | `CPHelperCommandRunnerTests` | Helper argv-array runner: no `system()`/`sprintf` in `CPHelperTool.m`; display-sleep validation; fixed firewall/`tmutil`/SMB/remote-login args (#86) |
 | `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
 | `CPConfigTransferTests` | Versioned config export/import round-trip (#35) |

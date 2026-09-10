@@ -38,4 +38,19 @@
                  @"SMPrivilegedExecutables is leftover SMJobBless; the client gate is CPHelperClientGate");
 }
 
+- (void)testTestingMdDescribesAbsentBlessKeysNotTeamOURequirements {
+    NSString *root = @CONTROLPLANE_SRCROOT;
+    XCTAssertTrue(root.length > 0, @"CONTROLPLANE_SRCROOT must be set");
+    NSString *path = [root stringByAppendingPathComponent:@"docs/TESTING.md"];
+    NSError *error = nil;
+    NSString *text = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
+    XCTAssertNotNil(text, @"Expected docs/TESTING.md (%@)", error);
+    XCTAssertFalse([text containsString:@"Helper/XPC SMJobBless requirements use team OU"],
+                   @"TESTING.md must not describe HelperSigningRequirementTests as SMJobBless team-OU checks (#215)");
+    XCTAssertTrue([text containsString:@"omit leftover SMAuthorizedClients"],
+                  @"TESTING.md must say HelperSigningRequirementTests asserts leftover bless keys are absent");
+    XCTAssertTrue([text containsString:@"CPHelperClientGateTests"],
+                  @"TESTING.md must point the listener gate at CPHelperClientGateTests");
+}
+
 @end
