@@ -1,0 +1,23 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M27D5PGMVK43GR5JYX1CW0FH",
+  "session_id": "83031b58-30fa-4ded-8f1a-3532ec17988f",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-11T04:56:20.366548Z",
+  "branch": "issue-202-uitest-harness",
+  "checkpoints_count": 1,
+  "files_touched": [],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "9a8786f7a06a",
+  "compact_transcript_start": 0,
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
