@@ -1,0 +1,53 @@
+Is there one agent still running?
+
+---
+
+Ok lets run through the issues and decide what batch of work to pick up next
+
+---
+
+Ok lets pick up the next set of work
+
+---
+
+Ok lets pick up and work on as much as we can in parallel next
+
+---
+
+ok doit
+
+---
+
+Keep going cursor died
+
+---
+
+Ok lets keep going
+
+---
+
+What is next?
+
+---
+
+We can rescope 149. we can pick that up later
+
+---
+
+What should we do next?
+
+---
+
+Do a deep analysis of this project. I want to get this to a awesome mac App that would win a Appple Award at WWDC. File a bunch of epics and issues to get to this. We should also move this to swift ui and swift 6. This should work amazing on macOS 26. We need all oUI tests for end to end journeys.
+
+---
+
+Ok lets file evrything we find
+
+---
+
+Ok lets do those in parallel.  Lets also merge any open PRs and remove any stale branches
+
+---
+
+Ok lets continue and finish up
