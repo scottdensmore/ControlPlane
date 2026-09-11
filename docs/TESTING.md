@@ -18,10 +18,12 @@ xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
   -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
   CODE_SIGNING_ALLOWED=NO test -only-testing:ControlPlaneTests
 
-# UI tests (prefs journeys; set CPUITestRunning to skip notification auth UI)
+# UI tests (prefs journeys; set CPUITestRunning to skip notification auth UI).
+# Prefer ad-hoc signing for the UITest runner — CODE_SIGNING_ALLOWED=NO often
+# kills ControlPlaneUITests-Runner before it can bootstrap on current macOS.
 xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
   -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
-  CODE_SIGNING_ALLOWED=NO test -only-testing:ControlPlaneUITests
+  CODE_SIGN_IDENTITY=- test -only-testing:ControlPlaneUITests
 
 # Full local smoke (Debug + Release + unit tests)
 ./scripts/smoke-build.sh
@@ -36,6 +38,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | :--- | :--- |
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
 | `PrefsHIGShortTermTests` | Prefs a11y labels, agent menu shortcuts, standard About, Help accuracy (#31) |
+| `CPUITestHarnessTests` | Settings UITest harness: OpenPrefsAtStartup → `runPreferences:`, `CPUITestRunning` auth skip + Regular activation policy, AX ids, docs (#202) |
 | `PrefsSettingsStyleShellTests` | Settings-style `NSTabViewController` shell presence + pane/⌘, continuity (#100) |
 | `CPMenuBarImageTests` | Menu-bar template prep (#89); Asset Catalog template/brand/AppIcon + button API checks (#32) |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model; IOKit display bridge null-ID safety (#88) |
@@ -73,18 +76,40 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 
 Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/ControlPlane` and Growl recommendation phrases.
 
+## UITest harness
+
+Deterministic Settings open for UITests (#202). **Do not** click menu-bar pixel positions or the status item to open Settings under XCUITest — that path is flaky for `LSUIElement` agents.
+
+| Hook | Role |
+| :--- | :--- |
+| `CPUITestRunning=1` (launch environment) | Skips notification authorization prompts in `CPNotifications`; sets `NSApplicationActivationPolicyRegular` in `main` so XCUITest can attach to the `LSUIElement` agent |
+| `-Debug OpenPrefsAtStartup YES` (launch argument) | After launch, opens Settings via `PrefsWindowController` `runPreferences:` (same path as the status-menu item) |
+| `prefs.window` (AX id) | Stable query for the Settings window in `ControlPlaneUITests` |
+
+```bash
+# Smoke: app launches and Settings appears
+xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
+  -destination 'platform=macOS' -derivedDataPath /tmp/ControlPlaneDerived \
+  CODE_SIGN_IDENTITY=- test \
+  -only-testing:ControlPlaneUITests/ControlPlaneUITests/testLaunchAndOpenPreferences
+```
+
+Unit contract: `ControlPlaneTests/CPUITestHarnessTests`.
+
+The shared scheme’s **Test** action uses PosixSpawn (no LLDB attach). That avoids “does not have a process ID” failures when launching the agent under `xcodebuild test`. `ControlPlaneUITests` also retries cold attach once or twice — the first launch after a clean DerivedData build can still race.
+
+**Follow-up:** status-item Force Context automation remains out of scope here — see [#244](https://github.com/scottdensmore/ControlPlane/issues/244).
+
 ## UI test accessibility identifiers
 
 | Identifier | Control |
 | :--- | :--- |
-| `prefs.window` | Preferences window |
+| `prefs.window` | Preferences / Settings window |
 | `prefs.settingsShell` | Settings-style prefs shell (`NSTabViewController` host view) |
 | `prefs.general.useNotifications` | Use Notifications checkbox |
 | `prefs.tab.general` | General tab content view |
 | `prefs.tab.evidencesources` | Evidence Sources tab content view |
-| `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`) |
-
-Launch with `CPUITestRunning=1` and `-Debug OpenPrefsAtStartup YES` (see `ControlPlaneUITests.m`).
+| `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`, `prefs.toolbar.evidencesources`) |
 
 ## Manual status-item smoke (not automatable under XCUITest)
 

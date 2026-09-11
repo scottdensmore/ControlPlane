@@ -157,9 +157,21 @@
 
 	if (paneName.length > 0) {
 		NSString *displayName = item.label.length > 0 ? item.label : paneName;
+		NSString *identifier = [NSString stringWithFormat:@"prefs.toolbar.%@", [paneName lowercaseString]];
+		// NSToolbarItem is not an NSAccessibility element on all OS builds; probe via id
+		// to compile and avoid -[NSToolbarItem setAccessibilityLabel:] abort (#202).
 		id axItem = item;
-		[axItem setAccessibilityLabel:displayName];
-		[axItem setAccessibilityIdentifier:[NSString stringWithFormat:@"prefs.toolbar.%@", [paneName lowercaseString]]];
+		if ([axItem respondsToSelector:@selector(setAccessibilityLabel:)]) {
+			[axItem setAccessibilityLabel:displayName];
+		}
+		if ([axItem respondsToSelector:@selector(setAccessibilityIdentifier:)]) {
+			[axItem setAccessibilityIdentifier:identifier];
+		}
+		NSView *itemView = item.view;
+		if (itemView) {
+			[itemView setAccessibilityLabel:displayName];
+			[itemView setAccessibilityIdentifier:identifier];
+		}
 	}
 
 	return item;

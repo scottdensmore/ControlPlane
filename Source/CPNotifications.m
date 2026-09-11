@@ -34,6 +34,16 @@
 
 + (void)requestAuthorizationIfNeededWithCompletion:(void (^)(BOOL granted))completion
 {
+    // UITests set CPUITestRunning=1 so Settings can appear without a TCC prompt.
+    if ([[[NSProcessInfo processInfo] environment][@"CPUITestRunning"] isEqualToString:@"1"]) {
+        if (completion != nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO);
+            });
+        }
+        return;
+    }
+
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
         if (settings.authorizationStatus == UNAuthorizationStatusAuthorized
