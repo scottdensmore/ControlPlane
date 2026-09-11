@@ -18,6 +18,7 @@
 #import "CPNotifications.h"
 #import "SharedNumberFormatter.h"
 #import "CPMenuBarImage.h"
+#import "PrefsWindowController.h"
 //#import <HockeySDK/HockeySDK.h>
 
 
@@ -610,8 +611,15 @@ static NSSet *sharedActiveContexts = nil;
         [NSApp unhideWithoutActivation];
 
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Debug OpenPrefsAtStartup"]) {
-            [NSApp activateIgnoringOtherApps:YES];
-            [prefsWindow makeKeyAndOrderFront:self];
+            // UITest / debug harness (#202): open Settings via the same path as the
+            // status-menu item — no menu-bar geometry clicks required.
+            NSWindowController *wc = [prefsWindow windowController];
+            if ([wc isKindOfClass:[PrefsWindowController class]]) {
+                [(PrefsWindowController *)wc runPreferences:self];
+            } else {
+                [NSApp activateIgnoringOtherApps:YES];
+                [prefsWindow makeKeyAndOrderFront:self];
+            }
         }
         [self updateActiveContextsMenuTitle];
         [self updateActiveContextsMenuList];

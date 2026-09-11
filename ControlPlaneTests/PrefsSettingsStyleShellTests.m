@@ -45,6 +45,9 @@
 		      @"Shell view needs an accessibility identifier");
 	XCTAssertTrue([shell containsString:@"prefs.toolbar."],
 		      @"Toolbar items should keep VoiceOver identifiers");
+	XCTAssertTrue([shell containsString:@"respondsToSelector:@selector(setAccessibilityLabel:)"]
+			  || [shell containsString:@"respondsToSelector:@selector(setAccessibilityIdentifier:)"],
+		      @"Toolbar AX must probe NSToolbarItem before messaging (launch crash on some OS builds)");
 }
 
 - (void)testPrefsControllerHostsSettingsShellAndKeepsPanes {

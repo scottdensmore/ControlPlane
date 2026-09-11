@@ -263,6 +263,7 @@
 		A126INT01WIRE126000001 /* SwitchContextIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A126INT01FILE126000001 /* SwitchContextIntent.swift */; };
 		A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A126TST01FILE126000001 /* CPContextAppIntentTests.m */; };
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
+		B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B202UIT01FILE202000001 /* CPUITestHarnessTests.m */; };
 		B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */; };
 		B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */; };
 		DDA2013A1411C0FB00DE570E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDA2013C1411C0FB00DE570E /* Localizable.strings */; };
@@ -832,6 +833,7 @@
 		A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlPlane-Bridging-Header.h; path = Source/ControlPlane-Bridging-Header.h; sourceTree = "<group>"; };
 		A126TST01FILE126000001 /* CPContextAppIntentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPContextAppIntentTests.m; sourceTree = "<group>"; };
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
+		B202UIT01FILE202000001 /* CPUITestHarnessTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPUITestHarnessTests.m; sourceTree = "<group>"; };
 		B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPPrefsSettingsShellController.h; path = Source/CPPrefsSettingsShellController.h; sourceTree = "<group>"; };
 		B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPPrefsSettingsShellController.m; path = Source/CPPrefsSettingsShellController.m; sourceTree = "<group>"; };
 		B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsSettingsStyleShellTests.m; sourceTree = "<group>"; };
@@ -1221,6 +1223,7 @@
 				A34SPARK01FILWIRE000001 /* SparkleEDKeyTests.m */,
 				F0CUSA01FILWIRE000014 /* FocusAndPowerEvidenceTests.m */,
 				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
+				B202UIT01FILE202000001 /* CPUITestHarnessTests.m */,
 				B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */,
 				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
 				B135EJ01FILE135000003 /* CPMockEvidenceJourneyTests.m */,
@@ -2093,6 +2096,7 @@
 				F0CUSA01TSTWIRE000003 /* FocusEvidenceSource.m in Sources */,
 				F0CUSA01TSTWIRE000004 /* SetFocusAction.m in Sources */,
 				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
+				B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */,
 				B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */,
 				B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */,
 				B135EJ01WIRE135000002 /* CPEvidenceSwitchJourney.m in Sources */,
@@ -2557,9 +2561,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_ALLOWED = YES;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 16.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneUITests;
@@ -2973,9 +2977,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_ALLOWED = YES;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 16.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.scottdensmore.ControlPlaneUITests;

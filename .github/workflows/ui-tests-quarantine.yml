@@ -40,7 +40,6 @@ jobs:
             -configuration Debug \
             -destination 'platform=macOS' \
             -derivedDataPath "$DERIVED_DATA_PATH" \
-            CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY=- \
             build
 
@@ -55,7 +54,6 @@ jobs:
             -configuration Debug \
             -destination 'platform=macOS' \
             -derivedDataPath "$DERIVED_DATA_PATH" \
-            CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_IDENTITY=- \
             test \
             -only-testing:ControlPlaneUITests
