@@ -18,7 +18,7 @@ Decide how ControlPlane can ship award-grade SwiftUI Settings and status-menu ch
 
 ## What changed since Wave 1
 
-| Wave 1 assumption (`menubarextra-spike.md`) | Today (`master` @ this spike) |
+| Wave 1 assumption (`menubarextra-spike.md`) | Today (`main` @ this spike) |
 | :--- | :--- |
 | “Zero `.swift` sources in the app target” | **False.** `SwitchContextIntent.swift` + `ControlPlane-Bridging-Header.h` + `CPContextAppIntentBridge` already ship App Intents beside `CPController`. |
 | Settings chrome deferred SwiftUI forever (#100) | Chrome is AppKit `NSTabViewController` (`CPPrefsSettingsShellController`). Award epic #192 wants **pane content** (and later search/sidebar) in SwiftUI — not a contradiction if hosting stays AppKit-owned. |
@@ -208,7 +208,7 @@ Prefer **gating/retiring dead actions** and AppKit chrome that already works ove
 
 ## Ordered thin slices
 
-Implementers: rebuild under `tdd-slice`. Do **not** promote spike prototypes. Each slice is independently shippable onto `master`.
+Implementers: rebuild under `tdd-slice`. Do **not** promote spike prototypes. Each slice is independently shippable onto `main`.
 
 ### Platform foundation — epic [#191](https://github.com/scottdensmore/ControlPlane/issues/191)
 

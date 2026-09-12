@@ -6,6 +6,6 @@
 
 echo "Doing nightly build of ControlPlane"
 cd /Users/dustin/Development/ControlPlane-Nightly
-git pull origin master
+git pull origin main
 ./Utilities/make_nightly_image.sh 2>&1 >> build-log 
 mv ControlPlane-NIGHTLY*dmg ~/Dropbox/Public/ControlPlane

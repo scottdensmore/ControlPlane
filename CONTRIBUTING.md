@@ -12,19 +12,19 @@ Coding agents should follow **[AGENTS.md](AGENTS.md)** as the single source of t
 
 ## Branching
 
-Integrate on **`master`**. Do not keep durable per-OS branches.
+Integrate on **`main`**. Do not keep durable per-OS branches.
 
 ```text
-git checkout master && git pull
+git checkout main && git pull
 git checkout -b issue-<n>-short-slug
 # … TDD → UI review if needed → verify → code review …
-# PR → squash-merge into master → delete feature branch
+# PR → squash-merge into main → delete feature branch
 ```
 
 | Rule | Detail |
 | :--- | :--- |
-| Base branch | Latest `master` |
-| Never commit | Directly to `master` |
+| Base branch | Latest `main` |
+| Never commit | Directly to `main` |
 | Deployment target | Raise only intentionally (currently **16.0**); do not bump “for fun” |
 | Labels | Optional `macos-16` / priority labels for filtering |
 
@@ -64,4 +64,4 @@ Copy any new keys into every shipping `Localizable.strings` and translate them. 
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- GitHub Actions is dispatch-only for now. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally, then squash-merge onto `master` without waiting on Actions.
+- GitHub Actions is dispatch-only for now. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally, then squash-merge onto `main` without waiting on Actions.
