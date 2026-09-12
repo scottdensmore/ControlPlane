@@ -6,7 +6,7 @@ GitHub Actions (`.github/workflows/ci.yml`) is kept but not triggered on push/PR
 
 ## Preconditions
 
-- [ ] On the correct tip (`master` for current Tahoe work).
+- [ ] On the correct tip (`main` for current Tahoe work).
 - [ ] Version bump intentional (`MARKETING_VERSION` / related plists)—coordinate with any open versioning issue.
 - [ ] `./scripts/smoke-build.sh` green locally (or at least Debug + `ControlPlaneTests`).
 - [ ] Team ID `27ZDER873F` Developer ID Application identity available (see [signing.md](signing.md)).
@@ -115,7 +115,7 @@ Legacy `Utilities/make_*_image.sh` scripts no longer call the old Ruby DSA signe
 
 - Helper registration in CI (`CODE_SIGNING_ALLOWED=NO` cannot register the daemon).
 - Collapsing `CPXPCService` (it still brokers XPC and does not call `SMJobBless`; see [smappservice-spike.md](smappservice-spike.md)).
-- `MACOSX_DEPLOYMENT_TARGET` is **16.0** on current `master` (#82).
+- `MACOSX_DEPLOYMENT_TARGET` is **16.0** on current `main` (#82).
 - Publishing a production appcast or rotating the public marketing feed host (maintainer ops).
 
 ## Related docs
