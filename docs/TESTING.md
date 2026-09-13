@@ -6,9 +6,8 @@
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
 - **UI tests:** `ControlPlaneUITests` for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
-- **CI:** `.github/workflows/ci.yml` is kept but **does not run** on push/PR (`workflow_dispatch` only) to save Actions minutes. Verify locally with `./scripts/smoke-build.sh`.
-- **UI quarantine:** `.github/workflows/ui-tests-quarantine.yml` is likewise manual-only.
-- **Signing / helper daemon:** see [`docs/signing.md`](signing.md) (manual signed smoke; CI cannot register the daemon)
+- **GitHub Actions:** not used. Verify locally with `./scripts/smoke-build.sh`.
+- **Signing / helper daemon:** see [`docs/signing.md`](signing.md) (manual signed smoke; unsigned builds cannot register the daemon)
 
 ## Commands
 
@@ -28,7 +27,7 @@ xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
 # Full local smoke (Debug + Release + unit tests)
 ./scripts/smoke-build.sh
 
-# CI-shaped smoke (skip Release)
+# Debug + unit tests only (skip Release)
 SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 

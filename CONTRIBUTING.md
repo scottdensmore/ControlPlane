@@ -24,7 +24,7 @@ git checkout -b issue-<n>-short-slug
 | Rule | Detail |
 | :--- | :--- |
 | Base branch | Latest `main` |
-| Never commit | Directly to `main` |
+| Never commit | Directly to `main` (GitHub blocks it; squash-merge PRs only) |
 | Deployment target | Raise only intentionally (currently **16.0**); do not bump “for fun” |
 | Labels | Optional `macos-16` / priority labels for filtering |
 
@@ -34,11 +34,11 @@ See the [README](README.md) for toolchain and Debug build steps. After code chan
 
 ```bash
 ./scripts/smoke-build.sh
-# or CI-shaped:
+# Debug + ControlPlaneTests only:
 SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 
-Signed helper bless and notarization are **not** part of CI—see [docs/signing.md](docs/signing.md) and [docs/releasing.md](docs/releasing.md).
+Signed helper bless and notarization are local/manual—see [docs/signing.md](docs/signing.md) and [docs/releasing.md](docs/releasing.md).
 
 ## Engineering notes (short)
 
@@ -64,4 +64,4 @@ Copy any new keys into every shipping `Localizable.strings` and translate them. 
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- GitHub Actions is dispatch-only for now. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally, then squash-merge onto `main` without waiting on Actions.
+- GitHub requires a squash-merge PR onto `main` (linear history). Direct pushes, merge commits, and rebase merges are blocked. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally. GitHub Actions is not used.

@@ -9,12 +9,12 @@ This repository is the **[scottdensmore/ControlPlane](https://github.com/scottde
 | Item | Value |
 | :--- | :--- |
 | Host OS | macOS 26 Tahoe (recommended for day-to-day work) |
-| Xcode | **26+** (CI uses the default Xcode on `macos-26` runners) |
+| Xcode | **26+** |
 | Deployment target | **16.0** |
 | Project | `ControlPlane.xcodeproj` |
 | Scheme | `ControlPlane` |
 
-Targets of note: the main app, embedded `CPXPCService` (XPC broker), and privileged helper `CPHelperTool` (an `SMAppService` LaunchDaemon registered from General settings). Unsigned CI/local smoke builds **cannot register the daemon**—see [docs/signing.md](docs/signing.md).
+Targets of note: the main app, embedded `CPXPCService` (XPC broker), and privileged helper `CPHelperTool` (an `SMAppService` LaunchDaemon registered from General settings). Unsigned local smoke builds **cannot register the daemon**—see [docs/signing.md](docs/signing.md).
 
 ## Clone and Debug build
 
@@ -27,7 +27,7 @@ open ControlPlane.xcodeproj
 
 In Xcode: select the **ControlPlane** scheme → **My Mac** → **Product → Build** (Debug).
 
-Or from the command line (unsigned, CI-shaped):
+Or from the command line (unsigned):
 
 ```bash
 xcodebuild \
@@ -44,26 +44,13 @@ Full local smoke (Debug + Release + unit tests):
 
 ```bash
 ./scripts/smoke-build.sh
-# CI-shaped (skip Release):
+# Debug + ControlPlaneTests only (skip Release):
 SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 
-## Continuous integration
+## Verification
 
-GitHub Actions workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) is **not running** on pushes or PRs (manual `workflow_dispatch` only) to save Actions minutes. Verify locally. When re-enabled it covers:
-
-- Debug `xcodebuild` of the app (`CODE_SIGNING_ALLOWED=NO`)
-- `ControlPlaneTests` only (unsigned builds cannot register the daemon)
-- Basic Info.plist / architecture smoke
-
-### Runner matrix
-
-| GitHub `runs-on` | Host OS | Notes |
-| :--- | :--- | :--- |
-| `macos-26` | macOS 26 Tahoe | **Current CI image** (Xcode 26.x default) |
-| `macos-15` | macOS 15 Sequoia | Available if a Tahoe runner is unavailable |
-
-There is no `macos-16` label; GitHub names Tahoe images `macos-26` (marketing version). UI tests run in a separate quarantine workflow and are non-blocking. Details: [docs/TESTING.md](docs/TESTING.md).
+This repository does not use GitHub Actions. Prove changes locally before opening a PR; `main` only accepts squash-merged pull requests. Details: [docs/TESTING.md](docs/TESTING.md).
 
 ## Docs map
 
