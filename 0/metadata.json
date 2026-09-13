@@ -1,0 +1,65 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M2E4VAY8PA6P8M00HX9D2D7H",
+  "session_id": "9cb9b992-bf7c-4460-a4cc-94df7d64f61e",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-13T19:45:31.935865Z",
+  "branch": "docs/award-ui-platform-path-design",
+  "checkpoints_count": 6,
+  "files_touched": [
+    "docs/superpowers/specs/2026-09-13-award-ui-platform-path-design.md"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "df83746ad28b",
+  "compact_transcript_start": 0,
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-claude-code-using-superpowers-2026-09-13T18:58:05.601286Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "using-superpowers"
+      },
+      "source": {
+        "agent": "claude-code",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "cf895943f314",
+      "timestamp": "2026-09-13T18:58:05.601286Z",
+      "native": {
+        "command": "/using-superpowers"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/using-superpowers",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-13T19:45:31.923789Z",
+    "agent_lines": 131,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 131,
+    "total_lines_changed": 131,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
