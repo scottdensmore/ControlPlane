@@ -46,7 +46,7 @@ Constraints that any award-track UI must preserve:
 1. **`LSUIElement` agent** — prefs/About/reopen call `[NSApp activateIgnoringOtherApps:YES]` before key (`PrefsWindowController` `runPreferences:`, `CPController` reopen path).
 2. **Status item is mutable AppKit state** — create/remove (`doHideFromStatusBar:`), template image (`CPMenuBarImage`), attributed title, live context menu injection, VoiceOver ids `status.item.*` / `status.menu.*`.
 3. **Logic tests have no app host** — dual `NSApplication` crashes this agent (`docs/TESTING.md`). UITests use `CPUITestRunning=1` + `-Debug OpenPrefsAtStartup YES`, not menu-bar geometry clicks.
-4. **Helper / Login Items / no App Sandbox** — out of scope for this spike; Settings panes must keep calling existing ObjC services.
+4. **Helper / Login Items** — out of scope for this spike; Settings panes must keep calling existing ObjC services. App Sandbox / MAS / widgets: [sandbox-store-spike.md](sandbox-store-spike.md).
 
 ---
 
@@ -248,7 +248,7 @@ Depends on P0; **strongly prefer P3 (#224) before panes that bind live lists**. 
 
 - Shipping SwiftUI Settings or MenuBarExtra
 - Helper / `SMAppService` changes
-- Enabling App Sandbox
+- Enabling App Sandbox (see [sandbox-store-spike.md](sandbox-store-spike.md))
 - Replacing `NSApplicationMain` / rewriting `CPController`
 - Promoting any prototype code into the app target
 

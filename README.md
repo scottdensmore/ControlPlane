@@ -74,6 +74,7 @@ There is no `macos-16` label; GitHub names Tahoe images `macos-26` (marketing ve
 | [docs/TESTING.md](docs/TESTING.md) | Unit vs UI tests, smoke commands |
 | [docs/signing.md](docs/signing.md) | Identities, entitlements, SMAppService daemon registration, notarization notes |
 | [docs/releasing.md](docs/releasing.md) | Release checklist (archive, notarize, Sparkle, verify) |
+| [docs/sandbox-store-spike.md](docs/sandbox-store-spike.md) | App Sandbox, MAS flavor, widgets, iCloud (design; `main` still unsandboxed) |
 
 ## License / history
 

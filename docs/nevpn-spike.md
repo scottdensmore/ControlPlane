@@ -19,7 +19,7 @@ Do **not** revive ScriptingBridge / System Events VPN control.
 | What it can do | Load/save **this app’s** IKEv2 (etc.) config; `startVPNTunnel` / `stopVPNTunnel` on that config. |
 | What it cannot do | Connect or disconnect arbitrary VPN services already configured in System Settings (corporate, third-party clients, WireGuard apps, etc.). |
 | LSUIElement | Agent can call the API, but the consent UI and VPN process affiliation are awkward for a menu-bar agent that is not a VPN product. |
-| Sandbox | Prefer remaining unsandboxed. Personal VPN entitlement is a signing/provisioning change, not a reason to sandbox the whole utility. |
+| Sandbox | Agent sandbox is [sandbox-store-spike.md](sandbox-store-spike.md). Personal VPN entitlement is still not a reason to sandbox; NEVPN stays NO-GO. |
 
 **Conclusion:** NEVPN is the wrong tool for “when I arrive at work, connect the VPN I already use.” It would only make sense if ControlPlane shipped its own VPN product, which is out of scope.
 

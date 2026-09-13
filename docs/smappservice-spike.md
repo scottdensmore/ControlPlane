@@ -59,7 +59,7 @@ Compared to SMJobBless:
 ## Entitlements and signing
 
 - Keep **Hardened Runtime** on app, any remaining XPC service, and the helper. Do **not** grant `com.apple.security.cs.disable-library-validation` to the helper (Sparkle remains app-only — unchanged).
-- **No App Sandbox** (unchanged product constraint).
+- **No App Sandbox** at the time of this spike. Superseded for the agent by [sandbox-store-spike.md](sandbox-store-spike.md) (helper/XPC stay unsandboxed).
 - App and helper must share Team ID `27ZDER873F`. Designated requirements for XPC clients should continue to use **team OU**, not a personal CN (same spirit as `HelperSigningRequirementTests`).
 - Drop reliance on `SMAuthorizedClients` / `SMPrivilegedExecutables` for the daemon path. Those keys are the SMJobBless contract. For SMAppService, **enforce** “who may talk to root” in `NSXPCListenerDelegate` `shouldAcceptNewConnection:` (audit connecting process code signing / Team ID / identifier). Shipping without that check would let any local process that discovers the Mach name drive the helper as root.
 - Bundle layout for implementation (not done here): copy LaunchDaemon plist into `Contents/Library/LaunchDaemons/`; use `BundleProgram` so relocating the app under `/Applications` still works. Prefer installing the product under `/Applications` so boot-time daemon bootstrap can find the bundle before login.
@@ -139,5 +139,5 @@ Reasons:
 
 - Shipping helper migration code
 - Broadening helper command surface
-- Enabling App Sandbox
+- Enabling App Sandbox (historical; see [sandbox-store-spike.md](sandbox-store-spike.md))
 - Private approval bypasses
