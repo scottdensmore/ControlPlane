@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M2E6E1NDBRAET6E0S1XT11D0",
+  "session_id": "c6ea1eea-9f16-40c9-a18a-f537a172dc5d",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-13T20:13:13.704152Z",
+  "branch": "docs/award-ui-platform-path-design",
+  "checkpoints_count": 5,
+  "save_step_count": 1,
+  "files_touched": [
+    ".gitignore"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "b5f188f970bf",
+  "compact_transcript_start": 0,
+  "session_metrics": {
+    "turn_count": 10
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-13T20:13:13.67178Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 1,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1,
+    "total_lines_changed": 7,
+    "agent_percentage": 0,
+    "metric_version": 2
+  }
+}
