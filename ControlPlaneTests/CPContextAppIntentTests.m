@@ -72,8 +72,9 @@
     NSError *error = nil;
     NSString *source = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
     XCTAssertNil(error);
-    XCTAssertTrue([source containsString:@"static var title: LocalizedStringResource = \"Switch Context\""]);
-    XCTAssertTrue([source containsString:@"static var openAppWhenRun: Bool = false"]);
+    // Swift 6: immutable static lets are concurrency-safe (#200).
+    XCTAssertTrue([source containsString:@"static let title: LocalizedStringResource = \"Switch Context\""]);
+    XCTAssertTrue([source containsString:@"static let openAppWhenRun: Bool = false"]);
     XCTAssertTrue([source containsString:@"forceSwitch(toContextNamed:"]);
     XCTAssertTrue([source containsString:@"ControlPlaneAppShortcuts"]);
 }

@@ -9,8 +9,8 @@
 import AppIntents
 
 struct ControlPlaneContextEntity: AppEntity, Identifiable, Sendable {
-    static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "Context")
-    static var defaultQuery = ControlPlaneContextQuery()
+    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Context")
+    static let defaultQuery = ControlPlaneContextQuery()
 
     var id: String
 
@@ -47,14 +47,14 @@ struct ControlPlaneContextQuery: EntityStringQuery {
 }
 
 struct SwitchContextIntent: AppIntent {
-    static var title: LocalizedStringResource = "Switch Context"
-    static var description = IntentDescription(
+    static let title: LocalizedStringResource = "Switch Context"
+    static let description = IntentDescription(
         "Force ControlPlane to a named context, the same way the status menu does."
     )
 
     /// Stay a background menu-bar agent. Do not order a window front or
     /// clear LSUIElement.
-    static var openAppWhenRun: Bool = false
+    static let openAppWhenRun: Bool = false
 
     @Parameter(title: "Context", description: "Context name, as shown in the Force Context menu")
     var context: ControlPlaneContextEntity
