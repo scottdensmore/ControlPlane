@@ -19,7 +19,6 @@
 #import "SharedNumberFormatter.h"
 #import "CPMenuBarImage.h"
 #import "PrefsWindowController.h"
-//#import <HockeySDK/HockeySDK.h>
 
 
 
@@ -388,13 +387,6 @@ static NSSet *sharedActiveContexts = nil;
 
 - (BOOL)stickyContext {
 	return forcedContextIsSticky;
-}
-
-- (void) applicationDidFinishLaunching:(NSNotification *)notification {
-//    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"fe18dcf4b5fd47a0bf75e0b49321ea93"];
-    // Do some additional configuration if needed here
-//    [[BITHockeyManager sharedHockeyManager] startManager];
-
 }
 
 - (void)importVersion1Settings {

@@ -56,9 +56,23 @@
 - (void)testATSDoesNotAllowArbitraryLoads {
     NSDictionary *plist = [self shippingInfoPlist];
     NSDictionary *ats = plist[@"NSAppTransportSecurity"];
-    XCTAssertTrue([ats isKindOfClass:[NSDictionary class]]);
-    XCTAssertNil(ats[@"NSAllowsArbitraryLoads"]);
-    XCTAssertNotNil(ats[@"NSExceptionDomains"]);
+    if (ats != nil) {
+        XCTAssertTrue([ats isKindOfClass:[NSDictionary class]]);
+        XCTAssertNil(ats[@"NSAllowsArbitraryLoads"]);
+    }
+}
+
+- (void)testNoCrashReportURLOrATSException {
+    NSDictionary *plist = [self shippingInfoPlist];
+    XCTAssertNil(plist[@"CPCrashReportURL"],
+                 @"Shipping plist must not advertise a crash-upload URL (#271)");
+
+    NSDictionary *ats = plist[@"NSAppTransportSecurity"];
+    NSDictionary *domains = ats[@"NSExceptionDomains"];
+    if ([domains isKindOfClass:[NSDictionary class]]) {
+        XCTAssertNil(domains[@"crashreport.controlplaneapp.com"],
+                     @"ATS must not except crashreport.controlplaneapp.com (#271)");
+    }
 }
 
 @end
