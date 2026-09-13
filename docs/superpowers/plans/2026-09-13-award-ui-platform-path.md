@@ -218,8 +218,7 @@ In `ControlPlaneTests/CPHelperDaemonServiceTests.m` (or a small new test file in
                   @"AGENTS.md must point at the coexistence spike");
     XCTAssertTrue([agents containsString:@"#190"] || [agents containsString:@"190"],
                   @"AGENTS.md must point at award epic #190");
-    XCTAssertFalse([agents containsString:@"MenuBarExtra"],
-                   @"Do not recommend MenuBarExtra in AGENTS policy");
+    // Naming MenuBarExtra as forbidden is OK (human decision: keep explicit NO-GO wording).
 }
 ```
 
