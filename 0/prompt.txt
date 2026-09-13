@@ -1,9 +1,5 @@
-lets do it
-
----
-
-1
-
----
-
 B
+
+---
+
+lets go ahead and delete the AGENTS.md too
