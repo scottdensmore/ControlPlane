@@ -126,6 +126,8 @@
 - (void)disableAutomaticSwitching:(NSNotification *) notification;
 
 - (void)registerForNotifications;
+- (void)uitestForceContext:(NSNotification *)notification;
+- (void)applyForceContextAtStartupIfRequested;
 
 @end
 
@@ -138,6 +140,11 @@
 #define CP_DISPLAY_ICON     0u
 #define CP_DISPLAY_CONTEXT  1u
 #define CP_DISPLAY_BOTH     2u
+
+/// Distributed notification for UITest Force Context (#244). Posted only under
+/// CPUITestRunning; object is unused, userInfo[@"name"] is the Force Context token.
+static NSString * const CPUITestForceContextNotificationName =
+	@"com.scottdensmore.ControlPlane.UITestForceContext";
 
 static NSSet *sharedActiveContexts = nil;
 
@@ -193,6 +200,8 @@ static NSSet *sharedActiveContexts = nil;
 
 	// Debugging
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"Debug OpenPrefsAtStartup"];
+	// UITest / debug harness (#244): empty = off; non-empty Force Context menu token.
+	[appDefaults setValue:@"" forKey:@"Debug ForceContextAtStartup"];
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"Debug USBParanoia"];
 
 	// Sparkle (TODO: make update time configurable?)
@@ -613,6 +622,9 @@ static NSSet *sharedActiveContexts = nil;
                 [prefsWindow makeKeyAndOrderFront:self];
             }
         }
+        // UITest / debug harness (#244): force a context without status-item clicks.
+        // Uses the same forceSwitchToContextNamed: path as the Force Context menu / App Intent.
+        [self applyForceContextAtStartupIfRequested];
         [self updateActiveContextsMenuTitle];
         [self updateActiveContextsMenuList];
     });
@@ -726,6 +738,15 @@ static NSSet *sharedActiveContexts = nil;
                                              selector:@selector(interfaceThemeDidChange)
                                                  name:@"AppleInterfaceThemeChangedNotification"
                                                object:nil];
+
+    // UITest-only Force Context hook (#244): mid-session switch without menu-bar clicks.
+    // Normal launches (no CPUITestRunning) stay LSUIElement agents with no extra listener.
+    if ([[[NSProcessInfo processInfo] environment][@"CPUITestRunning"] isEqualToString:@"1"]) {
+        [[NSDistributedNotificationCenter defaultCenter] addObserver:self
+                                                             selector:@selector(uitestForceContext:)
+                                                                 name:CPUITestForceContextNotificationName
+                                                               object:nil];
+    }
     
 }
 
@@ -874,6 +895,11 @@ static NSSet *sharedActiveContexts = nil;
 				[item setAccessibilityLabel:item.title];
 			}
 		}
+	}
+	// Submenu parent has no action; id still helps VoiceOver / future menu hosting (#244 / #235).
+	[forceContextMenuItem setAccessibilityIdentifier:@"status.menu.forceContext"];
+	if (forceContextMenuItem.title.length > 0) {
+		[forceContextMenuItem setAccessibilityLabel:forceContextMenuItem.title];
 	}
 }
 
@@ -1482,6 +1508,43 @@ static NSSet *sharedActiveContexts = nil;
 
 #pragma mark -
 #pragma mark Force context switching
+
+- (void)applyForceContextAtStartupIfRequested {
+	NSString *name = [[NSUserDefaults standardUserDefaults] stringForKey:@"Debug ForceContextAtStartup"];
+	name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (name.length == 0) {
+		return;
+	}
+	NSError *error = nil;
+	if (![self forceSwitchToContextNamed:name error:&error]) {
+		DSLog(@"Debug ForceContextAtStartup '%@' failed: %@", name, error);
+	}
+}
+
+- (void)uitestForceContext:(NSNotification *)notification {
+	// Extra guard: listener is only registered under CPUITestRunning, but refuse
+	// outside that env so a stray distributed post cannot force-switch a normal agent.
+	if (![[[NSProcessInfo processInfo] environment][@"CPUITestRunning"] isEqualToString:@"1"]) {
+		return;
+	}
+	NSString *name = notification.userInfo[@"name"];
+	if (![name isKindOfClass:[NSString class]]) {
+		name = notification.object;
+	}
+	if (![name isKindOfClass:[NSString class]]) {
+		return;
+	}
+	name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	if (name.length == 0) {
+		return;
+	}
+	dispatch_async(dispatch_get_main_queue(), ^{
+		NSError *error = nil;
+		if (![self forceSwitchToContextNamed:name error:&error]) {
+			DSLog(@"UITest Force Context '%@' failed: %@", name, error);
+		}
+	});
+}
 
 - (void)forceSwitch:(id)sender {
 	Context *ctxt = nil;

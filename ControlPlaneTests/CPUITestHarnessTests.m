@@ -104,10 +104,13 @@
 		      @"UITests must open Settings via Debug OpenPrefsAtStartup");
 	XCTAssertTrue([uitest containsString:@"prefs.window"],
 		      @"Smoke must locate Settings by prefs.window");
+	XCTAssertTrue([uitest containsString:@"ForceContextAtStartup"] ||
+			  [uitest containsString:@"UITestForceContext"],
+		      @"UITests should exercise the Force Context hook (#244)");
 	XCTAssertFalse([uitest containsString:@"coordinateWithNormalizedOffset"],
 		       @"Do not open Settings via menu-bar pixel/geometry clicks");
 	XCTAssertFalse([uitest containsString:@"status.item.controlplane"],
-		       @"Status-item clicks are out of scope for #202 (see #244)");
+		       @"Status-item clicks remain out of scope (use Force Context hooks for #206)");
 }
 
 - (void)testTestingDocsDocumentUITestHarness {
@@ -118,8 +121,11 @@
 		      @"Harness docs must name CPUITestRunning");
 	XCTAssertTrue([docs containsString:@"OpenPrefsAtStartup"],
 		      @"Harness docs must name OpenPrefsAtStartup");
-	XCTAssertTrue([docs containsString:@"#244"] || [docs containsString:@"issue 244"],
-		      @"Harness docs should note status-item Force Context follow-up (#244)");
+	XCTAssertTrue([docs containsString:@"ForceContextAtStartup"] ||
+			  [docs containsString:@"UITestForceContext"],
+		      @"Harness docs must cover the Force Context hook (#244)");
+	XCTAssertTrue([docs containsString:@"#206"] || [docs containsString:@"issue 206"],
+		      @"Harness docs should point Force Context journeys at #206");
 	XCTAssertTrue([docs containsString:@"PosixSpawn"],
 		      @"Harness docs must note PosixSpawn Test launcher (attach/PID)");
 }

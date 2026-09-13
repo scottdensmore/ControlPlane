@@ -38,6 +38,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `SharedNumberFormatterTests` | Percent formatter singleton used in confidence UI |
 | `PrefsHIGShortTermTests` | Prefs a11y labels, agent menu shortcuts, standard About, Help accuracy (#31) |
 | `CPUITestHarnessTests` | Settings UITest harness: OpenPrefsAtStartup → `runPreferences:`, `CPUITestRunning` auth skip + Regular activation policy, AX ids, docs (#202) |
+| `CPForceContextUITestHookTests` | Force Context UITest hook: `Debug ForceContextAtStartup` + `UITestForceContext` notification → `forceSwitchToContextNamed:`, gated listener, AX id, docs (#244) |
 | `PrefsSettingsStyleShellTests` | Settings-style `NSTabViewController` shell presence + pane/⌘, continuity (#100) |
 | `CPMenuBarImageTests` | Menu-bar template prep (#89); Asset Catalog template/brand/AppIcon + button API checks (#32) |
 | `CPSystemInfoTests` | `getOSVersion` encoding + hardware model; IOKit display bridge null-ID safety (#88) |
@@ -77,13 +78,16 @@ Manual/script: `./scripts/check-help-scrub.sh` greps Help HTML for `dustinrue/Co
 
 ## UITest harness
 
-Deterministic Settings open for UITests (#202). **Do not** click menu-bar pixel positions or the status item to open Settings under XCUITest — that path is flaky for `LSUIElement` agents.
+Deterministic Settings and Force Context entry for UITests (#202, #244). **Do not** click menu-bar pixel positions or the status item under XCUITest — that path is flaky for `LSUIElement` agents. Stay on AppKit `NSStatusItem` (no `MenuBarExtra`); see [`menubarextra-spike.md`](menubarextra-spike.md).
 
 | Hook | Role |
 | :--- | :--- |
-| `CPUITestRunning=1` (launch environment) | Skips notification authorization prompts in `CPNotifications`; sets `NSApplicationActivationPolicyRegular` in `main` so XCUITest can attach to the `LSUIElement` agent |
+| `CPUITestRunning=1` (launch environment) | Skips notification authorization prompts in `CPNotifications`; sets `NSApplicationActivationPolicyRegular` in `main` so XCUITest can attach to the `LSUIElement` agent; enables the Force Context distributed-notification listener |
 | `-Debug OpenPrefsAtStartup YES` (launch argument) | After launch, opens Settings via `PrefsWindowController` `runPreferences:` (same path as the status-menu item) |
+| `-Debug ForceContextAtStartup <token>` (launch argument) | After launch, forces a context via `forceSwitchToContextNamed:` (same path as the Force Context menu / Switch Context App Intent). `<token>` is the Force Context menu name (unique name, or `Parent/Child` when names collide). Empty / omitted = off |
+| `com.scottdensmore.ControlPlane.UITestForceContext` (distributed notification) | Mid-session Force Context without relaunch. Only observed when `CPUITestRunning=1`. `userInfo[@"name"]` (or `object` string) is the menu token; handler calls `forceSwitchToContextNamed:` |
 | `prefs.window` (AX id) | Stable query for the Settings window in `ControlPlaneUITests` |
+| `status.menu.forceContext` (AX id) | Force Context submenu parent (VoiceOver / future menu hosting; **not** a substitute for the launch/notification hooks — do not open the status menu via geometry clicks) |
 
 ```bash
 # Smoke: app launches and Settings appears
@@ -93,11 +97,21 @@ xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
   -only-testing:ControlPlaneUITests/ControlPlaneUITests/testLaunchAndOpenPreferences
 ```
 
-Unit contract: `ControlPlaneTests/CPUITestHarnessTests`.
+Post Force Context from a UITest (after a named context exists):
+
+```objc
+[[NSDistributedNotificationCenter defaultCenter]
+    postNotificationName:@"com.scottdensmore.ControlPlane.UITestForceContext"
+                  object:nil
+                userInfo:@{ @"name": @"Home" }
+      deliverImmediately:YES];
+```
+
+Unit contracts: `ControlPlaneTests/CPUITestHarnessTests` (#202), `ControlPlaneTests/CPForceContextUITestHookTests` (#244).
 
 The shared scheme’s **Test** action uses PosixSpawn (no LLDB attach). That avoids “does not have a process ID” failures when launching the agent under `xcodebuild test`. `ControlPlaneUITests` also retries cold attach once or twice — the first launch after a clean DerivedData build can still race.
 
-**Follow-up:** status-item Force Context automation remains out of scope here — see [#244](https://github.com/scottdensmore/ControlPlane/issues/244).
+**#244 closed:** the Force Context automation hook above is available for journeys. Full Force Context UITest (seed context → force → assert active UI) remains [#206](https://github.com/scottdensmore/ControlPlane/issues/206).
 
 ## UI test accessibility identifiers
 
@@ -109,6 +123,7 @@ The shared scheme’s **Test** action uses PosixSpawn (no LLDB attach). That avo
 | `prefs.tab.general` | General tab content view |
 | `prefs.tab.evidencesources` | Evidence Sources tab content view |
 | `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`, `prefs.toolbar.evidencesources`) |
+| `status.menu.forceContext` | Force Context submenu parent in the status menu |
 
 ## Manual status-item smoke (not automatable under XCUITest)
 

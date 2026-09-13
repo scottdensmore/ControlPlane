@@ -2,7 +2,8 @@
 //  ControlPlaneUITests.m
 //  ControlPlaneUITests
 //
-//  Deterministic Settings smoke (#202): launch-arg harness, no status-item clicks.
+//  Deterministic Settings smoke (#202) + Force Context hook smoke (#244):
+//  launch-arg / notification harness, no status-item clicks.
 //
 
 #import <XCTest/XCTest.h>
@@ -17,7 +18,7 @@
     self.continueAfterFailure = NO;
 }
 
-- (XCUIApplication *)launchWithPrefsOpen {
+- (XCUIApplication *)launchWithArguments:(NSArray<NSString *> *)arguments {
     XCUIApplication *existing = [[XCUIApplication alloc] init];
     if (existing.state != XCUIApplicationStateNotRunning) {
         [existing terminate];
@@ -36,7 +37,7 @@
     for (NSInteger attempt = 1; attempt <= 3; attempt++) {
         XCUIApplication *app = [[XCUIApplication alloc] init];
         app.launchEnvironment = @{ @"CPUITestRunning": @"1" };
-        app.launchArguments = @[ @"-Debug OpenPrefsAtStartup", @"YES" ];
+        app.launchArguments = arguments;
 
         if (attempt < 3) {
             XCTExpectFailureWithOptionsInBlock(
@@ -61,6 +62,10 @@
     return nil;
 }
 
+- (XCUIApplication *)launchWithPrefsOpen {
+    return [self launchWithArguments:@[ @"-Debug OpenPrefsAtStartup", @"YES" ]];
+}
+
 - (void)testLaunchAndOpenPreferences {
     XCUIApplication *app = [self launchWithPrefsOpen];
 
@@ -83,6 +88,30 @@
     }
 
     XCTAssertFalse([[checkbox value] boolValue], @"Use Notifications should be off after toggle");
+}
+
+/// #244: Force Context launch arg + distributed notification must not hang/crash the
+/// Settings harness. Full seed→force→assert journey is #206.
+- (void)testForceContextHookDoesNotBreakSettingsHarness {
+    XCUIApplication *app = [self launchWithArguments:@[
+        @"-Debug OpenPrefsAtStartup", @"YES",
+        @"-Debug ForceContextAtStartup", @"__CPUITestMissingContext__",
+    ]];
+
+    XCUIElement *window = app.windows[@"prefs.window"];
+    XCTAssertTrue([window waitForExistenceWithTimeout:15],
+                  @"ForceContextAtStartup (missing token) must not block OpenPrefsAtStartup");
+
+    [[NSDistributedNotificationCenter defaultCenter]
+        postNotificationName:@"com.scottdensmore.ControlPlane.UITestForceContext"
+                      object:nil
+                    userInfo:@{ @"name": @"__CPUITestMissingContext__" }
+          deliverImmediately:YES];
+
+    // Give the main-queue handler a beat; Settings must remain reachable.
+    [NSThread sleepForTimeInterval:0.5];
+    XCTAssertTrue(window.exists,
+                  @"UITestForceContext notification must not tear down Settings");
 }
 
 @end
