@@ -351,6 +351,7 @@
 }
 
 // #176: Toggle Remote Login Help points at Allow privileged helper, not “when first needed.”
+// #261: also names systemsetup fragility and links Diagnostics.
 
 - (void)testHelpRemoteLoginPointsAtPrivilegedHelperApproval {
     NSError *error = nil;
@@ -375,6 +376,10 @@
                    @"Toggle Remote Login Help must not say General preferences (#176)");
     XCTAssertFalse([rlSection rangeOfString:@"when first needed" options:NSCaseInsensitiveSearch].location != NSNotFound,
                    @"Toggle Remote Login Help must not say the helper is used when first needed (#176)");
+    XCTAssertTrue([rlSection rangeOfString:@"systemsetup"].location != NSNotFound,
+                  @"Toggle Remote Login Help must name systemsetup fragility (#261)");
+    XCTAssertTrue([rlSection rangeOfString:@"diagnostics.html"].location != NSNotFound,
+                  @"Toggle Remote Login Help must cross-link Diagnostics (#261)");
 }
 
 // #180: remaining privileged actions point at Allow privileged helper.
