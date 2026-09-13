@@ -23,7 +23,7 @@ Land the Award UI critical path so ControlPlane can ship SwiftUI Settings on mac
 | Order | Issue | Outcome |
 | :---: | :--- | :--- |
 | 1 | [#200](https://github.com/scottdensmore/ControlPlane/issues/200) | Swift 6 language mode for app Swift (`SwitchContextIntent` + project settings); build/docs assertion that mode stays 6 |
-| 2 | [#201](https://github.com/scottdensmore/ControlPlane/issues/201) | Dual-stack migration policy in `AGENTS.md`; refresh epic **#190** body for current constraints (`main`, local smoke only, sandbox design allowed) |
+| 2 | [#201](https://github.com/scottdensmore/ControlPlane/issues/201) | Dual-stack migration policy in `CONTRIBUTING.md`; refresh epic **#190** body for current constraints (`main`, local smoke only, sandbox design allowed) |
 | 3 | [#224](https://github.com/scottdensmore/ControlPlane/issues/224) | Thin Swift read models for Context / Evidence / Action lists; ObjC remains source of truth for matching and execution |
 | 4 | [#203](https://github.com/scottdensmore/ControlPlane/issues/203) | SwiftUI **General** pane hosted in the existing AppKit prefs shell; preserve `prefs.general.*` accessibility IDs; localize new strings |
 
@@ -59,7 +59,7 @@ NSApplicationMain → CPController (evidence → context → action)
 | Slice | Mechanism |
 | :--- | :--- |
 | **#200** | Set app-target `SWIFT_VERSION` to 6; fix `SwitchContextIntent` concurrency/isolation; ObjC call sites stay on existing `CPContextAppIntentBridge` |
-| **#201** | Document dual-stack in `AGENTS.md` only (pointer files stay pointers); update #190 issue text/comment so the written goal matches repo reality |
+| **#201** | Document dual-stack in `CONTRIBUTING.md` only (pointer files stay pointers; no `AGENTS.md`); update #190 issue text/comment so the written goal matches repo reality |
 | **#224** | Thin Swift structs + ObjC façade (same pattern as `CPContextAppIntentBridge`): ordered names, enablement flags — no matcher or action execution moves |
 | **#203** | Replace General pane content with hosted SwiftUI; wire toggles to `CPLoginItemService`, `CPHelperDaemonService`, and existing notification prefs |
 
@@ -81,7 +81,7 @@ Bridge (#224) supplies list read models for later panes; General may use it for 
 - **Helper / Login Items:** SwiftUI presents; ObjC services decide success/failure and supply alert copy. Keep “Open Login Items” recovery paths.
 - **Unsigned Debug:** Helper checkbox may show not-registered; do not pretend daemon registration works without Developer ID signing (`docs/signing.md`).
 - **Bridge mapping:** Empty or missing registries return empty lists; never invent contexts, evidence sources, or actions.
-- **Docs assertions:** Preserve existing `CPHelperDaemonServiceTests` contracts on `AGENTS.md` / README / signing (`SMAppService`, `CPXPCService`, no SMJobBless install wording).
+- **Docs assertions:** Preserve existing `CPHelperDaemonServiceTests` contracts on `CONTRIBUTING.md` / README / signing (`SMAppService`, `CPXPCService`, no SMJobBless install wording).
 
 ---
 
@@ -97,7 +97,7 @@ Bridge (#224) supplies list read models for later panes; General may use it for 
 | Slice | Extra proof |
 | :--- | :--- |
 | #200 | Debug + Release build under Swift 6; App Intent still works; assertion that app Swift stays on 6 |
-| #201 | `AGENTS.md` describes dual-stack + coexistence spike pointer; #190 text no longer claims Actions re-enable, `master`, or a standing sandbox ban |
+| #201 | `CONTRIBUTING.md` describes dual-stack + coexistence spike pointer; #190 text no longer claims Actions re-enable, `master`, or a standing sandbox ban |
 | #224 | Unit tests for Context / Evidence / Action list mapping; ObjC matchers unchanged |
 | #203 | Settings open via `Debug OpenPrefsAtStartup`; controls reachable via `prefs.general.*`; new strings in all shipping locales |
 

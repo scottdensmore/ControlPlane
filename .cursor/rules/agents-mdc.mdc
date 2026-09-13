@@ -1,9 +1,10 @@
 ---
-description: Follow AGENTS.md as the single source of truth for every coding agent
+description: Follow CONTRIBUTING.md as the instruction SSOT for every coding agent
+globs:
 alwaysApply: true
 ---
 
 # ControlPlane agents
 
-- The only instruction file is root `AGENTS.md`. Do not create or follow `agent.md`.
+- The only instruction file is root `CONTRIBUTING.md`. Do not create or follow `AGENTS.md` or `agent.md`.
 - This rule is a pointer. Do not copy workflow policy here.

@@ -2,13 +2,22 @@
 
 Thanks for helping keep this ObjC / XIB fork working on modern macOS. Live work tracking is **GitHub Issues** on [scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)—do not invent parallel roadmap docs.
 
-Coding agents should follow **[AGENTS.md](AGENTS.md)** as the single source of truth for workflow detail. This file is the human-oriented short version.
+This file is the instruction SSOT for humans and coding agents. Do not create `AGENTS.md`, `agent.md`, or parallel roadmap docs. Pointer files (`CLAUDE.md`, `.cursorrules`, etc.) only point here.
+
+**GitHub:** do not add GitHub Actions workflows. Actions is disabled. Land work with short-lived feature branches and squash-merged PRs onto `main` (linear history; direct pushes are blocked). Verify locally with `./scripts/smoke-build.sh`.
+
+**Sandbox / App Store / widgets / iCloud:** follow [docs/sandbox-store-spike.md](docs/sandbox-store-spike.md). Do not treat “no App Sandbox” as a standing ban. Current `main` remains unsandboxed until the enable-sandbox issue lands. Mac App Store flavor: no Sparkle, no privileged helper.
+
+**Helper / XPC:** the privileged helper is an `SMAppService` LaunchDaemon. Embedded `CPXPCService` is the XPC broker and does not call `SMJobBless`. See [docs/signing.md](docs/signing.md).
+
+Award-track UI coexistence (AppKit host + SwiftUI views, Swift 6): parent epic [#190](https://github.com/scottdensmore/ControlPlane/issues/190) and [docs/swiftui-coexistence-spike.md](docs/swiftui-coexistence-spike.md).
 
 ## Pick an issue
 
-1. Prefer open issues on the [macOS 26 epic](https://github.com/scottdensmore/ControlPlane/issues/116) (or other open `agent-ready` issues). Optional `macos-16` labels are metadata only—not branch names.
+1. Prefer open issues on the [award epic](https://github.com/scottdensmore/ControlPlane/issues/190) (or other open `agent-ready` issues). Optional `macos-16` labels are metadata only—not branch names.
 2. Prefer issues also labeled **`agent-ready`**: they should include summary, evidence (paths), tasks, and acceptance criteria so another session can execute without chat history.
 3. One thin vertical slice per PR—smallest cohesive fix or feature that can be tested and reviewed alone.
+4. Prefer epics for multi-slice themes. Keep feature branches short-lived.
 
 ## Branching
 

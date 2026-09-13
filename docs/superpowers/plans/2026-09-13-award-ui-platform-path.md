@@ -16,7 +16,7 @@
 - Feature branch → local `./scripts/smoke-build.sh` → squash-merge PR onto `main`. Never commit directly to `main`.
 - No MenuBarExtra, no SwiftUI `Settings { }` scene, no `@main` Swift `App`.
 - No App Sandbox flip (#280 is out of scope).
-- Preserve `prefs.general.*` accessibility IDs and existing `CPHelperDaemonServiceTests` AGENTS/SMAppService assertions.
+- Preserve `prefs.general.*` accessibility IDs and existing `CPHelperDaemonServiceTests` CONTRIBUTING/SMAppService assertions.
 - Shipping locales for new user-visible strings: `en`, `da-DK`, `de`, `fr`, `it`, `pt-BR`, `pt-PT`.
 
 ---
@@ -28,7 +28,7 @@
 | `ControlPlane.xcodeproj/project.pbxproj` | `SWIFT_VERSION = 6` (Debug + Release app configs); add new Swift/ObjC sources to app + test targets |
 | `Source/SwitchContextIntent.swift` | App Intent; fix any Swift 6 concurrency/isolation issues |
 | `ControlPlaneTests/CPContextAppIntentTests.m` (or new `CPSwiftLanguageModeTests.m`) | Assert `SWIFT_VERSION = 6` in app configs |
-| `AGENTS.md` | Dual-stack policy pointing at coexistence spike + #190 |
+| `CONTRIBUTING.md` | Dual-stack policy pointing at coexistence spike + #190 |
 | GitHub issue #190 | Refresh body: `main`, local smoke, sandbox design allowed |
 | `Source/CPSettingsReadModelTokens.h/.m` | Pure mapping: fixture rows → read-model dictionaries (unit-testable, no app host) |
 | `Source/CPSettingsReadModelBridge.h/.m` | Live lists from `CPController` / registries on main thread |
@@ -183,12 +183,12 @@ Squash-merge when approved; do not start Task 2 until this is on `main`.
 
 ---
 
-### Task 2: Dual-stack AGENTS.md + epic #190 refresh (#201)
+### Task 2: Dual-stack CONTRIBUTING.md + epic #190 refresh (#201)
 
 **Branch:** `docs/agents-dual-stack` from updated `main`
 
 **Files:**
-- Modify: `AGENTS.md`
+- Modify: `CONTRIBUTING.md`
 - Modify via `gh`: issue [#190](https://github.com/scottdensmore/ControlPlane/issues/190) body
 - Test: existing `CPHelperDaemonServiceTests` docs assertions must stay green
 
@@ -209,15 +209,15 @@ In `ControlPlaneTests/CPHelperDaemonServiceTests.m` (or a small new test file in
 
 ```objc
 - (void)testAgentsMdDescribesDualStackSwiftUIPolicy {
-    NSString *agents = [self sourceTextAtRelativePath:@"AGENTS.md"];
-    XCTAssertTrue([agents containsString:@"SwiftUI"],
-                  @"AGENTS.md must describe SwiftUI Settings/status migration");
-    XCTAssertTrue([agents containsString:@"Swift 6"],
-                  @"AGENTS.md must require Swift 6 for new Swift");
-    XCTAssertTrue([agents containsString:@"swiftui-coexistence-spike.md"],
-                  @"AGENTS.md must point at the coexistence spike");
-    XCTAssertTrue([agents containsString:@"#190"] || [agents containsString:@"190"],
-                  @"AGENTS.md must point at award epic #190");
+    NSString *contributing = [self sourceTextAtRelativePath:@"CONTRIBUTING.md"];
+    XCTAssertTrue([contributing containsString:@"SwiftUI"],
+                  @"CONTRIBUTING.md must describe SwiftUI Settings/status migration");
+    XCTAssertTrue([contributing containsString:@"Swift 6"],
+                  @"CONTRIBUTING.md must require Swift 6 for new Swift");
+    XCTAssertTrue([contributing containsString:@"swiftui-coexistence-spike.md"],
+                  @"CONTRIBUTING.md must point at the coexistence spike");
+    XCTAssertTrue([contributing containsString:@"#190"] || [contributing containsString:@"190"],
+                  @"CONTRIBUTING.md must point at award epic #190");
     // Naming MenuBarExtra as forbidden is OK (human decision: keep explicit NO-GO wording).
 }
 ```
@@ -230,38 +230,10 @@ If `sourceTextAtRelativePath:` is private to that class, put the test in that `@
 SKIP_RELEASE=1 ./scripts/smoke-build.sh
 ```
 
-- [ ] **Step 4: Update `AGENTS.md`**
+- [ ] **Step 4: Update `CONTRIBUTING.md`**
 
-Keep existing helper / sandbox / branching rules. Expand with a dual-stack section. **Must preserve** strings already asserted by `testAgentDocsDescribeSMAppServiceDaemonNotSMJobBlessInstall`:
-- contains `SMAppService`
-- contains `CPXPCService`
-- contains ``does not call `SMJobBless` ``
-- does not claim collapse of CPXPCService
-
-Example shape (edit to match repo voice; keep factual):
-
-```markdown
-# ControlPlane — Agent Instructions (SSOT)
-
-…existing pointer / GitHub / sandbox paragraphs…
-
-## Dual-stack UI (award track)
-
-Parent epic: https://github.com/scottdensmore/ControlPlane/issues/190  
-Design: docs/swiftui-coexistence-spike.md
-
-- AppKit owns process lifecycle and the evidence → context → action loop (`CPController`).
-- SwiftUI paints Settings panes and (later) status-menu content via `NSHostingController` / hosted views.
-- Do **not** add SwiftUI `MenuBarExtra`, SwiftUI `Settings` scenes, or a Swift `@main` App for this track.
-- New Swift uses **Swift 6** language mode. Thin Swift for App Intents remains OK.
-- ObjC remains source of truth for matching and privileged helper execution until an explicit migrate-template issue says otherwise.
-- Wave 1 epic #116 is closed; live work is GitHub Issues only.
-
-## Issue hygiene
-…
-```
-
-Ensure `SMAppService` and `CPXPCService` / SMJobBless wording from existing tests still appear (add a short helper topology sentence if the file became too thin).
+Keep existing helper / sandbox / branching rules in `CONTRIBUTING.md`. Expand with an explicit dual-stack section (AppKit host + SwiftUI views, Swift 6, no MenuBarExtra / Settings scenes / `@main` App). **Must preserve** strings already asserted by `testAgentDocsDescribeSMAppServiceDaemonNotSMJobBlessInstall` on `CONTRIBUTING.md`.
+Do **not** recreate `AGENTS.md`.
 
 - [ ] **Step 5: Refresh GitHub epic #190**
 
@@ -288,18 +260,18 @@ Expected: new dual-stack assertion + existing helper docs tests green.
 - [ ] **Step 7: Commit and PR**
 
 ```bash
-git add AGENTS.md ControlPlaneTests/
+git add CONTRIBUTING.md ControlPlaneTests/
 git commit -m "$(cat <<'EOF'
-docs(agents): dual-stack SwiftUI + Swift 6 migration policy (#201)
+docs(contributing): dual-stack SwiftUI + Swift 6 migration policy (#201)
 
-Align AGENTS.md with the award-track coexistence model and point agents at epic #190.
+Align CONTRIBUTING.md with the award-track coexistence model and point agents at epic #190.
 
 EOF
 )"
 git push -u origin HEAD
-gh pr create --title "docs(agents): dual-stack SwiftUI + Swift 6 policy (#201)" --body "$(cat <<'EOF'
+gh pr create --title "docs(contributing): dual-stack SwiftUI + Swift 6 policy (#201)" --body "$(cat <<'EOF'
 ## Summary
-- Dual-stack policy in AGENTS.md
+- Dual-stack policy in CONTRIBUTING.md
 - Docs assertion for SwiftUI / Swift 6 / coexistence spike
 - Epic #190 text refreshed for main / local smoke / sandbox design
 
@@ -675,7 +647,7 @@ EOF
 | Spec requirement | Task |
 | :--- | :--- |
 | #200 Swift 6 + assertion | Task 1 |
-| #201 AGENTS dual-stack + #190 refresh | Task 2 |
+| #201 CONTRIBUTING dual-stack + #190 refresh | Task 2 |
 | #224 read models + mapping tests | Task 3 |
 | #203 SwiftUI General + a11y IDs + locales | Task 4 |
 | Serial PR delivery / no main commits | Global Constraints + each task branch steps |

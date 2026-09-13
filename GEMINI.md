@@ -1,3 +1,1 @@
-# ControlPlane
-
-Follow root [`AGENTS.md`](AGENTS.md). That file is the only agent instruction file. Do not create or follow `agent.md`. Do not duplicate policy here.
+Follow root [`CONTRIBUTING.md`](CONTRIBUTING.md). That file is the instruction SSOT for coding agents. Do not create or follow `AGENTS.md` or `agent.md`. Do not duplicate policy here.
