@@ -683,4 +683,4 @@ EOF
 | No MenuBarExtra / Settings scene / sandbox | Global Constraints + Task 2 / 4 |
 | Preserve helper docs assertions | Task 2 Step 4 |
 
-No TBD placeholders remain. Action live-list wiring notes a concrete fallback if `ActionSetController` nib coupling blocks construction — implementers must still ship three token mappers and context+evidence live rows at minimum; action live rows required unless blocked, then empty array with issue comment (prefer full).
+No TBD placeholders remain. Action live rows use `ActionSetController` `-types` in the app bridge; token tests cover mapping with fixtures.
