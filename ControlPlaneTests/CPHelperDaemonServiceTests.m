@@ -142,6 +142,19 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
                           @"system/com.scottdensmore.CPHelperTool");
 }
 
+- (void)testAgentsMdDescribesDualStackSwiftUIPolicy {
+    NSString *contributing = [self sourceTextAtRelativePath:@"CONTRIBUTING.md"];
+    XCTAssertTrue([contributing containsString:@"SwiftUI"],
+                  @"CONTRIBUTING.md must describe SwiftUI Settings/status migration");
+    XCTAssertTrue([contributing containsString:@"Swift 6"],
+                  @"CONTRIBUTING.md must require Swift 6 for new Swift");
+    XCTAssertTrue([contributing containsString:@"swiftui-coexistence-spike.md"],
+                  @"CONTRIBUTING.md must point at the coexistence spike");
+    XCTAssertTrue([contributing containsString:@"#190"] || [contributing containsString:@"190"],
+                  @"CONTRIBUTING.md must point at award epic #190");
+    // Naming MenuBarExtra as forbidden is OK (human decision: keep explicit NO-GO wording).
+}
+
 - (void)testAgentDocsDescribeSMAppServiceDaemonNotSMJobBlessInstall {
     NSArray<NSString *> *paths = @[
         @"README.md",

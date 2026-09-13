@@ -12,6 +12,26 @@ This file is the instruction SSOT for humans and coding agents. Do not create `A
 
 Award-track UI coexistence (AppKit host + SwiftUI views, Swift 6): parent epic [#190](https://github.com/scottdensmore/ControlPlane/issues/190) and [docs/swiftui-coexistence-spike.md](docs/swiftui-coexistence-spike.md).
 
+## Dual-stack UI (award track)
+
+ControlPlane migrates Settings and status-menu chrome to SwiftUI **without** rewriting the ObjC evidence → context → action loop. Follow the locked coexistence model in [docs/swiftui-coexistence-spike.md](docs/swiftui-coexistence-spike.md) and parent epic [#190](https://github.com/scottdensmore/ControlPlane/issues/190).
+
+| Rule | Detail |
+| :--- | :--- |
+| Host | **AppKit owns lifecycle** — keep `NSApplicationMain`, `CPController`, `PrefsWindowController`, and existing activation paths |
+| Views | **SwiftUI paints** — host with `NSHostingController` / `NSHostingView` inside AppKit shells (tabs, menus, popovers) |
+| Swift version | **Swift 6** for all new Swift in the app target (see #200) |
+| Bridge pattern | Swift read models / bridges call ObjC registries — same shape as `SwitchContextIntent` → `CPContextAppIntentBridge` → `CPController` (#224) |
+| Accessibility | Preserve existing UITest ids (e.g. `prefs.general.*`) when replacing pane content |
+
+**Do not ship:**
+
+- SwiftUI `MenuBarExtra` — status item stays AppKit `NSStatusItem` + `NSMenu`
+- SwiftUI `Settings { }` scene — Settings stay AppKit-owned (`CPPrefsSettingsShellController` tabs)
+- Swift `@main` `App` — do not replace `NSApplicationMain` or add a second app host
+
+Thin vertical slices per prefs pane or menu section. Do not big-bang rewrite XIB panes in one PR.
+
 ## Pick an issue
 
 1. Prefer open issues on the [award epic](https://github.com/scottdensmore/ControlPlane/issues/190) (or other open `agent-ready` issues). Optional `macos-16` labels are metadata only—not branch names.
