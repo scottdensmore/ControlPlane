@@ -1609,6 +1609,22 @@ static NSSet *sharedActiveContexts = nil;
     return [CPContextAppIntentTokens tokensForContextsInMenuOrder:ordered];
 }
 
+- (NSArray<NSDictionary *> *)evidenceSourceDescriptorsForSettings {
+    NSMutableArray<NSDictionary *> *descriptors = [NSMutableArray array];
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    for (EvidenceSource *src in [evidenceSources sourceEnumerator]) {
+        NSString *name = [src name] ?: @"";
+        NSString *friendlyName = [src friendlyName] ?: name;
+        BOOL enabled = [standardUserDefaults boolForKey:[src enablementKeyName]];
+        [descriptors addObject:@{
+            @"id": name,
+            @"name": friendlyName,
+            @"enabled": @(enabled),
+        }];
+    }
+    return descriptors;
+}
+
 - (BOOL)forceSwitchToContextNamed:(NSString *)name error:(NSError **)error {
     NSString *token = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *ordered = [contextsDataSource orderedTraversal] ?: @[];

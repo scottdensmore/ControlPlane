@@ -263,6 +263,11 @@
 		A126INT01WIRE126000001 /* SwitchContextIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A126INT01FILE126000001 /* SwitchContextIntent.swift */; };
 		A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A126TST01FILE126000001 /* CPContextAppIntentTests.m */; };
 		A200TST01WIRE200000001 /* CPSwiftLanguageModeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A200TST01FILE200000001 /* CPSwiftLanguageModeTests.m */; };
+		A224TOK01WIRE224000001 /* CPSettingsReadModelTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A224TOK01FILE224000002 /* CPSettingsReadModelTokens.m */; };
+		A224TOK01WIRE224000002 /* CPSettingsReadModelTokens.m in Sources */ = {isa = PBXBuildFile; fileRef = A224TOK01FILE224000002 /* CPSettingsReadModelTokens.m */; };
+		A224BRG01WIRE224000001 /* CPSettingsReadModelBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = A224BRG01FILE224000002 /* CPSettingsReadModelBridge.m */; };
+		A224SWM01WIRE224000001 /* CPSettingsReadModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A224SWM01FILE224000001 /* CPSettingsReadModels.swift */; };
+		A224TST01WIRE224000001 /* CPSettingsReadModelTokensTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A224TST01FILE224000001 /* CPSettingsReadModelTokensTests.m */; };
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
 		B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B202UIT01FILE202000001 /* CPUITestHarnessTests.m */; };
 		B244UIT01WIRE244000001 /* CPForceContextUITestHookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */; };
@@ -835,6 +840,12 @@
 		A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ControlPlane-Bridging-Header.h; path = Source/ControlPlane-Bridging-Header.h; sourceTree = "<group>"; };
 		A126TST01FILE126000001 /* CPContextAppIntentTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPContextAppIntentTests.m; sourceTree = "<group>"; };
 		A200TST01FILE200000001 /* CPSwiftLanguageModeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPSwiftLanguageModeTests.m; sourceTree = "<group>"; };
+		A224TOK01FILE224000001 /* CPSettingsReadModelTokens.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPSettingsReadModelTokens.h; path = Source/CPSettingsReadModelTokens.h; sourceTree = "<group>"; };
+		A224TOK01FILE224000002 /* CPSettingsReadModelTokens.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CPSettingsReadModelTokens.m; path = Source/CPSettingsReadModelTokens.m; sourceTree = "<group>"; };
+		A224BRG01FILE224000001 /* CPSettingsReadModelBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CPSettingsReadModelBridge.h; path = Source/CPSettingsReadModelBridge.h; sourceTree = "<group>"; };
+		A224BRG01FILE224000002 /* CPSettingsReadModelBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = CPSettingsReadModelBridge.m; path = Source/CPSettingsReadModelBridge.m; sourceTree = "<group>"; };
+		A224SWM01FILE224000001 /* CPSettingsReadModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CPSettingsReadModels.swift; path = Source/CPSettingsReadModels.swift; sourceTree = "<group>"; };
+		A224TST01FILE224000001 /* CPSettingsReadModelTokensTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CPSettingsReadModelTokensTests.m; sourceTree = "<group>"; };
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
 		B202UIT01FILE202000001 /* CPUITestHarnessTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPUITestHarnessTests.m; sourceTree = "<group>"; };
 		B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPForceContextUITestHookTests.m; sourceTree = "<group>"; };
@@ -1022,6 +1033,11 @@
 				A126BRG01FILE126000001 /* CPContextAppIntentBridge.h */,
 				A126BRG01FILE126000002 /* CPContextAppIntentBridge.m */,
 				A126INT01FILE126000001 /* SwitchContextIntent.swift */,
+				A224TOK01FILE224000001 /* CPSettingsReadModelTokens.h */,
+				A224TOK01FILE224000002 /* CPSettingsReadModelTokens.m */,
+				A224BRG01FILE224000001 /* CPSettingsReadModelBridge.h */,
+				A224BRG01FILE224000002 /* CPSettingsReadModelBridge.m */,
+				A224SWM01FILE224000001 /* CPSettingsReadModels.swift */,
 				A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */,
 				8D8155CD0C3A304E00228463 /* ContextsDataSource.h */,
 				8D8155CE0C3A304E00228463 /* ContextsDataSource.m */,
@@ -1249,6 +1265,7 @@
 				5AB01456A891A29FF1EE3792 /* ContextModelTests.m */,
 				A126TST01FILE126000001 /* CPContextAppIntentTests.m */,
 				A200TST01FILE200000001 /* CPSwiftLanguageModeTests.m */,
+				A224TST01FILE224000001 /* CPSettingsReadModelTokensTests.m */,
 				C27D924513FD6137596A8580 /* IPv4RuleMatchTests.m */,
 				429E8B6B4153B81493E8C483 /* InfoPlistSmokeTests.m */,
 				042739F2DDC950F687D3730B /* DefaultBrowserUTITests.m */,
@@ -1962,6 +1979,9 @@
 				A126TOK01WIRE126000001 /* CPContextAppIntentTokens.m in Sources */,
 				A126BRG01WIRE126000001 /* CPContextAppIntentBridge.m in Sources */,
 				A126INT01WIRE126000001 /* SwitchContextIntent.swift in Sources */,
+				A224TOK01WIRE224000001 /* CPSettingsReadModelTokens.m in Sources */,
+				A224BRG01WIRE224000001 /* CPSettingsReadModelBridge.m in Sources */,
+				A224SWM01WIRE224000001 /* CPSettingsReadModels.swift in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
 				8D8C9CE70BBB7BE00074D5B3 /* BluetoothEvidenceSource.m in Sources */,
@@ -2090,6 +2110,8 @@
 				A126TST01WIRE126000001 /* CPContextAppIntentTests.m in Sources */,
 				A200TST01WIRE200000001 /* CPSwiftLanguageModeTests.m in Sources */,
 				A126TOK01WIRE126000002 /* CPContextAppIntentTokens.m in Sources */,
+				A224TST01WIRE224000001 /* CPSettingsReadModelTokensTests.m in Sources */,
+				A224TOK01WIRE224000002 /* CPSettingsReadModelTokens.m in Sources */,
 				B40DEPL01WIRE400000001 /* DeploymentTargetTests.m in Sources */,
 				D0E1F203142536475869A0B1 /* CPLoginItemServiceTests.m in Sources */,
 				C165HD01WIRE165000003 /* CPHelperDaemonServiceTests.m in Sources */,

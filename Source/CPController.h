@@ -45,6 +45,9 @@
 /// Select a context by that menu name, using the same path as the status menu.
 - (BOOL)forceSwitchToContextNamed:(NSString *)name error:(NSError **)error;
 
+/// Evidence source rows for the Settings read-model bridge (#224): id, name, enabled.
+- (NSArray<NSDictionary *> *)evidenceSourceDescriptorsForSettings;
+
 - (IBAction)toggleSticky: (id) sender;
 
 - (void)restartSwitchSmoothing;

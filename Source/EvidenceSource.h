@@ -76,6 +76,9 @@
 // Returns a friendly name to be used in the drop down menu
 - (NSString *) friendlyName;
 
+// Returns the NSUserDefaults key that stores whether this evidence source is enabled.
+- (NSString *)enablementKeyName;
+
 // Return true if the evidence source should be enabled for this model of Mac
 + (BOOL) isEvidenceSourceApplicableToSystem;
 
