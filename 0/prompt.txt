@@ -1,0 +1,21 @@
+remove the workflow from AGENTS.md  and all the skills and subagents associated with that for all coding agents
+
+---
+
+Execute the selected diff-tab create-branch-and-commit action.
+
+---
+
+add the .gemini
+
+---
+
+ok pr and then squash merge
+
+---
+
+Look through this code and repo at the issues. Clean up and get rid of any branches not main. Close any prs. Then file any issues that gets this app to real world and an amazing apple app that would win an award
+
+---
+
+We should fix thins so those things can be filed.
