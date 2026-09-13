@@ -20,7 +20,7 @@ Source/main.m
 Facts that constrain any SwiftUI host:
 
 - Product is an **`LSUIElement` menu-bar agent** (`Info.plist`); no Dock icon. Windows must call `[NSApp activateIgnoringOtherApps:YES]` before becoming key (prefs, About, reopen) — covered by `CPMenuBarImageTests` / prefs characterization.
-- Entry is classic **`NSApplicationMain`**; there are **zero** `.swift` sources in the app target today (`AGENTS.md`: Objective-C + XIBs).
+- Entry is classic **`NSApplicationMain`**; Wave 1 assumed zero `.swift` sources (Objective-C + XIBs). That assumption is obsolete—see [swiftui-coexistence-spike.md](swiftui-coexistence-spike.md).
 - Status item is not decorative chrome: `CPController` owns hide/show timers, icon / context title / both (`menuBarOption`), template + optional tint via `CPMenuBarImage`, VoiceOver identifiers (`status.item.*` / `status.menu.*`), live context menu mutation, and config-transfer menu injection.
 - Preferences already migrated chrome to **ObjC `NSTabViewController`** and explicitly deferred SwiftUI `Settings` (`docs/prefs-settings-style-spike.md`).
 - Epic #116 lists **full SwiftUI rewrite of Settings / MenuBarExtra** as out of scope except design spikes until feasible.

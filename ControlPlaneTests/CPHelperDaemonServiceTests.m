@@ -145,7 +145,7 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
 - (void)testAgentDocsDescribeSMAppServiceDaemonNotSMJobBlessInstall {
     NSArray<NSString *> *paths = @[
         @"README.md",
-        @"AGENTS.md",
+        @"CONTRIBUTING.md",
         @"docs/releasing.md",
     ];
     for (NSString *path in paths) {
@@ -168,13 +168,16 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
     XCTAssertFalse([readme containsString:@"helper bless"],
                    @"README must not describe helper install as bless");
 
-    NSString *agents = [self sourceTextAtRelativePath:@"AGENTS.md"];
-    XCTAssertTrue([agents containsString:@"CPXPCService"],
-                  @"AGENTS.md must not claim CPXPCService has been collapsed");
-    XCTAssertTrue([agents containsString:@"does not call `SMJobBless`"],
-                  @"AGENTS.md must say CPXPCService does not call SMJobBless");
-    XCTAssertFalse([agents containsString:@"installHelperToolWithReply:"],
-                   @"AGENTS.md must not claim unused SMJobBless remains");
+    NSString *contributing = [self sourceTextAtRelativePath:@"CONTRIBUTING.md"];
+    XCTAssertTrue([contributing containsString:@"CPXPCService"],
+                  @"CONTRIBUTING.md must not claim CPXPCService has been collapsed");
+    XCTAssertTrue([contributing containsString:@"does not call `SMJobBless`"],
+                  @"CONTRIBUTING.md must say CPXPCService does not call SMJobBless");
+    XCTAssertFalse([contributing containsString:@"installHelperToolWithReply:"],
+                   @"CONTRIBUTING.md must not claim unused SMJobBless remains");
+    XCTAssertFalse([[NSFileManager defaultManager]
+                    fileExistsAtPath:[@CONTROLPLANE_SRCROOT stringByAppendingPathComponent:@"AGENTS.md"]],
+                   @"AGENTS.md must remain deleted; CONTRIBUTING.md is the instruction SSOT");
 
     NSString *signing = [self sourceTextAtRelativePath:@"docs/signing.md"];
     XCTAssertTrue([signing containsString:@"do not collapse"],

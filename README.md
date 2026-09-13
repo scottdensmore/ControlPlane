@@ -56,8 +56,7 @@ This repository does not use GitHub Actions. Prove changes locally before openin
 
 | Doc | Purpose |
 | :--- | :--- |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, branching, localization, ARC |
-| [AGENTS.md](AGENTS.md) | Full agent workflow (SSOT for coding agents) |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Issues, branching, localization, ARC; instruction SSOT for coding agents |
 | [docs/TESTING.md](docs/TESTING.md) | Unit vs UI tests, smoke commands |
 | [docs/signing.md](docs/signing.md) | Identities, entitlements, SMAppService daemon registration, notarization notes |
 | [docs/releasing.md](docs/releasing.md) | Release checklist (archive, notarize, Sparkle, verify) |

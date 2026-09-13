@@ -136,7 +136,7 @@ NSApplicationMain + CPController          ← unchanged owner
 | Surface | Verdict |
 | :--- | :--- |
 | Swift 6 language mode for new Swift (#200) | **GO** |
-| `AGENTS.md` dual-stack policy (#201) | **GO** |
+| `CONTRIBUTING.md` dual-stack policy (#201) | **GO** |
 | Shared Swift read models (#224) | **GO** (before multi-pane Settings bind to live data) |
 | Migrate one evidence / one action to Swift (#225/#226) | **GO** as templates after bridge; optional parallel to shell |
 | Structured concurrency for polling (#227) | Spike only; do not block Settings panes |
@@ -216,7 +216,7 @@ Implementers: rebuild under `tdd-slice`. Do **not** promote spike prototypes. Ea
 | :---: | :--- | :--- | :--- | :--- | :--- |
 | P0 | [#199](https://github.com/scottdensmore/ControlPlane/issues/199) (this doc) | Lock GO/NO-GO + slice order | `docs/swiftui-coexistence-spike.md` | Docs review / issue AC checklist | Any production UI |
 | P1 | [#200](https://github.com/scottdensmore/ControlPlane/issues/200) | Swift 6 language mode for app Swift | `project.pbxproj`, `SwitchContextIntent.swift` as needed | Build fails under Swift 6 until fixed; `ControlPlaneTests` still green | UI panes |
-| P2 | [#201](https://github.com/scottdensmore/ControlPlane/issues/201) | Dual-stack policy in `AGENTS.md` | `AGENTS.md` only (pointers stay pointers) | Docs assertion / review vs this spike | Implementing SwiftUI |
+| P2 | [#201](https://github.com/scottdensmore/ControlPlane/issues/201) | Dual-stack policy in `CONTRIBUTING.md` | `CONTRIBUTING.md` (pointers stay pointers; no `AGENTS.md`) | Docs assertion / review vs this spike | Implementing SwiftUI |
 | P3 | [#224](https://github.com/scottdensmore/ControlPlane/issues/224) | Shared Swift read models (Context / Evidence / Action lists) | New Swift types + ObjC façades; tests | Failing mapping tests → green bridge; ObjC matchers unchanged | Settings UI; matcher rewrites |
 | P4 | [#225](https://github.com/scottdensmore/ControlPlane/issues/225) / [#226](https://github.com/scottdensmore/ControlPlane/issues/226) | One evidence + one action Swift template | One source + one action + registry tests | Characterization red → Swift type registered | Mass migration |
 | P5 | [#227](https://github.com/scottdensmore/ControlPlane/issues/227) | Concurrency spike for timers | Spike doc only | Design AC | Production timer rewrite in spike PR |
@@ -266,4 +266,4 @@ Depends on P0; **strongly prefer P3 (#224) before panes that bind live lists**. 
 | Wave 1 Scene NO-SHIP | `docs/menubarextra-spike.md` (still valid for Scenes; superseded for “never SwiftUI UI”) |
 | AppKit Settings chrome choice | `docs/prefs-settings-style-spike.md` |
 
-**Hand-off:** After verify/review of this docs-only PR, close #199 AC. Platform implementer starts at #200/#201/#224 under `tdd-slice`. Shell implementer starts General (#203) only after coexistence rules are in `AGENTS.md` (#201) or explicitly waived by the parent agent for a parallel slice that does not invent a second policy.
+**Hand-off:** After verify/review of this docs-only PR, close #199 AC. Platform implementer starts at #200/#201/#224 under `tdd-slice`. Shell implementer starts General (#203) only after coexistence rules are in `CONTRIBUTING.md` (#201) or explicitly waived by the parent agent for a parallel slice that does not invent a second policy.
