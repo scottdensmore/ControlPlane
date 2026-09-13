@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Smoke build + unit tests for ControlPlane (macOS-15 line).
 #
-# CI (GitHub Actions) runs Debug build + ControlPlaneTests only — see
-# .github/workflows/ci.yml. This script additionally builds Release locally.
+# Default: Debug + Release + ControlPlaneTests. Set SKIP_RELEASE=1 for
+# Debug + ControlPlaneTests only. GitHub Actions is not used.
 #
 # Signing/helper: no SMJobBless required. Pass CODE_SIGNING_ALLOWED=NO for
-# unsigned CI/local smoke (default below). Do not expect privileged helper
+# unsigned local smoke (default below). Do not expect privileged helper
 # install in this script.
 set -euo pipefail
 

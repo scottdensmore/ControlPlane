@@ -51,7 +51,7 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
    - status is Enabled before the action connects
    - `/Library/PrivilegedHelperTools/com.scottdensmore.CPHelperTool` is **absent**
    - `launchctl print system/com.scottdensmore.CPHelperTool` shows the in-bundle daemon, not a blessed copy
-7. Re-run unsigned CI-shaped smoke: `SKIP_RELEASE=1 ./scripts/smoke-build.sh`
+7. Re-run unsigned Debug + unit-test smoke: `SKIP_RELEASE=1 ./scripts/smoke-build.sh`
 
 ## Notarization (release-shaped)
 

@@ -2,7 +2,7 @@
 
 This is a practical release checklist for the ObjC fork targeting Tahoe / macOS 26 (`MACOSX_DEPLOYMENT_TARGET` **16.0**). Signing identities, entitlements, the `SMAppService` daemon, and notarization **facts** live in [signing.md](signing.md)—read that first and do not contradict it here. Unsigned builds cannot register the daemon.
 
-GitHub Actions (`.github/workflows/ci.yml`) is kept but not triggered on push/PR. Prove unsigned Debug compile + `ControlPlaneTests` locally. A shippable build is always a **local signed archive**.
+GitHub Actions is not used. Prove unsigned Debug compile + `ControlPlaneTests` locally. A shippable build is always a **local signed archive**.
 
 ## Preconditions
 
