@@ -6,5 +6,6 @@
 //
 
 #import "CPContextAppIntentBridge.h"
+#import "CPHelperDaemonService.h"
 #import "CPSettingsReadModelBridge.h"
 #import "CPSettingsReadModelTokens.h"

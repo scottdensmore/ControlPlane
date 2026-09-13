@@ -9,9 +9,11 @@
 #import "CPConfigTransfer.h"
 #import "CPHelperDaemonService.h"
 #import "CPLoginItemService.h"
+#import "CPNotifications.h"
 #import "CPPrefsSettingsShellController.h"
 #import "CPDiagnosticsSnapshot.h"
 #import "DSLogger.h"
+#import "GeneralSettingsController.h"
 #import "SharedNumberFormatter.h"
 #import "PrefsWindowController.h"
 #import "RuleType.h"
@@ -167,7 +169,7 @@
 @property (nonatomic,strong) NSTableView *diagnosticsRulesTable;
 @property (nonatomic,copy) NSArray *diagnosticsRuleRows;
 @property (nonatomic,strong) NSTimer *diagnosticsRefreshTimer;
-@property (nonatomic,strong) NSButton *allowPrivilegedHelperCheckbox;
+@property (nonatomic,strong) GeneralSettingsController *generalSettingsController;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
@@ -222,8 +224,8 @@
 
 - (void)awakeFromNib
 {
-	// Insert the helper checkbox before min size is captured so General grows with it.
-	[self installAllowPrivilegedHelperCheckbox];
+	// Host the SwiftUI General pane before min size is captured so General grows with it (#203).
+	[self installGeneralSettingsHostedView];
 
 	// Evil!
 	[NSValueTransformer setValueTransformer:[[ContextNameTransformer alloc] init:contextsDataSource]
@@ -325,9 +327,7 @@
 
     // display options for the menu bar
 
-
-    [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
-    [self refreshAllowPrivilegedHelperCheckbox];
+    [self refreshGeneralSettingsToggleState];
     [menuBarDisplayOptionsController addObject:
         [NSMutableDictionary dictionaryWithObjectsAndKeys:
             @"Icon",@"option", 
@@ -452,7 +452,7 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 - (IBAction)runPreferences:(id)sender {
 	[NSApp activateIgnoringOtherApps:YES];
 	[prefsWindow makeKeyAndOrderFront:self];
-	[self refreshAllowPrivilegedHelperCheckbox];
+	[self refreshGeneralSettingsToggleState];
 	if ([currentPrefsGroup isEqualToString:@"Advanced"]) {
         [self startLogBufferTimer];
 	}
@@ -1061,61 +1061,120 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     [startAtLoginStatus setState:[[CPLoginItemService sharedService] checkboxOn] ? NSControlStateValueOn : NSControlStateValueOff];
 }
 
-#pragma mark Privileged helper daemon
+#pragma mark SwiftUI General pane (#203)
 
-- (void)installAllowPrivilegedHelperCheckbox
+// Find the legacy XIB checkbox bound to a given defaults key path (e.g. the
+// "Use Notifications" checkbox bound to "values.EnableNotifications"). Works
+// across all locale XIBs without hardcoding per-locale titles or frames.
+- (NSButton * _Nullable)buttonInView:(NSView *)view boundToValueKeyPath:(NSString *)keyPath
 {
-    if (self.allowPrivilegedHelperCheckbox != nil || startAtLoginStatus == nil || generalPrefsView == nil) {
+    for (NSView *subview in view.subviews) {
+        if (![subview isKindOfClass:[NSButton class]]) {
+            continue;
+        }
+        NSDictionary *info = [(NSButton *)subview infoForBinding:NSValueBinding];
+        if ([info[NSObservedKeyPathKey] isEqualToString:keyPath]) {
+            return (NSButton *)subview;
+        }
+    }
+    return nil;
+}
+
+// Host GeneralSettingsView (Use Notifications / Start at Login / Allow
+// privileged helper) inside the existing generalPrefsView, growing the pane
+// by one section and hiding the two legacy XIB checkboxes it now owns.
+// Other General controls (automatic switching, confidence, default context,
+// menu bar options, updates, etc.) stay AppKit/XIB — out of scope for #203.
+- (void)installGeneralSettingsHostedView
+{
+    if (self.generalSettingsController != nil || startAtLoginStatus == nil || generalPrefsView == nil) {
         return;
     }
 
-    static const CGFloat kRowGap = 22.0;
-    NSRect loginFrame = startAtLoginStatus.frame;
-    CGFloat loginMinY = NSMinY(loginFrame);
+    startAtLoginStatus.hidden = YES;
+    NSButton *notificationsCheckbox = [self buttonInView:generalPrefsView
+                                     boundToValueKeyPath:@"values.EnableNotifications"];
+    notificationsCheckbox.hidden = YES;
+
+    __weak PrefsWindowController *weakSelf = self;
+    GeneralSettingsController *controller =
+        [[GeneralSettingsController alloc]
+            initWithUseNotifications:[[NSUserDefaults standardUserDefaults] boolForKey:@"EnableNotifications"]
+                        startAtLogin:[[CPLoginItemService sharedService] checkboxOn]
+              allowPrivilegedHelper:[[CPHelperDaemonService sharedService] checkboxOn]
+              applyUseNotifications:^BOOL(BOOL enabled) {
+                PrefsWindowController *strongSelf = weakSelf;
+                return strongSelf ? [strongSelf applyUseNotifications:enabled] : enabled;
+            }
+                   applyStartAtLogin:^BOOL(BOOL enabled) {
+                PrefsWindowController *strongSelf = weakSelf;
+                return strongSelf ? [strongSelf applyStartAtLogin:enabled] : enabled;
+            }
+          applyAllowPrivilegedHelper:^BOOL(BOOL enabled) {
+                PrefsWindowController *strongSelf = weakSelf;
+                return strongSelf ? [strongSelf applyAllowPrivilegedHelper:enabled] : enabled;
+            }];
+    self.generalSettingsController = controller;
+
+    static const CGFloat kHostedSectionHeight = 96.0;
 
     // Base and pt-PT leave autoresizesSubviews on. Growing the frame would also
-    // apply flexibleMinY, shifting rows 22pt before the explicit insert.
+    // apply flexibleMinY, shifting rows before the explicit row shift below.
     BOOL autoresizesSubviews = generalPrefsView.autoresizesSubviews;
     generalPrefsView.autoresizesSubviews = NO;
 
     NSRect viewFrame = generalPrefsView.frame;
-    viewFrame.size.height += kRowGap;
+    viewFrame.size.height += kHostedSectionHeight;
     generalPrefsView.frame = viewFrame;
 
     for (NSView *subview in generalPrefsView.subviews) {
         NSRect frame = subview.frame;
-        if (NSMinY(frame) + 0.5 >= loginMinY) {
-            frame.origin.y += kRowGap;
-            subview.frame = frame;
-        }
+        frame.origin.y += kHostedSectionHeight;
+        subview.frame = frame;
     }
 
-    NSButton *checkbox = [NSButton checkboxWithTitle:[CPHelperDaemonService allowHelperCheckboxTitle]
-                                              target:self
-                                              action:@selector(toggleAllowPrivilegedHelper:)];
-    CGFloat width = MAX(NSWidth(loginFrame), 360.0);
-    CGFloat maxWidth = NSWidth(generalPrefsView.frame) - NSMinX(loginFrame) - 16.0;
-    if (width > maxWidth) {
-        width = maxWidth;
-    }
-    checkbox.frame = NSMakeRect(NSMinX(loginFrame), loginMinY, width, NSHeight(loginFrame));
-    checkbox.autoresizingMask = startAtLoginStatus.autoresizingMask;
-    checkbox.toolTip = [CPHelperDaemonService allowHelperCheckboxToolTip];
-    checkbox.accessibilityIdentifier = @"prefs.general.allowPrivilegedHelper";
-    checkbox.accessibilityLabel = [CPHelperDaemonService allowHelperCheckboxTitle];
-    [generalPrefsView addSubview:checkbox];
-    self.allowPrivilegedHelperCheckbox = checkbox;
+    NSView *hostedView = controller.view;
+    hostedView.frame = NSMakeRect(16.0, 8.0,
+                                   NSWidth(generalPrefsView.frame) - 32.0,
+                                   kHostedSectionHeight - 16.0);
+    hostedView.autoresizingMask = NSViewWidthSizable;
+    [generalPrefsView addSubview:hostedView];
+
     generalPrefsView.autoresizesSubviews = autoresizesSubviews;
 }
 
-- (void)refreshAllowPrivilegedHelperCheckbox
+// Sync SwiftUI toggle state from the underlying services, e.g. when the prefs
+// window (re)opens (mirrors the old startAtLoginStatus/checkbox refresh).
+- (void)refreshGeneralSettingsToggleState
 {
-    if (self.allowPrivilegedHelperCheckbox == nil) {
-        return;
-    }
-    BOOL on = [[CPHelperDaemonService sharedService] checkboxOn];
-    [self.allowPrivilegedHelperCheckbox setState:on ? NSControlStateValueOn : NSControlStateValueOff];
+    [self.generalSettingsController refreshWithStartAtLogin:[[CPLoginItemService sharedService] checkboxOn]
+                                       allowPrivilegedHelper:[[CPHelperDaemonService sharedService] checkboxOn]];
 }
+
+- (BOOL)applyUseNotifications:(BOOL)enabled
+{
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:@"EnableNotifications"];
+    if (enabled && ![[[NSProcessInfo processInfo] environment][@"CPUITestRunning"] isEqualToString:@"1"]) {
+        [CPNotifications requestAuthorizationIfNeededWithCompletion:^(BOOL granted) {
+            if (!granted) {
+                [CPNotifications showAuthorizationDeniedAlert];
+            }
+        }];
+    }
+    return enabled;
+}
+
+- (BOOL)applyStartAtLogin:(BOOL)enabled
+{
+    if (enabled) {
+        [self startAtLogin];
+    } else {
+        [self disableStartAtLogin];
+    }
+    return [[CPLoginItemService sharedService] checkboxOn];
+}
+
+#pragma mark Privileged helper daemon
 
 - (void)allowPrivilegedHelper
 {
@@ -1141,16 +1200,14 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
     }
 }
 
-- (IBAction)toggleAllowPrivilegedHelper:(id)sender
+- (BOOL)applyAllowPrivilegedHelper:(BOOL)enabled
 {
-    (void)sender;
-    BOOL currentlyOn = [[CPHelperDaemonService sharedService] checkboxOn];
-    if (currentlyOn) {
-        [self disablePrivilegedHelper];
-    } else {
+    if (enabled) {
         [self allowPrivilegedHelper];
+    } else {
+        [self disablePrivilegedHelper];
     }
-    [self refreshAllowPrivilegedHelperCheckbox];
+    return [[CPHelperDaemonService sharedService] checkboxOn];
 }
 
 

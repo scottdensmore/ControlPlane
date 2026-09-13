@@ -86,8 +86,9 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
 
 - (void)testInstallDisablesAutoresizingBeforeGrowingGeneralPrefs {
     NSString *source = [self sourceTextAtRelativePath:@"Source/PrefsWindowController.m"];
-    NSRange method = [source rangeOfString:@"- (void)installAllowPrivilegedHelperCheckbox"];
-    XCTAssertNotEqual(method.location, NSNotFound);
+    NSRange method = [source rangeOfString:@"- (void)installGeneralSettingsHostedView"];
+    XCTAssertNotEqual(method.location, NSNotFound,
+                      @"General pane's SwiftUI host must grow generalPrefsView the same safe way (#203)");
     NSString *body = [source substringFromIndex:method.location];
     NSRange frameSet = [body rangeOfString:@"generalPrefsView.frame = viewFrame"];
     XCTAssertNotEqual(frameSet.location, NSNotFound);
@@ -96,6 +97,28 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
                   @"Growing generalPrefsView must not apply flexibleMinY before the explicit row shift");
     XCTAssertTrue([body containsString:@"generalPrefsView.autoresizesSubviews = autoresizesSubviews"],
                   @"Restore the previous autoresizesSubviews value after the insert");
+}
+
+- (void)testGeneralSwiftUIPreservesAccessibilityIds {
+    // #203: characterization lock for the SwiftUI General pane's stable a11y
+    // ids across the AppKit -> SwiftUI migration (docs/swiftui-coexistence-spike.md).
+    NSString *swift = [self sourceTextAtRelativePath:@"Source/GeneralSettingsView.swift"];
+    XCTAssertTrue([swift containsString:@"prefs.general.useNotifications"]);
+    XCTAssertTrue([swift containsString:@"prefs.general.startAtLogin"]);
+    XCTAssertTrue([swift containsString:@"prefs.general.allowPrivilegedHelper"]);
+    XCTAssertTrue([swift containsString:@"prefs.tab.general"]);
+
+    // The helper checkbox title/tooltip must keep coming from the existing
+    // localized ObjC helper, not a hardcoded English string.
+    XCTAssertTrue([swift containsString:@"CPHelperDaemonService.allowHelperCheckboxTitle()"]);
+    XCTAssertTrue([swift containsString:@"CPHelperDaemonService.allowHelperCheckboxToolTip()"]);
+
+    // PrefsWindowController hosts the SwiftUI pane and retires the duplicate
+    // AppKit helper checkbox path.
+    NSString *prefs = [self sourceTextAtRelativePath:@"Source/PrefsWindowController.m"];
+    XCTAssertTrue([prefs containsString:@"installGeneralSettingsHostedView"]);
+    XCTAssertFalse([prefs containsString:@"installAllowPrivilegedHelperCheckbox"],
+                   @"Duplicate AppKit helper checkbox path must be retired once SwiftUI owns it (#203)");
 }
 
 - (void)testOpenLoginItemsSettingsKeyExistsInEveryShippingLocale {
