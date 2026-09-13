@@ -72,8 +72,6 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>CPCrashReportURL</key>
-	<string>https://crashreport.controlplaneapp.com/crash_v200.php</string>
 	<key>CPDonationURL</key>
 	<string>https://www.controlplaneapp.com/support-controlplane/</string>
 	<key>CPSupportURL</key>
@@ -102,19 +100,6 @@
 	<string>1</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © ControlPlane contributors. All rights reserved.</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>crashreport.controlplaneapp.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 	<key>NSAppleEventsUsageDescription</key>
 	<string>ControlPlane uses Apple Events to run scripting actions such as VPN, firewall, and Time Machine destination changes.</string>
 	<key>NSAppleScriptEnabled</key>
