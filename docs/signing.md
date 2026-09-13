@@ -38,7 +38,7 @@ All three binaries (ControlPlane.app, CPXPCService.xpc, com.scottdensmore.CPHelp
 
 **Note:** `com.apple.security.cs.disable-library-validation` is **app-only**, required because Sparkle.framework is a separately-signed universal binary. Do **not** grant it to the privileged helper or XPC service. The app does **not** use `--deep` signing; `CodeSignOnCopy` covers Sparkle.framework, CPXPCService.xpc, and the helper.
 
-**No App Sandbox.** ControlPlane requires non-sandboxed access for Wi-Fi (CoreWLAN), Bluetooth, USB (IOKit), and other evidence sources.
+**App Sandbox:** approved design in [sandbox-store-spike.md](sandbox-store-spike.md). **Current `main` is still unsandboxed.** After the enable-sandbox slice, the agent is sandboxed; `CPXPCService` and `CPHelperTool` stay unsandboxed. Wi‑Fi / Bluetooth / USB go through sandbox entitlements (or USB is gated). Mac App Store flavor does not ship the helper.
 
 ## Local signed build + helper smoke
 
@@ -114,7 +114,7 @@ CI cannot register the daemon (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Rel
 - Helper still runs Apple CLIs as root; a compromised client that passes Authorization still gets those fixed operations.
 - `launchctl load`/`unload` for SMB is legacy relative to `bootstrap`/`bootout`; revisit if smbd toggle fails on a future OS.
 - `systemsetup -setremotelogin` behavior can change without notice; keep characterization tests and this inventory current per OS line.
-- No App Sandbox (by design); see Hardened Runtime section above.
+- App Sandbox on the agent is the approved follow-up ([sandbox-store-spike.md](sandbox-store-spike.md)); helper/XPC stay unsandboxed.
 
 ## Explicit non-goals (follow-ups)
 

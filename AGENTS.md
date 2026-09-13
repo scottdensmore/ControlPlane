@@ -6,6 +6,8 @@ Every coding agent reads this file. These entry files only point here and must n
 
 Live work tracking lives in **GitHub Issues** on `scottdensmore/ControlPlane`. Do not invent parallel roadmap docs.
 
+**Sandbox / App Store / widgets / iCloud:** follow [docs/sandbox-store-spike.md](docs/sandbox-store-spike.md). Do not treat “no App Sandbox” as a standing ban. Current `main` remains unsandboxed until the enable-sandbox issue lands. Mac App Store flavor: no Sparkle, no privileged helper.
+
 ---
 
 ## Issue hygiene

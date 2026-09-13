@@ -43,7 +43,7 @@ Signed helper bless and notarization are **not** part of CI—see [docs/signing.
 ## Engineering notes (short)
 
 - **Mixed MRC/ARC:** follow file-level ARC comments; do not flip target-wide ARC outside a scoped issue.
-- **No App Sandbox** without an explicit design (Wi‑Fi, Bluetooth, USB/IOKit, helper XPC assume non-sandboxed today).
+- **App Sandbox** is an approved direction ([docs/sandbox-store-spike.md](docs/sandbox-store-spike.md)). Current `main` stays unsandboxed until the enable-sandbox slice. Do not add MAS-illegal IOKit exceptions; gate USB if `device.usb` is not enough.
 - Prefer **gating or retiring** dead actions (`isActionApplicableToSystem`) over clever `launchctl` for removed macOS services.
 - Helper/XPC changes are high risk—minimize surface; avoid new `system()` / `sprintf` shelling.
 - Prefs key renames must update **Base and all** `*.lproj` XIBs. Legacy HTML notes: `LOCALISATION.html`, `HACKING.html`.
