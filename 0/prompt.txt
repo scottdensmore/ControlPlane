@@ -1,0 +1,5 @@
+remove the workflow from AGENTS.md  and all the skills and subagents associated with that for all coding agents
+
+---
+
+Execute the selected diff-tab create-branch-and-commit action.
