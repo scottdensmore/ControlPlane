@@ -94,7 +94,7 @@ Privileged commands no longer use `system()` / `sprintf` shelling. Survivors run
 | `start`/`stopBackupTimeMachine…` | `/usr/bin/tmutil` | `startbackup` / `stopbackup` | Active |
 | `setDisplaySleepTime:…` | `/usr/bin/pmset` | `-a displaysleep <minutes>` | Active; minutes validated `0…1440` before spawn |
 | `enable`/`disableSMBFileSharing…` | `/bin/launchctl` + `/usr/libexec/smb-sync-preferences` | `load\|unload -F` fixed `com.apple.smbd.plist` path | Active; pre-10.9 defaults path removed |
-| `enable`/`disableRemoteLogin…` | `/usr/sbin/systemsetup` | `-setremotelogin on\|off` | Active (replaced `launchctl load` of `ssh.plist`) |
+| `enable`/`disableRemoteLogin…` | `/usr/sbin/systemsetup` | `-setremotelogin on\|off` (no `-f`) | Active but fragile on current macOS (#261); replaced `launchctl load` of `ssh.plist` |
 | Firewall / Printer Sharing / Internet Sharing / AFP / FTP / TFTP / Web Sharing | — | — | Gated (`ENOTSUP`); app actions not applicable (#124) |
 
 **User-controlled input:** only display-sleep minutes (integer). It is range-checked and passed as its own argv element — never concatenated into a shell string.
@@ -113,8 +113,20 @@ CI cannot register the daemon (`CODE_SIGNING_ALLOWED=NO`). On a signed Debug/Rel
 
 - Helper still runs Apple CLIs as root; a compromised client that passes Authorization still gets those fixed operations.
 - `launchctl load`/`unload` for SMB is legacy relative to `bootstrap`/`bootout`; revisit if smbd toggle fails on a future OS.
-- `systemsetup -setremotelogin` behavior can change without notice; keep characterization tests and this inventory current per OS line.
 - App Sandbox on the agent is the approved follow-up ([sandbox-store-spike.md](sandbox-store-spike.md)); helper/XPC stay unsandboxed.
+
+### Toggle Remote Login / `systemsetup` fragility (#261)
+
+There is no public AppKit/API for Remote Login (SSH). The helper still shells out to `/usr/sbin/systemsetup` with fixed argv (`-setremotelogin on|off`). On current macOS that path is **fragile**, not gated:
+
+| Risk | Detail |
+| :--- | :--- |
+| Apple CLI contract | `systemsetup` is a legacy admin tool; flags and behavior can change or break without a public replacement. |
+| Full Disk Access | Apple’s `systemsetup` man page says `-setremotelogin` requires Full Disk Access. Root from the helper usually still works, but FDA / privacy policy shifts can make the CLI fail where System Settings still toggles SSH. |
+| Interactive prompt | Disabling without `-f` can prompt (“Do you really want to…?”). The helper does **not** pass `-f`, so a non-TTY spawn can hang or fail when turning Remote Login **off**. |
+| Characterization only | `CPHelperCommandRunnerTests` locks the argv arrays; CI does **not** run live `systemsetup` or assert SSH state. |
+
+**Manual signed smoke:** after the helper is Enabled, trigger Toggle Remote Login, confirm System Settings → General → Sharing → Remote Login, and watch unified log category `Helper` (`docs/TESTING.md`). Do not invent CI signing for this. User-facing Help: Actions → Toggle Remote Login (cross-links Diagnostics).
 
 ## Explicit non-goals (follow-ups)
 

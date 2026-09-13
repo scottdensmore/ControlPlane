@@ -248,6 +248,11 @@
         needs the privileged helper. Enable <strong>Allow privileged helper</strong>
         in General settings, then allow the helper in System Settings → General →
         Login Items &amp; Extensions. See <a href="config.html">Configuring ControlPlane</a>.
+        The helper runs Apple’s <tt>systemsetup -setremotelogin</tt> CLI (not a
+        public AppKit API). That tool can prompt, require Full Disk Access, or
+        change behavior after an OS update. If the toggle fails, confirm Remote
+        Login in System Settings → General → Sharing, and check
+        <a href="diagnostics.html">Diagnostics and logging</a> (Helper category).
         </p>
 
         <h2><em>Toggle Time Machine</em> action</h2>

@@ -50,3 +50,6 @@ Resources/usb-vendors.txt
 *_eddsa_private*
 sparkle_eddsa_private*
 .superpowers/
+
+# Agent / local git worktrees
+.worktrees/

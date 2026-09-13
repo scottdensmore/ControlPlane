@@ -66,7 +66,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 | `ScreenLockRuleMatchTests` | Lock/unlock matching via `setScreenLockedForTesting:` / direct `screenDidLock:` (no live distributed notifies) (#130) |
 | `RemoteDesktopRuleMatchTests` | Yes/No matching via `setUserConnectedForTesting:` / injected `ViewerNames` userInfo (no live distributed notifies) (#130) |
 | `HelperSigningRequirementTests` | Helper/XPC Info.plists omit leftover SMAuthorizedClients / SMPrivilegedExecutables (listener gate: `CPHelperClientGateTests`) |
-| `CPHelperCommandRunnerTests` | Helper argv-array runner: no `system()`/`sprintf` in `CPHelperTool.m`; display-sleep validation; fixed firewall/`tmutil`/SMB/remote-login args (#86) |
+| `CPHelperCommandRunnerTests` | Helper argv-array runner: no `system()`/`sprintf` in `CPHelperTool.m`; display-sleep validation; fixed firewall/`tmutil`/SMB/remote-login args (#86); remote-login live CLI is fragile — see #261 / signing.md |
 | `HelpScrubTests` | Help book links to this fork; no Growl-as-current guidance (#45); Wi‑Fi Location guidance (#84) |
 | `CPConfigTransferTests` | Versioned config export/import round-trip (#35) |
 | `CPDiagnosticsSnapshotTests` | Diagnostics snapshot explains mis-switched context / per-rule contribution (#35) |
@@ -153,6 +153,27 @@ Steps: enable Wi‑Fi evidence; toggle Location for ControlPlane in System Setti
 ## Light / AppleLMUController (#122)
 
 Ambient light evidence depends on undocumented `AppleLMUController`. On machines without that IOKit service (common on Apple silicon), `LightEvidenceSource` is not registered (`isEvidenceSourceApplicableToSystem` → NO). Unit tests cover the IOKit probe and the unavailable `doUpdate` path (`initForUnavailableLMUTesting`). Manual: Preferences → Evidence Sources should omit Light when LMU is absent; Help → Evidence Sources documents the limitation.
+
+## Toggle Remote Login / `systemsetup` fragility (#261)
+
+Toggle Remote Login is still **applicable** and runs through the privileged helper via fixed argv:
+
+`/usr/sbin/systemsetup -setremotelogin on|off` (see `CPHelperCommandRunner` / `docs/signing.md`).
+
+There is no public Remote Login API. Apple’s CLI is fragile on current macOS:
+
+- Man page: `-setremotelogin` requires Full Disk Access; use `-f` to suppress the disable prompt — the helper does **not** pass `-f`.
+- CI only characterizes argv (`CPHelperCommandRunnerTests`); it does **not** spawn `systemsetup` or flip SSH.
+- Do not invent CI signing to “prove” the toggle.
+
+### Manual probe (signed Debug/Release, helper Enabled)
+
+1. Enable **Allow privileged helper** and approve Login Items (see `docs/signing.md`).
+2. Add a **Toggle Remote Login** action; force a context that runs it on/off.
+3. Confirm System Settings → General → Sharing → Remote Login matches the intended state (or `systemsetup -getremotelogin` in Terminal).
+4. If the action fails or hangs on **off**, check Console / `log stream` for subsystem `com.scottdensmore.ControlPlane` category `Helper`, and fall back to System Settings. Prefer not treating live SSH flips as automated coverage.
+
+Help: Actions → Toggle Remote Login (links Diagnostics).
 
 ## Screen Lock + Remote Desktop fragility (#130)
 
