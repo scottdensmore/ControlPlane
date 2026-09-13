@@ -1,0 +1,9 @@
+/using-superpowers
+
+---
+
+/using-superpowers
+
+---
+
+First lets delete the workflows on github so no actions is used. Also we should setup the repo so that commits to main come from prs that are squash merge. I want to make sure we have a linear commit graph

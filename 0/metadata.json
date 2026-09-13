@@ -1,0 +1,73 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M2E1K047A6THK23CNYVXKNZH",
+  "session_id": "0a48a798-e577-43ac-a6f1-a8cca77a56cc",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-13T18:48:33.028838Z",
+  "branch": "issue-286-remove-actions-linear-main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/ui-tests-quarantine.yml",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "docs/TESTING.md",
+    "docs/releasing.md",
+    "docs/signing.md",
+    "scripts/smoke-build.sh"
+  ],
+  "agent": "Cursor",
+  "model": "cursor-grok-4.6-high",
+  "turn_id": "917e9139743b",
+  "compact_transcript_start": 0,
+  "skill_events_version": 1,
+  "skill_events": [
+    {
+      "id": "prompt-skill-cursor-using-superpowers-2026-09-13T18:38:37.581472Z",
+      "event_type": "prompt_invocation",
+      "skill": {
+        "name": "using-superpowers"
+      },
+      "source": {
+        "agent": "cursor",
+        "signal": "prompt_slash_command",
+        "confidence": "explicit"
+      },
+      "turn_id": "cd51181c4ebf",
+      "timestamp": "2026-09-13T18:38:37.581472Z",
+      "native": {
+        "command": "/using-superpowers"
+      },
+      "collapse": {
+        "target": "user_message",
+        "label": "/using-superpowers",
+        "default_collapsed": true
+      }
+    }
+  ],
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-13T18:48:33.019604Z",
+    "agent_lines": 20,
+    "agent_removed": 166,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 20,
+    "total_lines_changed": 186,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
