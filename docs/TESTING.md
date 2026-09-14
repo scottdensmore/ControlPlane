@@ -121,7 +121,14 @@ The shared scheme’s **Test** action uses PosixSpawn (no LLDB attach). That avo
 | `prefs.settingsShell` | Settings-style prefs shell (`NSTabViewController` host view) |
 | `prefs.general.useNotifications` | Use Notifications checkbox |
 | `prefs.general.startAtLogin` | Start ControlPlane at login checkbox |
+| `prefs.contexts.list` | Contexts list |
+| `prefs.contexts.add` | Add Context |
+| `prefs.contexts.remove` | Remove Context |
+| `prefs.contexts.edit` | Edit Context |
+| `prefs.contexts.sheet.name` | Context name sheet field |
+| `prefs.contexts.sheet.confirm` | Context name sheet OK |
 | `prefs.tab.general` | General tab content view |
+| `prefs.tab.contexts` | Contexts tab content view (AppKit `contextsPrefsView` container only — not on the hosted SwiftUI root) |
 | `prefs.tab.evidencesources` | Evidence Sources tab content view |
 | `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`, `prefs.toolbar.evidencesources`) |
 | `status.menu.forceContext` | Force Context submenu parent in the status menu |
