@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.10.6",
+  "checkpoint_id": "01M2ERPVHT4EPNDNQZQGYVBX97",
+  "session_id": "81453353-ccac-4e6c-b243-9a92fb76e10b",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-14T01:32:36.805833Z",
+  "branch": "docs/swiftui-contexts-pane-design",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/superpowers/plans/2026-09-13-swiftui-contexts-pane.md"
+  ],
+  "agent": "Cursor",
+  "model": "default",
+  "turn_id": "9336d0e4b367",
+  "checkpoint_transcript_start": 98,
+  "transcript_lines_at_start": 98,
+  "compact_transcript_start": 36,
+  "session_metrics": {
+    "turn_count": 6
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-14T01:32:36.783293Z",
+    "agent_lines": 723,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 723,
+    "total_lines_changed": 723,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
