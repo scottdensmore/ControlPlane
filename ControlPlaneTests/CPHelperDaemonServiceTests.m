@@ -106,7 +106,10 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
     XCTAssertTrue([swift containsString:@"prefs.general.useNotifications"]);
     XCTAssertTrue([swift containsString:@"prefs.general.startAtLogin"]);
     XCTAssertTrue([swift containsString:@"prefs.general.allowPrivilegedHelper"]);
-    XCTAssertTrue([swift containsString:@"prefs.tab.general"]);
+    XCTAssertFalse([swift containsString:@"setAccessibilityIdentifier(@\"prefs.tab.general\")"],
+                   @"Hosted SwiftUI view must not set pane-root id; generalPrefsView owns prefs.tab.general");
+    XCTAssertFalse([swift containsString:@".accessibilityIdentifier(@\"prefs.tab.general\")"],
+                   @"SwiftUI body must not set pane-root id; generalPrefsView owns prefs.tab.general");
 
     // The helper checkbox title/tooltip must keep coming from the existing
     // localized ObjC helper, not a hardcoded English string.
@@ -114,8 +117,11 @@ static NSString * const CPHelperDaemonBundleProgram = @"Contents/Library/LaunchS
     XCTAssertTrue([swift containsString:@"CPHelperDaemonService.allowHelperCheckboxToolTip()"]);
 
     // PrefsWindowController hosts the SwiftUI pane and retires the duplicate
-    // AppKit helper checkbox path.
+    // AppKit helper checkbox path. Pane-root prefs.tab.general stays on the
+    // generalPrefsView container (generic prefs.tab.%@ assignment in awakeFromNib).
     NSString *prefs = [self sourceTextAtRelativePath:@"Source/PrefsWindowController.m"];
+    XCTAssertTrue([prefs containsString:@"prefs.tab.%@"],
+                  @"PrefsWindowController must assign prefs.tab.<pane> on pane containers");
     XCTAssertTrue([prefs containsString:@"installGeneralSettingsHostedView"]);
     XCTAssertFalse([prefs containsString:@"installAllowPrivilegedHelperCheckbox"],
                    @"Duplicate AppKit helper checkbox path must be retired once SwiftUI owns it (#203)");

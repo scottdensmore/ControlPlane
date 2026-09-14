@@ -12,8 +12,9 @@
 //  login item behavior, and the NSAlert failure flows stay exactly as before.
 //
 //  Accessibility ids stay stable across the migration:
-//    prefs.tab.general, prefs.general.useNotifications,
-//    prefs.general.startAtLogin, prefs.general.allowPrivilegedHelper
+//    prefs.general.useNotifications, prefs.general.startAtLogin,
+//    prefs.general.allowPrivilegedHelper
+//  (Pane-root prefs.tab.general stays on generalPrefsView in PrefsWindowController.)
 //
 
 import SwiftUI
@@ -125,14 +126,6 @@ struct GeneralSettingsView: View {
 @objc(GeneralSettingsHost)
 public final class GeneralSettingsHost: NSObject {
     @objc public static func makeViewController(model: GeneralSettingsViewModel) -> NSViewController {
-        let controller = NSHostingController(rootView: GeneralSettingsView(model: model))
-        // Pane-root id on the outermost hosted AppKit view, per
-        // docs/swiftui-coexistence-spike.md ("keep a pane-root id on the
-        // outermost hosted view for navigation asserts"). Setting it here
-        // (rather than inside the SwiftUI body) avoids macOS Form/Toggle
-        // accessibility-identifier propagation quirks that can otherwise
-        // leak an ancestor id onto every child row (prefs.tab.general).
-        controller.view.setAccessibilityIdentifier("prefs.tab.general")
-        return controller
+        NSHostingController(rootView: GeneralSettingsView(model: model))
     }
 }

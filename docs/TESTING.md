@@ -120,6 +120,7 @@ The shared scheme’s **Test** action uses PosixSpawn (no LLDB attach). That avo
 | `prefs.window` | Preferences / Settings window |
 | `prefs.settingsShell` | Settings-style prefs shell (`NSTabViewController` host view) |
 | `prefs.general.useNotifications` | Use Notifications checkbox |
+| `prefs.general.startAtLogin` | Start ControlPlane at login checkbox |
 | `prefs.tab.general` | General tab content view |
 | `prefs.tab.evidencesources` | Evidence Sources tab content view |
 | `prefs.toolbar.*` | Preference toolbar items (e.g. `prefs.toolbar.general`, `prefs.toolbar.evidencesources`) |
