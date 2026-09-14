@@ -84,6 +84,7 @@ Deterministic Settings and Force Context entry for UITests (#202, #244). **Do no
 | :--- | :--- |
 | `CPUITestRunning=1` (launch environment) | Skips notification authorization prompts in `CPNotifications`; sets `NSApplicationActivationPolicyRegular` in `main` so XCUITest can attach to the `LSUIElement` agent; enables the Force Context distributed-notification listener |
 | `-Debug OpenPrefsAtStartup YES` (launch argument) | After launch, opens Settings via `PrefsWindowController` `runPreferences:` (same path as the status-menu item) |
+| `-Debug OpenPrefsPane <GroupId>` (launch argument) | After OpenPrefsAtStartup, selects that prefs group via `switchToView:` (e.g. `Contexts`). Prefer this over flaky toolbar AX clicks (#229) |
 | `-Debug ForceContextAtStartup <token>` (launch argument) | After launch, forces a context via `forceSwitchToContextNamed:` (same path as the Force Context menu / Switch Context App Intent). `<token>` is the Force Context menu name (unique name, or `Parent/Child` when names collide). Empty / omitted = off |
 | `com.scottdensmore.ControlPlane.UITestForceContext` (distributed notification) | Mid-session Force Context without relaunch. Only observed when `CPUITestRunning=1`. `userInfo[@"name"]` (or `object` string) is the menu token; handler calls `forceSwitchToContextNamed:` |
 | `prefs.window` (AX id) | Stable query for the Settings window in `ControlPlaneUITests` |

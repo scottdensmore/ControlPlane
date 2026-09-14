@@ -459,6 +459,11 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	[prefsWindow makeKeyAndOrderFront:self];
 	[self refreshGeneralSettingsToggleState];
 	[self.contextsSettingsController reloadRows];
+	// UITest / debug harness (#229): select a prefs group without toolbar AX clicks.
+	NSString *pane = [[NSUserDefaults standardUserDefaults] stringForKey:@"Debug OpenPrefsPane"];
+	if (pane.length > 0) {
+		[self switchToView:pane];
+	}
 	if ([currentPrefsGroup isEqualToString:@"Advanced"]) {
         [self startLogBufferTimer];
 	}

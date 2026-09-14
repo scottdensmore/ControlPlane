@@ -200,6 +200,8 @@ static NSSet *sharedActiveContexts = nil;
 
 	// Debugging
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"Debug OpenPrefsAtStartup"];
+	// UITest / debug harness (#229): empty = leave default pane; e.g. "Contexts".
+	[appDefaults setValue:@"" forKey:@"Debug OpenPrefsPane"];
 	// UITest / debug harness (#244): empty = off; non-empty Force Context menu token.
 	[appDefaults setValue:@"" forKey:@"Debug ForceContextAtStartup"];
 	[appDefaults setValue:[NSNumber numberWithBool:NO] forKey:@"Debug USBParanoia"];
@@ -614,6 +616,8 @@ static NSSet *sharedActiveContexts = nil;
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Debug OpenPrefsAtStartup"]) {
             // UITest / debug harness (#202): open Settings via the same path as the
             // status-menu item — no menu-bar geometry clicks required.
+            // Optional `-Debug OpenPrefsPane <GroupId>` is applied inside runPreferences:
+            // (e.g. Contexts) so the pane is selected after the window is ordered front.
             NSWindowController *wc = [prefsWindow windowController];
             if ([wc isKindOfClass:[PrefsWindowController class]]) {
                 [(PrefsWindowController *)wc runPreferences:self];
