@@ -67,4 +67,11 @@
 - (void)disableStartAtLogin;
 - (IBAction)toggleStartAtLoginAction:(id)sender;
 
+// SwiftUI General pane bridging (#203). Each returns the actual resulting
+// state (registration can fail / require approval), for GeneralSettingsView
+// to reflect reality rather than the optimistic toggle request.
+- (BOOL)applyUseNotifications:(BOOL)enabled;
+- (BOOL)applyStartAtLogin:(BOOL)enabled;
+- (BOOL)applyAllowPrivilegedHelper:(BOOL)enabled;
+
 @end
