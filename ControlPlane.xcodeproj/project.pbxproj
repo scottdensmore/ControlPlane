@@ -273,6 +273,7 @@
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
 		B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B202UIT01FILE202000001 /* CPUITestHarnessTests.m */; };
 		B244UIT01WIRE244000001 /* CPForceContextUITestHookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */; };
+		A229TST01WIRE229000001 /* CPContextsSettingsHostTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A229TST01FILE229000001 /* CPContextsSettingsHostTests.m */; };
 		B100SET01WIRE00000001 /* CPPrefsSettingsShellController.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */; };
 		B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */; };
 		DDA2013A1411C0FB00DE570E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DDA2013C1411C0FB00DE570E /* Localizable.strings */; };
@@ -854,6 +855,7 @@
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
 		B202UIT01FILE202000001 /* CPUITestHarnessTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPUITestHarnessTests.m; sourceTree = "<group>"; };
 		B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPForceContextUITestHookTests.m; sourceTree = "<group>"; };
+		A229TST01FILE229000001 /* CPContextsSettingsHostTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPContextsSettingsHostTests.m; sourceTree = "<group>"; };
 		B100SET01FILE00000001 /* CPPrefsSettingsShellController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CPPrefsSettingsShellController.h; path = Source/CPPrefsSettingsShellController.h; sourceTree = "<group>"; };
 		B100SET01FILE00000002 /* CPPrefsSettingsShellController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CPPrefsSettingsShellController.m; path = Source/CPPrefsSettingsShellController.m; sourceTree = "<group>"; };
 		B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsSettingsStyleShellTests.m; sourceTree = "<group>"; };
@@ -1253,6 +1255,7 @@
 				B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */,
 				B202UIT01FILE202000001 /* CPUITestHarnessTests.m */,
 				B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */,
+				A229TST01FILE229000001 /* CPContextsSettingsHostTests.m */,
 				B100SET01FILE00000003 /* PrefsSettingsStyleShellTests.m */,
 				B35DIAG01FILE350000003 /* CPDiagnosticsSnapshotTests.m */,
 				B135EJ01FILE135000003 /* CPMockEvidenceJourneyTests.m */,
@@ -2137,6 +2140,7 @@
 				B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */,
 				B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */,
 				B244UIT01WIRE244000001 /* CPForceContextUITestHookTests.m in Sources */,
+				A229TST01WIRE229000001 /* CPContextsSettingsHostTests.m in Sources */,
 				B100SET01WIRE00000002 /* PrefsSettingsStyleShellTests.m in Sources */,
 				B35DIAG01WIRE350000002 /* CPDiagnosticsSnapshot.m in Sources */,
 				B135EJ01WIRE135000002 /* CPEvidenceSwitchJourney.m in Sources */,
