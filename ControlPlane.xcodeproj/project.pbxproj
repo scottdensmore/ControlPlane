@@ -271,6 +271,7 @@
 		A203GEN01WIRE203000001 /* GeneralSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A203GEN01FILE203000002 /* GeneralSettingsController.m */; };
 		A203SWM01WIRE203000001 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A203SWM01FILE203000001 /* GeneralSettingsView.swift */; };
 		A229SWM01WIRE229000001 /* ContextsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A229SWM01FILE229000001 /* ContextsSettingsView.swift */; };
+		A229CTL01WIRE229000001 /* ContextsSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = A229CTL01FILE229000002 /* ContextsSettingsController.m */; };
 		B31HIG01WIRE3100000001 /* PrefsHIGShortTermTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */; };
 		B202UIT01WIRE202000001 /* CPUITestHarnessTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B202UIT01FILE202000001 /* CPUITestHarnessTests.m */; };
 		B244UIT01WIRE244000001 /* CPForceContextUITestHookTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */; };
@@ -854,6 +855,8 @@
 		A203GEN01FILE203000002 /* GeneralSettingsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = GeneralSettingsController.m; path = Source/GeneralSettingsController.m; sourceTree = "<group>"; };
 		A203SWM01FILE203000001 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GeneralSettingsView.swift; path = Source/GeneralSettingsView.swift; sourceTree = "<group>"; };
 		A229SWM01FILE229000001 /* ContextsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContextsSettingsView.swift; path = Source/ContextsSettingsView.swift; sourceTree = "<group>"; };
+		A229CTL01FILE229000001 /* ContextsSettingsController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ContextsSettingsController.h; path = Source/ContextsSettingsController.h; sourceTree = "<group>"; };
+		A229CTL01FILE229000002 /* ContextsSettingsController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ContextsSettingsController.m; path = Source/ContextsSettingsController.m; sourceTree = "<group>"; };
 		B31HIGFILE3100000001 /* PrefsHIGShortTermTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = PrefsHIGShortTermTests.m; sourceTree = "<group>"; };
 		B202UIT01FILE202000001 /* CPUITestHarnessTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPUITestHarnessTests.m; sourceTree = "<group>"; };
 		B244UIT01FILE244000001 /* CPForceContextUITestHookTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = CPForceContextUITestHookTests.m; sourceTree = "<group>"; };
@@ -1051,6 +1054,8 @@
 				A203GEN01FILE203000002 /* GeneralSettingsController.m */,
 				A203SWM01FILE203000001 /* GeneralSettingsView.swift */,
 				A229SWM01FILE229000001 /* ContextsSettingsView.swift */,
+				A229CTL01FILE229000001 /* ContextsSettingsController.h */,
+				A229CTL01FILE229000002 /* ContextsSettingsController.m */,
 				A126HDR01FILE126000001 /* ControlPlane-Bridging-Header.h */,
 				8D8155CD0C3A304E00228463 /* ContextsDataSource.h */,
 				8D8155CE0C3A304E00228463 /* ContextsDataSource.m */,
@@ -1999,6 +2004,7 @@
 				A203GEN01WIRE203000001 /* GeneralSettingsController.m in Sources */,
 				A203SWM01WIRE203000001 /* GeneralSettingsView.swift in Sources */,
 				A229SWM01WIRE229000001 /* ContextsSettingsView.swift in Sources */,
+				A229CTL01WIRE229000001 /* ContextsSettingsController.m in Sources */,
 				8D8C9CA60BBB74E70074D5B3 /* EvidenceSource.m in Sources */,
 				5DCCE0BB1CA4870100FACF9F /* ScrollBarsAction.m in Sources */,
 				8D8C9CE70BBB7BE00074D5B3 /* BluetoothEvidenceSource.m in Sources */,

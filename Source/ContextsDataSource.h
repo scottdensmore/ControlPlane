@@ -43,6 +43,12 @@
 - (IBAction)newContextSheetAccepted:(id)sender;
 - (IBAction)newContextSheetRejected:(id)sender;
 - (IBAction)removeContext:(id)sender;
+- (IBAction)editSelectedContext:(id)sender;
+
+// Selects the outline row matching uuid (or clears the selection if uuid is
+// nil/empty/unknown). Used by ContextsSettingsController to keep the
+// SwiftUI-hosted list and the AppKit outline view's selection in sync (#229).
+- (void)selectContextWithUUID:(NSString *)uuid;
 
 - (Context *)contextByUUID:(NSString *)uuid;
 - (Context *)contextByName:(NSString *)name;

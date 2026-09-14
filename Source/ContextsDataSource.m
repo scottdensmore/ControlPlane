@@ -189,6 +189,8 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
                                              selector:@selector(triggerOutlineViewReloadData:)
                                                  name:@"ContextsChangedNotification"
                                                object:self];
+
+    [self ensureContextsSheetAccessibilityIdentifiers];
     /*
      IBOutlet NSButton *generalPreferencesEnableSwitching;
      IBOutlet NSButton *generalPreferencesStartAtLogin;
@@ -259,6 +261,56 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
             [CPNotifications showAuthorizationDeniedAlert];
         }
     }];
+}
+
+// Private: sets the a11y ids UI tests rely on for the new/edit-context sheet
+// (#229: prefs.contexts.sheet.name / prefs.contexts.sheet.confirm). Runs once
+// -- called from awakeFromNib and again defensively before the sheet is
+// first presented, so the ids exist regardless of nib-loading order.
+- (void)ensureContextsSheetAccessibilityIdentifiers
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSTextField *strongNewContextSheetName = self->newContextSheetName;
+        strongNewContextSheetName.accessibilityIdentifier = @"prefs.contexts.sheet.name";
+
+        // Prefer the control that sends newContextSheetAccepted: (the OK button).
+        NSPanel *strongNewContextSheet = self->newContextSheet;
+        for (NSView *view in strongNewContextSheet.contentView.subviews) {
+            if (![view isKindOfClass:[NSButton class]]) {
+                continue;
+            }
+            NSButton *button = (NSButton *)view;
+            if (button.action == @selector(newContextSheetAccepted:)) {
+                button.accessibilityIdentifier = @"prefs.contexts.sheet.confirm";
+                break;
+            }
+        }
+    });
+}
+
+// Selects the outline row for uuid (used by ContextsSettingsController to
+// mirror SwiftUI list selection into the AppKit outline view, #229).
+- (void)selectContextWithUUID:(NSString *)uuid
+{
+    [self ensureContextsSheetAccessibilityIdentifiers];
+
+    NSOutlineView *strongOutlineView = outlineView;
+    if (uuid.length == 0) {
+        [strongOutlineView deselectAll:nil];
+        return;
+    }
+
+    NSInteger rows = [strongOutlineView numberOfRows];
+    for (NSInteger row = 0; row < rows; row++) {
+        Context *ctxt = (Context *)[strongOutlineView itemAtRow:row];
+        if ([ctxt.uuid isEqualToString:uuid]) {
+            [strongOutlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:(NSUInteger)row]
+                            byExtendingSelection:NO];
+            return;
+        }
+    }
+    [strongOutlineView deselectAll:nil];
 }
 
 // Private
@@ -398,6 +450,8 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 }
 
 - (IBAction)newContextPromptingForName:(id)sender {
+    [self ensureContextsSheetAccessibilityIdentifiers];
+
     NSTextField *strongNewContextSheetName = newContextSheetName;
 	[strongNewContextSheetName setStringValue:NSLocalizedString(@"New context",
                                                                 @"Default value for new context names")];
@@ -450,6 +504,8 @@ static NSString *MovedRowsType = @"MOVED_ROWS_TYPE";
 
 - (IBAction)editSelectedContext:(id)sender
 {
+    [self ensureContextsSheetAccessibilityIdentifiers];
+
     NSOutlineView *strongOutlineView = outlineView;
 	NSInteger row = [strongOutlineView selectedRow];
 	if (row < 0) {
