@@ -57,6 +57,21 @@
 		      @"OpenPrefsAtStartup must open Settings via runPreferences: (not status-item clicks)");
 }
 
+- (void)testOpenPrefsPaneSelectsViaSwitchToView {
+	NSString *prefs = [self contentsOfRelativePath:@"Source/PrefsWindowController.m"];
+	NSString *controller = [self contentsOfRelativePath:@"Source/CPController.m"];
+	XCTAssertTrue([controller containsString:@"setValue:@\"\" forKey:@\"Debug OpenPrefsPane\""],
+		      @"Debug OpenPrefsPane default must be empty (off)");
+	XCTAssertTrue([prefs containsString:@"stringForKey:@\"Debug OpenPrefsPane\""],
+		      @"runPreferences: must read Debug OpenPrefsPane");
+	NSRange key = [prefs rangeOfString:@"stringForKey:@\"Debug OpenPrefsPane\""];
+	XCTAssertTrue(key.location != NSNotFound);
+	NSString *after = [prefs substringFromIndex:key.location];
+	NSRange switchCall = [after rangeOfString:@"switchToView:pane"];
+	XCTAssertTrue(switchCall.location != NSNotFound && switchCall.location < 400,
+		      @"OpenPrefsPane must call switchToView: near the defaults read");
+}
+
 - (void)testUITestEnvSkipsNotificationAuthorizationPrompts {
 	NSString *notifications = [self contentsOfRelativePath:@"Source/CPNotifications.m"];
 	XCTAssertTrue([notifications containsString:@"CPUITestRunning"],
@@ -102,6 +117,9 @@
 		      @"UITests must set CPUITestRunning");
 	XCTAssertTrue([uitest containsString:@"Debug OpenPrefsAtStartup"],
 		      @"UITests must open Settings via Debug OpenPrefsAtStartup");
+	XCTAssertTrue([uitest containsString:@"Debug OpenPrefsPane"] ||
+			  [uitest containsString:@"OpenPrefsPane"],
+		      @"Contexts journey should use Debug OpenPrefsPane (avoid flaky toolbar AX)");
 	XCTAssertTrue([uitest containsString:@"prefs.window"],
 		      @"Smoke must locate Settings by prefs.window");
 	XCTAssertTrue([uitest containsString:@"ForceContextAtStartup"] ||
@@ -121,6 +139,8 @@
 		      @"Harness docs must name CPUITestRunning");
 	XCTAssertTrue([docs containsString:@"OpenPrefsAtStartup"],
 		      @"Harness docs must name OpenPrefsAtStartup");
+	XCTAssertTrue([docs containsString:@"OpenPrefsPane"],
+		      @"Harness docs must name OpenPrefsPane for deterministic pane selection (#229)");
 	XCTAssertTrue([docs containsString:@"ForceContextAtStartup"] ||
 			  [docs containsString:@"UITestForceContext"],
 		      @"Harness docs must cover the Force Context hook (#244)");

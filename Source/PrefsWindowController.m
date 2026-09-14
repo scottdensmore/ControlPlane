@@ -13,6 +13,7 @@
 #import "CPPrefsSettingsShellController.h"
 #import "CPDiagnosticsSnapshot.h"
 #import "DSLogger.h"
+#import "ContextsSettingsController.h"
 #import "GeneralSettingsController.h"
 #import "SharedNumberFormatter.h"
 #import "PrefsWindowController.h"
@@ -170,6 +171,7 @@
 @property (nonatomic,copy) NSArray *diagnosticsRuleRows;
 @property (nonatomic,strong) NSTimer *diagnosticsRefreshTimer;
 @property (nonatomic,strong) GeneralSettingsController *generalSettingsController;
+@property (nonatomic,strong) ContextsSettingsController *contextsSettingsController;
 
 - (void)doAddRule:(NSDictionary *)dict;
 - (void)doEditRule:(NSDictionary *)dict;
@@ -226,6 +228,9 @@
 {
 	// Host the SwiftUI General pane before min size is captured so General grows with it (#203).
 	[self installGeneralSettingsHostedView];
+
+	// Host the SwiftUI Contexts pane inside the existing contextsPrefsView (#229).
+	[self installContextsSettingsHostedView];
 
 	// Evil!
 	[NSValueTransformer setValueTransformer:[[ContextNameTransformer alloc] init:contextsDataSource]
@@ -453,6 +458,12 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 	[NSApp activateIgnoringOtherApps:YES];
 	[prefsWindow makeKeyAndOrderFront:self];
 	[self refreshGeneralSettingsToggleState];
+	[self.contextsSettingsController reloadRows];
+	// UITest / debug harness (#229): select a prefs group without toolbar AX clicks.
+	NSString *pane = [[NSUserDefaults standardUserDefaults] stringForKey:@"Debug OpenPrefsPane"];
+	if (pane.length > 0) {
+		[self switchToView:pane];
+	}
 	if ([currentPrefsGroup isEqualToString:@"Advanced"]) {
         [self startLogBufferTimer];
 	}
@@ -1149,6 +1160,37 @@ static NSString * const sizeParamPrefix = @"NSView Size Preferences/";
 {
     [self.generalSettingsController refreshWithStartAtLogin:[[CPLoginItemService sharedService] checkboxOn]
                                        allowPrivilegedHelper:[[CPHelperDaemonService sharedService] checkboxOn]];
+}
+
+#pragma mark SwiftUI Contexts pane (#229)
+
+// Host ContextsSettingsView inside the existing contextsPrefsView, filling
+// the pane. The legacy AppKit outline view + add/remove/edit buttons are
+// hidden (not removed) so ContextsDataSource's outlets and the outline's
+// selection-sync plumbing (-selectContextWithUUID:) keep working; the hosted
+// SwiftUI list forwards all mutation to ContextsDataSource, it never
+// reimplements persistence.
+- (void)installContextsSettingsHostedView
+{
+    if (self.contextsSettingsController != nil || contextsPrefsView == nil || contextsDataSource == nil) {
+        return;
+    }
+
+    // Hide legacy AppKit contexts chrome (outline + buttons). Keep the views in
+    // the hierarchy so ContextsDataSource outlets / selection sync still work.
+    for (NSView *subview in contextsPrefsView.subviews) {
+        subview.hidden = YES;
+    }
+
+    ContextsSettingsController *controller =
+        [[ContextsSettingsController alloc] initWithDataSource:contextsDataSource];
+    self.contextsSettingsController = controller;
+
+    NSView *hostedView = controller.view;
+    hostedView.frame = NSInsetRect(contextsPrefsView.bounds, 0, 0);
+    hostedView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+    hostedView.hidden = NO;
+    [contextsPrefsView addSubview:hostedView];
 }
 
 - (BOOL)applyUseNotifications:(BOOL)enabled
