@@ -114,4 +114,39 @@
                   @"UITestForceContext notification must not tear down Settings");
 }
 
+/// #229: minimal create-context journey through the SwiftUI Contexts pane —
+/// switch to the Contexts tab, add a context via the name sheet, and confirm
+/// it appears in the list. No status-item clicks; name is unique per run.
+- (void)testCreateContextViaContextsPane {
+    XCUIApplication *app = [self launchWithPrefsOpen];
+
+    XCUIElement *window = app.windows[@"prefs.window"];
+    XCTAssertTrue([window waitForExistenceWithTimeout:15], @"Settings window should appear");
+
+    XCUIElement *toolbarContexts = app.toolbars.buttons[@"prefs.toolbar.contexts"];
+    XCTAssertTrue([toolbarContexts waitForExistenceWithTimeout:10],
+                  @"Contexts toolbar item should exist");
+    [toolbarContexts click];
+
+    XCUIElement *add = window.buttons[@"prefs.contexts.add"];
+    XCTAssertTrue([add waitForExistenceWithTimeout:10], @"Add Context button should exist");
+    [add click];
+
+    NSString *name = [NSString stringWithFormat:@"UITest Context %@", NSUUID.UUID.UUIDString];
+    XCUIElement *nameField = app.textFields[@"prefs.contexts.sheet.name"];
+    XCTAssertTrue([nameField waitForExistenceWithTimeout:10], @"Context name sheet field should exist");
+    [nameField click];
+
+    // The sheet pre-fills a default name ("New context") and selects it; typing
+    // replaces the selection rather than appending.
+    [nameField typeText:name];
+
+    XCUIElement *ok = app.buttons[@"prefs.contexts.sheet.confirm"];
+    XCTAssertTrue([ok waitForExistenceWithTimeout:5], @"Context name sheet confirm button should exist");
+    [ok click];
+
+    XCTAssertTrue([window.staticTexts[name] waitForExistenceWithTimeout:10],
+                  @"Created context name must appear in the Contexts list");
+}
+
 @end
