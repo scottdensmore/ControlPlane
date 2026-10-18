@@ -4,7 +4,7 @@ Thanks for helping keep this ObjC / XIB fork working on modern macOS. Live work 
 
 This file is the instruction SSOT for humans and coding agents. Do not create `AGENTS.md`, `agent.md`, or parallel roadmap docs. Pointer files (`CLAUDE.md`, `.cursorrules`, etc.) only point here.
 
-**GitHub:** do not add GitHub Actions workflows. Actions is disabled. Land work with short-lived feature branches and squash-merged PRs onto `main` (linear history; direct pushes are blocked). Verify locally with `./scripts/smoke-build.sh`.
+**GitHub:** build/test Actions runs on PRs and main pushes with read-only repository permissions. CI does not register the privileged helper, notarize, or publish releases. Land work with short-lived feature branches and squash-merged PRs onto `main` (linear history; direct pushes are blocked). Verify locally with `./scripts/smoke-build.sh`.
 
 **Sandbox / App Store / widgets / iCloud:** follow [docs/sandbox-store-spike.md](docs/sandbox-store-spike.md). Do not treat “no App Sandbox” as a standing ban. Current `main` remains unsandboxed until the enable-sandbox issue lands. Mac App Store flavor: no Sparkle, no privileged helper.
 
@@ -93,4 +93,4 @@ Copy any new keys into every shipping `Localizable.strings` and translate them. 
 
 - Conventional Commits: `type(scope): imperative summary` (`fix`, `feat`, `refactor`, `chore`, `docs`, `test`, `build`).
 - Link the GitHub issue; checklist the acceptance criteria.
-- GitHub requires a squash-merge PR onto `main` (linear history). Direct pushes, merge commits, and rebase merges are blocked. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally. GitHub Actions is not used.
+- GitHub requires a squash-merge PR onto `main` (linear history). Direct pushes, merge commits, and rebase merges are blocked. Run `./scripts/smoke-build.sh` (or Debug + `ControlPlaneTests`) locally. GitHub Actions also runs the smoke and Settings UI checks; require successful checks on the reviewed PR head before merging.

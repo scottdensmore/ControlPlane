@@ -1,0 +1,80 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Debug, Release and unit tests
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Show selected toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+      - name: Check Help documentation
+        run: ./scripts/check-help-scrub.sh
+      - name: Build both configurations and run all logic tests
+        env:
+          DERIVED_DATA_PATH: ${{ runner.temp }}/ControlPlaneSmokeDerived
+        run: |
+          set -euo pipefail
+          ./scripts/smoke-build.sh 2>&1 | tee "$RUNNER_TEMP/smoke-build.log"
+      - name: Verify build preserved source files
+        run: git diff --exit-code
+      - name: Retain failure log
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: smoke-failure-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/smoke-build.log
+          retention-days: 3
+
+  ui-tests:
+    name: Settings UI journeys
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Show selected toolchain
+        run: xcodebuild -version
+      - name: Run all existing Settings UI tests with ad-hoc signing
+        run: |
+          set -euo pipefail
+          xcodebuild -project ControlPlane.xcodeproj -scheme ControlPlane \
+            -configuration Debug -destination 'platform=macOS' \
+            -derivedDataPath "$RUNNER_TEMP/ControlPlaneUIDerived" \
+            -resultBundlePath "$RUNNER_TEMP/ControlPlaneUI.xcresult" \
+            -parallel-testing-enabled NO \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= \
+            test -only-testing:ControlPlaneUITests \
+            2>&1 | tee "$RUNNER_TEMP/ui-tests.log"
+      - name: Verify build preserved source files
+        run: git diff --exit-code
+      - name: Retain UI failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: ui-failure-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/ui-tests.log
+            ${{ runner.temp }}/ControlPlaneUI.xcresult
+          retention-days: 3

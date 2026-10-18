@@ -6,7 +6,7 @@
 - **Unit tests:** `ControlPlaneTests` logic bundle (no app host — avoids dual `NSApplication` crash with this LSUIElement agent)
 - **UI tests:** `ControlPlaneUITests` for prefs journeys; status-item clicks are unreliable under XCUITest
 - **Smoke script:** `scripts/smoke-build.sh`
-- **GitHub Actions:** not used. Verify locally with `./scripts/smoke-build.sh`.
+- **GitHub Actions:** PRs and main pushes run `./scripts/smoke-build.sh` (unsigned Debug + Release + all logic tests), Help scrub, and all existing Settings UI tests with ad-hoc signing on disposable macOS 26 runners. Helper registration, notarization, release publication, and live privileged/system actions are outside CI coverage.
 - **Signing / helper daemon:** see [`docs/signing.md`](signing.md) (manual signed smoke; unsigned builds cannot register the daemon)
 
 ## Commands
