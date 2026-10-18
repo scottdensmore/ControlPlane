@@ -50,7 +50,7 @@ SKIP_RELEASE=1 ./scripts/smoke-build.sh
 
 ## Verification
 
-This repository does not use GitHub Actions. Prove changes locally before opening a PR; `main` only accepts squash-merged pull requests. Details: [docs/TESTING.md](docs/TESTING.md).
+GitHub Actions checks unsigned Debug/Release builds, logic tests, Help documentation, and ad-hoc signed Settings UI journeys on PRs and main pushes. Helper registration, notarization, and releases remain manual. `main` only accepts squash-merged pull requests. Local verification details: [docs/TESTING.md](docs/TESTING.md).
 
 ## Docs map
 
