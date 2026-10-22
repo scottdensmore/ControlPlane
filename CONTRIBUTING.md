@@ -2,7 +2,7 @@
 
 Thanks for helping keep this ObjC / XIB fork working on modern macOS. Live work tracking is **GitHub Issues** on [scottdensmore/ControlPlane](https://github.com/scottdensmore/ControlPlane)—do not invent parallel roadmap docs.
 
-This file is the instruction SSOT for humans and coding agents. Do not create `AGENTS.md`, `agent.md`, or parallel roadmap docs. Pointer files (`CLAUDE.md`, `.cursorrules`, etc.) only point here.
+This file is the instruction SSOT for contributors. Do not create `AGENTS.md`, `agent.md`, or parallel roadmap docs.
 
 **GitHub:** build/test Actions runs on PRs and main pushes with read-only repository permissions. CI does not register the privileged helper, notarize, or publish releases. Land work with short-lived feature branches and squash-merged PRs onto `main` (linear history; direct pushes are blocked). Verify locally with `./scripts/smoke-build.sh`.
 
