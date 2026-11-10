@@ -50,5 +50,10 @@ Resources/usb-vendors.txt
 *_eddsa_private*
 sparkle_eddsa_private*
 
+# Local environment / signing secrets
+.env
+.env.*
+!.env.example
+
 # Agent / local git worktrees
 .worktrees/
