@@ -57,3 +57,28 @@ sparkle_eddsa_private*
 
 # Agent / local git worktrees
 .worktrees/
+
+# Modern Xcode, SwiftPM, editors, and Python script caches
+DerivedData/
+.derivedData/
+.build/
+.swiftpm/configuration/
+.swiftpm/xcode/package.xcworkspace/
+.swiftpm/xcode/xcuserdata/
+*.xcuserstate
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.AppleDouble
+.LSOverride
+._*
+.vscode/
+.idea/
+*.swo
+__pycache__/
+*.py[cod]
+.venv/
